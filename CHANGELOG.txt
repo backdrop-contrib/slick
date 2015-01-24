@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2014-1-25
+----------------------------
+Added link field as option for slide title for both file and field collection.
+
 Slick 7.x-2.0-dev, 2014-1-24
 ----------------------------
 Added random option to randomize slide orders, useful to manipulate cached
