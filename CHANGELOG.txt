@@ -1,4 +1,27 @@
 
+Slick 7.x-2.0-dev, 2014-1-24
+----------------------------
+Added random option to randomize slide orders, useful to manipulate cached
+  blocks.
+  See https://github.com/kenwheeler/slick/issues/359
+  See http://reddit.com/r/slickcarousel/comments/2kyu51/random_slide_order
+
+Slick 7.x-2.0-dev, 2014-1-2
+---------------------------
+Dropped too general .slick__caption absolute positioning if no layout defined at
+  slick.theme.css, to allow pure text slideshow such as testimonial, or quotes
+  without extra overrides.
+
+Added Translate link to file entity if translatable, basically to trigger/ bring
+  to translation tab as defined at:
+  admin/config/regional/entity_translation/translatable/FIELD_NAME
+Added slide_classes to file entity and FC fields.
+
+Slick 7.x-2.0-dev, 2014-12-27
+-----------------------------
+Fixed for Fatal error: Cannot access empty property in field.attach.inc on line
+  324, if Media view_mode is not enabled.
+
 Slick 7.x-2.0-dev, 2014-12-26
 -----------------------------
 Fixed compatibility with Entity translation for the Slick fields media by

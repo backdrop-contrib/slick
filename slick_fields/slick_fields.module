@@ -40,7 +40,9 @@ function slick_fields_field_formatter_info() {
   if (module_exists('file_entity') || module_exists('field_collection')) {
     if (module_exists('file_entity')) {
       $formatters['slick']['field types'][] = 'file';
-      // $formatters['slick']['file types'][] = array('image', 'audio', 'video');
+      $formatters['slick']['settings'] += array(
+        'slide_classes' => '',
+      );
     }
     if (module_exists('field_collection')) {
       $formatters['slick']['field types'][] = 'field_collection';
@@ -108,6 +110,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   $title_options   = array();
   $link_options    = array();
   $color_options   = array();
+  $slide_classes   = array();
   $optionsets = slick_optionset_options();
 
   $is_views_ui = '';
@@ -268,7 +271,8 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     case 'file':
       $caption_options = _slick_fields_get_media_fields($instance);
       $layout_options  = _slick_fields_get_media_fields($instance, array('options_select'));
-      $title_options   = _slick_fields_get_media_fields($instance, array('text_textfield', 'text_textarea'));
+      $slide_classes   = _slick_fields_get_media_fields($instance, array('options_select', 'text_textfield'));
+      $title_options   = _slick_fields_get_media_fields($instance, array('link_field', 'text_textfield', 'text_textarea'));
       $link_options    = _slick_fields_get_media_fields($instance, array(
         'text_textfield',
         'link_field',
@@ -296,7 +300,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       $layout_options  = _slick_fields_get_fc_fields($instance, array('list_text'));
       $image_options   = _slick_fields_get_fc_fields($instance, array('image', 'file'));
       $overlay_options = _slick_fields_get_fc_fields($instance, array('image', 'file', 'atom_reference'));
-      $title_options   = _slick_fields_get_fc_fields($instance, array('text', 'text_long'));
+      $title_options   = _slick_fields_get_fc_fields($instance, array('link_field', 'text', 'text_long'));
       $link_options    = _slick_fields_get_fc_fields($instance, array(
         'text',
         'link_field',
@@ -409,6 +413,17 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
 
     if ($field_entity_type == 'file') {
       $element['view_mode']['#description'] .= t('For video, make sure to choose relevant video display, not as image.');
+
+      // Slide class field.
+      $element['slide_classes'] = array(
+        '#title' => t('Slide class field'),
+        '#type' => 'select',
+        '#empty_option' => t('None'),
+        '#options' => $slide_classes,
+        '#default_value' => $settings['slide_classes'],
+        '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split.'),
+        '#attributes' => array('class' => array('is-tooltip')),
+      );
     }
   }
 
@@ -665,7 +680,6 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
       }
     }
 
-
     if (isset($settings['image_style'])) {
       $image_style = $settings['image_style'] ? $settings['image_style'] : t('None (original image)');
       $summary[] = t('Image style: @image_style', array('@image_style' => $image_style));
@@ -712,6 +726,11 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
     if (isset($settings['slide_link'])) {
       $slide_link = $settings['slide_link'] ? $settings['slide_link'] : t('None');
       $summary[] = t('Link: @slide_link', array('@slide_link' => $slide_link));
+    }
+
+    if (isset($settings['slide_classes'])) {
+      $slide_classes = $settings['slide_classes'] ? $settings['slide_classes'] : t('None');
+      $summary[] = t('Slide classes: @slide_classes', array('@slide_classes' => $slide_classes));
     }
 
     if (!empty($settings['slide_caption'])) {
@@ -835,8 +854,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         $settings['colorbox_ready'] = TRUE;
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.media');
-        $build = _slick_fields_format_media($settings, $items, $field, $view_mode);
-        $thumb = _slick_fields_format_media($settings, $items, $field, $view_mode, TRUE);
+        $build = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode);
+        $thumb = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode, TRUE);
         break;
 
       case 'field_collection':

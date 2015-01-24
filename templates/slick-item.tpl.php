@@ -62,6 +62,8 @@
         <?php print render($title_suffix); ?>
       <?php endif; ?>
 
+      <?php isset($editor) && print render($editor); ?>
+
     </<?php print $content_tag; ?>>
   <?php endif; ?>
 </<?php print $tag; ?>>

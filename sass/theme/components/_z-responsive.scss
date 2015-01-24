@@ -33,11 +33,23 @@
   }
 
   .slide__caption {
-    left: 0;
-    padding: 20px;
-    position: absolute;
-    top: 10%;
-    width: 42%;
+    .slide--caption--left &,
+    .slide--caption--right &,
+    .slide--caption--top &,
+    .slide--caption--bottom &,
+    .slide--caption--stage-left &,
+    .slide--caption--stage-right &,
+    .slide--caption--split-left &,
+    .slide--caption--split-right &,
+    .slide--caption--stage-zebra &,
+    .slide--caption--center &,
+    .slide--caption--center-top & {
+      left: 0;
+      padding: 20px;
+      position: absolute;
+      top: 10%;
+      width: 42%;
+    }
 
     .slide--caption--below & {
       position: relative;

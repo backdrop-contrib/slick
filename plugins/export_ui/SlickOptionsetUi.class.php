@@ -121,8 +121,9 @@ class SlickOptionsetUi extends ctools_export_ui {
       '#options' => array(
         'pattern' => t('Use pattern overlay'),
         'arrow-down' => t('Use arrow down'),
+        'random' => t('Randomize'),
       ),
-      '#description' => t('Applies to main display, not thumbnail pager. <ol><li>Pattern overlay is background image with pattern placed over the main stage.</li><li>Arrow down to scroll down into a certain page section, make sure to provide target selector.</li></ol>'),
+      '#description' => t('Applies to main display, not thumbnail pager. <ol><li>Pattern overlay is background image with pattern placed over the main stage.</li><li>Arrow down to scroll down into a certain page section, make sure to provide target selector.</li><li>Randomize the slide display, useful to manipulate cached blocks.</li></ol>'),
       '#attributes' => array('class' => array('is-tooltip')),
     );
 

@@ -8,7 +8,7 @@
 /**
  * Format image/media file data.
  */
-function _slick_fields_format_media(&$settings, $items, $field, $view_mode, $thumb_nav = FALSE) {
+function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $view_mode, $thumb_nav = FALSE) {
   module_load_include('inc', 'slick', 'includes/slick.extras');
 
   $build = array();
@@ -90,23 +90,56 @@ function _slick_fields_format_media(&$settings, $items, $field, $view_mode, $thu
 
     if (!$thumb_nav) {
       // Title, if so configured.
+      $title = '';
       if (!empty($settings['slide_title'])) {
         if ($field_title = field_get_items('file', $file, $settings['slide_title'])) {
-          $title = $field_title[0]['safe_value'];
+          // Plain text title.
+          if (isset($field_title[0]['safe_value'])) {
+            $title = $field_title[0]['safe_value'];
+          }
+          // Link field.
+          elseif (isset($field_title[0]['url'])) {
+            // The $item paramater expected here is $field_title[0].
+            $title = field_view_value('file', $file, $settings['slide_title'], $field_title[0], $view_mode);
+          }
+
           $slide['caption']['title'] = $title;
         }
       }
 
       // Other caption fields, if so configured.
+      $caption_items = array();
       if (!empty($settings['slide_caption'])) {
-        $caption_items = array();
         foreach ($settings['slide_caption'] as $i => $caption_field) {
-          $caption = field_view_field('file', $file, $caption_field, $view_mode);
-          if ($caption) {
+          $is_caption = field_get_items('file', $file, $caption_field);
+          if ($is_caption && ($caption = field_view_field('file', $file, $caption_field, $view_mode))) {
             $caption_items[$i] = $caption;
           }
         }
         $slide['caption']['data'] = $caption_items;
+      }
+
+      if (file_entity_access('update', $file)) {
+        // @todo drop, when file_entity via media popup supports ET in place.
+        // This is basically to trigger/ bring to translation tab as defined at
+        // admin/config/regional/entity_translation/translatable/FIELD_NAME
+        if (($title || $caption_items) && field_is_translatable($entity_type, $field)) {
+          $slide['caption']['editor']['translate']['#markup'] = l(t('Translate'), 'file/' . $file->fid . '/translate', array(
+            'query' => drupal_get_destination(),
+            'attributes' => array(
+              'title' => t('Translate file @title', array('@title' => $file->filename)),
+              'class' => array('file__translate edit-link icon-globe'),
+            ),
+          ));
+        }
+
+        $slide['caption']['editor']['edit']['#markup'] = l(t('Edit'), 'file/' . $file->fid . '/edit', array(
+          'query' => drupal_get_destination(),
+          'attributes' => array(
+            'title' => t('Edit file @title', array('@title' => $file->filename)),
+            'class' => array('file__edit edit-link icon-edit'),
+          ),
+        ));
       }
 
       // Link, if so configured.
@@ -148,6 +181,14 @@ function _slick_fields_format_media(&$settings, $items, $field, $view_mode, $thu
       // Thumbnail static.
       if ($settings['dots_thumbnail'] && $thumbnail_hover) {
         $image_slide .= $thumbnail_hover;
+      }
+    }
+
+    // Slide classes, if so configured.
+    if (!empty($settings['slide_classes'])) {
+      if ($field_slide_classes = field_get_items('file', $file, $settings['slide_classes'])) {
+        $slide_classes = $field_slide_classes[0]['value'];
+        $settings['classes'] = check_plain($slide_classes);
       }
     }
 

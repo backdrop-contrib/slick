@@ -81,7 +81,8 @@ function template_preprocess_slick_views(&$variables) {
       }
       else {
         // @todo refine more.
-        // $attach['attach_colorbox'] = TRUE;
+        // Media is enabled to allow copying slick media template in replacement
+        // for regular media_youtube and media_vimeo templates manually.
         $attach['attach_media'] = TRUE;
         $item['slide'] = $view->style_plugin->row_plugin->render($row);
       }

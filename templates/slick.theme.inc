@@ -120,6 +120,10 @@ function template_preprocess_slick(&$variables) {
     // WOW, inView or jquery.appear.
     $settings['is_carousel'] = $js['slidesToShow'] > 1;
     $attributes['class'][] = $settings['is_carousel'] ? 'slick--carousel' : 'slick--slider';
+
+    if (isset($goodies['random']) && $goodies['random']) {
+      $attributes['class'][] = 'slick--random';
+    }
   }
 
   $attributes['class'][] = drupal_clean_css_identifier('slick--optionset--' . $optionset_name);
@@ -280,7 +284,8 @@ function template_process_slick(&$variables) {
 function template_preprocess_slick_item(&$variables) {
   $element = $variables['element'];
   $item = $element['#item'];
-  $settings = $element['#settings'];
+  $settings = isset($element['#settings']) ? $element['#settings'] : array();
+  $item_settings = isset($item['#settings']) ? $item['#settings'] : $settings;
   $captions = $element['#caption'];
 
   $variables['item'] = $item;
@@ -318,6 +323,7 @@ function template_preprocess_slick_item(&$variables) {
     $variables['tag'] = 'div';
   }
 
+  // 1, 2, 3, 1, 2, 3, drink.
   $attributes['class'][] = $one;
   $attributes['class'][] = $two;
   $attributes['class'][] = $three;
@@ -348,7 +354,8 @@ function template_preprocess_slick_item(&$variables) {
   }
 
   // @todo, disabled for thumb by now when Slick resolves selector issue.
-  $variables['caption'] = '';
+  $variables['caption'] = array();
+  $variables['editor'] = array();
   $variables['slide_pattern'] = '';
 
   // @todo, thumbnails may have captions when Slick resolves selector issue.
@@ -387,6 +394,11 @@ function template_preprocess_slick_item(&$variables) {
       $stage['link'] = $captions['link'];
     }
 
+    // Editor links, implementors should do the access check properly.
+    if (isset($captions['editor']) && !empty($captions['editor'])) {
+      $variables['editor'] = $captions['editor'];
+    }
+
     $variables['caption'] = $stage;
 
     // We split image from captions with a wrapper if we do have captions, and
@@ -408,6 +420,10 @@ function template_preprocess_slick_item(&$variables) {
     if (isset($settings['has_pattern']) && $settings['has_pattern'] && $settings['media_switch'] != 'colorbox-switch') {
       $variables['slide_pattern'] = '<div class="slide__pattern"></div>';
     }
+  }
+
+  if (isset($item_settings['classes']) && $item_settings['classes']) {
+    $attributes['class'][] = $item_settings['classes'];
   }
 
   $variables['settings'] = $settings;
@@ -477,8 +493,8 @@ function template_preprocess_slick_media(&$variables) {
   $variables['url'] = '';
   $variables['alternative_content'] = '';
 
-  // Only reasonable for the main display, not thumbnail navigation.
-  if ($variables['asnavfor'] == 'main') {
+  // Only reasonable for the main or grid display, not thumbnail navigation.
+  if ($variables['asnavfor'] != 'thumbnail') {
     // Specific to Media integration.
     $media = isset($element['#media']) ? $element['#media'] : '';
 

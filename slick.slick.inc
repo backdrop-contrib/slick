@@ -8,6 +8,8 @@
 /**
  * Implements hook_slick_skins_info().
  *
+ * This file is loaded automatically when needed.
+ *
  * All the skins are very basic, to perform possible variants. It doesn't care
  * about looking great, and other element stylings, but basic one and layouts.
  * Detailed styling is all yours to match your actual design.
@@ -21,6 +23,7 @@
  * - css: An array of CSS files to attach.
  * - js: An array of JS files to attach.
  *
+ * @see hook_hook_info()
  * @see https://drupal.org/node/1887922
  */
 function slick_slick_skins_info() {

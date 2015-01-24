@@ -29,6 +29,8 @@
           });
         }
 
+        Drupal.slick.randomize(t);
+
         // Build the Slick.
         t.slick($.extend(configs, globals, callbacks));
 
@@ -50,13 +52,31 @@
         // Arrow down jumper.
         $('.jump-scroll[data-target]').click(function (e) {
           e.preventDefault();
-          var t = $(this);
+          var a = $(this);
           $('html, body').stop().animate({
-            scrollTop: $(t.data('target')).offset().top - (t.data('offset') || 0)
+            scrollTop: $(a.data('target')).offset().top - (a.data('offset') || 0)
           }, 800, 'easeInOutExpo');
         });
       });
     }
+  };
+
+  /**
+   * Randomize slide orders, useful to manipulate cached blocks.
+   * @see https://github.com/kenwheeler/slick/issues/359
+   * @see http://reddit.com/r/slickcarousel/comments/2kyu51/random_slide_order
+   */
+  Drupal.slick.randomize = function(t) {
+    if (!t.hasClass('slick--random')) {
+      return;
+    }
+
+    t.children('.slick__slide:not(.slick-cloned)').sort(function (){
+      return Math.round(Math.random()) - 0.5;
+    })
+    .each(function (){
+      $(this).appendTo(t);
+    });
   };
 
   /**
@@ -80,7 +100,6 @@
    * Gets slidesToShow depending on current settings.
    */
   Drupal.slick.toShow = function(merged) {
-
     var toShow = merged.slidesToShow;
 
     // Only rely on the first largest breakpoint, otherwise complex loop.
@@ -105,6 +124,8 @@
     }
 
     var toShow = Drupal.slick.toShow(merged);
+
+    // Do not remove arrows, to allow responsive option have different options.
     var arrows = total <= toShow ? $arrows.hide() : $arrows.show();
   };
 

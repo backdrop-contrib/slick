@@ -342,9 +342,24 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         }
 
         // Title, if so configured.
-        if (!empty($settings['slide_title']) && isset($fc[$settings['slide_title']][$langcode][0]['safe_value'])) {
-          $layout = $fc[$settings['slide_title']][$langcode][0]['safe_value'];
-          $slide['caption']['title'] = $layout;
+        if (!empty($settings['slide_title'])) {
+          $slide_title = $settings['slide_title'];
+          $title = '';
+          // Plain text title.
+          if (isset($fc[$slide_title][$langcode][0]['safe_value'])) {
+            $title = $fc[$slide_title][$langcode][0]['safe_value'];
+          }
+          // Link field title.
+          elseif (isset($fc[$slide_title][$langcode][0]['url'])) {
+            $url = '';
+            $title = $fc[$slide_title][$langcode][0]['title'];
+            if ($url = $fc[$slide_title][$langcode][0]['url']) {
+              // $attributes = $fc[$slide_title][$langcode][0]['attributes'];
+              $title = l($title, $url);
+            }
+          }
+
+          $slide['caption']['title'] = $title;
         }
 
         // Other caption fields, if so configured.
