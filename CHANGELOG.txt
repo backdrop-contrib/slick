@@ -1,6 +1,10 @@
 
 Slick 7.x-2.0-dev, 2014-1-25
 ----------------------------
+Updated invalid index attribute to data-slick-index as per
+  https://github.com/kenwheeler/slick/issues/825
+Changed dummy image for lazyLoad to said more stable by user Layke.
+  See http://goo.gl/TJenKX
 Added link field as option for slide title for both file and field collection.
 
 Slick 7.x-2.0-dev, 2014-1-24

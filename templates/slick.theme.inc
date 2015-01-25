@@ -698,7 +698,7 @@ function theme_slick_image_lazy($variables) {
       // This is why we have this function, D7 core theme_image() only expects
       // a file, not inline image. Dropped at D8 that supports it, and merged to
       // theme_slick_image_formatter_lazy() instead.
-      $attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+      $attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
       $attributes['data-lazy'] = $path;
     }
 

@@ -153,7 +153,7 @@
         // With centerMode.
         // When total = slidesToShow, the first + last have slick-center classes.
         // When total < slidesToShow, the first has slick-center class, even odd.
-        $('.slick__slide[index="' + slider.currentSlide + '"]', t).click().addClass('slide--current');
+        $('.slick__slide[data-slick-index="' + slider.currentSlide + '"]', t).click().addClass('slide--current');
       },
       onReInit: function (slider) {
         Drupal.slick.updateArrows(t, merged, slider.slideCount);
@@ -178,7 +178,7 @@
    */
   Drupal.slick.setCurrent = function(t, index) {
     $('.slide--current', t).removeClass('slide--current');
-    $('.slick__slide[index="' + index + '"]', t).addClass('slide--current');
+    $('.slick__slide[data-slick-index="' + index + '"]', t).addClass('slide--current');
   };
 
   /**
