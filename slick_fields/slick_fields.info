@@ -1,5 +1,5 @@
 name = Slick Fields
-description = "Adds a field display formatter for Slick carousel"
+description = "Adds a field display formatter for the Slick carousel."
 core = 7.x
 package = Slick
 

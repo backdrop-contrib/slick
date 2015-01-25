@@ -1,8 +1,18 @@
 
+
+Slick 7.x-2.0-dev, 2014-1-26
+----------------------------
+Updated workarounds to become permanent, since core library leaves them to the 
+  implementors for various reasons, such as: mousewheel, arrows issues, etc.
+Added slick_devel.module to ease developing the latest features of the library.
+Updated data-slick-index reference to use static class with slide--N classes
+  instead to make it compatible with slick 1.4 and below.
+Added edgeFriction option as Swipetoslide fix, requires slick 1.4.
+
 Slick 7.x-2.0-dev, 2014-1-25
 ----------------------------
 Updated invalid index attribute to data-slick-index as per
-  https://github.com/kenwheeler/slick/issues/825
+  https://github.com/kenwheeler/slick/issues/825, requires slick 1.4.
 Changed dummy image for lazyLoad to said more stable by user Layke.
   See http://goo.gl/TJenKX
 Added link field as option for slide title for both file and field collection.

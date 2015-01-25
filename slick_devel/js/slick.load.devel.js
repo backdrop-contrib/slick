@@ -14,7 +14,7 @@
         var self = this,
           t = $(self),
           defaults = settings.slick || {},
-          configs = t.data('config') || {},
+          configs = t.data('slick') || {},
           merged = $.extend({}, defaults, configs),
           index = $('.slick__slide:not(.slick-cloned)', self).index(),
           callbacks = Drupal.slick.runCallbacks(t, index) || {},
@@ -32,7 +32,8 @@
         Drupal.slick.randomize(t);
 
         // Build the Slick.
-        t.slick($.extend(configs, globals, callbacks));
+        var slider = t.slick($.extend(configs, globals, callbacks)).slick('getSlick');
+        console.log(slider);
 
         // @todo drop if total <= slideToShow fixed, or onAfterChange works.
         $('.slick__slide', t).on('click', function () {
@@ -61,7 +62,7 @@
   };
 
   /**
-   * Randomize slide orders, useful to manipulate cached blocks.
+   * Randomize slide orders, useful to manipulate cached blocks with ondemand.
    * @see https://github.com/kenwheeler/slick/issues/359
    */
   Drupal.slick.randomize = function(t) {
@@ -160,10 +161,12 @@
         // If total < slidesToShow, onAfterChange uselessly triggered on load,
         // otherwise not working at all.
         Drupal.slick.setCurrent(t, slider.currentSlide);
+        console.log('onAfterChange: ' + index); // no go
       },
       onSetPosition: function (slider) {
         // @todo drop when onAfterChange works. Only if total > slidesToShow.
         Drupal.slick.setCurrent(t, slider.currentSlide);
+        console.log('onSetPosition: ' + slider.currentSlide);
       }
     };
     return globals;
@@ -186,7 +189,7 @@
     if (!$('.slick__slide:first .slide__thumbnail', t).length) {
       return;
     }
-    var dotClass = $(t).data('config').dotClass || 'slick-dots';
+    var dotClass = $(t).data('slick').dotClass || 'slick-dots';
     $('.' + dotClass, t).addClass('slick__thumbnail');
 
     $('.slick__slide .slide__thumbnail--placeholder', t).remove();

@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Slick Development module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function slick_devel_uninstall() {
+  variable_del('slick_devel');
+  variable_del('slick_devel_load');
+}

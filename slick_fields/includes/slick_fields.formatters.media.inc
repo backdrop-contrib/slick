@@ -188,7 +188,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
     if (!empty($settings['slide_classes'])) {
       if ($field_slide_classes = field_get_items('file', $file, $settings['slide_classes'])) {
         $slide_classes = $field_slide_classes[0]['value'];
-        $settings['classes'] = check_plain($slide_classes);
+        $settings['classes'] = strip_tags($slide_classes);
       }
     }
 

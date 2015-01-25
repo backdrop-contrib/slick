@@ -275,6 +275,14 @@ function slick_get_options() {
       'states' => array('visible' => array(':input[name*="options[settings][swipe]"]' => array('checked' => TRUE))),
     );
 
+    $options['edgeFriction'] = array(
+      'title' => t('Edge friction'),
+      'description' => t('Swipetoslide fix.'),
+      'type' => 'textfield',
+      'cast' => 'int',
+      'default' => 0.35,
+    );
+
     $options['touchMove'] = array(
       'title' => t('Touch move'),
       'description' => t('Enable slide motion with touch.'),

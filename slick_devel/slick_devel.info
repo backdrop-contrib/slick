@@ -1,0 +1,6 @@
+name = Slick Development
+description = "Provides development option for the Slick carousel."
+core = 7.x
+package = Slick
+
+dependencies[] = slick

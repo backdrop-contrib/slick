@@ -15,7 +15,6 @@
  *   key|value pairs related to JS settings, or at least optionset name.
  */
 function template_preprocess_slick(&$variables) {
-
   $element = $variables['element'];
   $items = $element['#items'];
   $count = count($items);
@@ -226,7 +225,9 @@ function template_preprocess_slick(&$variables) {
   $js['mousewheel'] = $settings['mousewheel'] ? TRUE : FALSE;
 
   // Add the configuration as JSON object into slick container.
-  // Avoid possible future common namedspaced: data-slick.
+  // @todo change to data-slick for > 1.4 as data-slick is intentionally
+  // supported for this purpose.
+  // @see https://github.com/kenwheeler/slick/pull/407
   if (!isset($attributes['data-config']) && $count > 1) {
     $js_data = _slick_remove_default_optionset_options($optionset, $js);
 
@@ -266,7 +267,7 @@ function template_preprocess_slick(&$variables) {
   $variables['classes_array'] = $variables['attributes_array']['class'];
 
   // Add the basic library if no sub-modules, nor #attached in use.
-  if ($count > 1 && !isset($element['#attached'])) {
+  if ($count > 1 && !isset($element['#attached']) && ($settings['current_display'] == 'main')) {
     slick_add();
   }
 }
@@ -285,7 +286,9 @@ function template_preprocess_slick_item(&$variables) {
   $element = $variables['element'];
   $item = $element['#item'];
   $settings = isset($element['#settings']) ? $element['#settings'] : array();
-  $item_settings = isset($item['#settings']) ? $item['#settings'] : $settings;
+  // $item is not always an array such as from views. This may results in
+  // unexpected "&lt;" for custom classes below when checking $item_settings.
+  $item_settings = is_array($item) && isset($item['#settings']) ? $item['#settings'] : $settings;
   $captions = $element['#caption'];
 
   $variables['item'] = $item;
@@ -423,7 +426,7 @@ function template_preprocess_slick_item(&$variables) {
   }
 
   if (isset($item_settings['classes']) && $item_settings['classes']) {
-    $attributes['class'][] = $item_settings['classes'];
+    $attributes['class'][] = strip_tags($item_settings['classes']);
   }
 
   $variables['settings'] = $settings;
