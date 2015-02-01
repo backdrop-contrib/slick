@@ -159,8 +159,8 @@
         lazyLoad: merged.lazyLoad,
         dotsClass: merged.dotsClass,
         rtl: merged.rtl,
-        prevArrow: $('.slick__arrow .slick-prev', t) || merged.prevArrow,
-        nextArrow: $('.slick__arrow .slick-next', t) || merged.nextArrow,
+        prevArrow: $('.slick__arrow .slick-prev', t),
+        nextArrow: $('.slick__arrow .slick-next', t),
          // $(merged.appendArrows, t), if using data-slick
         appendArrows: merged.appendArrows,
         customPaging: function(slick, i) {

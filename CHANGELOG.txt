@@ -1,6 +1,9 @@
 
-Slick 7.x-2.0-dev, 2014-2-1
+Slick 7.x-2.0-dev, 2015-2-1
 ---------------------------
+Updated year CHANGELOG from 2014 to 2015.
+Removed useless merged.prevArrow + merged.nextArrow from slick.load.js since
+  arrows already added by HTML whenever required.
 Added hook_requirements() to slick.install.
 Added thumbnail caption to slick_fields and slick_views like yahoo/youtube
   thumbnail captioning.
