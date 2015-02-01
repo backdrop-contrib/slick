@@ -21,6 +21,14 @@ function slick_get_options() {
   if (!isset($options)) {
     $options = array();
 
+    $options['mobileFirst'] = array(
+      'title' => t('Mobile first'),
+      'description' => t('Responsive settings use mobile first calculation.'),
+      'type' => 'checkbox',
+      'cast' => 'bool',
+      'default' => FALSE,
+    );
+
     $options['asNavFor'] = array(
       'title' => t('asNavFor target'),
       'description' => t('Set the slider to be the navigation of other slider (Class or ID Name). Use selector identifier ("." or "#") accordingly. If class, use the provided Wrapper class under General as needed, e.g.: if the main display has class "slick--for", and the thumbnail navigation "slick--nav", place the opposite here as its target. Or use existing classes based on optionsets, e.g.: .slick--optionset--main, or .slick--optionset--main-nav. Overriden per field formatter.'),
@@ -227,10 +235,10 @@ function slick_get_options() {
 
     $options['slide'] = array(
       'title' => t('Slide element'),
-      'description' => t("Element query to use as slide. Make sure to be specific with the slide item class, default to .slick__slide if using Fields formatter, or the provided theme_slick(). Otherwise Slick will wrap all DIV as slide item which is problematic to add extra stuffs like arrows container or thumbnail pagers."),
+      'description' => t("Element query to use as slide. Slick will use any direct children as slides, without having to specify which tag or selector to target."),
       'type' => 'textfield',
       'cast' => 'string',
-      'default' => 'div',
+      'default' => '',
     );
 
     $options['slidesToShow'] = array(
@@ -277,7 +285,7 @@ function slick_get_options() {
 
     $options['edgeFriction'] = array(
       'title' => t('Edge friction'),
-      'description' => t('Swipetoslide fix.'),
+      'description' => t("Resistance when swiping edges of non-infinite carousels. If you don't want resistance, set it to 1."),
       'type' => 'textfield',
       'cast' => 'int',
       'default' => 0.35,
@@ -390,23 +398,28 @@ function slick_get_responsive_options($count = 0) {
 
     $options[$key]['breakpoint'] = array(
       'title' => t('Breakpoint'),
-      'description' => t('Breakpoint'),
+      'description' => t('Breakpoint width in pixel.'),
       'type' => 'textfield',
       'cast' => 'int',
       'default' => '',
       'field_suffix' => 'px',
     );
 
-    $options[$key]['settings'] = array(
-      'title' => t('Settings'),
-      'description' => t('Breakpoint settings'),
-      'type' => 'fieldset',
+    $options[$key]['unslick'] = array(
+      'title' => t('Unslick'),
+      'description' => t("Disable Slick at a given breakpoint. Note, you can't window shrink this, once you unslick, you are unslicked."),
+      'type' => 'checkbox',
+      'cast' => 'bool',
+      'default' => FALSE,
     );
+
+    $options[$key]['settings'] = array();
 
     // Duplicate main settings.
     // Clean up problematic dup options, since they have to be available once
     // for all. JS takes care of the copy on each responsive settings.
     unset(
+      $slick_options['mobileFirst'],
       $slick_options['asNavFor'],
       $slick_options['slide'],
       $slick_options['lazyLoad'],
@@ -454,17 +467,21 @@ function _slick_optionset_defaults($key = NULL, $set = NULL, $breakpoints = NULL
     $slick_responsive_options = slick_get_responsive_options($breakpoints);
     foreach ($slick_responsive_options as $i => $items) {
       foreach ($items as $name => $groups) {
-        if (is_array($groups)) {
-          if (isset($groups['default'])) {
+        switch ($name) {
+          case 'breakpoint':
+          case 'unslick':
             $defaults['responsives']['responsive'][$i][$name] = $groups['default'];
-          }
-          else {
-            foreach ($groups as $k => $group) {
-              if (is_array($group) && isset($group['default'])) {
-                $defaults['responsives']['responsive'][$i][$name][$k] = $group['default'];
+            break;
+
+          case 'settings':
+            if (is_array($groups)) {
+              foreach ($groups as $k => $group) {
+                if (is_array($group) && isset($group['default'])) {
+                  $defaults['responsives']['responsive'][$i][$name][$k] = $group['default'];
+                }
               }
             }
-          }
+            break;
         }
       }
     }
@@ -495,8 +512,8 @@ function _slick_optionset_defaults($key = NULL, $set = NULL, $breakpoints = NULL
  *   An array of Option Set options, default is loaded if none specified.
  *
  * @param array $customs
- *   An array of hand-coded JS options defined using #options property if passed
- *   via theme_slick().
+ *   An array of hand-coded JS options defined using #options property or those
+ *   manupulated at theme_slick() dependent on various options.
  *
  * @return array
  *   An array of reduced duplicated Option set options performance wise.
@@ -553,35 +570,36 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
       $cleaned = array();
       foreach ($cleaned_responsives as $key => $responsive) {
         $cleaned[$key]['breakpoint'] = $cleaned_responsives[$key]['breakpoint'];
-        $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults['settings']);
 
-        // Remove wasted dependent options if disabled, even if not empty.
-        if (empty($cleaned[$key]['settings']['autoplay'])) {
-          unset(
-            $cleaned[$key]['settings']['pauseOnHover'],
-            $cleaned[$key]['settings']['pauseOnDotsHover'],
-            $cleaned[$key]['settings']['autoplaySpeed']
-          );
+        // Isset check as we are growing from non-existent ones.
+        if (isset($cleaned_responsives[$key]['unslick']) && $cleaned_responsives[$key]['unslick']) {
+          $cleaned[$key]['settings'] = 'unslick';
+          unset($cleaned_responsives[$key]['unslick']);
         }
-        if (empty($cleaned[$key]['settings']['centerMode'])) {
-          unset($cleaned[$key]['settings']['centerPadding']);
-        }
-        if (empty($cleaned[$key]['settings']['swipe'])) {
-          unset($cleaned[$key]['settings']['swipeToSlide']);
-        }
-        if (empty($cleaned[$key]['settings']['dots'])) {
-          unset(
-            $cleaned[$key]['settings']['dotsClass'],
-            $cleaned[$key]['settings']['appendDots']
-          );
-        }
-        if (isset($cleaned[$key]['settings']['cssEaseOverride']) && $cleaned[$key]['settings']['cssEaseOverride']) {
-          $cleaned[$key]['settings']['cssEase'] = _slick_css_easing_mapping($cleaned[$key]['settings']['cssEaseOverride']);
-          unset($cleaned[$key]['settings']['cssEaseOverride']);
+        else {
+          $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults['settings']);
+
+          // Remove wasted dependent options if disabled, even if not empty.
+          if (empty($cleaned[$key]['settings']['autoplay'])) {
+            unset($cleaned[$key]['settings']['pauseOnHover'], $cleaned[$key]['settings']['pauseOnDotsHover'], $cleaned[$key]['settings']['autoplaySpeed']);
+          }
+          if (empty($cleaned[$key]['settings']['centerMode'])) {
+            unset($cleaned[$key]['settings']['centerPadding']);
+          }
+          if (empty($cleaned[$key]['settings']['swipe'])) {
+            unset($cleaned[$key]['settings']['swipeToSlide']);
+          }
+          if (empty($cleaned[$key]['settings']['dots'])) {
+            unset($cleaned[$key]['settings']['dotsClass'], $cleaned[$key]['settings']['appendDots']);
+          }
+          if (isset($cleaned[$key]['settings']['cssEaseOverride']) && $cleaned[$key]['settings']['cssEaseOverride']) {
+            $cleaned[$key]['settings']['cssEase'] = _slick_css_easing_mapping($cleaned[$key]['settings']['cssEaseOverride']);
+            unset($cleaned[$key]['settings']['cssEaseOverride']);
+          }
         }
       }
 
-      // Make sure to follow JS array.
+      // Be sure to follow JS array.
       $config['responsive'] = $cleaned;
     }
   }
@@ -616,17 +634,24 @@ function _slick_typecast_optionset(&$options, $breakpoints = NULL) {
       $slick_responsive_options = slick_get_responsive_options($breakpoints);
       foreach ($slick_responsive_options as $i => $items) {
         foreach ($items as $name => $groups) {
-          if (is_array($groups)) {
-            if ($name == 'breakpoint' && isset($groups['cast'])) {
+          switch ($name) {
+            case 'breakpoint':
+            case 'unslick':
               settype($options['responsives']['responsive'][$i][$name], $groups['cast']);
-            }
-            elseif ($name == 'settings') {
-              foreach ($groups as $key => $group) {
-                if (is_array($group) && isset($group['cast']) && isset($group['default'])) {
-                  settype($options['responsives']['responsive'][$i][$name][$key], $group['cast']);
+              break;
+
+            case 'settings':
+              if (is_array($groups)) {
+                foreach ($groups as $key => $group) {
+                  if (is_array($group) && isset($group['cast']) && isset($group['default'])) {
+                    settype($options['responsives']['responsive'][$i][$name][$key], $group['cast']);
+                  }
                 }
               }
-            }
+              break;
+
+            default:
+              break;
           }
         }
       }
@@ -754,12 +779,14 @@ function _slick_css_easing_options($all = FALSE) {
   if (!isset($css_easings)) {
     $css_easings = array();
     $available_easings = array(
+
       // Defaults/ Native.
       'ease' => 'ease|ease',
       'linear' => 'linear|linear',
       'ease-in' => 'ease-in|ease-in',
       'ease-out' => 'ease-out|ease-out',
       'swing' => 'swing|ease-in-out',
+
       // Penner Equations (approximated).
       'easeInQuad' => 'easeInQuad|cubic-bezier(0.550, 0.085, 0.680, 0.530)',
       'easeInCubic' => 'easeInCubic|cubic-bezier(0.550, 0.055, 0.675, 0.190)',

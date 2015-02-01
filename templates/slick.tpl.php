@@ -17,13 +17,15 @@
 ?>
 <div<?php print $attributes; ?>>
 
-  <?php foreach ($items as $delta => $item): ?>
-    <?php print render($item); ?>
-  <?php endforeach; ?>
+  <div<?php print $content_attributes; ?>>
+    <?php foreach ($items as $delta => $item): ?>
+      <?php print render($item); ?>
+    <?php endforeach; ?>
+  </div>
 
   <?php if (count($items) > 1 && $settings['arrows']): ?>
     <nav class="slick__arrow">
-      <?php $settings['prev_arrow'] && print $settings['prev_arrow']; ?>
+      <?php isset($settings['prev_arrow']) && print $settings['prev_arrow']; ?>
       <?php if ($settings['has_arrow_down']): ?>
         <?php
           $is_target = $settings['arrow_down_target'] ? ' data-target="#' . $settings['arrow_down_target'] . '"' : '';
@@ -31,7 +33,7 @@
         ?>
         <button class="slick-down jump-scroll"<?php print $is_target . $is_offset; ?>></button>
       <?php endif; ?>
-      <?php $settings['next_arrow'] && print $settings['next_arrow']; ?>
+      <?php isset($settings['next_arrow']) && print $settings['next_arrow']; ?>
     </nav>
   <?php endif; ?>
 

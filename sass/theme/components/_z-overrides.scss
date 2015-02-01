@@ -2,9 +2,9 @@
  * Misc overrides core slick.
  */
 /* Hide non-js lazy-loaded image to show <noscript> one instead, if the theme
-supports no-js */
-.no-js img.lazy {
-  display: none !important;
+supports no-js, otherwise IMG tag with dummy placeholder. */
+.no-js .slick img.lazy {
+  display: none;
 }
 
 .slick-initialized {
@@ -14,22 +14,4 @@ supports no-js */
 .slick,
 .slick__slide {
   position: relative;
-}
-
-// @todo verify the class is not removed, otherwise drop.
-.slick-loading {
-  // background: white url(./ajax-loader.gif) center center no-repeat;
-  // Prevent all slides visible at once until ready.
-  .slick-track {
-    opacity: 0;
-  }
-
-  .slide__image {
-    display: block;
-    visibility: hidden;
-  }
-
-  .slick__slide {
-    visibility: hidden;
-  }
 }

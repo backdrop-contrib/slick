@@ -12,7 +12,7 @@
 
       $(player, context).once('slick-media', function () {
         var t = $(this),
-          $slider = t.closest('.slick');
+          $slider = t.closest('.slick__slider');
 
         // Remove SRC attributes to avoid direct autoplay, if mistakenly enabled.
         t.find('iframe').attr('src', 'about:blank');
@@ -43,9 +43,9 @@
           // Clean up any pause marker.
           $('.is-paused').removeClass('is-paused');
 
-          // Last, pause the slide, for just in case autoplay is on and
+          // Last, pause the slide, for just in case autoplay is on, and
           // pauseOnHover is disabled, and then trigger autoplay.
-          $slider.addClass('is-paused').slickPause();
+          $slider.addClass('is-paused').slick('slickPause');
 
           t.closest(player).addClass('is-playing').find('iframe').attr('src', url);
           return false;
@@ -58,22 +58,16 @@
         });
 
         // Turns off video if any button clicked.
-        $slider.on('click.media-close-other', '.slick__arrow button, > button', function (e) {
-           $slider.find('.media-icon--close').trigger('click.media-close');
+        $slider
+        .on('click.media-close-other', '.slick__arrow button, > button', function (e) {
+          $slider.find('.media-icon--close').trigger('click.media-close');
+        })
+        .on('afterChange', function (e, slick, currentSlide) {
+          $('.media-icon--close', $slider).trigger('click.media-close');
+          // Drupal.slick.setCurrent($slider, currentSlide);
         });
+        ;
       });
     }
   };
-
-  // Turn off current video if the slide changes, e.g. by dragging the slide.
-  Drupal.slick.callbacks.onAfterChange = function (slider, index) {
-    var t = '#' + slider.$slider.attr('id');
-    if ($(t).hasClass('slick--display--main')) {
-      $('.media-icon--close', t).trigger('click.media-close');
-    }
-    // Rebuild slick.load.js onAfterChange, since overriden by this one,
-    // and we only have one onAfterChange.
-    Drupal.slick.setCurrent(t, index);
-  };
-
 })(jQuery);

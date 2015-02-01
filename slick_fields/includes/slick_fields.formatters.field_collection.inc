@@ -53,7 +53,6 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               // Large background video is not supported, any taker?
               $file = $slide_image[0]['file'];
               $fallback = $slide_image['#items'][0];
-              // @todo recheck versions, #image_style vs #style_name
               $image_style = isset($file['#style_name']) ? $file['#style_name'] : (isset($file['#image_style']) ? $file['#image_style'] : $image_style);
               $image['uri'] = isset($file['#path']) && $file['#path'] ? $file['#path'] : $fallback['uri'];
               $image['width'] = isset($file['#width']) ? $file['#width'] : NULL;
@@ -73,12 +72,9 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               $image['title'] = $file['title'];
 
               break;
-
-            // @todo or drop scald atom_reference.
           }
 
           // Provide thumbnail pagers if so configured.
-          // @todo use renderable array for D8, and convert slide to array.
           $thumbnail = '';
           $thumbnail_hover = '';
 
@@ -115,6 +111,14 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
             // Thumbnail static to copy over by JS.
             if ($settings['dots_thumbnail'] && $thumbnail_hover) {
               $slide['slide'] .= $thumbnail_hover;
+            }
+
+            // Thumbnail captions.
+            if (isset($settings['thumbnail_caption']) && !empty($settings['thumbnail_caption'])) {
+              $thumbnail_caption = $settings['thumbnail_caption'];
+              if (isset($fc[$thumbnail_caption][$langcode][0]['safe_value']) && $fc[$thumbnail_caption][$langcode][0]['safe_value']) {
+                $slide['caption']['data']['#markup'] = $fc[$thumbnail_caption][$langcode][0]['safe_value'];
+              }
             }
           }
 

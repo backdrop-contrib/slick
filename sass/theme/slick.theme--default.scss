@@ -4,9 +4,8 @@
 @import "compass";
 @import "breakpoint";
 
-// Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+// Import variables and abstractions.
+@import "../globals";
 /**
  * @file
  */

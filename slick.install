@@ -6,6 +6,42 @@
  */
 
 /**
+ * Implements hook_requirements().
+ *
+ * Checks for the Slick library.
+ */
+function slick_requirements($phase) {
+  $t = get_t();
+  $requirements = array();
+
+  // Check for the Slick library.
+  if ($phase == 'runtime') {
+    $path = libraries_get_path('slick');
+    if (!$path || !file_exists("{$path}/slick/slick.min.js")) {
+      $requirements['slick_library'] = array(
+        'description' => $t('The <a href="@url">Slick library</a> should be installed at [libraries-path]/slick.', array('@url' => 'https://github.com/kenwheeler/slick/')),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Not installed.'),
+        'title' => $t('Slick library'),
+      );
+    }
+
+    // Check for the minimum required jQuery version.
+    $jquery_version = variable_get('jquery_update_jquery_version', '1.5');
+    if (!version_compare($jquery_version, '1.7', '>=')) {
+      $requirements['slick_jquery_version'] = array(
+        'description' => $t('Incorrect jQuery version detected. Slick requires jQuery 1.7 or higher. Please change your <a href="!settings">jQuery Update settings</a>.', array('!settings' => url('admin/config/development/jquery_update'))),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Not installed. Please enable jQuery 1.7 or higher.'),
+        'title' => $t('Slick jQuery version'),
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
  * Implements hook_schema().
  */
 function slick_schema() {

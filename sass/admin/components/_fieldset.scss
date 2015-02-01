@@ -69,8 +69,14 @@
       @include visually-hidden;
     }
     .fieldset--responsive {
-      padding-left: $horz-spacing-unit;
-      padding-right: $horz-spacing-unit;
+      padding-left: 0;
+      padding-right: 0;
+      padding-top: $vert-spacing-unit *2;
+      
+      > .fieldset-wrapper {
+        padding-left: $horz-spacing-unit;
+        padding-right: $horz-spacing-unit;
+      }
       
       .fieldset--settings {
         border: 1px solid $light-grey;

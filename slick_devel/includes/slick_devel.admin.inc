@@ -26,13 +26,19 @@ function slick_devel_form_settings() {
     '#default_value' => variable_get('slick_devel', FALSE),
   );
 
-  $form['library']['slick_devel_load'] = array(
+  $form['library']['slick_devel_disable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Disable module slick.load.js'),
+    '#default_value' => variable_get('slick_devel_disable', FALSE),
+  );
+
+  $form['library']['slick_devel_replace'] = array(
     '#type' => 'checkbox',
     '#title' => t('Replace the slick.load.js with development version: slick.load.devel.js'),
-    '#default_value' => variable_get('slick_devel_load', FALSE),
+    '#default_value' => variable_get('slick_devel_replace', FALSE),
     '#states' => array(
       'invisible' => array(
-        array(':input[name="slick_devel"]' => array('checked' => FALSE)),
+        array(':input[name="slick_devel_disable"]' => array('checked' => TRUE)),
       ),
     ),
   );

@@ -4,9 +4,8 @@
 @import "compass";
 @import "breakpoint";
 
-// Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+// Import variables and abstractions.
+@import "../globals";
 
 /**
  * @file.
@@ -87,18 +86,8 @@
   @include user-select(text);
 }
 
-/**
- * @todo drop, temp Bartik overrides.
- */
-#content .slide__title {
-  margin: 10px 0 5px;
-  line-height: 1.2;
-}
-
-#content .slick--carousel .slide__title {
-  @include font-size(22px);
-}
-
-.slick .field-type-image img {
-  margin-bottom: 0;
+/* Fix excessive height with ondemand lazyLoad prior to being visible */
+.slick--ondemand .slick__slide:not(.slick-active) img[data-lazy] {
+  width: 40px;
+  height: 40px;
 }

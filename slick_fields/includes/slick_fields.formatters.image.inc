@@ -86,6 +86,20 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
       if ($settings['dots_thumbnail'] && $thumbnail_hover) {
         $image_slide .= $thumbnail_hover;
       }
+
+      // Thumbnail captions.
+      if (isset($settings['thumbnail_caption']) && !empty($settings['thumbnail_caption'])) {
+        $thumbnail_caption = '';
+        if ($settings['thumbnail_caption'] == 'title_field' && !empty($image['title'])) {
+          $thumbnail_caption = $image['title'];
+        }
+        elseif ($settings['thumbnail_caption'] == 'alt_field' && !empty($image['alt'])) {
+          $thumbnail_caption = $image['alt'];
+        }
+        if ($thumbnail_caption) {
+          $slide['caption']['data']['#markup'] = filter_xss($thumbnail_caption);
+        }
+      }
     }
 
     // Pass it over to theme_slick_media.

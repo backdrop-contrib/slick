@@ -4,9 +4,8 @@
 @import "compass";
 @import "breakpoint";
 
-// Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+// Import variables and abstractions.
+@import "../globals";
 /**
  * @file
  * Best with 1 slidesToShow, placed at external region.
@@ -40,11 +39,14 @@ body {
   .page-admin & {
     position: relative;
   }
-
-  .slick--skin--fullscreen {
+  
+  .slick--skin--fullscreen,
+  .slick__slider {
     height: 100%;
     min-height: 100%;
+  }
 
+  .slick--skin--fullscreen {
     .slick-list,
     .slick-track,
     .slick__slide,

@@ -22,6 +22,7 @@ function slick_fields_field_formatter_info() {
       'optionset_thumbnail_label' => '',
       'asnavfor_main' => '',
       'asnavfor_thumbnail' => '',
+      'asnavfor_auto' => '',
       'dots_main' => '',
       'dots_thumbnail' => '',
       'skin' => '',
@@ -30,6 +31,7 @@ function slick_fields_field_formatter_info() {
       'image_style' => '',
       'thumbnail_style' => '',
       'thumbnail_hover' => '',
+      'thumbnail_caption' => '',
       'slide_image' => '',
       'slide_caption' => array(),
 			'media_switch' => '',
@@ -111,6 +113,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   $link_options    = array();
   $color_options   = array();
   $slide_classes   = array();
+  $thumbnail_caption_options = array();
   $optionsets = slick_optionset_options();
 
   $is_views_ui = '';
@@ -206,7 +209,8 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#attributes' => array('class' => array('is-tooltip', 'js-expandable')),
     '#states' => array(
       'invisible' => array(
-        'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
+        array('select[name*="[optionset_thumbnail]"]' => array('value' => '')),
+        array(':input[name*="[asnavfor_auto]"]' => array('checked' => TRUE)),
       ),
     ),
   );
@@ -217,6 +221,36 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#default_value' => $settings['asnavfor_thumbnail'],
     '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the thumbnail display, e.g.: #slick-node-page-field-images-1 or .slick--for. This should address the main display class or ID attributes.'),
     '#attributes' => array('class' => array('is-tooltip', 'js-expandable')),
+    '#states' => array(
+      'invisible' => array(
+        array('select[name*="[optionset_thumbnail]"]' => array('value' => '')),
+        array(':input[name*="[asnavfor_auto]"]' => array('checked' => TRUE)),
+      ),
+    ),
+  );
+
+  $element['asnavfor_auto'] = array(
+    '#title' => t('asNavFor auto selectors'),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['asnavfor_auto'],
+    '#field_suffix' => '',
+    '#title_display' => 'before',
+    '#description' => t('If checked, asNavFor selectors will be determined by the current field ID selectors automatically. Check if unsure with selectors.'),
+    '#attributes' => array('class' => array('is-tooltip')),
+    '#states' => array(
+      'invisible' => array(
+        'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
+      ),
+    ),
+  );
+
+  $element['thumbnail_caption'] = array(
+    '#type' => 'select',
+    '#title' => t('Thumbnail caption'),
+    '#default_value' => isset($settings['thumbnail_caption']) && $settings['thumbnail_caption'] ? $settings['thumbnail_caption'] : '',
+    '#empty_option' => t('- None -'),
+    '#description' => t('Thumbnail caption maybe just titles.'),
+    '#attributes' => array('class' => array('is-tooltip')),
     '#states' => array(
       'invisible' => array(
         'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
@@ -278,6 +312,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         'link_field',
         'url_external',
       ));
+      $thumbnail_caption_options = _slick_fields_get_media_fields($instance, array('text_textfield', 'text_textarea'));
       break;
 
     // This should go as a separate module, but alas.
@@ -306,6 +341,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         'link_field',
         'url',
       ));
+      $thumbnail_caption_options = _slick_fields_get_fc_fields($instance, array('text', 'text_long'));
       break;
 
     default:
@@ -433,8 +469,6 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#default_value' => $settings['media_switch'],
     '#options' => array(
       'iframe-switch' => t('Image to iframe switcher'),
-      // 'colorbox-switch' => t('Image to colorbox switcher'),
-      // @todo image to colorbox node, any taker?
     ),
     '#empty_option' => t('- None -'),
     '#description' => t('Supports Colorbox and Media iframe switcher.'),
@@ -519,14 +553,16 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       unset($element['media_switch']);
     }
 
+    $slide_caption_options = $thumbnail_caption_options = array(
+      'title_field' => t('Title'),
+      'alt_field' => t('Alt'),
+    );
+
     $element['slide_caption'] = array(
       '#title' => t('Caption fields'),
       '#type' => 'checkboxes',
       '#default_value' => $settings['slide_caption'],
-      '#options' => array(
-        'title_field' => t('Title'),
-        'alt_field' => t('Alt'),
-      ),
+      '#options' => $slide_caption_options,
 			'#description' => t('Captions will attempt to use Alt and Title attributes if enabled.'),
       '#attributes' => array('class' => array('is-tooltip')),
     );
@@ -558,6 +594,10 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
           ),
       ));
     }
+  }
+
+  if ($thumbnail_caption_options) {
+    $element['thumbnail_caption']['#options'] = $thumbnail_caption_options;
   }
 
   // Picture module integration.
@@ -670,13 +710,21 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
     }
 
     if (isset($settings['optionset_thumbnail'])) {
-      if (isset($settings['asnavfor_main'])) {
-        $asnavfor_main = $settings['asnavfor_main'] ? $settings['asnavfor_main'] : t('None');
-        $summary[] = t('asNavFor main: @asnavfor_main', array('@asnavfor_main' => $asnavfor_main));
+
+      $summary[] = isset($settings['thumbnail_caption']) && $settings['thumbnail_caption'] ? t('Yes') : t('None');
+
+      if (isset($settings['asnavfor_auto']) && $settings['asnavfor_auto']) {
+        $summary[] = t('asNavFor auto selectors: Yes');
       }
-      if (isset($settings['asnavfor_thumbnail'])) {
-        $asnavfor_thumbnail = $settings['asnavfor_thumbnail'] ? $settings['asnavfor_thumbnail'] : t('None');
-        $summary[] = t('asNavFor thumbnail: @asnavfor_thumbnail', array('@asnavfor_thumbnail' => $asnavfor_thumbnail));
+      else {
+        if (isset($settings['asnavfor_main'])) {
+          $asnavfor_main = $settings['asnavfor_main'] ? $settings['asnavfor_main'] : t('None');
+          $summary[] = t('asNavFor main: @asnavfor_main', array('@asnavfor_main' => $asnavfor_main));
+        }
+        if (isset($settings['asnavfor_thumbnail'])) {
+          $asnavfor_thumbnail = $settings['asnavfor_thumbnail'] ? $settings['asnavfor_thumbnail'] : t('None');
+          $summary[] = t('asNavFor thumbnail: @asnavfor_thumbnail', array('@asnavfor_thumbnail' => $asnavfor_thumbnail));
+        }
       }
     }
 
@@ -809,6 +857,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $settings['attach_colorbox'] = $settings['media_switch'] == 'colorbox-switch';
     $field_name = $settings['field_name'];
     $view_mode = !empty($settings['view_mode']) ? $settings['view_mode'] : 'full';
+    $is_asnavfor = isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'];
+    $is_asnavfor_auto = isset($settings['asnavfor_auto']) && $settings['asnavfor_auto'];
 
     // Load the optionset to check for lazyLoad.
     $optionset = $settings['optionset'];
@@ -832,10 +882,21 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $attach['attach_colorbox']       = $settings['attach_colorbox'];
 		$attach['attach_mousewheel']     = $settings['mousewheel'];
 
-    list($id, , $bundle) = entity_extract_ids($entity_type, $entity);
+    list($entity_id, , $bundle) = entity_extract_ids($entity_type, $entity);
     $slick_id = &drupal_static('slick_id', 0);
     $item_id = drupal_clean_css_identifier("slick-{$entity_type}-{$bundle}-{$field_name}-" . ++$slick_id);
+    $thumbnail_id = $item_id . '-thumbnail';
     $settings['attributes']['id'] = $item_id;
+    $settings['content_attributes']['id'] = $item_id . '-slider';
+
+    if ($is_asnavfor) {
+      if ($is_asnavfor_auto) {
+        $settings['asnavfor_target'] = '#' . $thumbnail_id . '-slider';
+      }
+      elseif ($settings['asnavfor_main']) {
+        $settings['asnavfor_target'] = check_plain($settings['asnavfor_main']);
+      }
+    }
 
     module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.global');
     switch ($field['type']) {
@@ -880,10 +941,19 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       '#attached' => slick_attach($attach),
     );
 
-    if ($settings['optionset_thumbnail']) {
-      $settings['attributes']['id'] = $item_id . '-thumbnail';
+    if ($is_asnavfor) {
+      $settings['attributes']['id'] = $thumbnail_id;
+      $settings['content_attributes']['id'] = $thumbnail_id . '-slider';
       $settings['optionset'] = $settings['optionset_thumbnail'];
       $settings['current_display'] = 'thumbnail';
+
+      if ($is_asnavfor_auto) {
+        $settings['asnavfor_target'] = '#' . $item_id . '-slider';
+      }
+      elseif ($settings['asnavfor_thumbnail']) {
+        $settings['asnavfor_target'] = check_plain($settings['asnavfor_thumbnail']);
+      }
+
       $slick[1] = array(
         '#theme' => 'slick',
         '#items' => $thumb,

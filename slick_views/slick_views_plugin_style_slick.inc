@@ -22,10 +22,13 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       'skin_thumbnail' => array('default' => ''),
       'asnavfor_main' => array('default' => ''),
       'asnavfor_thumbnail' => array('default' => ''),
+      'asnavfor_auto' => array('default' => FALSE),
+      'thumbnail_caption' => array('default' => ''),
       'grid' => array('default' => ''),
       'grid_medium' => array('default' => ''),
       'grid_small' => array('default' => ''),
       'visible_slides' => array('default' => ''),
+      'preserve_keys' => array('default' => FALSE),
       'slide_field_wrapper' => array('default' => FALSE),
       'slide_title' => array('default' => ''),
       'slide_image' => array('default' => ''),
@@ -110,6 +113,25 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       '#attributes' => array('class' => array('is-tooltip')),
     );
 
+    $element['asnavfor_auto'] = array(
+      '#title' => t('asNavFor auto selectors'),
+      '#type' => 'checkbox',
+      '#default_value' => $settings['asnavfor_auto'],
+      '#field_suffix' => '',
+      '#title_display' => 'before',
+      '#description' => t('If checked, asNavFor selectors will be determined by the current view ID selector automatically. Check if unsure with selectors.'),
+      '#attributes' => array('class' => array('is-tooltip')),
+    );
+
+    $element['thumbnail_caption'] = array(
+      '#type' => 'select',
+      '#title' => t('Thumbnail caption'),
+      '#default_value' => $settings['thumbnail_caption'],
+      '#empty_option' => t('- None -'),
+      '#description' => t('Thumbnail caption maybe just titles.'),
+      '#attributes' => array('class' => array('is-tooltip')),
+    );
+
     $grid_options = drupal_map_assoc(range(1, 12));
     $element['grid'] = array(
       '#type' => 'select',
@@ -151,11 +173,20 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       '#attributes' => array('class' => array('is-tooltip')),
     );
 
+    $element['preserve_keys'] = array(
+      '#title' => t('Preserve keys'),
+      '#type' => 'checkbox',
+      '#default_value' => $settings['preserve_keys'],
+      '#description' => t('If checked, keys will be preserved. Default is FALSE which will reindex the grid chunk numerically'),
+      '#attributes' => array('class' => array('is-tooltip')),
+      '#field_suffix' => '.',
+      '#title_display' => 'before',
+    );
+
     $element['slide_field_wrapper'] = array(
       '#title' => t('Provide Slick field wrapper'),
       '#type' => 'checkbox',
       '#default_value' => $settings['slide_field_wrapper'],
-      '#empty_option' => t('- None -'),
       '#description' => t('If checked, Slick will provides Slick markups for the following fields.'),
       '#attributes' => array('class' => array('is-tooltip')),
       '#field_suffix' => '',
@@ -167,10 +198,10 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
     $layout_options = array();
     $link_options = array();
     $title_options = array();
+    $thumbnail_caption_options = array();
 
     $fields = $this->view->display_handler->get_handlers('field');
     foreach ($fields as $field => $handler) {
-
       if (isset($handler->field_info)) {
         $type = $handler->field_info['type'];
 
@@ -186,9 +217,13 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
 
           case 'text':
           case 'text_long':
+          case 'text_with_summary':
           case 'link_field':
             $link_options[$field] = $handler->ui_name();
             $title_options[$field] = $handler->ui_name();
+            if ($type != 'link_field') {
+              $thumbnail_caption_options[$field] = $handler->ui_name();
+            }
             break;
         }
       }
@@ -196,10 +231,15 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       // Content: title is not really a field.
       if ($handler->field == 'title') {
         $title_options[$field] = $handler->ui_name();
+        $thumbnail_caption_options[$field] = $handler->ui_name();
       }
 
       // Caption can be anything to get custom works going.
       $caption_options[$field] = $handler->ui_name();
+    }
+
+    if ($thumbnail_caption_options) {
+      $element['thumbnail_caption']['#options'] = $thumbnail_caption_options;
     }
 
     // Simple uniform layout.
@@ -314,15 +354,23 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
         'slide_field_wrapper',
         'id',
         'asnavfor_main',
-        'asnavfor_thumbnail',
         'grid',
         'grid_medium',
         'grid_small',
         'visible_slides',
+        'preserve_keys',
       ))) {
         $form['slick'][$key]['#states'] = array(
           'visible' => array(
             ':input[name*="[slide_field_wrapper]"]' => array('checked' => TRUE),
+          ),
+        );
+      }
+      if (in_array($key, array('thumbnail_caption', 'asnavfor_auto'))) {
+        $form['slick'][$key]['#states'] = array(
+          'invisible' => array(
+            array('select[name*="[optionset_thumbnail]"]' => array('value' => '')),
+            array(':input[name*="[slide_field_wrapper]"]' => array('checked' => FALSE)),
           ),
         );
       }
@@ -331,10 +379,17 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
           'invisible' => array(
             array('select[name*="[optionset_thumbnail]"]' => array('value' => '')),
             array(':input[name*="[slide_field_wrapper]"]' => array('checked' => FALSE)),
+            array(':input[name*="[asnavfor_auto]"]' => array('checked' => TRUE)),
           ),
         );
       }
-      if (in_array($key, array('grid_medium', 'grid_small', 'visible_slides'))) {
+      $grids = array(
+        'grid_medium',
+        'grid_small',
+        'visible_slides',
+        'preserve_keys',
+      );
+      if (in_array($key, $grids)) {
         $form['slick'][$key]['#states'] = array(
           'invisible' => array(
             array('select[name$="[grid]"]' => array('value' => '')),
@@ -378,17 +433,23 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       if (!empty($this->options['slide_field_wrapper'])) {
         foreach ($rows as $index => $row) {
           // Add main image field if so configured.
-          // @todo get raw values to work with lazyLoad and fullscreen skin.
           if (!empty($this->options['slide_image'])) {
             $slide_image = $this->options['slide_image'];
-            $slide_thumbnail = '';
+            $slide_thumbnail = $thumbnail_caption = '';
             if (!empty($this->options['slide_thumbnail'])) {
               $slide_thumbnail = $this->options['slide_thumbnail'];
+            }
+
+            if (isset($this->options['thumbnail_caption']) && !empty($this->options['thumbnail_caption'])) {
+              $thumbnail_caption = $this->options['thumbnail_caption'];
             }
 
             $rows[$index]->image = $this->get_field($index, $slide_image);
             if ($slide_thumbnail) {
               $rows[$index]->thumbnail = $this->get_field($index, $slide_thumbnail);
+              if ($thumbnail_caption) {
+                $rows[$index]->thumbnail_caption = $this->get_field($index, $thumbnail_caption);
+              }
             }
           }
 

@@ -304,6 +304,11 @@ body {
   word-wrap: normal;
 }
 .form--slick .fieldset--responsive--ajax .fieldset--responsive {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 60px;
+}
+.form--slick .fieldset--responsive--ajax .fieldset--responsive > .fieldset-wrapper {
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -665,37 +670,6 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   padding-top: 20px;
   width: 100%;
 }
-.form--slick .vertical-tabs {
-  /**
-   * Prevent text inputs from overflowing when container is too narrow. "width" is
-   * applied to override hardcoded cols or size attributes and used in conjunction
-   * with "box-sizing" to prevent box model issues from occurring in most browsers.
-   */
-    /*
-    .form-type-textfield {
-      input {
-        width: auto;
-        max-width: 140px;
-      }
-      .form-text--int {
-        max-width: 50px;
-      }
-
-      .js-expandable {
-        @include transition($transition-width);
-      }
-
-      &.js-on-focus {
-        .js-expandable {
-          max-width: 280px;
-          position: absolute;
-          width: 280px;
-          z-index: 2;
-        }
-      }
-    }
-    */
-}
 .form--slick .vertical-tabs .form-item {
   border-left: 1px solid #e7e7e7;
   border-right: 1px solid #e7e7e7;
@@ -735,12 +709,10 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
 /**
  * Overrides
  */
-.form--slick .fieldset-wrapper div[class*="-breakpoint"] {
-  background: none;
+.form--slick .fieldset-wrapper div[class*="-breakpoint"],
+.form--slick .fieldset-wrapper div[class*="-unslick"] {
   border: 0;
-  clear: both;
-  float: none;
-  width: 100%;
+  background: none;
 }
 .form--slick .form-item.form-type-checkboxes {
   clear: both;

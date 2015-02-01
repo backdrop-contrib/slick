@@ -1,8 +1,82 @@
 
+Slick 7.x-2.0-dev, 2014-2-1
+---------------------------
+Added hook_requirements() to slick.install.
+Added thumbnail caption to slick_fields and slick_views like yahoo/youtube
+  thumbnail captioning.
+
+
+Slick 7.x-2.0-dev, 2014-1-30
+----------------------------
+Please read below before upgrading to Slick 1.4:
+Breaking changes: https://github.com/kenwheeler/slick/releases/tag/1.4.0
+  - slide - The default value of the slide option has been changed to blank.
+    This means that slick will use any direct children as slides, without having
+    to specify which tag or selector to target.
+    Consequencies:
+    * Added direct child container within .slick to hold the slides, i.e.:
+      .slick__slider. Previously slides are direct children of .slick container.
+    * Slick consequently must be initilialized at .slick__slider, otherwise we
+      always have one slide.
+    * "slick__arrow" can not be placed within .slick container directly even
+      with the previous workaround by adding a specific class, and different
+      selector. To overcome this, added additional container .slick__slider
+      within .slick, so that .slick__arrow is not fetched as part of slides.
+    * focusOnSelect , e.g. with thumbnail navigation, will not work anymore, so
+      .slick__slide class added automatically only when needed now.
+    * All in all, this is mostly breaking asNavFor, so be sure to update the
+      asNavFor selectors accordingly at Field formatter and Views pages, e.g.:
+      Before: #slick-nodes targetting .slick container.
+      After: #slick-nodes-slider (note "-slider") targetting .slick__slider.
+
+      Or adding " .slick__slider" to your current selector should resolve, e.g.:
+      Before: #slick-nodes
+      After: #slick-nodes .slick__slider
+      Apply it to both asNavFor Main and asNavFor Thumbnail.
+
+      Or if you are using sub-modules, and unsure, simply check the new option:
+      "asNavFor auto selector" at:
+      - admin/structure/types/manage/CONTENT_TYPE/display
+      - admin/structure/views/view/VIEW
+      This will auto generate the proper asNavFor selectors accordingly instead.
+      See README.txt for the new HTML structure
+
+   - Methods replaced by events
+     Consequencies:
+     * Drupal.slick.callbacks dropped, encouraged to use events now, see
+     slick.media.js.
+     We can bring this callback back if any good reason other than placing
+     it somewhere in the slick.load.js, only then it is not specific to library.
+
+   - slick.css has been forked into two different files. slick.css is now the
+     core functional slick css file, while slick-theme.css are the default
+     styling.
+     Consequencies:
+     * slick-theme.css is optional, and only added if you have chosen a Skin.
+     This is a great plus for advanced work, e.g.: use own arrow icons.
+
+Added "Unslick" option to disable Slick at a given breakpoint. Note, you can't
+  window shrink this, once you unslick, you are unslicked.
+Added "asNavFor auto selectors" option to determine asNavFor selectors by the
+  current field/view ID selectors automatically as opposed to manual selectors.
+Updated slick.load.js, slick.media.js to use events, not callback anymore.
+Updated slick.tpl.php, SlickOptionsetUi, etc. to deal with the breaking changes
+  introduced at Slick 1.4.
+  Be sure to update slick.tpl.php, etc., if already customized.
+Updated to Slick 1.4.
+
+Slick 7.x-2.0-dev, 2014-1-29
+----------------------------
+Added unslick option for Slick 1.4 to disable Slick at breakpoint.
+Added mobileFirst option for Slick 1.4.
+
+Added Slick example sub-module, be sure to have field_image and field_images as
+  no fields installed by default, see admin/reports/fields.
+Fixed for slick_devel_preprocess_slick() applied globally.
 
 Slick 7.x-2.0-dev, 2014-1-26
 ----------------------------
-Updated workarounds to become permanent, since core library leaves them to the 
+Updated workarounds to become permanent, since core library leaves them to the
   implementors for various reasons, such as: mousewheel, arrows issues, etc.
 Added slick_devel.module to ease developing the latest features of the library.
 Updated data-slick-index reference to use static class with slide--N classes
@@ -20,7 +94,7 @@ Added link field as option for slide title for both file and field collection.
 Slick 7.x-2.0-dev, 2014-1-24
 ----------------------------
 Added random option to randomize slide orders, useful to manipulate cached
-  blocks.
+  blocks such ads rotation, or random products.
   See https://github.com/kenwheeler/slick/issues/359
   See http://reddit.com/r/slickcarousel/comments/2kyu51/random_slide_order
 

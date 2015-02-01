@@ -5,7 +5,7 @@
  * Slick carousel integration, the last carousel you'll ever need.
  */
 
-define('SLICK_VERSION', '1.3');
+define('SLICK_VERSION', '1.4');
 
 /**
  * Implements hook_theme().
@@ -143,7 +143,6 @@ function slick_library() {
     ),
   );
 
-  // @todo mousewheel, no module for drupal 7 by now.
   $libraries['mousewheel'] = array(
     'title' => 'jQuery Mousewheel',
     'vendor url' => 'https://github.com/brandonaaron/jquery-mousewheel',
@@ -243,7 +242,7 @@ function slick_libraries_info() {
     ),
   );
 
-  // Alternative to jqeasing if using .make file.
+  // Alternative to jqeasing.
   $libraries['slick.easing'] = array(
     'name' => 'jQuery Easing',
     'vendor url' => 'https://github.com/gdsmith/jquery.easing',
@@ -259,7 +258,7 @@ function slick_libraries_info() {
     ),
   );
 
-  // @todo mousewheel, no module for drupal 7 by now.
+  // No module for drupal 7 by now.
   $libraries['mousewheel'] = array(
     'name' => 'jQuery Mousewheel',
     'vendor url' => 'https://github.com/brandonaaron/jquery-mousewheel',
@@ -296,6 +295,7 @@ function slick_attach(array $attach) {
     'attach_easing'         => TRUE,
     'attach_mousewheel'     => FALSE,
     'attach_slick'          => TRUE,
+    'attach_slick_element'  => TRUE,
     'attach_module'         => TRUE,
     'attach_media'          => FALSE,
     'attach_colorbox'       => FALSE,
@@ -334,7 +334,11 @@ function slick_attach(array $attach) {
   // Skin assets.
   if ($skin = $attach['attach_skin']) {
     if (isset($skins[$skin]['css'])) {
-      $load['css'][] = $module_path . '/css/theme/slick.theme.css';
+      // If we do have a defined skin, load the Slick element and module theme.
+      if ($attach['attach_slick_element']) {
+        $load['css'][libraries_get_path('slick') . '/slick/slick-theme.css'] = array('weight' => -2);
+      }
+      $load['css'][$module_path . '/css/theme/slick.theme.css'] = array('weight' => -1);
       foreach ($skins[$skin]['css'] as $c => $css) {
         $load['css'][] = $css;
       }
@@ -375,7 +379,8 @@ function slick_attach(array $attach) {
     $defaults = _slick_optionset_defaults(NULL, 'settings');
     // Prevents JS error with Slick > 1.3.11 within responsive display clone.
     // Error: Syntax error, unrecognized expression: $(element).
-    unset($defaults['appendDots']);
+    unset($defaults['appendDots'], $defaults['cssEaseOverride']);
+    $defaults['asNavFor'] = NULL;
     $defaults['appendArrows'] = '.slick__arrow';
     $load['js'][] = array(
       'data' => array('slick' => $defaults),
@@ -402,8 +407,6 @@ function slick_attach(array $attach) {
  * instead. It is here to load library for custom works as needed, or fallback.
  *
  * @see slick_attach()
- *
- * @todo drop unsupported functions.
  */
 function slick_add() {
   static $already_added = FALSE;
@@ -425,7 +428,6 @@ function slick_add() {
 
   libraries_load('slick');
 
-  // @todo drop for libraries_load() above alone when integration files fixed.
   // @see https://drupal.org/node/1855918
   drupal_add_library('slick', 'drupal.slick');
 

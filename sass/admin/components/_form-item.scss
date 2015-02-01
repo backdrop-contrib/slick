@@ -195,13 +195,11 @@
 /**
  * Overrides
  */
-.form--slick {
-  .fieldset-wrapper div[class*="-breakpoint"] {
-    background: none;
+.form--slick {  
+  .fieldset-wrapper div[class*="-breakpoint"],
+  .fieldset-wrapper div[class*="-unslick"] {
     border: 0;
-    clear: both;
-    float: none;
-    width: 100%;
+    background: none;
   }
 
   .form-item.form-type-checkboxes {

@@ -28,7 +28,8 @@ body.page-admin {
 .page-admin .slick-wrapper--fullscreen {
   position: relative;
 }
-.slick-wrapper--fullscreen .slick--skin--fullscreen {
+.slick-wrapper--fullscreen .slick--skin--fullscreen,
+.slick-wrapper--fullscreen .slick__slider {
   height: 100%;
   min-height: 100%;
 }

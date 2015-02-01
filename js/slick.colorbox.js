@@ -29,7 +29,7 @@
           id = t.closest('.slick').attr('id'),
           $body = $('body'),
           media = t.data('media') || {},
-          $slider = t.closest('.slick', context),
+          $slider = t.closest('.slick__slider', context),
           isMedia = media.type !== 'image' ? true : false,
           curr,
           runtimeOptions = {
@@ -38,7 +38,7 @@
             onOpen: function () {
               $body.addClass('colorbox-on colorbox-on--' + media.type);
               $body.data('mediaHeight', '');
-              $slider.slickPause();
+              $slider.slick('slickPause');
             },
             onLoad: function () {
               if (media.type !== 'image') {
@@ -46,11 +46,12 @@
               }
 
               // Remove these lines to disable slider scrolling under colorbox.
-              curr = parseInt(t.closest('.slick__slide').attr('index'));
-              if ($slider.next('.slick').length) {
-                $slider.next('.slick').slickGoTo(curr);
+              curr = parseInt(t.closest('.slick__slide:not(.slick-cloned)').data('slickIndex'));
+              if ($slider.parent().next('.slick').length) {
+                var $thumb = $slider.parent().next('.slick').find('.slick__slider');
+                $thumb.slick('slickGoTo', curr);
               }
-              $slider.slickGoTo(curr);
+              $slider.slick('slickGoTo', curr);
             },
             onCleanup: function () {
               $body.removeClass('colorbox-on colorbox-on--' + media.type);
@@ -105,7 +106,6 @@
   };
 
   // Colorbox has no responsive support so far.
-  // @todo drop this when it is.
   Drupal.slickColorbox.resize = function (context, settings) {
     if (cboxResizeTimer) {
       clearTimeout(cboxResizeTimer);

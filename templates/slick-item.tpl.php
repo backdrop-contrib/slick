@@ -23,6 +23,9 @@
 <<?php print $tag; ?><?php print $attributes; ?>>
   <?php if ($settings['current_item'] == 'thumbnail'): ?>
     <?php print render($item); ?>
+    <?php if ($caption): ?>
+      <div class="slide__caption"><?php print render($caption); ?></div>
+    <?php endif; ?>
   <?php else: ?>
 
     <<?php print $content_tag; ?><?php print $content_attributes; ?>>
@@ -32,7 +35,7 @@
       <?php $slide_pattern && print $slide_pattern; ?>
       <?php print render($item_suffix); ?>
 
-      <?php if (!empty($caption)): ?>
+      <?php if ($caption): ?>
         <?php print render($title_prefix); ?>
 
         <div class="slide__caption">

@@ -120,7 +120,6 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       }
 
       if (file_entity_access('update', $file)) {
-        // @todo drop, when file_entity via media popup supports ET in place.
         // This is basically to trigger/ bring to translation tab as defined at
         // admin/config/regional/entity_translation/translatable/FIELD_NAME
         if (($title || $caption_items) && field_is_translatable($entity_type, $field)) {
@@ -182,6 +181,14 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       if ($settings['dots_thumbnail'] && $thumbnail_hover) {
         $image_slide .= $thumbnail_hover;
       }
+
+      // Thumbnail captions.
+      if (isset($settings['thumbnail_caption']) && !empty($settings['thumbnail_caption'])) {
+        if ($field_thumbnail_caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
+          $thumbnail_caption = $field_thumbnail_caption[0]['value'];
+          $slide['caption']['data']['#markup'] = filter_xss($thumbnail_caption);
+        }
+      }
     }
 
     // Slide classes, if so configured.
@@ -206,7 +213,6 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
     }
 
     // @todo map from picture, or refine for mobile.
-    // @todo refine for video/audio.
     if (in_array($settings['skin'], array('fullscreen', 'parallax'))) {
       $slide['slide'] = array();
       $fullscreen_image_url = image_style_url($settings['image_style'], $image['uri']);

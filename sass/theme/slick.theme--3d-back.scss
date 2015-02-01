@@ -4,9 +4,8 @@
 @import "compass";
 @import "breakpoint";
 
-// Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+// Import variables and abstractions.
+@import "../globals";
 
 /**
  * @file.
@@ -16,7 +15,7 @@
 // http://24ways.org/2010/intro-to-css-3d-transforms/
 $arrow-width: 50% !default;
 $rotate: 25deg !default;
-.slick--skin--3d-back.slick-initialized {
+.slick--skin--3d-back .slick-initialized {
   overflow: hidden;
   padding-bottom: $vert-spacing-unit; // to keep dots visible.
   padding-top: $vert-spacing-unit;

@@ -4,9 +4,8 @@
 @import "compass";
 @import "breakpoint";
 
-// Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+// Import variables and abstractions.
+@import "../globals";
 /**
  * @file
  * asNavFor.
@@ -24,6 +23,15 @@ $thumbnail-horz-spacing: 30px !default;
   .slick-list {
     margin: 0 (-$thumbnail-spacing);
     padding: 30px $thumbnail-spacing *2;
+  }
+
+  .slide__caption {
+    p {
+      margin: 0;
+    }
+  }
+  .slide--current {
+    background: $white;
   }
 
   .slick__slide {

@@ -25,10 +25,12 @@ creating database table to store option sets.
 REQUIREMENTS:
 --------------------------------------------------------------------------------
 - Slick library:
-  * Download archive from https://github.com/kenwheeler/slick/,
+  * Download Slick archive > 1.4 from https://github.com/kenwheeler/slick/,
   * Extract it as is, so the needed assets available at:
     sites/../libraries/slick/slick/slick.css
+    sites/../libraries/slick/slick/slick-theme.css (optional if a skin chosen)
     sites/../libraries/slick/slick/slick.min.js
+
 - CTools, for exportable optionsets -- only the main "Chaos tools" is needed.
   If you have Views installed, CTools is already enabled.
   D8 in core: CMI.
@@ -66,9 +68,12 @@ integration.
 
 OPTIONSETS:
 --------------------------------------------------------------------------------
-To create your option sets, go to:
+To create your optionsets, go to:
 "admin/config/media/slick"
 These will be available at Manage display field format, and Views UI.
+
+To store optionsets in code for versioning and performance, use CTools Bulk
+exporter or Features. And revert them via UI to default to avoid database lookup.
 
 
 
@@ -147,8 +152,9 @@ Optional skins:
 - Grid, to create the last grid carousel. Use slidesToShow > 1 to have more grid
   combination, only if you have considerable amount of grids, otherwise 1.
   Avoid variableWidth and adaptiveHeight. Use consistent dimensions.
-  Uses the Foundation 5.5 block-grid as a starter, and disabled if you choose
-  your own skin.
+  Choose skin "Grid" for starter.
+  Uses the Foundation 5.5 block-grid, and disabled if you choose your own skin
+  not name Grid. Otherwise overrides skin Grid accordingly.
 
 - Rounded, should be named circle
   This will circle the main image display, reasonable for small carousels, maybe
@@ -175,7 +181,8 @@ When upgrading from Slick v1.3.6 to later version, try to resave options at:
 only if trouble to see the new options, or when options don't apply properly.
 This is most likely true when the library adds/changes options, or the module
 does something new.
-Always clear the cache when updating the module to ensure things are picked up.
+Always clear the cache when updating the module to ensure things are picked up:
+- admin/config/development/performance
 
 Dropped workaround for "on demand" lazyLoad. The issue is no longer valid.
 However if the issue persists at your end, please try two possible fixes below.
@@ -188,11 +195,72 @@ Possible fixes without compromising security:
 - Use lazyLoad "progressive" instead.
 
 lazyLoad ondemand also has issue with dummy image excessive height, so use it
-with care. Dummy image is for valid HTML5.
+with care. Dummy image is for valid HTML5. Added fix for this via CSS.
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
 
+
+
+SLICK > 1.4:
+--------------------------------------------------------------------------------
+If you just start using Slick, you may ignore this.
+See breaking changes for more info at:
+- https://github.com/kenwheeler/slick/releases/tag/1.4.0
+- CHANGELOG.txt dated 2014-1-30.
+
+Added direct child container within .slick to hold the slides, i.e.:
+  .slick__slider. Previously slides are direct children of .slick container.
+
+Since 1.4, Slick is initialized at this .slick__slider, not .slick, to allow
+placing arrows within the .slick container, otherwise arrows are part of the
+slides. Previous workaround by specifiying specific class (.slick__slide) no go.
+
+Slick 1.4 will break existing asNavFor, so be sure to update the asNavFor
+selectors accordingly at Field formatter and Views pages, e.g.:
+
+  Before: #slick-nodes targetting .slick container.
+  After: #slick-nodes-slider (note "-slider") targetting .slick__slider.
+
+  Or adding " .slick__slider" to your current selector should resolve, e.g.:
+  Before: #slick-nodes
+  After: #slick-nodes .slick__slider
+  Apply it to both asNavFor Main and asNavFor Thumbnail.
+
+  Or if you are using sub-modules, and unsure, simply check the new option:
+  "asNavFor auto selector" at:
+  - admin/structure/types/manage/CONTENT_TYPE/display
+  - admin/structure/views/view/VIEW
+  This will auto generate the proper asNavFor selectors accordingly instead.
+
+
+
+HTML structure:
+--------------------------------------------------------------------------------
+Before Slick 1.4:
+-----------------
+<div class="slick slick-processed slick-initialized slick-slider">
+  <div class="slick__slide"></div>
+  <nav class="slick__arrow"></nav>
+</div>
+
+
+After Slick 1.4:
+-----------------
+<div class="slick slick-processed">
+  <div class="slick__slider slick-initialized slick-slider">
+    <div class="slick__slide"></div>
+  </div>
+  <nav class="slick__arrow"></nav>
+</div>
+
+At both cases, asNavFor should target slick-initialized class/ID attributes.
+
+
+HOW CAN YOU HELP?
+--------------------------------------------------------------------------------
+Please consider helping in the issue queue, provide improvement, or helping with
+documentation.
 
 
 READ MORE:

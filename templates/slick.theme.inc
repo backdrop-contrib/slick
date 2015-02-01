@@ -23,10 +23,10 @@ function template_preprocess_slick(&$variables) {
   $settings = array(
     'optionset' => '',
     'optionset_thumbnail' => '',
+    'asnavfor_target' => '',
     'skin' => '',
     'skin_thumbnail' => '',
     'grid' => '',
-    'visible_slides' => '',
     'media_switch' => FALSE,
     'is_carousel' => FALSE,
     'has_pattern' => FALSE,
@@ -63,49 +63,44 @@ function template_preprocess_slick(&$variables) {
 
   // The Slick JS settings defined either via custom #options, or CTools UI.
   $js = $customs ? array_merge($options['settings'], $customs) : $options['settings'];
-  // Anon DIV is problematic, since Slick will slide every div element within
-  // its container which makes it impossible to add a div to wrap buttons (such
-  // as arrow down) nor wrap them for advanced customPaging. Hence we override
-  // with more specific class .slick__slide instead.
-  // Note: Having list type is irrelevant to the JS generated markups.
-  $js['slide'] = $js['slide'] == 'div' ? '.slick__slide' : $js['slide'];
 
   // Field or Views options override the optionset ones.
   $settings['has_arrow_down'] = $settings['has_arrow_down'] ? TRUE : isset($goodies['arrow-down']) && $goodies['arrow-down'];
   $settings['has_pattern'] = $settings['has_pattern'] ? TRUE : isset($goodies['pattern']) && $goodies['pattern'];
 
-  // Only add asNavFor if we do have thumbnail optionset.
-  if ($settings['optionset_thumbnail']) {
-    if ($settings['current_display'] == 'main') {
-      if (isset($settings['asnavfor_main']) && $settings['asnavfor_main']) {
-        $js['asNavFor'] = check_plain($settings['asnavfor_main']);
-      }
-    }
-    elseif ($settings['current_display'] == 'thumbnail') {
-      if (isset($settings['asnavfor_thumbnail']) && $settings['asnavfor_thumbnail']) {
-        $js['asNavFor'] = check_plain($settings['asnavfor_thumbnail']);
-      }
-    }
-  }
-
   // Configure attributes for containing elements.
   $attributes = $variables['attributes_array'];
   $attributes['class'] = $variables['classes_array'];
+  $content_attributes = $variables['content_attributes_array'];
 
   // Merge with defined attributes.
+  $id = '';
   if (isset($settings['attributes']) && is_array($settings['attributes'])) {
     $attributes += $settings['attributes'];
+    $id = isset($attributes['id']) ? $attributes['id'] : '';
+  }
+  if (isset($settings['content_attributes']) && is_array($settings['content_attributes'])) {
+    $content_attributes += $settings['content_attributes'];
   }
 
   // Set the ID for each slick instance, if none provided, for quick JS lookup.
   if (empty($attributes['id'])) {
     $slick_id = &drupal_static('slick_id', 0);
     $id = 'slick-' . ++$slick_id;
-    $attributes['id'] = $id;
     if ($settings['current_display'] == 'thumbnail') {
-      $attributes['id'] = $id . '-thumbnail';
+      $id = $id . '-thumbnail';
     }
+    $attributes['id'] = $id;
   }
+
+  $settings['id'] = $id;
+
+  // Since 1.4, Slick is moved to content attributes to allow placing arrows
+  // within the slick container, otherwise arrows are slides.
+  if (!isset($content_attributes['id'])) {
+    $content_attributes['id'] = $id . '-slider';
+  }
+  $content_attributes['class'][] = 'slick__slider';
 
   // Add the slick classes.
   if ($count == 1) {
@@ -146,18 +141,11 @@ function template_preprocess_slick(&$variables) {
 
   $attributes['class'][] = $js['centerMode'] ? 'slick--center' : 'slick--float';
 
-  // @todo drop, is it really needed anywhere else?
+  // This is needed by Slick media for slick ration option.
   if (isset($settings['field_type'])) {
     $attributes['class'][] = drupal_clean_css_identifier('slick--' . $settings['field_type']);
   }
 
-  // @todo drop or more test with elementTransition, etc.
-  // if ($general['transition']) {
-  // $attributes['class'][] = 'slick--has-transition';
-  // $attributes['class'][] = $general['transition'];
-  // }
-
-  // @todo refactor some classes into skin instead.
   // Some settings are only reasonable for the main display, not thumbnail.
   if ($settings['current_display'] == 'main') {
     $attributes['class'][] = 'slick--display--main';
@@ -191,6 +179,25 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = strip_tags($general['template_class']);
   }
 
+  // Provide context to fix excessive height with lazyLoad ondemand.
+  if ($js['lazyLoad']) {
+    $attributes['class'][] = drupal_clean_css_identifier('slick--' . $js['lazyLoad']);
+  }
+
+  // focusOnSelect will not work with empty slide value, so add proper selector.
+  // Intentionaly empty the fallback, not using the useless old selector "div"
+  // anymore to use the new blank default, and clean up old JSON object.
+  // @see https://github.com/kenwheeler/slick/issues/789
+  $js['slide'] = !$js['slide'] && $js['focusOnSelect'] ? '.slick__slide' : '';
+
+  // Only add asNavFor if we do have thumbnail optionset.
+  // Implementor is now responsible to pass the proper asnavfor_target.
+  if ($settings['optionset_thumbnail'] && $settings['asnavfor_target']) {
+    // Enforce clickable thumbnail, and solves old lingering "div".
+    $js['slide'] = '.slick__slide';
+    $js['asNavFor'] = $settings['asnavfor_target'];
+  }
+
   // The slider must have the attribute "dir" set to "rtl", if so configured.
   if ($js['rtl']) {
     $attributes['dir'] = 'rtl';
@@ -199,21 +206,25 @@ function template_preprocess_slick(&$variables) {
   // Arrows may be unset and empty if arrows option is disabled, so fallback to
   // the default in code.
   // Limit sanitization with button and a few reasonable selectors.
-  $allowed_tags = array(
-    'a',
-    'em',
-    'strong',
-    'button',
-    'p',
-    'div',
-    'i',
-    'span',
-  );
   if ($settings['arrows'] = $js['arrows']) {
+    $allowed_tags = array(
+      'a',
+      'em',
+      'strong',
+      'button',
+      'p',
+      'div',
+      'i',
+      'span',
+    );
     $is_prev = isset($js['prevArrow']) && $js['prevArrow'];
     $is_next = isset($js['nextArrow']) && $js['nextArrow'];
-    $settings['prev_arrow'] = $is_prev ? filter_xss($js['prevArrow'], $allowed_tags) : _slick_optionset_defaults('prevArrow', 'settings');
-    $settings['next_arrow'] = $is_next ? filter_xss($js['nextArrow'], $allowed_tags) : _slick_optionset_defaults('nextArrow', 'settings');
+
+    $default_prev = _slick_optionset_defaults('prevArrow', 'settings');
+    $default_next = _slick_optionset_defaults('nextArrow', 'settings');
+
+    $settings['prev_arrow'] = $is_prev ? filter_xss($js['prevArrow'], $allowed_tags) : $default_prev;
+    $settings['next_arrow'] = $is_next ? filter_xss($js['nextArrow'], $allowed_tags) : $default_next;
 
     // This is the only default supported appendArrows selector.
     $default_append_arrows = _slick_optionset_defaults('appendArrows', 'settings');
@@ -225,10 +236,11 @@ function template_preprocess_slick(&$variables) {
   $js['mousewheel'] = $settings['mousewheel'] ? TRUE : FALSE;
 
   // Add the configuration as JSON object into slick container.
-  // @todo change to data-slick for > 1.4 as data-slick is intentionally
-  // supported for this purpose.
+  // data-config is kept rather than the new data-slick, otherwise Slick will
+  // be initialized too early, causing other functions fail. data-slick is very
+  // useful if you have no extra needs.
   // @see https://github.com/kenwheeler/slick/pull/407
-  if (!isset($attributes['data-config']) && $count > 1) {
+  if ($count > 1 && !isset($content_attributes['data-config'])) {
     $js_data = _slick_remove_default_optionset_options($optionset, $js);
 
     // Remove empty lazyLoad, or left to default ondemand, to avoid JS error.
@@ -238,12 +250,8 @@ function template_preprocess_slick(&$variables) {
 
     // Do not pass arrows HTML to JSON object, as we process separately above.
     unset($js_data['prevArrow'], $js_data['nextArrow']);
-    $attributes['data-config'] = drupal_json_encode($js_data);
+    $content_attributes['data-config'] = drupal_json_encode($js_data);
   }
-
-  // Add the wrapper attributes.
-  $variables['attributes_array'] = $attributes;
-  $settings['id'] = $attributes['id'];
 
   // Process individual item.
   $build = array();
@@ -259,11 +267,13 @@ function template_preprocess_slick(&$variables) {
     );
   }
 
+  // Add the wrapper attributes.
+  $variables['attributes_array'] = $attributes;
+  $variables['content_attributes_array'] = $content_attributes;
   $variables['items'] = $build;
   $variables['settings'] = $settings;
 
   // Populate classes_array expected by Omega 3.
-  // @todo drop it when Omega3/5 has a better preprocess like Omega 4.
   $variables['classes_array'] = $variables['attributes_array']['class'];
 
   // Add the basic library if no sub-modules, nor #attached in use.
@@ -277,6 +287,7 @@ function template_preprocess_slick(&$variables) {
  */
 function template_process_slick(&$variables) {
   $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
+  $variables['content_attributes'] = empty($variables['content_attributes_array']) ? '' : drupal_attributes($variables['content_attributes_array']);
 }
 
 /**
@@ -356,21 +367,26 @@ function template_preprocess_slick_item(&$variables) {
     $attributes['class'][] = drupal_clean_css_identifier('slide--' . $settings['type']);
   }
 
-  // @todo, disabled for thumb by now when Slick resolves selector issue.
+  // All slides may have captions.
   $variables['caption'] = array();
   $variables['editor'] = array();
   $variables['slide_pattern'] = '';
 
-  // @todo, thumbnails may have captions when Slick resolves selector issue.
-  if ($settings['current_item'] != 'thumbnail') {
+  // Title, caption and overlay, or nested media.
+  $stage = array();
+
+  if ($settings['current_item'] == 'thumbnail') {
+    // Thumbnail caption.
+    if (isset($captions['data']) && !empty($captions['data'])) {
+      $stage['data'] = $captions['data'];
+    }
+  }
+  else {
     // Add layout/ caption position classes if so configured.
     if (!empty($captions['layout'])) {
       $layout = drupal_clean_css_identifier('slide--caption--' . $captions['layout']);
       $attributes['class'][] = $layout;
     }
-
-    // Title, caption and overlay, or nested media.
-    $stage = array();
 
     // Overlay image/ video.
     if (!empty($captions['overlay'])) {
@@ -402,8 +418,6 @@ function template_preprocess_slick_item(&$variables) {
       $variables['editor'] = $captions['editor'];
     }
 
-    $variables['caption'] = $stage;
-
     // We split image from captions with a wrapper if we do have captions, and
     // main image. This allows more complex slide layout.
     if ((!empty($stage) && $item) || (strpos($settings['skin'], '3d') !== FALSE)) {
@@ -425,6 +439,9 @@ function template_preprocess_slick_item(&$variables) {
     }
   }
 
+  // Pass the captions to template.
+  $variables['caption'] = $stage;
+
   if (isset($item_settings['classes']) && $item_settings['classes']) {
     $attributes['class'][] = strip_tags($item_settings['classes']);
   }
@@ -433,7 +450,6 @@ function template_preprocess_slick_item(&$variables) {
   $variables['attributes_array'] = $attributes;
 
   // Populate classes_array expected by Omega 3.
-  // @todo drop it when Omega3/5 has a better preprocess like Omega 4.
   $variables['classes_array'] = $variables['attributes_array']['class'];
 }
 
@@ -565,7 +581,6 @@ function template_preprocess_slick_media(&$variables) {
   $variables['attributes_array'] = $attributes;
 
   // Populate classes_array expected by Omega 3.
-  // @todo drop it when Omega3/5 has a better preprocess like Omega 4.
   $variables['classes_array'] = $variables['attributes_array']['class'];
 }
 
@@ -603,7 +618,6 @@ function template_preprocess_slick_wrapper(&$variables) {
   }
 
   // Populate classes_array expected by Omega 3.
-  // @todo drop it when Omega3/5 has a better preprocess like Omega 4.
   $variables['classes_array'] = $variables['attributes_array']['class'];
 }
 
@@ -700,7 +714,8 @@ function theme_slick_image_lazy($variables) {
 
       // This is why we have this function, D7 core theme_image() only expects
       // a file, not inline image. Dropped at D8 that supports it, and merged to
-      // theme_slick_image_formatter_lazy() instead.
+      // theme_slick_image_formatter_lazy() instead, or vice versa.
+      // @see https://www.drupal.org/node/1342504
       $attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
       $attributes['data-lazy'] = $path;
     }

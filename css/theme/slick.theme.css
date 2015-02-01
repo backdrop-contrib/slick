@@ -165,7 +165,7 @@ img {
   opacity: 1;
 }
 .slick--center .slick__slide.slick-center {
-  z-index: 2;
+  z-index: 4;
 }
 
 /**
@@ -273,9 +273,9 @@ img {
  * Misc overrides core slick.
  */
 /* Hide non-js lazy-loaded image to show <noscript> one instead, if the theme
-supports no-js */
-.no-js img.lazy {
-  display: none !important;
+supports no-js, otherwise IMG tag with dummy placeholder. */
+.no-js .slick img.lazy {
+  display: none;
 }
 
 .slick-initialized {
@@ -285,17 +285,6 @@ supports no-js */
 .slick,
 .slick__slide {
   position: relative;
-}
-
-.slick-loading .slick-track {
-  opacity: 0;
-}
-.slick-loading .slide__image {
-  display: block;
-  visibility: hidden;
-}
-.slick-loading .slick__slide {
-  visibility: hidden;
 }
 
 /**
@@ -308,12 +297,17 @@ supports no-js */
 .slide__caption {
   font-size: 16px;
   font-size: 1rem;
+  position: relative;
+  width: 100%;
+}
+.slick--display--main .slide__caption {
   min-height: 32%;
   padding: 20px 0;
-  position: relative;
   text-align: left;
-  width: 100%;
   z-index: 3;
+}
+.slick--display--thumbnail .slide__caption {
+  padding: 5px 6px;
 }
 
 /* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
@@ -334,7 +328,7 @@ supports no-js */
     opacity: 1;
   }
 
-  .slide__caption {
+  .slide--caption--left .slide__caption, .slide--caption--right .slide__caption, .slide--caption--top .slide__caption, .slide--caption--bottom .slide__caption, .slide--caption--stage-left .slide__caption, .slide--caption--stage-right .slide__caption, .slide--caption--split-left .slide__caption, .slide--caption--split-right .slide__caption, .slide--caption--stage-zebra .slide__caption, .slide--caption--center .slide__caption, .slide--caption--center-top .slide__caption {
     left: 0;
     padding: 20px;
     position: absolute;
@@ -368,6 +362,7 @@ supports no-js */
   }
   .slide--caption--bottom .slide__caption {
     bottom: 0;
+    top: auto;
   }
   .slick--has-arrow-down .slide--caption--bottom .slide__caption {
     padding-bottom: 80px;
@@ -502,19 +497,8 @@ supports no-js */
   user-select: text;
 }
 
-/**
- * @todo drop, temp Bartik overrides.
- */
-#content .slide__title {
-  margin: 10px 0 5px;
-  line-height: 1.2;
-}
-
-#content .slick--carousel .slide__title {
-  font-size: 22px;
-  font-size: 1.375rem;
-}
-
-.slick .field-type-image img {
-  margin-bottom: 0;
+/* Fix excessive height with ondemand lazyLoad prior to being visible */
+.slick--ondemand .slick__slide:not(.slick-active) img[data-lazy] {
+  width: 40px;
+  height: 40px;
 }
