@@ -133,7 +133,7 @@ function slick_get_options() {
 
     $options['centerPadding'] = array(
       'title' => t('Center padding'),
-      'description' => t('Side padding when in center mode (px or %).'),
+      'description' => t('Side padding when in center mode (px or %). Be aware, too large padding at small breakpoint will screw the slide calculation with slidesToShow.'),
       'type' => 'textfield',
       'cast' => 'string',
       'default' => '50px',
