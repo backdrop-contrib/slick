@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-2-3
 ---------------------------
+Added more info related to ROADMAP and current delvelopment status at README.txt.
 Issue #2418149 by nrutkowski: Fixed for Slick 1.4 breaking changes.
 Updated to Slick 1.4 with more tests and cleanups.
 Fixed nullified edgeFriction due to typecast integer to float.

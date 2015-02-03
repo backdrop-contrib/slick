@@ -263,10 +263,60 @@ After Slick 1.4:
 At both cases, asNavFor should target slick-initialized class/ID attributes.
 
 
+RECOMMENDED MODULES
+--------------------------------------------------------------------------------
+The following modules are supported, but optional.
+- Colorbox, to have small grids/slides that open up images/videos in overlay.
+- Media, to have fairly variant slides: image, video, audio.
+- Field collection, to have more complex layout with Media.
+- Color field, to colorize slide background invidually.
+- Block reference to have more complex slide content for Full screen/width skins.
+- Entity translation, to have translated files with Media.
+
+
+
+NICE TO HAVE
+--------------------------------------------------------------------------------
+These should not block the proper release, but nice to have before then.
+- Paragraphs integration, currently only works when using Views.
+- Multi resolution fullscreen background image sizes.
+- Photobox integration.
+
+
+
 HOW CAN YOU HELP?
 --------------------------------------------------------------------------------
 Please consider helping in the issue queue, provide improvement, or helping with
 documentation.
+
+
+KNOWN ISSUES
+--------------------------------------------------------------------------------
+- It currently supports Slick 1.4 above (< 1.5), and dropped Slick 1.3 below.
+- Fullscreen preview with Views is not working, and intentionally disabled to
+  avoid interfering/ covering admin pages.
+- The following is not module related, but worth a note:
+  * lazyLoad ondemand has issue with dummy image excessive height. See above for
+    the recommended fixes.
+  * If the total < slidesToShow, Slick behaves. Previously added a workaround to
+    fix this, but later dropped and handed over to the core instead.
+
+
+
+CURRENT DEVELOPMENT STATUS
+--------------------------------------------------------------------------------
+It is currently feature complete, I think. I only have 3 left TODOs related to
+the above nice to have, but that should not stop the proper release.
+A proper release should be reasonable after proper feedbacks from the community,
+and a few small code cleanup where needed. Patches are very much welcome.
+
+
+
+ROADMAP
+--------------------------------------------------------------------------------
+- Drupal 8 port, see if you can help/ provide suggestion:
+  https://www.drupal.org/node/2412863
+
 
 
 AUTHOR/MAINTAINER/CREDITS
@@ -275,6 +325,7 @@ Slick 7.x-2.x-dev by gausarts, inspired by Flexslider with CTools integration.
 Slick 7.x-1.x-dev by arshadcn, the original author.
 
 With the help from the community: https://www.drupal.org/node/2232779/committers
+
 
 READ MORE
 --------------------------------------------------------------------------------
