@@ -1,4 +1,4 @@
-Slick Carousel Module
+Slick Example Module
 ================================================================================
 You don't need this module if you are a developer, or site builder.
 
@@ -15,7 +15,7 @@ Shortly you still have to add or adjust the fields manually if you need to learn
 from this example.
 
 The samples depend on existence of "field_image", normally available at Article
-at Standard install. And field_images which you should create manually, or
+at Standard install. And "field_images" which you should create manually, or
 adjust the example references to images accordngly at the Views edit page.
 
 See admin/reports/fields for the list of your fields.

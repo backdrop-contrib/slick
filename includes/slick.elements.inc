@@ -287,7 +287,7 @@ function slick_get_options() {
       'title' => t('Edge friction'),
       'description' => t("Resistance when swiping edges of non-infinite carousels. If you don't want resistance, set it to 1."),
       'type' => 'textfield',
-      'cast' => 'int',
+      'cast' => 'float',
       'default' => 0.35,
     );
 
@@ -489,7 +489,6 @@ function _slick_optionset_defaults($key = NULL, $set = NULL, $breakpoints = NULL
 
   $defaults['general']['normal'] = '';
   $defaults['general']['thumbnail'] = '';
-  // $defaults['general']['transition'] = '';
   $defaults['general']['template_class'] = '';
   $defaults['general']['goodies'] = array();
 

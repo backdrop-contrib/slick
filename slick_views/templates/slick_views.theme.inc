@@ -116,7 +116,6 @@ function template_preprocess_slick_views(&$variables) {
     $is_asnavfor_auto = isset($settings['asnavfor_auto']) && $settings['asnavfor_auto'];
 
     // Build the Slick attributes.
-    $id = '';
     if ($settings['id']) {
       $id = $settings['id'];
     }
@@ -125,10 +124,12 @@ function template_preprocess_slick_views(&$variables) {
       $id = drupal_clean_css_identifier("slick-views-{$view_name}-" . ++$slick_id);
     }
 
+    $thumbnail_id = $id . '-thumbnail';
+
     // Enforce ID for easy asNavFor selectors.
     $settings['attributes']['id'] = $id;
     $settings['content_attributes']['id'] = $id . '-slider';
-    $thumbnail_id = $id . '-thumbnail';
+    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
 
     if ($is_asnavfor) {
       if ($is_asnavfor_auto) {
@@ -138,8 +139,6 @@ function template_preprocess_slick_views(&$variables) {
         $settings['asnavfor_target'] = check_plain($settings['asnavfor_main']);
       }
     }
-
-    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
 
     // Build the Slick grid.
     $grid = isset($settings['grid']) && $settings['grid'] ? $settings['grid'] : '';
@@ -177,11 +176,8 @@ function template_preprocess_slick_views(&$variables) {
     if ($is_asnavfor) {
       $settings['optionset'] = $settings['optionset_thumbnail'];
       $settings['current_display'] = 'thumbnail';
-
-      if ($thumbnail_id) {
-        $settings['attributes']['id'] = $thumbnail_id;
-        $settings['content_attributes']['id'] = $thumbnail_id . '-slider';
-      }
+      $settings['attributes']['id'] = $thumbnail_id;
+      $settings['content_attributes']['id'] = $thumbnail_id . '-slider';
 
       if ($is_asnavfor_auto) {
         $settings['asnavfor_target'] = '#' . $id . '-slider';

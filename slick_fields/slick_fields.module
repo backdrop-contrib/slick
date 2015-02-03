@@ -248,6 +248,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#type' => 'select',
     '#title' => t('Thumbnail caption'),
     '#default_value' => isset($settings['thumbnail_caption']) && $settings['thumbnail_caption'] ? $settings['thumbnail_caption'] : '',
+    '#options' => array(),
     '#empty_option' => t('- None -'),
     '#description' => t('Thumbnail caption maybe just titles.'),
     '#attributes' => array('class' => array('is-tooltip')),
@@ -256,6 +257,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
       ),
     ),
+    '#access' => FALSE,
   );
 
   $image_styles = image_style_options(FALSE, PASS_THROUGH);
@@ -598,6 +600,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
 
   if ($thumbnail_caption_options) {
     $element['thumbnail_caption']['#options'] = $thumbnail_caption_options;
+    $element['thumbnail_caption']['#access'] = TRUE;
   }
 
   // Picture module integration.

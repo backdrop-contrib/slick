@@ -10,22 +10,26 @@ See http://kenwheeler.github.io/slick.
 * Desktop mouse dragging.
 * Fully accessible with arrow key navigation.
 * Autoplay, pagers, arrows, etc...
-* Works with Views, core and contrib fields: Image, Media or Field collection.
 * Exportable via CTools.
+* Works with Views, core and contrib fields: Image, Media or Field collection.
+* Optional skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth, Grid, Split.
 
 
 
 VERSIONS:
 --------------------------------------------------------------------------------
-Make sure to run update, when upgrading from 7.x-1.x to 7.x-2.x to allow
-creating database table to store option sets.
+7.x-2.x supports exportable optionsets via CTools.
+Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x to allow creating
+database table to store/ manage option sets.
+With Bulk exporter or Features, optionsets may be stored in codes to avoid
+database lookup, it is analog to Drupal 8 CMI.
 
 
 
 REQUIREMENTS:
 --------------------------------------------------------------------------------
 - Slick library:
-  * Download Slick archive > 1.4 from https://github.com/kenwheeler/slick/,
+  * Download Slick archive >= 1.4 from https://github.com/kenwheeler/slick/,
   * Extract it as is, so the needed assets available at:
     sites/../libraries/slick/slick/slick.css
     sites/../libraries/slick/slick/slick-theme.css (optional if a skin chosen)
@@ -38,7 +42,7 @@ REQUIREMENTS:
   D8: dropped.
 - jquery_update with jQuery > 1.7, perhaps 1.8 if trouble with the latest Slick.
   D8: dropped.
-- jqeasing, so available at:
+- jqeasing from http://gsgd.co.uk/sandbox/jquery/easing, so available at:
   sites/../libraries/easing/jquery.easing.min.js
   This is a fallback for non-supporting browsers.
 
@@ -73,7 +77,7 @@ To create your optionsets, go to:
 These will be available at Manage display field format, and Views UI.
 
 To store optionsets in code for versioning and performance, use CTools Bulk
-exporter or Features. And revert them via UI to default to avoid database lookup.
+exporter or Features. And revert them via UI to Default to avoid database lookup.
 
 
 
@@ -187,7 +191,7 @@ Always clear the cache when updating the module to ensure things are picked up:
 Dropped workaround for "on demand" lazyLoad. The issue is no longer valid.
 However if the issue persists at your end, please try two possible fixes below.
 Related old info:
-Default lazyLoad "on demand" may have issue to generate newly created images,
+Default lazyLoad "ondemand" may have issue to generate newly created images,
 causing 403.
 Maybe related to itok: https://www.drupal.org/drupal-7.20-release-notes
 Possible fixes without compromising security:
@@ -195,7 +199,9 @@ Possible fixes without compromising security:
 - Use lazyLoad "progressive" instead.
 
 lazyLoad ondemand also has issue with dummy image excessive height, so use it
-with care. Dummy image is for valid HTML5. Added fix for this via CSS.
+with care. It is never encouraged to use by the Slick author due to bad UX.
+It may be useful to cycle a large number of slides randomly like ads though.
+Dummy image is for valid HTML5. Added fix for this via CSS.
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
@@ -263,7 +269,14 @@ Please consider helping in the issue queue, provide improvement, or helping with
 documentation.
 
 
-READ MORE:
+AUTHOR/MAINTAINER/CREDITS
+--------------------------------------------------------------------------------
+Slick 7.x-2.x-dev by gausarts, inspired by Flexslider with CTools integration.
+Slick 7.x-1.x-dev by arshadcn, the original author.
+
+With the help from the community: https://www.drupal.org/node/2232779/committers
+
+READ MORE
 --------------------------------------------------------------------------------
 See the project page on drupal.org: http://drupal.org/project/slick.
 See the Slick docs at:

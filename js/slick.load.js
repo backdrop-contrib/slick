@@ -15,7 +15,7 @@
           merged = $.extend({}, settings.slick, configs),
           globals = Drupal.slick.globals(this, merged);
 
-        // Populate defaults + globals into breakpoints.
+        // Populate defaults + globals into each breakpoint.
         if (typeof configs.responsive !== 'undefined') {
           $.map(configs.responsive, function(v, i) {
             if (typeof configs.responsive[i].settings !== 'undefined' && configs.responsive[i].settings !== 'unslick') {

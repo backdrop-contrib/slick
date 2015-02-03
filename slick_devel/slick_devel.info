@@ -1,5 +1,5 @@
 name = Slick Development
-description = "Provides development option for the Slick carousel."
+description = "Provides Slick development, the last carousel development."
 core = 7.x
 package = Slick
 

@@ -1,4 +1,11 @@
 
+Slick 7.x-2.0-dev, 2015-2-3
+---------------------------
+Issue #2418149 by nrutkowski: Fixed for Slick 1.4 breaking changes.
+Updated to Slick 1.4 with more tests and cleanups.
+Fixed nullified edgeFriction due to typecast integer to float.
+Updated the rest of year CHANGELOG from 2014 to 2015.
+
 Slick 7.x-2.0-dev, 2015-2-1
 ---------------------------
 Updated slick example to avoid Unslick and too large centerPadding which screws

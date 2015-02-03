@@ -127,9 +127,11 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       '#type' => 'select',
       '#title' => t('Thumbnail caption'),
       '#default_value' => $settings['thumbnail_caption'],
+      '#options' => array(),
       '#empty_option' => t('- None -'),
       '#description' => t('Thumbnail caption maybe just titles.'),
       '#attributes' => array('class' => array('is-tooltip')),
+      '#access' => FALSE,
     );
 
     $grid_options = drupal_map_assoc(range(1, 12));
@@ -228,7 +230,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
         }
       }
 
-      // Content: title is not really a field.
+      // Content: title is not really a field, unless title.module installed.
       if ($handler->field == 'title') {
         $title_options[$field] = $handler->ui_name();
         $thumbnail_caption_options[$field] = $handler->ui_name();
