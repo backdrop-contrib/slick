@@ -4,39 +4,46 @@
  * @file
  * Hooks provided by the Slick module.
  *
- * Modules and themes may implement any of the available hooks to interact with
- * the Slick.
+ * Modules may implement any of the available hooks to interact with Slick.
  */
 
 /**
- * Register Slick skins.
+ * Registers Slick skins.
+ *
+ * This function may live in module file, or my_module.slick.inc if you have
+ * many skins.
  *
  * This hook can be used to register skins for the Slick. Skins will be
- * displayed and made selectable when configuring the formatter.
+ * available when configuring the Optionset, Field formatter, or Views style.
  *
  * Slick skins get a unique CSS class to use for styling, e.g.:
  * If you skin name is "my_module_slick_carousel_rounded", the class is:
  * slick--skin--my-module-slick-carousel-rounded
  *
- * A skin can specify an unlimited number of CSS and JS files to include when
- * the Slick is displayed, but of course nobody will do it.
+ * A skin can specify some CSS and JS files to include when Slick is displayed.
+ *
+ * @see hook_hook_info()
+ * @see slick_example.module
  */
 function hook_slick_skins_info() {
+  // The source can be theme or module.
+  $theme_path = drupal_get_path('theme', 'my_theme');
+
   return array(
     'skin_name' => array(
       // Human readable skin name.
       'name' => t('Skin name'),
-      // Description of the skin, future use for help and manage pages.
+      // Description of the skin.
       'description' => t('Skin description.'),
       'css' => array(
         // Full path to a CSS file to include with the skin.
-        drupal_get_path('module', 'module_name') . '/css/module-name.slick.theme--slider.css',
-        drupal_get_path('module', 'module_name') . '/css/module-name.slick.theme--carousel.css',
+        $theme_path . '/css/my-theme.slick.theme--slider.css' => array('weight' => 10),
+        $theme_path . '/css/my-theme.slick.theme--carousel.css' => array('weight' => 11),
       ),
       'js' => array(
         // Full path to a JS file to include with the skin.
-        drupal_get_path('module', 'module_name') . '/js/module-name.slick.theme--slider.js',
-        drupal_get_path('module', 'module_name') . '/js/module-name.slick.theme--carousel.js',
+        $theme_path . '/js/my-theme.slick.theme--slider.js',
+        $theme_path . '/js/my-theme.slick.theme--carousel.js',
       ),
     )
   );
@@ -45,16 +52,61 @@ function hook_slick_skins_info() {
 /**
  * Alter Slick skins.
  *
+ * This function lives in module file, not my_module.slick.inc.
+ * Overriding skin CSS can be done via my_theme.info, hook_css_alter(), or below.
+ *
  * @param $skins
  *   The associative array of skin information from hook_slick_skins_info().
  *
  * @see hook_slick_skins_info()
+ * @see slick_example.module
  */
 function hook_slick_skins_info_alter(&$skins) {
-  // Modify the default skin's name and description.
-  $skins['default']['name'] = t('My skin');
-  $skins['default']['description'] = t('My owsem skin.');
+  // The source can be theme or module.
+  // The CSS is provided by my_theme.
+  $theme_path = drupal_get_path('theme', 'my_theme');
 
-  // Replace the default skin styling.
-  $skins['default']['css'][] = drupal_get_path('module', 'module_name') . '/module-name.slick.theme--owsem.css';
+  // Modify the default skin's name and description.
+  $skins['default']['name'] = t('My Theme: Default');
+  $skins['default']['description'] = t('My Theme default skin.');
+
+  // This one won't work.
+  // $skins['default']['css'][$theme_path . '/css/slick.theme--base.css'] = array('weight' => -22);
+
+  // This one overrides slick.theme--default.css with slick.theme--base.css.
+  $skins['default']['css'] = array($theme_path . '/css/slick.theme--base.css' => array('weight' => -22));
+
+  // Overrides skin asNavFor with theme CSS.
+  $skins['asnavfor']['name'] = t('My Theme: asnavfor');
+  $skins['asnavfor']['css'] = array($theme_path . '/css/slick.theme--asnavfor.css' => array('weight' => 21));
+
+  // Or with the new name.
+  $skins['asnavfor']['css'] = array($theme_path . '/css/slick.theme--asnavfor-new.css' => array('weight' => 21));
+
+  // Overrides skin Fullwidth with theme CSS.
+  $skins['fullwidth']['name'] = t('My Theme: fullwidth');
+  $skins['fullwidth']['css'] = array($theme_path . '/css/slick.theme--fullwidth.css' => array('weight' => 22));
+}
+
+/**
+ * Alter Slick attach information before they are called.
+ *
+ * This function lives in module file, not my_module.slick.inc.
+ *
+ * @param $attach
+ *   The associative array of attach information from slick_attach().
+ *
+ * @see slick_attach()
+ * @see slick_example.module
+ */
+function hook_slick_attach_info_alter(&$attach) {
+  // Disable inline CSS after copying the output to theme at final stage.
+  $attach['attach_inline_css'] = NULL;
+
+  // Disable module JS: slick.load.js to use your own slick JS.
+  $attach['attach_module'] = FALSE;
+
+  // Also disable its depencencies, otherwise slick.load.js is still loaded.
+  $attach['attach_media'] = FALSE;
+  $attach['attach_colorbox'] = FALSE;
 }

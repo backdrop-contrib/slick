@@ -108,10 +108,6 @@ function slick_hook_info() {
     'group' => 'slick',
   );
 
-  $hooks['slick_skins_info_alter'] = array(
-    'group' => 'slick',
-  );
-
   return $hooks;
 }
 
@@ -297,6 +293,7 @@ function slick_attach(array $attach) {
     'attach_slick'          => TRUE,
     'attach_slick_element'  => TRUE,
     'attach_module'         => TRUE,
+    'attach_module_css'     => TRUE,
     'attach_media'          => FALSE,
     'attach_colorbox'       => FALSE,
     'attach_skin'           => NULL,
@@ -305,6 +302,9 @@ function slick_attach(array $attach) {
   );
 
   $attach = array_merge($defaults, $attach);
+
+  // Allows attach information to be altered.
+  drupal_alter('slick_attach_info', $attach);
 
   if ($attach['attach_easing']) {
     $easing = module_exists('jqeasing') ? array('jqeasing', 'easing') : array('slick', 'slick.easing');
@@ -331,35 +331,36 @@ function slick_attach(array $attach) {
     $load['library'][] = array('slick', 'drupal.slick.media');
   }
 
+  $load['css'] = array();
+  $load['js'] = array();
+
   // Skin assets.
   if ($skin = $attach['attach_skin']) {
     if (isset($skins[$skin]['css'])) {
       // If we do have a defined skin, load the Slick element and module theme.
       if ($attach['attach_slick_element']) {
-        $load['css'][libraries_get_path('slick') . '/slick/slick-theme.css'] = array('weight' => -2);
+        $load['css'] += array(libraries_get_path('slick') . '/slick/slick-theme.css' => array('weight' => -100));
       }
-      $load['css'][$module_path . '/css/theme/slick.theme.css'] = array('weight' => -1);
-      foreach ($skins[$skin]['css'] as $c => $css) {
-        $load['css'][] = $css;
+
+      if ($attach['attach_module_css']) {
+        $load['css'] += array($module_path . '/css/theme/slick.theme.css' => array('weight' => -100));
+      }
+
+      if (is_array($skins[$skin]['css'])) {
+        $load['css'] += $skins[$skin]['css'];
       }
     }
-    if (isset($skins[$skin]['js'])) {
-      foreach ($skins[$skin]['js'] as $j => $js) {
-        $load['js'][] = $js;
-      }
+    if (isset($skins[$skin]['js']) && is_array($skins[$skin]['js'])) {
+      $load['js'] += $skins[$skin]['js'];
     }
   }
 
   if ($skin_thumbnail = $attach['attach_skin_thumbnail']) {
-    if (isset($skins[$skin_thumbnail]['css'])) {
-      foreach ($skins[$skin_thumbnail]['css'] as $c => $css) {
-        $load['css'][] = $css;
-      }
+    if (isset($skins[$skin_thumbnail]['css']) && is_array($skins[$skin_thumbnail]['css'])) {
+      $load['css'] += $skins[$skin_thumbnail]['css'];
     }
-    if (isset($skins[$skin_thumbnail]['js'])) {
-      foreach ($skins[$skin_thumbnail]['js'] as $j => $js) {
-        $load['js'][] = $js;
-      }
+    if (isset($skins[$skin_thumbnail]['js']) && is_array($skins[$skin_thumbnail]['js'])) {
+      $load['js'] += $skins[$skin_thumbnail]['js'];
     }
   }
 

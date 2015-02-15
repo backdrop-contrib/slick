@@ -2,12 +2,12 @@
 
 /**
  * @file
+ * Provides development options for the Slick module.
  */
 
 define('SLICK_DEVEL', variable_get('slick_devel', FALSE));
 define('SLICK_DEVEL_REPLACE', variable_get('slick_devel_replace', FALSE));
 define('SLICK_DEVEL_DISABLE', variable_get('slick_devel_disable', FALSE));
-
 
 /**
  * Implements hook_menu().
@@ -83,6 +83,6 @@ function slick_devel_preprocess_slick(&$variables) {
   if (SLICK_DEVEL_DISABLE && isset($variables['content_attributes_array']['data-config'])) {
     $variables['content_attributes_array']['data-slick'] = $variables['content_attributes_array']['data-config'];
     unset($variables['content_attributes_array']['data-config']);
-  // kpr($variables);
+    // kpr($variables);
   }
 }

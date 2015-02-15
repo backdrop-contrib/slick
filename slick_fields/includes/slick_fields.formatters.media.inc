@@ -222,5 +222,9 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
     $build[$key] = $slide;
   }
 
+  if ($css) {
+    $settings['inline_css'] = $css;
+  }
+
   return $build;
 }

@@ -302,6 +302,12 @@ KNOWN ISSUES
     fix this, but later dropped and handed over to the core instead.
 
 
+UNKNOWN ISSUES
+--------------------------------------------------------------------------------
+- Anything I am not aware of.
+  Please report if you find one. Your report and help is the module QA.
+
+
 
 CURRENT DEVELOPMENT STATUS
 --------------------------------------------------------------------------------

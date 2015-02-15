@@ -120,7 +120,9 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
     $build[$key] = $slide;
   }
 
-  $settings['inline_css'] = $css;
+  if ($css) {
+    $settings['inline_css'] = $css;
+  }
 
   return $build;
 }

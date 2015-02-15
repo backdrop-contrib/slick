@@ -277,7 +277,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#default_value' => $settings['thumbnail_style'],
     '#empty_option' => t('- None -'),
     '#options' => $image_styles,
-    '#description' => t('If <em>Option set thumbnail</em> provided, it will be used for asNavFor thumbnail navigation slider.'),
+    '#description' => t('If <em>Option set thumbnail</em> provided, it will be used for asNavFor thumbnail navigation slider. Otherwise thumbnails may also be displayed when hovering over dots.'),
     '#attributes' => array('class' => array('is-tooltip')),
   );
 
@@ -292,7 +292,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         'select[name*="[thumbnail_style]"]' => array('value' => ''),
       ),
     ),
-    '#description' => t('Dependent on dots option enabled, and thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
+    '#description' => t('Dependent on dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
     '#attributes' => array('class' => array('is-tooltip')),
   );
 

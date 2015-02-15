@@ -409,9 +409,11 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 
   .slick--skin--split .slide--caption--split-left .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) .slide__caption {
     margin-left: 52%;
+    width: auto;
   }
   .slick--skin--split .slide--caption--split-right .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(even) .slide__caption {
     margin-right: 52%;
+    width: auto;
   }
 }
 @media (max-width: 767px) {

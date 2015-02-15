@@ -1,4 +1,30 @@
 
+Slick 7.x-2.0-dev, 2015-2-14
+----------------------------
+Added hook_slick_attach_info_alter() to alter slick_attach() before output.
+Updated slick.api.php for the new skin CSS and JS array.
+Fixed skin CSS overrides not being applied for multiple slick instances on the
+  same page, by changing the array of skin CSS and JS to be keyed by file names
+  rather than indeces. Relevant to Drupal 8 dynamic assets.
+  If you don't override the skin CSS, the change is ignorable.
+  Single instance or multiple without overriding skins are not effected.
+  Unless you have multiple slick instances on the same page, previous overrides
+  with indeces will still work though.
+  The change now allows proper overrides and respect the orders accordingly, see
+  hook_slick_skins_info_alter().
+  If you have overridden the skin CSS, be sure to update it accordingly, see
+  slick.api.php for the updated information.
+
+Fixed skin Fullscreen inline CSS for slick_fields.module for Media and FC.
+
+Fixed .slick__arrow parent selector relevant for Slick 1.4, see
+  Drupal.slick.arrows().
+  This core bug happens when total <= slidesTosShow and should be fixed by the
+  implementor/module as the author suggested.
+Fixed for skin 3d back relevant to the latest fix with afterChange and proper
+  data-slick-index.
+Updated slick.load.js to reflect the 1.4.1 fixes.
+
 Slick 7.x-2.0-dev, 2015-2-3
 ---------------------------
 Added more info related to ROADMAP and current delvelopment status at README.txt.

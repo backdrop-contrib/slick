@@ -50,21 +50,11 @@
      * The event must be bound after slick being called.
      */
     afterSlick: function(t, merged) {
-      $('.slide--' + merged.initialSlide, t).addClass('slide--current');
+      Drupal.slick.setCurrent(t, merged.initialSlide);
 
-      t
-        .on('reInit', function(e, slick) {
-          Drupal.slick.arrows(t, merged, slick.slideCount);
-        })
-        .on('beforeChange', function(e, slick, currentSlide, nextSlide) {
-          $('.slide--current', t).removeClass('slide--current');
-        })
-        .on('afterChange', function(e, slick, currentSlide) {
-          Drupal.slick.setCurrent(t, currentSlide);
-        })
-        .on('click.slick-slide', '.slick__slide', function(e) {
-          Drupal.slick.setCurrent(t, parseInt($(this).data('slickIndex')));
-        });
+      t.on('afterChange', function(e, slick, currentSlide) {
+        Drupal.slick.setCurrent(t, currentSlide);
+      });
 
       // Arrow down jumper.
       t.parent().on('click', '.jump-scroll[data-target]', function(e) {
@@ -101,10 +91,10 @@
     },
 
     /**
-     * Update arrows.
+     * Fixed core bug with arrows when total <= slidesToShow.
      */
     arrows: function(t, merged, total) {
-      var $arrows = $('.slick__arrow', t);
+      var $arrows = $('.slick__arrow', t.parent());
       if (!$arrows.length) {
         return;
       }
@@ -134,11 +124,13 @@
 
     /**
      * Without centerMode, .slick-active can be as many as visible slides, hence
-     * added a specific class. Also fix for total <= slidesToShow with centerMode.
+     * added a specific class. Also fix total <= slidesToShow with centerMode.
      */
     setCurrent: function(t, curr) {
-      $('.slide--current', t).removeClass('slide--current');
-      $('.slide--' + curr, t).addClass('slide--current');
+      $('.slick__slide', t).removeClass('slide--after slide--before slide--current');
+      var $curr = $('[data-slick-index="' + curr + '"]', t).addClass('slide--current');
+      $curr.prevAll().addClass('slide--before');
+      $curr.nextAll().addClass('slide--after');
     },
 
     /**
@@ -155,7 +147,7 @@
         nextArrow: $('.slick__arrow .slick-next', t),
         appendArrows: merged.appendArrows,
         customPaging: function(slick, i) {
-          return slick.$slides.eq(i).find('.slide__thumbnail--placeholder').html() || '<button type="button" data-role="none">' + (i + 1) + '</button>';
+          return slick.$slides.eq(i).find('.slide__thumbnail--placeholder').html() || slick.defaults.customPaging(slick, i);
         }
       };
 

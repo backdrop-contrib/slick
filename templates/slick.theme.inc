@@ -235,7 +235,7 @@ function template_preprocess_slick(&$variables) {
 
   $js['mousewheel'] = $settings['mousewheel'] ? TRUE : FALSE;
 
-  // Add the configuration as JSON object into slick container.
+  // Add the configuration as JSON object into the slick container.
   // data-config is kept rather than the new data-slick, otherwise Slick will
   // be initialized too early, causing other functions fail. data-slick is very
   // useful if you have no extra needs.

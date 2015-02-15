@@ -432,7 +432,9 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
     }
   }
 
-  $settings['inline_css'] = $css;
+  if ($css) {
+    $settings['inline_css'] = $css;
+  }
 
   return $build;
 }
