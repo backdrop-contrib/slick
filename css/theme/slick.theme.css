@@ -164,9 +164,6 @@ img {
 .slick--center .slick__slide.slide--current, .slick--center .slick__slide.slick-active {
   opacity: 1;
 }
-.slick--center .slick__slide.slick-center {
-  z-index: 4;
-}
 
 /**
  * Thumbnails inside bullets.
@@ -285,6 +282,13 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 .slick,
 .slick__slide {
   position: relative;
+}
+
+.slick__slide.slick-center {
+  z-index: 1;
+}
+.slick__slide.slide--current {
+  z-index: 2;
 }
 
 /**

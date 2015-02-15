@@ -50,11 +50,18 @@
      * The event must be bound after slick being called.
      */
     afterSlick: function(t, merged) {
+      var slider = t.slick('getSlick');
       Drupal.slick.setCurrent(t, merged.initialSlide);
 
       t.on('afterChange', function(e, slick, currentSlide) {
         Drupal.slick.setCurrent(t, currentSlide);
       });
+
+      if (merged.focusOnSelect && (slider.slideCount <= Drupal.slick.toShow(t, merged))) {
+        t.on('click', '.slick-slide', function(e) {
+          Drupal.slick.setCurrent(t, $(this).data('slickIndex'));
+        });
+      }
 
       // Arrow down jumper.
       t.parent().on('click', '.jump-scroll[data-target]', function(e) {
@@ -62,11 +69,10 @@
         var a = $(this);
         $('html, body').stop().animate({
           scrollTop: $(a.data('target')).offset().top - (a.data('offset') || 0)
-        }, 800, 'easeInOutExpo');
+        }, 800, merged.easing || 'swing');
       });
 
       if ($.isFunction($.fn.mousewheel) && merged.mousewheel) {
-        var slider = t.slick('getSlick');
         t.on('mousewheel', function(e, delta) {
           e.preventDefault();
           var wheeler = (delta < 0) ? slider.slickNext() : slider.slickPrev();
@@ -91,6 +97,19 @@
     },
 
     /**
+     * Gets slidesToShow depending on current settings.
+     */
+    toShow: function(t, merged) {
+      var toShow = merged.slidesToShow;
+      if (typeof merged.responsive !== 'undefined' && typeof merged.responsive[0].breakpoint !== 'undefined') {
+        if ($(window).width() <= merged.responsive[0].breakpoint) {
+          toShow = merged.responsive[0].settings.slidesToShow;
+        }
+      }
+      return parseInt(toShow);
+    },
+
+    /**
      * Fixed core bug with arrows when total <= slidesToShow.
      */
     arrows: function(t, merged, total) {
@@ -99,17 +118,8 @@
         return;
       }
 
-      // Gets slidesToShow depending on current settings.
-      var toShow = merged.slidesToShow;
-      if (typeof merged.responsive !== 'undefined' && typeof merged.responsive[0].breakpoint !== 'undefined') {
-        if ($(window).width() <= merged.responsive[0].breakpoint) {
-          toShow = merged.responsive[0].settings.slidesToShow;
-        }
-      }
-      toShow = parseInt(toShow);
-
       // Do not remove arrows, to allow responsive have different options.
-      var arrows = total <= toShow ? $arrows.hide() : $arrows.show();
+      var arrows = total <= Drupal.slick.toShow(t, merged) ? $arrows.hide() : $arrows.show();
     },
 
     /**
@@ -127,8 +137,10 @@
      * added a specific class. Also fix total <= slidesToShow with centerMode.
      */
     setCurrent: function(t, curr) {
-      $('.slick__slide', t).removeClass('slide--after slide--before slide--current');
-      var $curr = $('[data-slick-index="' + curr + '"]', t).addClass('slide--current');
+      // Must take care for both asNavFor as well.
+      var w = t.closest('.slick-wrapper');
+      $('.slick__slide', w).removeClass('slide--after slide--before slide--current');
+      var $curr = $('[data-slick-index="' + curr + '"]', w).addClass('slide--current');
       $curr.prevAll().addClass('slide--before');
       $curr.nextAll().addClass('slide--after');
     },

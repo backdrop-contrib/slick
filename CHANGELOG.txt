@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2015-2-15
+----------------------------
+Fixed slide--current class not being applied when total <= slidesToShow, that is
+  when slick-center class is not really centered, and when asNavFor applies, and
+  when afterChange always fails.
+
 Slick 7.x-2.0-dev, 2015-2-14
 ----------------------------
 Added hook_slick_attach_info_alter() to alter slick_attach() before output.

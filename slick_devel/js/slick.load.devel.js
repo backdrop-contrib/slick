@@ -15,7 +15,7 @@
           merged = $.extend({}, settings.slick, configs),
           globals = Drupal.slick.globals(this, merged);
 
-        // Populate defaults + globals into breakpoints.
+        // Populate defaults + globals into each breakpoint.
         if (typeof configs.responsive !== 'undefined') {
           $.map(configs.responsive, function(v, i) {
             if (typeof configs.responsive[i].settings !== 'undefined' && configs.responsive[i].settings !== 'unslick') {
@@ -50,27 +50,19 @@
      * The event must be bound after slick being called.
      */
     afterSlick: function(t, merged) {
-      $('.slide--' + merged.initialSlide, t).addClass('slide--current');
+      var slider = t.slick('getSlick');
+      Drupal.slick.setCurrent(t, merged.initialSlide);
 
-      t
-        .on('reInit', function(e, slick) {
-          Drupal.slick.arrows(t, merged, slick.slideCount);
-          console.log('reInit: ' + slick.slideCount);
-        })
-        .on('beforeChange', function(e, slick, currentSlide, nextSlide) {
-          $('.slide--current', t).removeClass('slide--current');
-          console.log('beforeChange currentSlide: ' + currentSlide);
-          console.log('beforeChange nextSlide: ' + currentSlide);
-        })
-        .on('afterChange', function(e, slick, currentSlide) {
-          Drupal.slick.setCurrent(t, currentSlide);
-          console.log(slick);
-          console.log(slider);
-          console.log('afterChange currentSlide: ' + currentSlide);
-        })
-        .on('click.slick-slide', '.slick__slide', function(e) {
-          Drupal.slick.setCurrent(t, parseInt($(this).data('slickIndex')));
+      t.on('afterChange', function(e, slick, currentSlide) {
+        Drupal.slick.setCurrent(t, currentSlide);
+        console.log('afterChange: ' + currentSlide);
+      });
+
+      if (slider.slideCount <= Drupal.slick.toShow(t, merged)) {
+        t.on('click', '.slick-slide', function(e) {
+          Drupal.slick.setCurrent(t, $(this).data('slickIndex'));
         });
+      }
 
       // Arrow down jumper.
       t.parent().on('click', '.jump-scroll[data-target]', function(e) {
@@ -78,15 +70,12 @@
         var a = $(this);
         $('html, body').stop().animate({
           scrollTop: $(a.data('target')).offset().top - (a.data('offset') || 0)
-        }, 800, 'easeInOutExpo');
+        }, 800, merged.easing || 'swing');
       });
 
-      // @see https://github.com/kenwheeler/slick/issues/122
       if ($.isFunction($.fn.mousewheel) && merged.mousewheel) {
-        var slider = t.slick('getSlick');
         t.on('mousewheel', function(e, delta) {
           e.preventDefault();
-          // var wheeler = (delta < 0) ? t.slick('slickNext') : t.slick('slickPrev');
           var wheeler = (delta < 0) ? slider.slickNext() : slider.slickPrev();
         });
       }
@@ -109,25 +98,29 @@
     },
 
     /**
-     * Update arrows.
+     * Gets slidesToShow depending on current settings.
      */
-    arrows: function(t, merged, total) {
-      var $arrows = $('.slick__arrow', t);
-      if (!$arrows.length) {
-        return;
-      }
-
-      // Gets slidesToShow depending on current settings.
+    toShow: function(t, merged) {
       var toShow = merged.slidesToShow;
       if (typeof merged.responsive !== 'undefined' && typeof merged.responsive[0].breakpoint !== 'undefined') {
         if ($(window).width() <= merged.responsive[0].breakpoint) {
           toShow = merged.responsive[0].settings.slidesToShow;
         }
       }
-      toShow = parseInt(toShow);
+      return parseInt(toShow);
+    },
+
+    /**
+     * Fixed core bug with arrows when total <= slidesToShow.
+     */
+    arrows: function(t, merged, total) {
+      var $arrows = $('.slick__arrow', t.parent());
+      if (!$arrows.length) {
+        return;
+      }
 
       // Do not remove arrows, to allow responsive have different options.
-      var arrows = total <= toShow ? $arrows.hide() : $arrows.show();
+      var arrows = total <= Drupal.slick.toShow(t, merged) ? $arrows.hide() : $arrows.show();
     },
 
     /**
@@ -142,11 +135,13 @@
 
     /**
      * Without centerMode, .slick-active can be as many as visible slides, hence
-     * added a specific class. Also fix for total <= slidesToShow with centerMode.
+     * added a specific class. Also fix total <= slidesToShow with centerMode.
      */
     setCurrent: function(t, curr) {
-      $('.slide--current', t).removeClass('slide--current');
-      $('.slide--' + curr, t).addClass('slide--current');
+      $('.slick__slide', t).removeClass('slide--after slide--before slide--current');
+      var $curr = $('[data-slick-index="' + curr + '"]', t).addClass('slide--current');
+      $curr.prevAll().addClass('slide--before');
+      $curr.nextAll().addClass('slide--after');
     },
 
     /**
@@ -161,10 +156,9 @@
         rtl: merged.rtl,
         prevArrow: $('.slick__arrow .slick-prev', t),
         nextArrow: $('.slick__arrow .slick-next', t),
-         // $(merged.appendArrows, t), if using data-slick
         appendArrows: merged.appendArrows,
         customPaging: function(slick, i) {
-          return slick.$slides.eq(i).find('.slide__thumbnail--placeholder').html() || '<button type="button" data-role="none">' + (i + 1) + '</button>';
+          return slick.$slides.eq(i).find('.slide__thumbnail--placeholder').html() || slick.defaults.customPaging(slick, i);
         }
       };
 

@@ -25,13 +25,10 @@
   .slick__slide {
     opacity: 0.8;
     @include transition(all 300ms ease);
-    
+
     &.slide--current,
     &.slick-active {
       opacity: 1;
-    }
-    &.slick-center {
-      z-index: 4;
     }
   }
 }

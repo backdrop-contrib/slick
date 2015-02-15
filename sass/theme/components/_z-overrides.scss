@@ -15,3 +15,14 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 .slick__slide {
   position: relative;
 }
+
+.slick__slide {
+  // With bug total <= slidesToShow, slick-center is screwed up.
+  &.slick-center {
+    z-index: 1;
+  }
+  // So add proper z-index for the actual current.
+  &.slide--current {
+    z-index: 2;
+  }
+}
