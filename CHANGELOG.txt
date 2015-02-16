@@ -1,6 +1,9 @@
 
 Slick 7.x-2.0-dev, 2015-2-17
 ----------------------------
+Updated to media_soundcloud 7.x-2.1 which removed ::getOEmbed method.
+Fixed module slick.theme.css being overriden by library slick-theme.css.
+Fixed media video/audio autoplay not being triggered when button play clicked.
 Fixed media video carousel being sluggish due to the browser always request
   iframe SRC even when empty (about:blank). The iframe is now removed and stored
   in memory instead, and only made available when a play button clicked.

@@ -343,7 +343,7 @@ function slick_attach(array $attach) {
       }
 
       if ($attach['attach_module_css']) {
-        $load['css'] += array($module_path . '/css/theme/slick.theme.css' => array('weight' => -100));
+        $load['css'] += array($module_path . '/css/theme/slick.theme.css' => array('weight' => -99));
       }
 
       if (is_array($skins[$skin]['css'])) {

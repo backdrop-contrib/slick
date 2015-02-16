@@ -144,10 +144,8 @@ function _slick_fields_get_media_thumbnail(&$settings, $uri, $image_style = NULL
           break;
 
         case 'soundcloud':
-          $soundcloud_url = $wrapper->interpolateUrl();
-
           // Prevent fatal error for no internet connection.
-          if ($embed_data = $wrapper->getOEmbed($soundcloud_url)) {
+          if ($wrapper->interpolateUrl()) {
             $settings['soundcloud'] = TRUE;
           }
 

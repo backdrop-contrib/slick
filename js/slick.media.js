@@ -47,7 +47,7 @@
           $slider.addClass('is-paused').slick('slickPause');
 
           t.addClass('is-playing').append(newIframe);
-
+          newIframe.attr('src', url);
           return false;
         })
         // Closes the video.

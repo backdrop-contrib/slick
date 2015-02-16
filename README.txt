@@ -320,6 +320,7 @@ and a few small code cleanup where needed. Patches are very much welcome.
 
 ROADMAP
 --------------------------------------------------------------------------------
+- Bug fixes.
 - Drupal 8 port, see if you can help/ provide suggestion:
   https://www.drupal.org/node/2412863
 

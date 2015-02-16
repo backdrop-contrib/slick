@@ -215,9 +215,8 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                   $safe = TRUE;
                   if ($settings['scheme'] == 'soundcloud') {
                     $safe = FALSE;
-                    $soundcloud_url = $wrapper->interpolateUrl();
                     // Prevent fatal error for no internet connection.
-                    if ($embed_data = $wrapper->getOEmbed($soundcloud_url)) {
+                    if ($wrapper->interpolateUrl()) {
                       $settings['soundcloud'] = TRUE;
                       $safe = TRUE;
                     }
