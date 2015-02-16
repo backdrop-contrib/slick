@@ -8,20 +8,19 @@
   Drupal.behaviors.slickMedia = {
     attach: function (context, settings) {
 
-      var player = '.media--switch--player';
-
-      $(player, context).once('slick-media', function () {
+      $('.media--switch--player', context).once('slick-media', function () {
         var t = $(this),
-          $slider = t.closest('.slick__slider');
+          $slider = t.closest('.slick__slider'),
+          iframe = t.find('iframe'),
+          newIframe = iframe.clone(),
+          media = newIframe.data('media'),
+          url = newIframe.data('lazy');
 
-        // Remove SRC attributes to avoid direct autoplay, if mistakenly enabled.
-        t.find('iframe').attr('src', 'about:blank');
+        // Remove iframe to avoid browser requesting them till clicked.
+        iframe.remove();
 
         t.on('click.media-play', '.media-icon--play', function (e) {
-          var p = $(this),
-            iframe = p.closest(player).find('iframe'),
-            url = iframe.data('lazy'),
-            media = iframe.data('media');
+          var p = $(this);
 
             // Soundcloud needs internet, fails on disconnected local.
             if (url === '') {
@@ -38,35 +37,30 @@
             }
 
           // First, reset any video to avoid multiple videos from playing.
-          $(player).removeClass('is-playing').find('iframe').attr('src', 'about:blank');
+          t.removeClass('is-playing');
 
-          // Clean up any pause marker.
+          // Clean up any pause marker at slider container.
           $('.is-paused').removeClass('is-paused');
 
           // Last, pause the slide, for just in case autoplay is on, and
           // pauseOnHover is disabled, and then trigger autoplay.
           $slider.addClass('is-paused').slick('slickPause');
 
-          t.closest(player).addClass('is-playing').find('iframe').attr('src', url);
+          t.addClass('is-playing').append(newIframe);
+
           return false;
         })
         // Closes the video.
         .on('click.media-close', '.media-icon--close', function (e) {
-          $(this).closest(player).removeClass('is-playing').find('iframe').attr('src', 'about:blank');
+          t.removeClass('is-playing').find('iframe').remove();
           $('.is-paused').removeClass('is-paused');
           return false;
         });
 
-        // Turns off video if any button clicked.
-        $slider
-        .on('click.media-close-other', '.slick__arrow button, > button', function (e) {
-          $slider.find('.media-icon--close').trigger('click.media-close');
-        })
-        .on('afterChange', function (e, slick, currentSlide) {
-          $('.media-icon--close', $slider).trigger('click.media-close');
-          // Drupal.slick.setCurrent($slider, currentSlide);
+        // Turns off any video if any change to the slider.
+        $slider.on('afterChange', function (e, slick, currentSlide) {
+          $slider.find('.is-playing .media-icon--close').trigger('click.media-close');
         });
-        ;
       });
     }
   };

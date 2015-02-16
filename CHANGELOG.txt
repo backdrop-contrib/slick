@@ -1,4 +1,12 @@
 
+Slick 7.x-2.0-dev, 2015-2-17
+----------------------------
+Fixed media video carousel being sluggish due to the browser always request
+  iframe SRC even when empty (about:blank). The iframe is now removed and stored
+  in memory instead, and only made available when a play button clicked.
+
+Updated slick.media.js to reflect the latest fix with afterChange.
+
 Slick 7.x-2.0-dev, 2015-2-15
 ----------------------------
 Fixed slide--current class not being applied when total <= slidesToShow, that is
