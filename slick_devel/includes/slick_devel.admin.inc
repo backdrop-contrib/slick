@@ -3,8 +3,6 @@
 /**
  * @file
  * Slick development admin.
- *
- * Contains optional functions called only if needed by admin pages.
  */
 
 /**
@@ -26,15 +24,29 @@ function slick_devel_form_settings() {
     '#default_value' => variable_get('slick_devel', FALSE),
   );
 
+  $form['library']['slick_debug'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use non-minified slick.load.js'),
+    '#description' => t('Replace slick.load.min.js with slick.load.js. Only useful to debug it.'),
+    '#default_value' => variable_get('slick_debug', FALSE),
+  );
+
   $form['library']['slick_devel_disable'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Disable module slick.load.js'),
+    '#title' => t('Disable module slick.load.min.js'),
+    '#description' => t('Slick will run at its basic setup using data-slick attributes.'),
     '#default_value' => variable_get('slick_devel_disable', FALSE),
+    '#states' => array(
+      'invisible' => array(
+        array(':input[name="slick_debug"]' => array('checked' => TRUE)),
+      ),
+    ),
   );
 
   $form['library']['slick_devel_replace'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Replace the slick.load.js with development version: slick.load.devel.js'),
+    '#title' => t('Replace the slick.load.min.js with development version: slick.load.devel.js'),
+    '#description' => t('Use slick.load.devel.js to debug the Slick without modifying slick.load.min.js.'),
     '#default_value' => variable_get('slick_devel_replace', FALSE),
     '#states' => array(
       'invisible' => array(

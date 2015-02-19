@@ -185,6 +185,7 @@ When upgrading from Slick v1.3.6 to later version, try to resave options at:
 only if trouble to see the new options, or when options don't apply properly.
 This is most likely true when the library adds/changes options, or the module
 does something new.
+
 Always clear the cache when updating the module to ensure things are picked up:
 - admin/config/development/performance
 
@@ -278,7 +279,6 @@ The following modules are supported, but optional.
 NICE TO HAVE
 --------------------------------------------------------------------------------
 These should not block the proper release, but nice to have before then.
-- Paragraphs integration, currently only works when using Views.
 - Multi resolution fullscreen background image sizes.
 - Photobox integration.
 
@@ -293,8 +293,8 @@ documentation.
 KNOWN ISSUES
 --------------------------------------------------------------------------------
 - It currently supports Slick 1.4 above (< 1.5), and dropped Slick 1.3 below.
-- Fullscreen preview with Views is not working, and intentionally disabled to
-  avoid interfering/ covering admin pages.
+- Fullscreen admin preview with Views is not working, and intentionally disabled
+  to avoid interfering/ covering admin pages.
 - The following is not module related, but worth a note:
   * lazyLoad ondemand has issue with dummy image excessive height. See above for
     the recommended fixes.
@@ -305,7 +305,7 @@ KNOWN ISSUES
 UNKNOWN ISSUES
 --------------------------------------------------------------------------------
 - Anything I am not aware of.
-  Please report if you find one. Your report and help is the module QA.
+  Please report if you find one. Your report and help is any module QA.
 
 
 

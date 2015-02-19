@@ -197,14 +197,14 @@ function template_preprocess_slick_views(&$variables) {
     // Updates rows to contain Slick instances now.
     $variables['rows'] = $element;
 
-    // Mimick the Slick wrapper attributes as we don't actually use it.
+    // Mimick the Slick wrapper attributes as we don't actually use it till D8.
     $variables['attributes_array']['class'] = array('slick-wrapper');
     if (isset($settings['skin']) && $settings['skin']) {
       $variables['attributes_array']['class'][] = drupal_clean_css_identifier('slick-wrapper--' . $settings['skin']);
     }
 
     if (isset($settings['asnavfor_thumbnail']) && $settings['asnavfor_thumbnail']) {
-      $variables['attributes_array']['class'][] = drupal_clean_css_identifier('slick-wrapper--asnavfor');
+      $variables['attributes_array']['class'][] = 'slick-wrapper--asnavfor';
     }
 
     // Populate classes_array expected by Omega 3.

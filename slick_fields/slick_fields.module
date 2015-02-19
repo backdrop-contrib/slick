@@ -671,9 +671,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   );
 
   if ($display['type'] == 'slick') {
-    $element['#attached']['css'][] = $slick_module_path . '/css/admin/slick.admin--ui.css';
-    $element['#attached']['css'][] = $slick_module_path . '/css/admin/slick.admin--ui--field.css';
-    $element['#attached']['js'][] = $slick_module_path . '/js/slick.admin.ui.js';
+    $element['#attached']['library'][] = array('slick', 'slick.admin');
   }
 
   return $element;

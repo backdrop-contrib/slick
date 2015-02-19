@@ -1,4 +1,13 @@
 
+Slick 7.x-2.0-dev, 2015-2-20
+----------------------------
+Changed admin assests to use slick.admin library. Clear cache if trouble to see
+  the admin styling.
+Added slick.admin library.
+Changed slick.load.js, slick.media.js and slick.colorbox.js with their
+  minified versions, slick.load.min.js, slick.media.min.js and
+  slick.colorbox.min.js, respectively to save some bytes.
+
 Slick 7.x-2.0-dev, 2015-2-17
 ----------------------------
 Updated to media_soundcloud 7.x-2.1 which removed ::getOEmbed method.

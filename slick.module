@@ -171,7 +171,7 @@ function slick_library() {
   $libraries['drupal.slick'] = $common + array(
     'title' => 'Slick module',
     'js' => array(
-      $slick_module_path . '/js/slick.load.js' => array('group' => JS_DEFAULT, 'weight' => 0),
+      $slick_module_path . '/js/slick.load.min.js' => array('group' => JS_DEFAULT, 'weight' => 0),
     ),
     'dependencies' => array(
       array('system', 'jquery.once'),
@@ -183,7 +183,7 @@ function slick_library() {
   $libraries['drupal.slick.colorbox'] = $common + array(
     'title' => 'Slick colorbox',
     'js' => array(
-      $slick_module_path . '/js/slick.colorbox.js' => array('group' => JS_DEFAULT, 'weight' => 1),
+      $slick_module_path . '/js/slick.colorbox.min.js' => array('group' => JS_DEFAULT, 'weight' => 1),
     ),
     'css' => array(
       $slick_module_path . '/css/components/slick.colorbox.css',
@@ -199,7 +199,7 @@ function slick_library() {
   $libraries['drupal.slick.media'] = $common + array(
     'title' => 'Slick media',
     'js' => array(
-      $slick_module_path . '/js/slick.media.js' => array('group' => JS_DEFAULT, 'weight' => 2),
+      $slick_module_path . '/js/slick.media.min.js' => array('group' => JS_DEFAULT, 'weight' => 2),
     ),
     'css' => array(
       $slick_module_path . '/css/components/slick.media.css',
@@ -208,6 +208,21 @@ function slick_library() {
       array('system', 'jquery.once'),
       array('slick', 'slick'),
       array('slick', 'drupal.slick'),
+    ),
+  );
+
+  // Slick admin libraries.
+  $libraries['slick.admin'] = $common + array(
+    'title' => 'Slick admin',
+    'js' => array(
+      $slick_module_path . '/js/slick.admin.ui.min.js' => array('group' => JS_DEFAULT, 'weight' => 3),
+    ),
+    'css' => array(
+      $slick_module_path . '/css/admin/slick.admin--ui.css' => array(),
+      $slick_module_path . '/css/admin/slick.admin--ui--field.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery.once'),
     ),
   );
 

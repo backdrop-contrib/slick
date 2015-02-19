@@ -52,13 +52,14 @@
     afterSlick: function(t, merged) {
       var slider = t.slick('getSlick');
       Drupal.slick.setCurrent(t, merged.initialSlide);
+      console.log('count: ' + t.slick('getSlick').slideCount);
 
       t.on('afterChange', function(e, slick, currentSlide) {
         Drupal.slick.setCurrent(t, currentSlide);
         console.log('afterChange: ' + currentSlide);
       });
 
-      if (slider.slideCount <= Drupal.slick.toShow(t, merged)) {
+      if (merged.focusOnSelect && (slider.slideCount <= Drupal.slick.toShow(t, merged))) {
         t.on('click', '.slick-slide', function(e) {
           Drupal.slick.setCurrent(t, $(this).data('slickIndex'));
         });
@@ -76,7 +77,8 @@
       if ($.isFunction($.fn.mousewheel) && merged.mousewheel) {
         t.on('mousewheel', function(e, delta) {
           e.preventDefault();
-          var wheeler = (delta < 0) ? slider.slickNext() : slider.slickPrev();
+          // var wheeler = (delta < 0) ? slider.slickNext() : slider.slickPrev();
+          var wheeler = (delta < 0) ? t.slick('slickNext') : t.slick('slickPrev');
         });
       }
     },
@@ -138,8 +140,10 @@
      * added a specific class. Also fix total <= slidesToShow with centerMode.
      */
     setCurrent: function(t, curr) {
-      $('.slick__slide', t).removeClass('slide--after slide--before slide--current');
-      var $curr = $('[data-slick-index="' + curr + '"]', t).addClass('slide--current');
+      // Must take care for both asNavFor as well.
+      var w = t.closest('.slick-wrapper');
+      $('.slick__slide', w).removeClass('slide--after slide--before slide--current');
+      var $curr = $('[data-slick-index="' + curr + '"]', w).addClass('slide--current');
       $curr.prevAll().addClass('slide--before');
       $curr.nextAll().addClass('slide--after');
     },

@@ -75,7 +75,7 @@
       if ($.isFunction($.fn.mousewheel) && merged.mousewheel) {
         t.on('mousewheel', function(e, delta) {
           e.preventDefault();
-          var wheeler = (delta < 0) ? slider.slickNext() : slider.slickPrev();
+          var wheeler = (delta < 0) ? t.slick('slickNext') : t.slick('slickPrev');
         });
       }
     },

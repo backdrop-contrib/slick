@@ -461,7 +461,7 @@ function template_process_slick_item(&$variables) {
 }
 
 /**
- * Implements hook_process_HOOK().
+ * Implements hook_preprocess_HOOK().
  *
  * Tips:
  *   - Avoid variableWidth and adaptiveHeight.
@@ -614,7 +614,7 @@ function template_preprocess_slick_wrapper(&$variables) {
   }
 
   if (isset($settings['asnavfor_thumbnail']) && $settings['asnavfor_thumbnail']) {
-    $variables['attributes_array']['class'][] = drupal_clean_css_identifier('slick-wrapper--asnavfor');
+    $variables['attributes_array']['class'][] = 'slick-wrapper--asnavfor';
   }
 
   // Populate classes_array expected by Omega 3.

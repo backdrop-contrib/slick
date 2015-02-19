@@ -2,7 +2,7 @@
 
 /**
  * @file
- * slick style plugin for the Views module.
+ * Slick style plugin for the Views module.
  */
 
 /**
@@ -400,9 +400,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       }
     }
 
-    $form['#attached']['css'][] = $slick_module_path . '/css/admin/slick.admin--ui.css';
-    $form['#attached']['css'][] = $slick_module_path . '/css/admin/slick.admin--ui--field.css';
-    $form['#attached']['js'][] = $slick_module_path . '/js/slick.admin.ui.js';
+    $form['#attached']['library'][] = array('slick', 'slick.admin');
   }
 
   /**

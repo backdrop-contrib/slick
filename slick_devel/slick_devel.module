@@ -6,6 +6,7 @@
  */
 
 define('SLICK_DEVEL', variable_get('slick_devel', FALSE));
+define('SLICK_DEBUG', variable_get('slick_debug', FALSE));
 define('SLICK_DEVEL_REPLACE', variable_get('slick_devel_replace', FALSE));
 define('SLICK_DEVEL_DISABLE', variable_get('slick_devel_disable', FALSE));
 
@@ -34,6 +35,7 @@ function slick_devel_menu() {
  */
 function slick_devel_library_alter(&$libraries, $module) {
   $path = drupal_get_path('module', 'slick_devel');
+  $slick_path = drupal_get_path('module', 'slick');
   if (SLICK_DEVEL) {
     // Switch to the un-minified version of the library.
     if ($module == 'slick' && isset($libraries['slick'])) {
@@ -43,9 +45,17 @@ function slick_devel_library_alter(&$libraries, $module) {
     }
   }
 
-  if (SLICK_DEVEL_REPLACE) {
+  if (SLICK_DEBUG) {
     // Switch to the development version of the slick.load.js.
     if ($module == 'slick' && isset($libraries['drupal.slick'])) {
+      $libraries['drupal.slick']['js'] = array(
+        $slick_path . '/js/slick.load.js' => array(),
+      );
+    }
+  }
+  else {
+    // Switch to the development version of the slick.load.js.
+    if (SLICK_DEVEL_REPLACE && $module == 'slick' && isset($libraries['drupal.slick'])) {
       $libraries['drupal.slick']['js'] = array(
         $path . '/js/slick.load.devel.js' => array(),
       );
@@ -53,7 +63,7 @@ function slick_devel_library_alter(&$libraries, $module) {
   }
 
   if (SLICK_DEVEL_DISABLE) {
-    // Disable the slick.load.js.
+    // Disable the slick.load.min.js.
     if ($module == 'slick' && isset($libraries['drupal.slick'])) {
       unset($libraries['drupal.slick']['js']);
     }
