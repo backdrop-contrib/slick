@@ -50,6 +50,9 @@ function slick_fields_field_formatter_info() {
       $formatters['slick']['field types'][] = 'field_collection';
       $formatters['slick']['settings'] += array(
         'color_field' => '',
+        'nested_slick' => FALSE,
+        'nested_optionset' => '',
+        'nested_style' => '',
       );
     }
 
@@ -369,8 +372,8 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       $element['slide_image'] = array(
         '#title' => t('Main image field'),
         '#type' => 'select',
-        '#empty_option' => t('None'),
         '#options' => $image_options,
+        '#empty_option' => t('None'),
         '#default_value' => $settings['slide_image'],
         '#description' => t('Main background image field'),
         '#attributes' => array('class' => array('is-tooltip')),
@@ -380,11 +383,59 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       $element['slide_overlay'] = array(
         '#title' => t('Overlay image/video field'),
         '#type' => 'select',
-        '#empty_option' => t('None'),
         '#options' => $overlay_options,
+        '#empty_option' => t('- None -'),
         '#default_value' => $settings['slide_overlay'],
-        '#description' => t('If audio/video, make sure the display is not image display.'),
+        '#description' => t('If audio/video, be sure the display is not image display. You can manage its display at its own entity View mode display, or below for the supported formatters: Image and Rendered file. Nested Slick carousel is supported. Supported fields: Image, Media, Atom reference'),
         '#attributes' => array('class' => array('is-tooltip')),
+      );
+
+      // Field collection nested slicks, slicks within a slick.
+      $element['nested_slick'] = array(
+        '#title' => t('Enable nested slicks'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['nested_slick'],
+        '#description' => t('If checked, multiple overlay items will be rendered as nested slicks, otherwise only the first image/video/audio is displayed. Applied to Image and Rendered file formatters. Alternatively, use the Slick carousel formatter for this particular overlay field at its own View mode display to build similar nested slick.'),
+        '#attributes' => array('class' => array('is-tooltip')),
+        '#field_suffix' => '',
+        '#title_display' => 'before',
+        '#states' => array(
+          'invisible' => array(
+            'select[name*="[slide_overlay]"]' => array('value' => ''),
+          ),
+        ),
+      );
+
+      $element['nested_style'] = array(
+        '#title' => t('Nested image style'),
+        '#type' => 'select',
+        '#default_value' => $settings['nested_style'],
+        '#empty_option' => t('- None -'),
+        '#options' => $image_styles,
+        '#description' => t('Choose the image style for the nested slicks to get them uniformly.'),
+        '#attributes' => array('class' => array('is-tooltip')),
+        '#states' => array(
+          'invisible' => array(
+            array('select[name*="[slide_overlay]"]' => array('value' => '')),
+            array(':input[name*="[nested_slick]"]' => array('checked' => FALSE)),
+          ),
+        ),
+      );
+
+      $element['nested_optionset'] = array(
+        '#title' => t('Nested optionset'),
+        '#type' => 'select',
+        '#options' => $optionsets,
+        '#empty_option' => t('- None -'),
+        '#default_value' => $settings['nested_optionset'],
+        '#description' => t('Choose the optionset for the nested slicks.'),
+        '#attributes' => array('class' => array('is-tooltip')),
+        '#states' => array(
+          'invisible' => array(
+            array('select[name*="[slide_overlay]"]' => array('value' => '')),
+            array(':input[name*="[nested_slick]"]' => array('checked' => FALSE)),
+          ),
+        ),
       );
     }
 
@@ -755,6 +806,11 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
     if (isset($settings['slide_overlay'])) {
       $slide_overlay = $settings['slide_overlay'] ? $settings['slide_overlay'] : t('None');
       $summary[] = t('Overlay image/video: @slide_overlay', array('@slide_overlay' => $slide_overlay));
+
+      if (isset($settings['nested_slick'])) {
+        $nested_slick = $settings['nested_slick'] ? t('Yes') : t('No');
+        $summary[] = t('Nested slicks: @nested_slick', array('@nested_slick' => $nested_slick));
+      }
     }
 
     if (isset($settings['slide_layout'])) {
@@ -835,6 +891,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $settings = array(
       'count' => count($items),
       'has_overlay' => FALSE,
+      'nested_slick' => FALSE,
       'has_media' => FALSE,
       'colorbox_ready' => FALSE,
       'picture_ready' => FALSE,
@@ -887,8 +944,10 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $slick_id = &drupal_static('slick_id', 0);
     $item_id = drupal_clean_css_identifier("slick-{$entity_type}-{$bundle}-{$field_name}-" . ++$slick_id);
     $thumbnail_id = $item_id . '-thumbnail';
-    $settings['attributes']['id'] = $item_id;
-    $settings['content_attributes']['id'] = $item_id . '-slider';
+    // @todo unique_id
+    // $unique_id = uniqid();
+    $settings['attributes']['id'] = drupal_html_id($item_id);
+    $settings['content_attributes']['id'] = drupal_html_id($item_id . '-slider');
 
     if ($is_asnavfor) {
       if ($is_asnavfor_auto) {

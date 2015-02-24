@@ -2,6 +2,7 @@
  * @file
  */
 (function ($, Drupal, window) {
+
   "use strict";
 
   Drupal.slick = Drupal.slick || {};
@@ -10,10 +11,11 @@
     attach: function(context, settings) {
 
       $('.slick', context).once('slick', function() {
-        var t = $('.slick__slider', this),
+        var t = $('> .slick__slider', this),
+          a = $('~ .slick__arrow', t),
           configs = t.data('config') || {},
           merged = $.extend({}, settings.slick, configs),
-          globals = Drupal.slick.globals(this, merged);
+          globals = Drupal.slick.globals(a, merged);
 
         // Populate defaults + globals into each breakpoint.
         if (typeof configs.responsive !== 'undefined') {
@@ -25,7 +27,7 @@
         }
 
         // Build the Slick.
-        Drupal.slick.beforeSlick(t, merged);
+        Drupal.slick.beforeSlick(t, a, merged);
         t.slick($.extend(configs, globals));
         Drupal.slick.afterSlick(t, merged);
       });
@@ -37,12 +39,12 @@
     /**
      * The event must be bound prior to slick being called.
      */
-    beforeSlick: function(t, merged) {
+    beforeSlick: function(t, a, merged) {
       Drupal.slick.randomize(t);
 
       t.on('init', function(e, slick) {
         Drupal.slick.thumbnail(t, merged);
-        Drupal.slick.arrows(t, merged, slick.slideCount);
+        Drupal.slick.arrows(a, merged, slick.slideCount);
       });
     },
 
@@ -57,7 +59,7 @@
         Drupal.slick.setCurrent(t, currentSlide);
       });
 
-      if (merged.focusOnSelect && (slider.slideCount <= Drupal.slick.toShow(t, merged))) {
+      if (merged.focusOnSelect && (slider.slideCount <= Drupal.slick.toShow(merged))) {
         t.on('click', '.slick-slide', function(e) {
           Drupal.slick.setCurrent(t, $(this).data('slickIndex'));
         });
@@ -88,7 +90,7 @@
         return;
       }
 
-      t.children('.slick__slide:not(.slick-cloned)').sort(function() {
+      t.children('> .slick__slide:not(.slick-cloned)').sort(function() {
           return Math.round(Math.random()) - 0.5;
         })
         .each(function() {
@@ -99,7 +101,7 @@
     /**
      * Gets slidesToShow depending on current settings.
      */
-    toShow: function(t, merged) {
+    toShow: function(merged) {
       var toShow = merged.slidesToShow;
       if (typeof merged.responsive !== 'undefined' && typeof merged.responsive[0].breakpoint !== 'undefined') {
         if ($(window).width() <= merged.responsive[0].breakpoint) {
@@ -112,14 +114,13 @@
     /**
      * Fixed core bug with arrows when total <= slidesToShow.
      */
-    arrows: function(t, merged, total) {
-      var $arrows = $('.slick__arrow', t.parent());
-      if (!$arrows.length) {
+    arrows: function(a, merged, total) {
+      if (!a.length) {
         return;
       }
-
+      a.find('>*').addClass('slick-nav');
       // Do not remove arrows, to allow responsive have different options.
-      var arrows = total <= Drupal.slick.toShow(t, merged) ? $arrows.hide() : $arrows.show();
+      var arrows = total <= Drupal.slick.toShow(merged) ? a.hide() : a.show();
     },
 
     /**
@@ -127,7 +128,7 @@
      */
     thumbnail: function(t, merged) {
       if ($('.slick__slide:first .slide__thumbnail', t).length) {
-        $('.' + merged.dotsClass, t).addClass('slick__thumbnail');
+        $('> .' + merged.dotsClass, t).addClass('slick__thumbnail');
         $('.slick__slide .slide__thumbnail--placeholder', t).remove();
       }
     },
@@ -148,21 +149,20 @@
     /**
      * Declare global options explicitly to copy into responsives.
      */
-    globals: function(t, merged) {
+    globals: function(a, merged) {
       var globals = {
         asNavFor: merged.asNavFor,
         slide: merged.slide,
         lazyLoad: merged.lazyLoad,
         dotsClass: merged.dotsClass,
         rtl: merged.rtl,
-        prevArrow: $('.slick__arrow .slick-prev', t),
-        nextArrow: $('.slick__arrow .slick-next', t),
-        appendArrows: merged.appendArrows,
+        prevArrow: $('.slick-prev', a),
+        nextArrow: $('.slick-next', a),
+        appendArrows: a,
         customPaging: function(slick, i) {
           return slick.$slides.eq(i).find('.slide__thumbnail--placeholder').html() || slick.defaults.customPaging(slick, i);
         }
       };
-
       return globals;
     }
   };

@@ -77,6 +77,18 @@ function slick_example_image_default_styles() {
     ),
   );
 
+  $styles['slick_600x320'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 600,
+          'height' => 320,
+        ),
+      ),
+    ),
+  );
+
   $styles['slick_1280'] = array(
     'effects' => array(
       array(

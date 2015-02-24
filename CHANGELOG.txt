@@ -1,4 +1,21 @@
 
+Slick 7.x-2.0-dev, 2015-2-24
+----------------------------
+Simplified slick.tpl.php markups for when only 1 item is available.
+Fixed slick.theme.css and slick.load.min.js to support nested slicks. Be sure
+  to re-check your CSS with the new specifity introduced by nested slicks.
+  Mostly related to .slick__caption and .slide__media classes e.g.:
+  Before:
+  .slide--caption--below .slide__caption {}
+  After:
+  .slide--caption--below > .slide__content > .slide__caption {}
+
+  This allows child slicks within a slick to have proper skins, rather than
+  being overridden by the parent slick.
+
+Fixed for nested slicks, slicks within a slick for Field collection and Views.
+Fixed RTL attributes from the .slick to .slick-slider to reflect Slick 1.4.
+
 Slick 7.x-2.0-dev, 2015-2-20
 ----------------------------
 Changed admin assests to use slick.admin library. Clear cache if trouble to see

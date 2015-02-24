@@ -11,10 +11,11 @@
  * It is reasonable to have picture for large images only, while medium to small
  * use lazyLoad instead.
  */
-function _slick_fields_get_picture(&$settings, $image, $key, $media_url = NULL) {
+function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
   $build = '';
 
-  $id = $settings['type'] . '-' . $settings['attributes']['id'];
+  // Must be similar for the colorbox rel gallery for image/video/audio.
+  $id = isset($settings['colorbox_id']) ? $settings['colorbox_id'] : $settings['attributes']['id'];
 
   // We are safe to load picture, without relying on function_exists.
   if ($settings['picture_ready'] && $settings['picture'] && $settings['picture_style']) {
@@ -81,7 +82,6 @@ function _slick_fields_get_picture(&$settings, $image, $key, $media_url = NULL) 
     // Provide relevant link path if it is a colorbox: media audio/video should
     // provide URL to the actual audio/video URL, image to colorbox image URL.
     if ($settings['colorbox_ready'] && $settings['media_switch'] == 'colorbox-switch' && $settings['colorbox_style']) {
-      $settings['attach_colorbox'] = TRUE;
       if ($media_url) {
         $url = $media_url;
       }
@@ -98,9 +98,13 @@ function _slick_fields_get_picture(&$settings, $image, $key, $media_url = NULL) 
         ),
       );
 
-      $data_media = array('type' => $settings['type'], 'rel' => $id);
+      $data_media = array('type' => $settings['type']);
       if (isset($settings['scheme'])) {
         $data_media['scheme'] = $settings['scheme'];
+      }
+
+      if ($settings['count'] > 1) {
+        $data_media['rel'] = $id;
       }
 
       // Video/audio has special attributes for JS interaction.

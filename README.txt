@@ -13,6 +13,8 @@ See http://kenwheeler.github.io/slick.
 * Exportable via CTools.
 * Works with Views, core and contrib fields: Image, Media or Field collection.
 * Optional skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth, Grid, Split.
+* Nested slicks, slide overlays or multiple slicks within a single Slick using
+  Field collection, or Views.
 
 
 
@@ -98,6 +100,22 @@ Use renderable arrays, see slick_fields.module.
 
 
 
+NESTED SLICKS
+--------------------------------------------------------------------------------
+Nested slick is a parent Slick containing slides which contain individual child
+slick per slide. The child slicks are basically regular slide overlays like
+a single video over the large background image, only with nested slicks it can
+be many videos displayed as a slideshow.
+Use Field collection, or Views to build them.
+Supported multi-value fields for the nested slicks: Image, Media, Atom reference.
+
+Usage example:
+- A home slideshow containing multiple videos per slide for quick overview.
+- A large product slideshow containing a grid of slides displaying various items.
+- A news slideshow containing latest related news items per slide.
+
+
+
 SKINS:
 --------------------------------------------------------------------------------
 Skins allow swappable layouts like next/prev links, split image and caption, etc.
@@ -173,6 +191,8 @@ Tips:
 - Use the provided Wrapper class option at Optionset manager to have a unique
   context as needed, useful to build asNavFor aka thumbnail navigation.
 - If having JS error with jQuery v1.7, you may need to upgrade it to v1.8.
+- For nested slicks, set the parent slick to non-draggable, the child slick is,
+  to allow proper dragging with the child slicks, otherwise both are dragged.
 
 
 
@@ -311,7 +331,7 @@ UNKNOWN ISSUES
 
 CURRENT DEVELOPMENT STATUS
 --------------------------------------------------------------------------------
-It is currently feature complete, I think. I only have 3 left TODOs related to
+It is currently feature complete, I think. I only have few left TODOs related to
 the above nice to have, but that should not stop the proper release.
 A proper release should be reasonable after proper feedbacks from the community,
 and a few small code cleanup where needed. Patches are very much welcome.

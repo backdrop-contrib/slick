@@ -5,8 +5,7 @@
 @import "breakpoint";
 
 // Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+@import "../globals";
 
 /**
  * @file

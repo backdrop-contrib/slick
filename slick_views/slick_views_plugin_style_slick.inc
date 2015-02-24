@@ -51,11 +51,9 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
 
     module_load_include('inc', 'slick', 'includes/slick.admin');
 
-    $slick_module_path = drupal_get_path('module', 'slick');
     $element = array();
     $settings = $this->options;
     $skins = slick_skins(TRUE);
-    $image_styles = image_style_options(FALSE, PASS_THROUGH);
     $optionsets = slick_optionset_options();
 
     $element['optionset'] = array(
@@ -234,6 +232,10 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       if ($handler->field == 'title') {
         $title_options[$field] = $handler->ui_name();
         $thumbnail_caption_options[$field] = $handler->ui_name();
+      }
+
+      if ($handler->field == 'view_node') {
+        $link_options[$field] = $handler->ui_name();
       }
 
       // Caption can be anything to get custom works going.

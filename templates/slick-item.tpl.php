@@ -32,7 +32,7 @@
 
       <?php print render($item_prefix); ?>
       <?php print render($item); ?>
-      <?php $slide_pattern && print $slide_pattern; ?>
+      <?php print $slide_pattern; ?>
       <?php print render($item_suffix); ?>
 
       <?php if ($caption): ?>
@@ -53,7 +53,9 @@
                 <p class="slide__description"><?php print render($caption['alt']); ?></p>
               <?php endif; ?>
 
-              <?php print render($caption['data']); ?>
+              <?php if (!empty($caption['data'])): ?>
+                <div class="slide__description"><?php print render($caption['data']); ?></div>
+              <?php endif; ?>
 
               <?php if (isset($caption['link'])): ?>
                 <div class="slide__link"><?php print render($caption['link']); ?></div>
@@ -65,7 +67,7 @@
         <?php print render($title_suffix); ?>
       <?php endif; ?>
 
-      <?php isset($editor) && print render($editor); ?>
+      <?php print render($editor); ?>
 
     </<?php print $content_tag; ?>>
   <?php endif; ?>

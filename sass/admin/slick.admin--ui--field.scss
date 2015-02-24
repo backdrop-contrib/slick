@@ -5,8 +5,7 @@
 @import "breakpoint";
 
 // Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+@import "../globals";
 /**
  * @file
  * Overrides over-specified tough Seven.
@@ -18,7 +17,7 @@
   @include pie-clearfix;
   @include box-shadow(0 0 0 4px lighten($color-4, 25));
   margin: $vert-spacing-unit 0;
-    
+
   .form-item {
     border-bottom: 1px solid lighten($light-grey, 5);
     border-right: 1px solid lighten($light-grey, 5);
@@ -26,13 +25,14 @@
     border-top: 1px solid $white;
     padding: 20px 10px 12px;
     margin: 0;
-   
+
     @include breakpoint($breakpoint-start) {
       display: inline-block;
       padding: 20px 0 12px;
       width: 50%;
+      // Best trade-off with Views popup.
       label {
-        width: 210px;
+        width: 170px;
       }
     }
   }
@@ -44,7 +44,7 @@
     padding-top: 0;
     width: 100%;
     position: relative;
-    
+
     > label {
       background: lighten($light-grey, 5);
       display: block;
@@ -68,7 +68,7 @@
   width: 100%;
 }
 
-#edit-style-options-slick.form--slick { 
+#edit-style-options-slick.form--slick {
   .fieldset-description {
     padding: 5px 15px;
   }

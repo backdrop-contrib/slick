@@ -2,6 +2,7 @@
  * @file
  */
 (function ($, Drupal, window, document, undefined) {
+
   "use strict";
 
   Drupal.slickColorbox = Drupal.slickColorbox || {};
@@ -27,9 +28,10 @@
         var t = $(this),
           url = t.attr('href'),
           id = t.closest('.slick').attr('id'),
+          is_slick = $('#' + id).length,
           $body = $('body'),
           media = t.data('media') || {},
-          $slider = t.closest('.slick__slider', context),
+          $slider = t.closest('.slick__slider', '#' + id + '.slick'),
           isMedia = media.type !== 'image' ? true : false,
           curr,
           runtimeOptions = {
@@ -38,23 +40,33 @@
             onOpen: function () {
               $body.addClass('colorbox-on colorbox-on--' + media.type);
               $body.data('mediaHeight', '');
-              $slider.slick('slickPause');
+              if (is_slick) {
+                $slider.slick('slickPause');
+              }
             },
             onLoad: function () {
+              // Rebuild media data based on the current active box.
+              media = $(this).data('media');
               if (media.type !== 'image') {
                 $body.data('mediaHeight', media.height);
               }
 
+              Drupal.slickColorbox.removeClasses();
+              $body.addClass('colorbox-on colorbox-on--' + media.type);
+
               // Remove these lines to disable slider scrolling under colorbox.
-              curr = parseInt(t.closest('.slick__slide:not(.slick-cloned)').data('slickIndex'));
-              if ($slider.parent().next('.slick').length) {
-                var $thumb = $slider.parent().next('.slick').find('.slick__slider');
-                $thumb.slick('slickGoTo', curr);
+              if (is_slick) {
+                // curr = $slider.slick('slickCurrentSlide');
+                curr = parseInt(t.closest('.slick__slide:not(.slick-cloned)').data('slickIndex'));
+                if ($slider.parent().next('.slick').length) {
+                  var $thumb = $slider.parent().next('.slick').find('.slick__slider');
+                  $thumb.slick('slickGoTo', curr);
+                }
+                $slider.slick('slickGoTo', curr);
               }
-              $slider.slick('slickGoTo', curr);
             },
             onCleanup: function () {
-              $body.removeClass('colorbox-on colorbox-on--' + media.type);
+              Drupal.slickColorbox.removeClasses();
             },
             onComplete: function() {
               if (media.type !== 'image') {
@@ -64,7 +76,7 @@
             onClosed: function () {
               // 120 offset is to play safe for possible fixed header.
               Drupal.slickColorbox.jumpScroll('#' + id, 120);
-              $body.removeClass('colorbox-on colorbox-on--' + media.type);
+              Drupal.slickColorbox.removeClasses();
               $body.data('mediaHeight', '');
             }
           };
@@ -97,10 +109,14 @@
     }
   };
 
+  Drupal.slickColorbox.removeClasses = function () {
+    $('body').removeClass('colorbox-on colorbox-on--image colorbox-on--video colorbox-on--audio');
+  };
+
   Drupal.slickColorbox.jumpScroll = function (id, o) {
     if ($(id).length) {
       $('html, body').stop().animate({
-          scrollTop: $(id).offset().top - o
+        scrollTop: $(id).offset().top - o
       }, 800);
     }
   };

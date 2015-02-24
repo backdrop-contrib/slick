@@ -50,7 +50,7 @@ Usage #3
 Displaying a single multiple-value field in a single entity display for the
 slides. Use it either with contextual filter by NID, or filter criteria by NID.
 - Under Pager", choose "Display a specified number of items" with "1 item".
-- Choose "Unformatted list" under the Format.
+- Choose "Unformatted list" under the Format, not "Slick carousel".
 - Add a multi-value Image, Media or Field collection field.
 - Click the field under the Fields, choose "Slick carousel" under Formatter.
 - Adjust the settings.
@@ -60,14 +60,15 @@ slides. Use it either with contextual filter by NID, or filter criteria by NID.
 Themeing is mostly taken care of by slick_fields.module in terms of layout, with
 the goodness of Views to provide better markups manually.
 
-Example use case: front or inner individual slideshow based on the entity ID.
+Example use case: front or inner individual slideshow based on the entity ID, or
+individual user slideshow.
 
 GOTCHAS:
 --------------------------------------------------------------------------------
 If you are choosing a single multi-value field (such as images, Media files, or
 Field collection fields) rather displaying various fields from multiple nodes,
 make sure to:
-- Choose a "Unformatted list" Format, not "Slick carousel".
+- Choose an "Unformatted list" Format, not "Slick carousel".
 - Choose "Slick carousel" for the actual field when configuring the field.
 - Check "Use field template" under "Style Settings"so that the Slick field
   themeing is picked-up.

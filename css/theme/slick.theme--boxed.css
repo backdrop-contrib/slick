@@ -10,7 +10,7 @@
 }
 
 @media (min-width: 48em) {
-  .slick--skin--boxed .slick-list {
+  .slick--skin--boxed > .slick__slider > .slick-list {
     margin: 0 60px;
   }
 }

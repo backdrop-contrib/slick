@@ -2,7 +2,9 @@
  * @file
  */
 (function ($) {
+
   "use strict";
+
   Drupal.slick = Drupal.slick || {};
 
   Drupal.behaviors.slickMedia = {

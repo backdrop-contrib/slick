@@ -31,6 +31,7 @@ img {
  */
 .slick__arrow {
   bottom: auto;
+  display: none;
   height: 2px;
   left: 0;
   margin-top: -1px;
@@ -40,7 +41,10 @@ img {
   width: 100%;
   z-index: 2;
 }
-.slick--has-arrow-down .slick__arrow {
+.slick-initialized ~ .slick__arrow {
+  display: block;
+}
+.slick--has-arrow-down > .slick__arrow {
   bottom: 20px;
   height: 62px;
   left: 50%;
@@ -139,6 +143,29 @@ img {
 }
 .slick-down:hover:before, .slick-down:hover:after {
   color: #fff;
+}
+
+/**
+ * Edit link
+ */
+.slide__content .edit-link {
+  display: block;
+  font-size: 0;
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  text-indent: -9999px;
+  top: 0;
+  z-index: 2;
+}
+.slide__content .edit-link:before {
+  display: block;
+  font-size: 18px;
+  font-size: 1.125rem;
+  text-indent: 0;
+}
+.slide__content .file__translate {
+  left: 32px;
 }
 
 /**
@@ -284,6 +311,9 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   position: relative;
 }
 
+.slick__slide {
+  width: 100%;
+}
 .slick__slide.slick-center {
   z-index: 1;
 }
@@ -319,7 +349,21 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   pointer-events: auto;
 }
 
+.slick .slick-wrapper {
+  margin: 0 auto;
+}
+.slick .slick .slick__slide {
+  display: none;
+}
+.slick .slick .slick__slide:first-child, .slick .slick .slick__slide.slick-slide {
+  display: block;
+}
+
 @media (min-width: 64em) {
+  .slick--float .slick__slide {
+    float: left;
+  }
+
   /* Fixed FireFox draggable issue, avoid asNavFor thumbnails. */
   .slick--display--main .slick__slide img {
     pointer-events: none;
@@ -332,48 +376,69 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     opacity: 1;
   }
 
-  .slide--caption--left .slide__caption, .slide--caption--right .slide__caption, .slide--caption--top .slide__caption, .slide--caption--bottom .slide__caption, .slide--caption--stage-left .slide__caption, .slide--caption--stage-right .slide__caption, .slide--caption--split-left .slide__caption, .slide--caption--split-right .slide__caption, .slide--caption--stage-zebra .slide__caption, .slide--caption--center .slide__caption, .slide--caption--center-top .slide__caption {
+  .slide__content > .slide__constrained > .slide__caption,
+  .slide__content > .slide__caption {
     left: 0;
     padding: 20px;
     position: absolute;
     top: 10%;
     width: 42%;
   }
-  .slide--caption--below .slide__caption {
+  .slick--display--thumbnail .slide__content > .slide__constrained > .slide__caption, .slick--display--thumbnail
+  .slide__content > .slide__caption {
+    padding: 5px 6px;
+    top: auto;
+    width: 100%;
+  }
+  .slide--caption--below > .slide__content > .slide__constrained > .slide__caption, .slide--caption--below >
+  .slide__content > .slide__caption {
+    padding: 20px 0;
     position: relative;
     top: auto;
     width: 100%;
   }
-  .slide--caption--center .slide__caption {
+  .slide--caption--center > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center >
+  .slide__content > .slide__caption {
     margin-top: -16%;
     top: 50%;
   }
-  .slide--caption--center .slide__caption, .slide--caption--center-top .slide__caption {
+  .slide--caption--center > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center-top > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center >
+  .slide__content > .slide__caption, .slide--caption--center-top >
+  .slide__content > .slide__caption {
     left: 50%;
     margin-left: -21%;
     padding: 0;
     text-align: center;
   }
-  .slide--caption--right .slide__caption {
+  .slide--caption--right > .slide__content > .slide__constrained > .slide__caption, .slide--caption--right >
+  .slide__content > .slide__caption {
     left: auto;
     right: 0;
   }
-  .slide--caption--top .slide__caption, .slide--caption--bottom .slide__caption {
+  .slide--caption--top > .slide__content > .slide__constrained > .slide__caption, .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slide--caption--top >
+  .slide__content > .slide__caption, .slide--caption--bottom >
+  .slide__content > .slide__caption {
     width: 100%;
   }
-  .slide--caption--top .slide__caption {
+  .slide--caption--top .slide__content > .slide__constrained > .slide__caption, .slide--caption--top
+  .slide__content > .slide__caption {
     top: 0;
   }
-  .slide--caption--bottom .slide__caption {
+  .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slide--caption--bottom >
+  .slide__content > .slide__caption {
     bottom: 0;
     top: auto;
   }
-  .slick--has-arrow-down .slide--caption--bottom .slide__caption {
+  .slick--has-arrow-down .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slick--has-arrow-down .slide--caption--bottom >
+  .slide__content > .slide__caption {
     padding-bottom: 80px;
   }
 
   /* Caption right, stage left */
-  .slide--caption--stage-left .slide__caption, .slide--caption--stage-right .slide__caption, .slide--caption--stage-zebra .slide__caption {
+  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption, .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption, .slide--caption--stage-zebra > .slide__content > .slide__constrained > .slide__caption, .slide--caption--stage-left >
+  .slide__content > .slide__caption, .slide--caption--stage-right >
+  .slide__content > .slide__caption, .slide--caption--stage-zebra >
+  .slide__content > .slide__caption {
     left: 50%;
     margin-left: -41%;
     padding: 0;
@@ -381,41 +446,50 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   }
 
   /* Contains text or other fields within caption */
-  .slide__data {
+  .slide__content > .slide__constrained > .slide__caption > .slide__data,
+  .slide__content > .slide__caption > .slide__data {
     /* Caption right, stage left */
     /* Caption left, stage right */
   }
-  .slide--caption--stage-left .slide__caption .slide__data, .slide--caption--stage-zebra:nth-child(odd) .slide__caption .slide__data {
+  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-left >
+  .slide__content > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(odd) >
+  .slide__content > .slide__caption > .slide__data {
     margin-right: 56%;
   }
-  .slide--caption--stage-right .slide__caption .slide__data, .slide--caption--stage-zebra:nth-child(even) .slide__caption .slide__data {
+  .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-right >
+  .slide__content > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(even) >
+  .slide__content > .slide__caption > .slide__data {
     margin-left: 56%;
   }
 
   /* Contains image within caption container */
-  .slide--caption--stage-left .slide__caption .slide__overlay, .slide--caption--stage-zebra:nth-child(odd) .slide__caption .slide__overlay {
+  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption > .slide__overlay, .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption > .slide__overlay {
     float: right;
     width: 52%;
   }
-  .slide--caption--stage-right .slide__caption .slide__overlay, .slide--caption--stage-zebra:nth-child(even) .slide__caption .slide__overlay {
+  .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption > .slide__overlay, .slide--caption--stage-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption > .slide__overlay {
     float: left;
     width: 52%;
   }
 
-  .slick--skin--split .slide--caption--split-left .slide__media, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) .slide__media {
+  .slick--skin--split .slide--caption--split-left > .slide__content > .slide__media, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > .slide__content > .slide__media {
     float: left;
     width: 48%;
   }
-  .slick--skin--split .slide--caption--split-right .slide__media, .slick--skin--split .slide--caption--split-zebra:nth-child(even) .slide__media {
+  .slick--skin--split .slide--caption--split-right > .slide__content > .slide__media, .slick--skin--split .slide--caption--split-zebra:nth-child(even) > .slide__content > .slide__media {
     float: right;
     width: 48%;
   }
 
-  .slick--skin--split .slide--caption--split-left .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) .slide__caption {
+  .slick--skin--split .slide--caption--split-left > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-left >
+  .slide__content > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) >
+  .slide__content > .slide__caption {
     margin-left: 52%;
     width: auto;
   }
-  .slick--skin--split .slide--caption--split-right .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(even) .slide__caption {
+  .slick--skin--split .slide--caption--split-right > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-right >
+  .slide__content > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(even) >
+  .slide__content > .slide__caption {
     margin-right: 52%;
     width: auto;
   }

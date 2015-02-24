@@ -11,7 +11,7 @@
  * Detailed stylings are all yours, get yourself dirty.
  */
 .slick--skin--boxed {
-  // Applies only if we have 1 slideToShow, not carousel.
+  // Applies only if 1 slideToShow, not carousel, to avoid nearby visible.
   &.slick--slider {
     .slick__slide {
       // Prevent text overlapping with arrows on small devices.
@@ -28,8 +28,8 @@
 
 @include breakpoint($ipad, true) {
   // Spaces only reasonable for larger device.
-  .slick--skin--boxed {
-    .slick-list {
+  .slick--skin--boxed > {
+    .slick__slider > .slick-list {
       margin: 0 60px;
     }
   }

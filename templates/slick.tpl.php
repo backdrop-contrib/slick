@@ -16,25 +16,33 @@
  */
 ?>
 <div<?php print $attributes; ?>>
+  <?php if (count($items) > 1): ?>
 
-  <div<?php print $content_attributes; ?>>
+    <div<?php print $content_attributes; ?>>
+      <?php foreach ($items as $delta => $item): ?>
+        <?php print render($item); ?>
+      <?php endforeach; ?>
+    </div>
+
+    <?php if ($settings['arrows']): ?>
+      <nav class="slick__arrow">
+        <?php isset($settings['prev_arrow']) && print $settings['prev_arrow']; ?>
+        <?php if ($settings['has_arrow_down']): ?>
+          <?php
+            $is_target = $settings['arrow_down_target'] ? ' data-target="#' . $settings['arrow_down_target'] . '"' : '';
+            $is_offset = $settings['arrow_down_offset'] ? ' data-offset="' . $settings['arrow_down_offset'] . '"' : '';
+          ?>
+          <button class="slick-down jump-scroll"<?php print $is_target . $is_offset; ?>></button>
+        <?php endif; ?>
+        <?php isset($settings['next_arrow']) && print $settings['next_arrow']; ?>
+      </nav>
+    <?php endif; ?>
+
+  <?php else: ?>
+
     <?php foreach ($items as $delta => $item): ?>
       <?php print render($item); ?>
     <?php endforeach; ?>
-  </div>
 
-  <?php if (count($items) > 1 && $settings['arrows']): ?>
-    <nav class="slick__arrow">
-      <?php isset($settings['prev_arrow']) && print $settings['prev_arrow']; ?>
-      <?php if ($settings['has_arrow_down']): ?>
-        <?php
-          $is_target = $settings['arrow_down_target'] ? ' data-target="#' . $settings['arrow_down_target'] . '"' : '';
-          $is_offset = $settings['arrow_down_offset'] ? ' data-offset="' . $settings['arrow_down_offset'] . '"' : '';
-        ?>
-        <button class="slick-down jump-scroll"<?php print $is_target . $is_offset; ?>></button>
-      <?php endif; ?>
-      <?php isset($settings['next_arrow']) && print $settings['next_arrow']; ?>
-    </nav>
   <?php endif; ?>
-
 </div>

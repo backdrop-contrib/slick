@@ -65,7 +65,7 @@ class SlickOptionsetUi extends ctools_export_ui {
     );
 
     // Image styles.
-    $image_styles = image_style_options(FALSE);
+    $image_styles = function_exists('image_style_options') ? image_style_options(FALSE) : array();
     $form['options']['general'] = array(
       '#type' => 'fieldset',
       '#title' => t('General'),
@@ -206,7 +206,7 @@ class SlickOptionsetUi extends ctools_export_ui {
     $form['options']['responsives'] = array(
       '#title' => t('Responsive display'),
       '#type' => 'fieldset',
-      '#description' => t('Containing breakpoints and settings objects. Settings set at a given breakpoint/screen width is self-contained and does not inherit the main settings, but defaults. Currently only supports Desktop first: starts breakpoint from the largest to smallest. Starting from 1.4, Slick supports mobile first.'),
+      '#description' => t('Containing breakpoints and settings objects. Settings set at a given breakpoint/screen width is self-contained and does not inherit the main settings, but defaults.'),
       '#collapsible' => FALSE,
       '#tree' => TRUE,
     );
@@ -225,127 +225,130 @@ class SlickOptionsetUi extends ctools_export_ui {
 
     if ($form_state['breakpoints_count'] > 0) {
       $slick_options = slick_get_responsive_options($form_state['breakpoints_count']);
-      foreach ($slick_options as $i => $values) {
-        if ($values['type'] == 'fieldset') {
-          $fieldset_class = drupal_clean_css_identifier(drupal_strtolower($values['title']));
-          // Invidual breakpoint fieldset.
-          $form['options']['responsives']['responsive'][$i] = array(
-            '#title' => $values['title'],
-            '#type' => $values['type'],
-            '#description' => isset($values['description']) ? $values['description'] : '',
-            '#collapsible' => TRUE,
-            '#collapsed' => TRUE,
-            '#attributes' => array('class' => array('fieldset--responsive', 'fieldset--' . $fieldset_class, 'has-tooltip')),
-          );
 
-          foreach ($values as $key => $vals) {
-            switch ($key) {
-              case 'breakpoint':
-              case 'unslick':
-                $form['options']['responsives']['responsive'][$i][$key] = array(
-                  '#title' => $vals['title'],
-                  '#description' => $vals['description'],
-                  '#type' => $vals['type'],
-                  '#default_value' => isset($options['responsives']['responsive'][$i][$key]) ? $options['responsives']['responsive'][$i][$key] : $vals['default'],
+      foreach ($slick_options as $i => $responsives) {
+        // Invidual breakpoint fieldset.
+        $fieldset_class = drupal_clean_css_identifier(drupal_strtolower($responsives['title']));
+        $form['options']['responsives']['responsive'][$i] = array(
+          '#title' => $responsives['title'],
+          '#type' => $responsives['type'],
+          '#description' => isset($responsives['description']) ? $responsives['description'] : '',
+          '#collapsible' => TRUE,
+          '#collapsed' => TRUE,
+          '#attributes' => array('class' => array('fieldset--responsive', 'fieldset--' . $fieldset_class, 'has-tooltip')),
+        );
+
+        foreach ($responsives as $key => $responsive) {
+          switch ($key) {
+            case 'breakpoint':
+            case 'unslick':
+              $form['options']['responsives']['responsive'][$i][$key] = array(
+                '#title' => $responsive['title'],
+                '#description' => $responsive['description'],
+                '#type' => $responsive['type'],
+                '#default_value' => isset($options['responsives']['responsive'][$i][$key]) ? $options['responsives']['responsive'][$i][$key] : $responsive['default'],
+                '#attributes' => array('class' => array('is-tooltip')),
+              );
+
+              if ($responsive['type'] == 'textfield') {
+                $form['options']['responsives']['responsive'][$i][$key]['#size'] = 20;
+                $form['options']['responsives']['responsive'][$i][$key]['#maxlength'] = 255;
+              }
+              if ($responsive['cast'] == 'int') {
+                $form['options']['responsives']['responsive'][$i][$key]['#maxlength'] = 60;
+              }
+              if (isset($responsive['states'])) {
+                $form['options']['responsives']['responsive'][$i][$key]['#states'] = $responsive['states'];
+              }
+              if (isset($responsive['options'])) {
+                $form['options']['responsives']['responsive'][$i][$key]['#options'] = $responsive['options'];
+              }
+              if (isset($responsive['field_suffix'])) {
+                $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = $responsive['field_suffix'];
+              }
+              if (!isset($responsive['field_suffix']) && $responsive['cast'] == 'bool') {
+                $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = '';
+                $form['options']['responsives']['responsive'][$i][$key]['#title_display'] = 'before';
+              }
+              break;
+
+            case 'settings':
+              $form['options']['responsives']['responsive'][$i][$key] = array(
+                '#title' => t('Settings'),
+                '#title_display' => 'invisible',
+                '#type' => 'fieldset',
+                '#collapsible' => FALSE,
+                '#collapsed' => FALSE,
+                '#attributes' => array('class' => array('fieldset--settings', 'fieldset--' . $fieldset_class, 'has-tooltip')),
+                '#states' => array('visible' => array(':input[name*="[responsive][' . $i . '][unslick]"]' => array('checked' => FALSE))),
+              );
+              unset($responsive['title'], $responsive['type']);
+
+              if (!is_array($responsive)) {
+                continue;
+              }
+              foreach ($responsive as $k => $item) {
+                if ($item && !is_array($item)) {
+                  continue;
+                }
+                $form['options']['responsives']['responsive'][$i][$key][$k] = array(
+                  '#title' => isset($item['title']) ? $item['title'] : '',
+                  '#description' => isset($item['description']) ? $item['description'] : '',
+                  '#type' => $item['type'],
                   '#attributes' => array('class' => array('is-tooltip')),
+                  '#default_value' => isset($options['responsives']['responsive'][$i][$key][$k]) ? $options['responsives']['responsive'][$i][$key][$k] : $item['default'],
                 );
 
-                if ($vals['type'] == 'textfield') {
-                  $form['options']['responsives']['responsive'][$i][$key]['#size'] = 20;
-                  $form['options']['responsives']['responsive'][$i][$key]['#maxlength'] = 255;
-                }
-                if ($vals['cast'] == 'int') {
-                  $form['options']['responsives']['responsive'][$i][$key]['#maxlength'] = 60;
-                }
-                if (isset($vals['states'])) {
-                  $form['options']['responsives']['responsive'][$i][$key]['#states'] = $vals['states'];
-                }
-                if (isset($vals['options'])) {
-                  $form['options']['responsives']['responsive'][$i][$key]['#options'] = $vals['options'];
-                }
-                if (isset($vals['field_suffix'])) {
-                  $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = $vals['field_suffix'];
-                }
-                if (!isset($vals['field_suffix']) && $vals['cast'] == 'bool') {
-                  $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = '';
-                  $form['options']['responsives']['responsive'][$i][$key]['#title_display'] = 'before';
-                }
-                break;
+                // Specify proper states for the breakpoint elements.
+                if (isset($item['states'])) {
+                  $states = '';
+                  switch ($k) {
+                    case 'pauseOnHover':
+                    case 'pauseOnDotsHover':
+                    case 'autoplaySpeed':
+                      $states = array('visible' => array(':input[name*="[' . $i . '][settings][autoplay]"]' => array('checked' => TRUE)));
+                      break;
 
-              case 'settings':
-                $form['options']['responsives']['responsive'][$i][$key] = array(
-                  '#title' => t('Settings'),
-                  '#title_display' => 'invisible',
-                  '#type' => 'fieldset',
-                  '#collapsible' => FALSE,
-                  '#collapsed' => FALSE,
-                  '#attributes' => array('class' => array('fieldset--settings', 'fieldset--' . $fieldset_class, 'has-tooltip')),
-                  '#states' => array('visible' => array(':input[name*="[responsive][' . $i . '][unslick]"]' => array('checked' => FALSE))),
-                );
-                unset($vals['title']);
+                    case 'centerPadding':
+                      $states = array('visible' => array(':input[name*="[' . $i . '][settings][centerMode]"]' => array('checked' => TRUE)));
+                      break;
 
-                if (is_array($vals)) {
-                  foreach ($vals as $k => $value) {
-                    if ($value && is_array($value)) {
-                      $form['options']['responsives']['responsive'][$i][$key][$k] = array(
-                        '#title' => isset($value['title']) ? $value['title'] : '',
-                        '#description' => isset($value['description']) ? $value['description'] : '',
-                        '#type' => $value['type'],
-                        '#attributes' => array('class' => array('is-tooltip')),
-                      );
-                      if ($value['type'] != 'fieldset') {
-                        $form['options']['responsives']['responsive'][$i][$key][$k]['#default_value'] = isset($options['responsives']['responsive'][$i][$key][$k]) ? $options['responsives']['responsive'][$i][$key][$k] : $value['default'];
-                      }
-                      if (isset($value['states'])) {
-                        // Specify proper states for the breakpoint elements.
-                        $states = '';
-                        switch ($k) {
-                          case 'pauseOnHover':
-                          case 'pauseOnDotsHover':
-                          case 'autoplaySpeed':
-                            $states = array('visible' => array(':input[name*="options[responsives][responsive][' . $i . '][settings][autoplay]"]' => array('checked' => TRUE)));
-                            break;
+                    case 'touchThreshold':
+                      $states = array('visible' => array(':input[name*="[' . $i . '][settings][touchMove]"]' => array('checked' => TRUE)));
+                      break;
 
-                          case 'centerPadding':
-                            $states = array('visible' => array(':input[name*="options[responsives][responsive][' . $i . '][settings][centerMode]"]' => array('checked' => TRUE)));
-                            break;
+                    case 'swipeToSlide':
+                      $states = array('visible' => array(':input[name*="[' . $i . '][settings][swipe]"]' => array('checked' => TRUE)));
+                       break;
 
-                          case 'touchThreshold':
-                            $states = array('visible' => array(':input[name*="options[responsives][responsive][' . $i . '][settings][touchMove]"]' => array('checked' => TRUE)));
-                            break;
+                    case 'cssEase':
+                    case 'cssEaseOverride':
+                      $states = array('visible' => array(':input[name*="[' . $i . '][settings][useCSS]"]' => array('checked' => TRUE)));
+                      break;
+                  }
 
-                          case 'swipeToSlide':
-                            $states = array('visible' => array(':input[name*="options[responsives][responsive][' . $i . '][settings][swipe]"]' => array('checked' => TRUE)));
-                            break;
-
-                          case 'cssEase':
-                          case 'cssEaseOverride':
-                            $states = array('visible' => array(':input[name*="options[responsives][responsive][' . $i . '][settings][useCSS]"]' => array('checked' => TRUE)));
-                            break;
-                        }
-
-                        if ($states) {
-                          $form['options']['responsives']['responsive'][$i][$key][$k]['#states'] = $states;
-                        }
-                      }
-                      if (isset($value['options'])) {
-                        $form['options']['responsives']['responsive'][$i][$key][$k]['#options'] = $value['options'];
-                      }
-                      if (isset($value['empty_option'])) {
-                        $form['options']['responsives']['responsive'][$i][$key][$k]['#empty_option'] = $value['empty_option'];
-                      }
-                      if (isset($value['field_suffix'])) {
-                        $form['options']['responsives']['responsive'][$i][$key][$k]['#field_suffix'] = $value['field_suffix'];
-                      }
-                      if (!isset($value['field_suffix']) && $value['cast'] == 'bool') {
-                        $form['options']['responsives']['responsive'][$i][$key][$k]['#field_suffix'] = '';
-                        $form['options']['responsives']['responsive'][$i][$key][$k]['#title_display'] = 'before';
-                      }
-                    }
+                  if ($states) {
+                    $form['options']['responsives']['responsive'][$i][$key][$k]['#states'] = $states;
                   }
                 }
-                break;
-            }
+                if (isset($item['options'])) {
+                  $form['options']['responsives']['responsive'][$i][$key][$k]['#options'] = $item['options'];
+                }
+                if (isset($item['empty_option'])) {
+                  $form['options']['responsives']['responsive'][$i][$key][$k]['#empty_option'] = $item['empty_option'];
+                }
+                if (isset($item['field_suffix'])) {
+                  $form['options']['responsives']['responsive'][$i][$key][$k]['#field_suffix'] = $item['field_suffix'];
+                }
+                if (!isset($item['field_suffix']) && $item['cast'] == 'bool') {
+                  $form['options']['responsives']['responsive'][$i][$key][$k]['#field_suffix'] = '';
+                  $form['options']['responsives']['responsive'][$i][$key][$k]['#title_display'] = 'before';
+                }
+              }
+              break;
+
+            default:
+              break;
           }
         }
       }

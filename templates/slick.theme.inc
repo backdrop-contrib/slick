@@ -141,7 +141,7 @@ function template_preprocess_slick(&$variables) {
 
   $attributes['class'][] = $js['centerMode'] ? 'slick--center' : 'slick--float';
 
-  // This is needed by Slick media for slick ration option.
+  // This is needed by Slick media for the aspect ratio option.
   if (isset($settings['field_type'])) {
     $attributes['class'][] = drupal_clean_css_identifier('slick--' . $settings['field_type']);
   }
@@ -200,7 +200,7 @@ function template_preprocess_slick(&$variables) {
 
   // The slider must have the attribute "dir" set to "rtl", if so configured.
   if ($js['rtl']) {
-    $attributes['dir'] = 'rtl';
+    $content_attributes['dir'] = 'rtl';
   }
 
   // Arrows may be unset and empty if arrows option is disabled, so fallback to
@@ -229,7 +229,8 @@ function template_preprocess_slick(&$variables) {
     // This is the only default supported appendArrows selector.
     $default_append_arrows = _slick_optionset_defaults('appendArrows', 'settings');
     if ($js['appendArrows'] == $default_append_arrows) {
-      $js['appendArrows'] = '.slick__arrow';
+      // $js['appendArrows'] = '.slick__arrow';
+      // unset($js['appendArrows']);
     }
   }
 
@@ -367,7 +368,7 @@ function template_preprocess_slick_item(&$variables) {
     $attributes['class'][] = drupal_clean_css_identifier('slide--' . $settings['type']);
   }
 
-  // All slides may have captions.
+  // All slides - main, thumbnail, grid - may have captions.
   $variables['caption'] = array();
   $variables['editor'] = array();
   $variables['slide_pattern'] = '';
@@ -403,7 +404,8 @@ function template_preprocess_slick_item(&$variables) {
       $stage['alt'] = $captions['alt'];
     }
 
-    // Captions, can be multiple fields, useful for custom markups.
+    // Captions, can be multiple fields, useful for custom markups, or nested
+    // slick if possible at all.
     if (!empty($captions['data'])) {
       $stage['data'] = $captions['data'];
     }
@@ -413,7 +415,9 @@ function template_preprocess_slick_item(&$variables) {
       $stage['link'] = $captions['link'];
     }
 
-    // Editor links, implementors should do the access check properly.
+    // Editor links, implementors should do the access check properly, e.g.:
+    // Translate file @title, Edit file @title.
+    // @see _slick_fields_format_media()
     if (isset($captions['editor']) && !empty($captions['editor'])) {
       $variables['editor'] = $captions['editor'];
     }
@@ -514,6 +518,7 @@ function template_preprocess_slick_media(&$variables) {
 
   // Only reasonable for the main or grid display, not thumbnail navigation.
   if ($variables['asnavfor'] != 'thumbnail') {
+
     // Specific to Media integration.
     $media = isset($element['#media']) ? $element['#media'] : '';
 
@@ -537,7 +542,7 @@ function template_preprocess_slick_media(&$variables) {
       $variables['content_attributes_array']['width'] = $settings['media_width'];
 
       // Non-JS fallback.
-      // The media URL containing all the params extracted from their iframe.
+      // The media URL contains all the params extracted from the iframe SRC.
       if ($settings['url']) {
         $variables['url'] = $settings['url'];
         $variables['content_attributes_array']['src'] = $variables['url'];
@@ -551,7 +556,7 @@ function template_preprocess_slick_media(&$variables) {
       else {
         $attributes['class'][] = 'media--switch';
 
-        // If no colorbox, it is a media player iframe.
+        // If no colorbox, it is an image to iframe switcher.
         if ($settings['media_switch'] != 'colorbox-switch') {
           $attributes['class'][] = 'media--player';
           $attributes['class'][] = 'media--switch--player';
@@ -686,7 +691,7 @@ function theme_slick_image_lazy($variables) {
   $path = $variables['path'];
   $variables['attributes']['class'][] = 'slick__image';
 
-  // Make sure to avoid images with breakpoints and without image style.
+  // Be sure to avoid images with breakpoints and without image style.
   if (!isset($variables['breakpoints']) && isset($variables['style_name'])) {
     $attributes = $variables['attributes'];
     foreach (array('width', 'height', 'alt', 'title') as $key) {

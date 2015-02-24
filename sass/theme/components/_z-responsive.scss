@@ -24,13 +24,30 @@
 }
 
 /* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
-.slick--display--thumbnail {
-  .slick__slide img {
-    pointer-events: auto;
+.slick--display--thumbnail .slick__slide img {
+  pointer-events: auto;
+}
+
+// Prevents nested slick slide from screwing up the layout.
+// Nested slick maybe placed inside .slide__media or .slide__caption
+.slick {
+  .slick-wrapper {
+    margin: 0 auto;
+  }
+  .slick .slick__slide {
+    display: none;
+    &:first-child,
+    &.slick-slide {
+      display: block;
+    }
   }
 }
 
 @include breakpoint($breakpoint-start, true) {
+  // Prevents stacked slides for the nested slicks.
+  .slick--float .slick__slide {
+    float: left;
+  }
   /* Fixed FireFox draggable issue, avoid asNavFor thumbnails. */
   .slick--display--main .slick__slide img {
     pointer-events: none;
@@ -41,51 +58,48 @@
     opacity: 1;
   }
 
-  .slide__caption {
-    .slide--caption--left &,
-    .slide--caption--right &,
-    .slide--caption--top &,
-    .slide--caption--bottom &,
-    .slide--caption--stage-left &,
-    .slide--caption--stage-right &,
-    .slide--caption--split-left &,
-    .slide--caption--split-right &,
-    .slide--caption--stage-zebra &,
-    .slide--caption--center &,
-    .slide--caption--center-top & {
-      left: 0;
-      padding: 20px;
-      position: absolute;
-      top: 10%;
-      width: 42%;
+  .slide__content > .slide__constrained > .slide__caption,
+  .slide__content > .slide__caption {
+    left: 0;
+    padding: 20px;
+    position: absolute;
+    top: 10%;
+    width: 42%;
+
+    .slick--display--thumbnail & {
+      padding: 5px 6px;
+      top: auto;
+      width: 100%;
     }
 
-    .slide--caption--below & {
+    .slide--caption--below > & {
+      // bottom: 0;
+      padding: 20px 0;
       position: relative;
       top: auto;
       width: 100%;
     }
 
-    .slide--caption--center & {
+    .slide--caption--center > & {
       margin-top: -16%;
       top: 50%;
     }
 
-    .slide--caption--center &,
-    .slide--caption--center-top & {
+    .slide--caption--center > &,
+    .slide--caption--center-top > & {
       left: 50%;
       margin-left: -21%;
       padding: 0;
       text-align: center;
     }
 
-    .slide--caption--right & {
+    .slide--caption--right > & {
       left: auto;
       right: 0;
     }
 
-    .slide--caption--top &,
-    .slide--caption--bottom & {
+    .slide--caption--top > &,
+    .slide--caption--bottom > & {
       width: 100%;
     }
 
@@ -93,22 +107,23 @@
       top: 0;
     }
 
-    .slide--caption--bottom & {
+    .slide--caption--bottom > & {
       bottom: 0;
       top: auto;
     }
 
-    .slick--has-arrow-down .slide--caption--bottom & {
+    .slick--has-arrow-down .slide--caption--bottom > & {
       padding-bottom: 80px;
     }
   }
 
   /* Caption right, stage left */
-  .slide__caption  {
+  .slide__content > .slide__constrained > .slide__caption,
+  .slide__content > .slide__caption {
     // Stages are full width image with captions positioned on top of it.
-    .slide--caption--stage-left &,
-    .slide--caption--stage-right &,
-    .slide--caption--stage-zebra & {
+    .slide--caption--stage-left > &,
+    .slide--caption--stage-right > &,
+    .slide--caption--stage-zebra > & {
       left: 50%;
       margin-left: -41%;
       padding: 0;
@@ -117,57 +132,59 @@
   }
 
   /* Contains text or other fields within caption */
-  .slide__data {
+  .slide__content > .slide__constrained > .slide__caption > .slide__data,
+  .slide__content > .slide__caption > .slide__data {
     /* Caption right, stage left */
-    .slide--caption--stage-left .slide__caption &,
-    .slide--caption--stage-zebra:nth-child(odd) .slide__caption & {
+    .slide--caption--stage-left > &,
+    .slide--caption--stage-zebra:nth-child(odd) > & {
       margin-right: 56%;
     }
 
     /* Caption left, stage right */
-    .slide--caption--stage-right .slide__caption &,
-    .slide--caption--stage-zebra:nth-child(even) .slide__caption & {
+    .slide--caption--stage-right > &,
+    .slide--caption--stage-zebra:nth-child(even) > & {
       margin-left: 56%;
     }
   }
 
   /* Contains image within caption container */
-  .slide__overlay {
-    .slide--caption--stage-left .slide__caption &,
-    .slide--caption--stage-zebra:nth-child(odd) .slide__caption & {
+  .slide__content > .slide__constrained > .slide__caption > .slide__overlay {
+    .slide--caption--stage-left > &,
+    .slide--caption--stage-zebra:nth-child(odd) > & {
       float: right;
       width: 52%;
     }
 
-    .slide--caption--stage-right .slide__caption &,
-    .slide--caption--stage-zebra:nth-child(even) .slide__caption & {
+    .slide--caption--stage-right > &,
+    .slide--caption--stage-zebra:nth-child(even) > & {
       float: left;
       width: 52%;
     }
   }
 
-  .slide__media {
-    .slick--skin--split .slide--caption--split-left &,
-    .slick--skin--split .slide--caption--split-zebra:nth-child(odd) & {
+  .slide__content > .slide__media {
+    .slick--skin--split .slide--caption--split-left > &,
+    .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > & {
       float: left;
       width: 48%;
     }
 
-    .slick--skin--split .slide--caption--split-right &,
-    .slick--skin--split .slide--caption--split-zebra:nth-child(even) & {
+    .slick--skin--split .slide--caption--split-right > &,
+    .slick--skin--split .slide--caption--split-zebra:nth-child(even) > & {
       float: right;
       width: 48%;
     }
   }
 
-  .slide__caption {
-    .slick--skin--split .slide--caption--split-left &,
-    .slick--skin--split .slide--caption--split-zebra:nth-child(odd) & {
+  .slide__content > .slide__constrained > .slide__caption,
+  .slide__content > .slide__caption {
+    .slick--skin--split .slide--caption--split-left > &,
+    .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > & {
       margin-left: 52%;
       width: auto;
     }
-    .slick--skin--split .slide--caption--split-right &,
-    .slick--skin--split .slide--caption--split-zebra:nth-child(even) & {
+    .slick--skin--split .slide--caption--split-right > &,
+    .slick--skin--split .slide--caption--split-zebra:nth-child(even) > & {
       margin-right: 52%;
       width: auto;
     }
