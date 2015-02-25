@@ -1,5 +1,7 @@
 name = Slick Example
 description = "Provides Slick examples, the last carousel examples."
-dependencies[] = slick
 package = Slick
 core = 7.x
+
+dependencies[] = views
+dependencies[] = slick
