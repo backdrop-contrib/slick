@@ -5,3 +5,5 @@ package = Slick
 
 dependencies[] = views
 dependencies[] = slick
+
+files[] = slick_views_plugin_style_slick.inc

@@ -388,11 +388,9 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               break;
           }
 
-          $settings['image_style'] = $overlay_style;
-
           $overlay_elements = array();
 
-          // Managed overlays for nested slicks with Atom reference.
+          // Managed overlays for nested slicks with supported formatters.
           if ($overlay_items) {
             $id = '';
             $overlay_element = array();
@@ -408,7 +406,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               $overlay_settings[$key][$idx]['picture_ready'] = FALSE;
               $overlay_settings[$key][$idx]['media_switch'] = $settings['media_switch'];
               $overlay_settings[$key][$idx]['picture'] = FALSE;
-              $overlay_settings[$key][$idx]['lazy'] = FALSE;
+              $overlay_settings[$key][$idx]['lazy'] = $settings['lazy'];
               $overlay_settings[$key][$idx]['attributes'] = $settings['attributes'];
 
               // Must be similar across all slide items within a particular

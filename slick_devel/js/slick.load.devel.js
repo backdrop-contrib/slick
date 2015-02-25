@@ -1,6 +1,6 @@
 /**
  * @file
- * Provides a development version of the slick.load.min.js.
+ * Provides Slick loader.
  */
 
 (function ($, Drupal, window) {
@@ -85,7 +85,7 @@
     },
 
     /**
-     * Randomize slide orders, useful to manipulate cached blocks with ondemand.
+     * Randomize slide orders, for ads/products rotation within cached blocks.
      */
     randomize: function(t) {
       if (!t.parent().hasClass('slick--random')) {
@@ -142,8 +142,8 @@
      * added a specific class. Also fix total <= slidesToShow with centerMode.
      */
     setCurrent: function(t, curr) {
-      // Must take care for both asNavFor as well.
-      var w = t.closest('.slick-wrapper');
+      // Must take care for both asNavFor instances, with/without slick-wrapper.
+      var w = t.parent('.slick').parent();
       $('.slick__slide', w).removeClass('slide--after slide--before slide--current');
       var $curr = $('[data-slick-index="' + curr + '"]', w).addClass('slide--current');
       $curr.prevAll().addClass('slide--before');

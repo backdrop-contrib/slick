@@ -13,6 +13,7 @@ class SlickOptionsetUi extends ctools_export_ui {
   function edit_form(&$form, &$form_state) {
     parent::edit_form($form, $form_state);
 
+    module_load_include('inc', 'slick', 'includes/slick.admin');
     $module_path = drupal_get_path('module', 'slick');
     $optionset = $form_state['item'];
 
@@ -147,7 +148,7 @@ class SlickOptionsetUi extends ctools_export_ui {
     }
 
     // Main options.
-    $slick_options = slick_get_options();
+    $slick_elements = $this->getSlickElements();
     $form['options']['settings'] = array(
       '#title' => t('Settings'),
       '#type' => 'fieldset',
@@ -156,49 +157,48 @@ class SlickOptionsetUi extends ctools_export_ui {
       '#attributes' => array('class' => array('fieldset--settings', 'has-tooltip')),
     );
 
-    foreach ($slick_options as $name => $setting) {
-      $default_value = isset($options['settings'][$name]) ? $options['settings'][$name] : $setting['default'];
+    foreach ($slick_elements as $name => $element) {
+      $default_value = isset($options['settings'][$name]) ? $options['settings'][$name] : $element['default'];
       if ($name == 'cssEaseBezier' && ($override = $options['settings']['cssEaseOverride']) !== '') {
-        // @todo make this function internal to this form.
         $default_value = _slick_css_easing_mapping($override);
       }
       $form['options']['settings'][$name] = array(
-        '#title' => isset($setting['title']) ? $setting['title'] : '',
-        '#description' => isset($setting['description']) ? $setting['description'] : '',
-        '#type' => $setting['type'],
+        '#title' => isset($element['title']) ? $element['title'] : '',
+        '#description' => isset($element['description']) ? $element['description'] : '',
+        '#type' => $element['type'],
         '#default_value' => $default_value,
         '#attributes' => array('class' => array('is-tooltip')),
       );
 
-      if (isset($setting['field_suffix'])) {
-        $form['options']['settings'][$name]['#field_suffix'] = $setting['field_suffix'];
+      if (isset($element['field_suffix'])) {
+        $form['options']['settings'][$name]['#field_suffix'] = $element['field_suffix'];
       }
 
-      if ($setting['type'] == 'textfield') {
+      if ($element['type'] == 'textfield') {
         $form['options']['settings'][$name]['#size'] = 20;
         $form['options']['settings'][$name]['#maxlength'] = 255;
       }
 
-      if (!isset($setting['field_suffix']) && $setting['cast'] == 'bool') {
+      if (!isset($element['field_suffix']) && $element['cast'] == 'bool') {
         $form['options']['settings'][$name]['#field_suffix'] = '';
         $form['options']['settings'][$name]['#title_display'] = 'before';
       }
 
-      if ($setting['cast'] == 'int') {
+      if ($element['cast'] == 'int') {
         $form['options']['settings'][$name]['#maxlength'] = 60;
         $form['options']['settings'][$name]['#attributes']['class'][] = 'form-text--int';
       }
 
-      if (isset($setting['states'])) {
-        $form['options']['settings'][$name]['#states'] = $setting['states'];
+      if (isset($element['states'])) {
+        $form['options']['settings'][$name]['#states'] = $element['states'];
       }
 
-      if (isset($setting['options'])) {
-        $form['options']['settings'][$name]['#options'] = $setting['options'];
+      if (isset($element['options'])) {
+        $form['options']['settings'][$name]['#options'] = $element['options'];
       }
 
-      if (isset($setting['empty_option'])) {
-        $form['options']['settings'][$name]['#empty_option'] = $setting['empty_option'];
+      if (isset($element['empty_option'])) {
+        $form['options']['settings'][$name]['#empty_option'] = $element['empty_option'];
       }
 
       // Expand textfield for easy edit.
@@ -229,9 +229,9 @@ class SlickOptionsetUi extends ctools_export_ui {
     $form_state['breakpoints_count'] = $breakpoints_count;
 
     if ($form_state['breakpoints_count'] > 0) {
-      $slick_options = slick_get_responsive_options($form_state['breakpoints_count']);
+      $slick_responsive_elements = $this->getSlickResponsiveElements($form_state['breakpoints_count']);
 
-      foreach ($slick_options as $i => $responsives) {
+      foreach ($slick_responsive_elements as $i => $responsives) {
         // Invidual breakpoint fieldset.
         $fieldset_class = drupal_clean_css_identifier(drupal_strtolower($responsives['title']));
         $form['options']['responsives']['responsive'][$i] = array(
@@ -324,7 +324,7 @@ class SlickOptionsetUi extends ctools_export_ui {
 
                     case 'swipeToSlide':
                       $states = array('visible' => array(':input[name*="[' . $i . '][settings][swipe]"]' => array('checked' => TRUE)));
-                       break;
+                      break;
 
                     case 'cssEase':
                     case 'cssEaseOverride':
@@ -360,10 +360,353 @@ class SlickOptionsetUi extends ctools_export_ui {
     }
   }
 
+  /**
+   * Defines a list of form elements available for the Slick.
+   *
+   * @return array
+   *   All available Slick form elements.
+   *
+   * @see http://kenwheeler.github.io/slick
+   */
+  public function getSlickElements() {
+    $options = &drupal_static(__METHOD__, NULL);
+
+    if (!isset($options)) {
+      $options = array();
+
+      $options['mobileFirst'] = array(
+        'title' => t('Mobile first'),
+        'description' => t('Responsive settings use mobile first calculation.'),
+        'type' => 'checkbox',
+      );
+
+      $options['asNavFor'] = array(
+        'title' => t('asNavFor target'),
+        'description' => t('Set the slider to be the navigation of other slider (Class or ID Name). Use selector identifier ("." or "#") accordingly. If class, use the provided Wrapper class under General as needed, e.g.: if the main display has class "slick--for", and the thumbnail navigation "slick--nav", place the opposite here as its target. Or use existing classes based on optionsets, e.g.: .slick--optionset--main, or .slick--optionset--main-nav. Overriden per field formatter.'),
+        'type' => 'textfield',
+      );
+
+      $options['accessibility'] = array(
+        'title' => t('Accessibility'),
+        'description' => t('Enables tabbing and arrow key navigation.'),
+        'type' => 'checkbox',
+      );
+
+      $options['adaptiveHeight'] = array(
+        'title' => t('Adaptive height'),
+        'description' => t('Enables adaptive height for single slide horizontal carousels.'),
+        'type' => 'checkbox',
+      );
+
+      $options['autoplay'] = array(
+        'title' => t('Autoplay'),
+        'description' => t('Enables autoplay.'),
+        'type' => 'checkbox',
+      );
+
+      $options['autoplaySpeed'] = array(
+        'title' => t('Autoplay speed'),
+        'description' => t('Autoplay speed in milliseconds.'),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][autoplay]"]' => array('checked' => TRUE))),
+      );
+
+      $options['pauseOnHover'] = array(
+        'title' => t('Pause on hover'),
+        'description' => t('Pause autoplay on hover.'),
+        'type' => 'checkbox',
+        'states' => array('visible' => array(':input[name*="options[settings][autoplay]"]' => array('checked' => TRUE))),
+      );
+
+      $options['pauseOnDotsHover'] = array(
+        'title' => t('Pause on dots hover'),
+        'description' => t('Pauses autoplay when a dot is hovered.'),
+        'type' => 'checkbox',
+        'states' => array('visible' => array(':input[name*="options[settings][autoplay]"]' => array('checked' => TRUE))),
+      );
+
+      $options['arrows'] = array(
+        'title' => t('Arrows'),
+        'description' => t('Show prev/next arrows'),
+        'type' => 'checkbox',
+      );
+
+      $options['appendArrows'] = array(
+        'title' => t('Append arrows'),
+        'description' => t("Change where the navigation arrows are attached (Selector, htmlString, Array, Element, jQuery object). Leave it to default to wrap it within .slick__arrow container, otherwise change its markups accordingly."),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
+      );
+
+      $options['prevArrow'] = array(
+        'title' => t('Previous arrow'),
+        'description' => t("Customize the previous arrow markups. Make sure to keep the expected class."),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
+      );
+
+      $options['nextArrow'] = array(
+        'title' => t('Next arrow'),
+        'description' => t("Customize the next arrow markups. Make sure to keep the expected class."),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
+      );
+
+      $options['centerMode'] = array(
+        'title' => t('Center mode'),
+        'description' => t('Enables centered view with partial prev/next slides. Use with odd numbered slidesToShow counts.'),
+        'type' => 'checkbox',
+      );
+
+      $options['centerPadding'] = array(
+        'title' => t('Center padding'),
+        'description' => t('Side padding when in center mode (px or %). Be aware, too large padding at small breakpoint will screw the slide calculation with slidesToShow.'),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][centerMode]"]' => array('checked' => TRUE))),
+      );
+
+      $options['dots'] = array(
+        'title' => t('Dots'),
+        'description' => t('Show dot indicators.'),
+        'type' => 'checkbox',
+      );
+
+      $options['dotsClass'] = array(
+        'title' => t('Dot class'),
+        'description' => t('Class for slide indicator dots container. Do not prefix with dot. If you change this, edit its CSS accordingly.'),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][dots]"]' => array('checked' => TRUE))),
+      );
+
+      $options['appendDots'] = array(
+        'title' => t('Append dots'),
+        'description' => t('Change where the navigation dots are attached (Selector, htmlString, Array, Element, jQuery object). If you change this, make sure to provide its relevant markup.'),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][dots]"]' => array('checked' => TRUE))),
+      );
+
+      $options['draggable'] = array(
+        'title' => t('Draggable'),
+        'description' => t('Enable mouse dragging.'),
+        'type' => 'checkbox',
+      );
+
+      $options['fade'] = array(
+        'title' => t('Fade'),
+        'description' => t('Enable fade'),
+        'type' => 'checkbox',
+      );
+
+      $options['focusOnSelect'] = array(
+        'title' => t('Focus on select'),
+        'description' => t('Enable focus on selected element (click).'),
+        'type' => 'checkbox',
+      );
+
+      $options['infinite'] = array(
+        'title' => t('Infinite'),
+        'description' => t('Infinite loop sliding.'),
+        'type' => 'checkbox',
+      );
+
+      $options['initialSlide'] = array(
+        'title' => t('Initial slide'),
+        'description' => t('Slide to start on.'),
+        'type' => 'textfield',
+      );
+
+      $options['lazyLoad'] = array(
+        'title' => t('Lazy load'),
+        'description' => t("Set lazy loading technique. 'ondemand' will load the image as soon as you slide to it, 'progressive' loads one image after the other when the page loads. Note: dummy image is no good for ondemand. If ondemand fails to generate images, try progressive instead. Or use <a href='@url' target='_blank'>imageinfo_cache</a>. To share images for Pinterest, leave empty, otherwise no way to read actual image src.", array('@url' => '//www.drupal.org/project/imageinfo_cache')),
+        'type' => 'select',
+        'options' => drupal_map_assoc(array('ondemand', 'progressive')),
+        'empty_option' => t('- None -'),
+      );
+
+      $options['respondTo'] = array(
+        'title' => t('Respond to'),
+        'description' => t("Width that responsive object responds to. Can be 'window', 'slider' or 'min' (the smaller of the two)."),
+        'type' => 'select',
+        'options' => drupal_map_assoc(array('window', 'slider', 'min')),
+      );
+
+      $options['rtl'] = array(
+        'title' => t('RTL'),
+        'description' => t("Change the slider's direction to become right-to-left."),
+        'type' => 'checkbox',
+      );
+
+      $options['slide'] = array(
+        'title' => t('Slide element'),
+        'description' => t("Element query to use as slide. Slick will use any direct children as slides, without having to specify which tag or selector to target."),
+        'type' => 'textfield',
+      );
+
+      $options['slidesToShow'] = array(
+        'title' => t('Slides to show'),
+        'description' => t('Number of slides to show at a time. If 1, it will behave like slideshow, more than 1 a carousel. Provide more if it is a thumbnail navigation with asNavFor. Only works with odd number slidesToShow counts when using centerMode.'),
+        'type' => 'textfield',
+      );
+
+      $options['slidesToScroll'] = array(
+        'title' => t('Slides to scroll'),
+        'description' => t('Number of slides to scroll at a time, or steps at each scroll.'),
+        'type' => 'textfield',
+      );
+
+      $options['speed'] = array(
+        'title' => t('Speed'),
+        'description' => t('Slide/Fade animation speed in milliseconds.'),
+        'type' => 'textfield',
+        'field_suffix' => 'ms',
+      );
+
+      $options['swipe'] = array(
+        'title' => t('Swipe'),
+        'description' => t('Enable swiping.'),
+        'type' => 'checkbox',
+      );
+
+      $options['swipeToSlide'] = array(
+        'title' => t('Swipe to slide'),
+        'description' => t('Allow users to drag or swipe directly to a slide irrespective of slidesToScroll.'),
+        'type' => 'checkbox',
+        'states' => array('visible' => array(':input[name*="options[settings][swipe]"]' => array('checked' => TRUE))),
+      );
+
+      $options['edgeFriction'] = array(
+        'title' => t('Edge friction'),
+        'description' => t("Resistance when swiping edges of non-infinite carousels. If you don't want resistance, set it to 1."),
+        'type' => 'textfield',
+      );
+
+      $options['touchMove'] = array(
+        'title' => t('Touch move'),
+        'description' => t('Enable slide motion with touch.'),
+        'type' => 'checkbox',
+      );
+
+      $options['touchThreshold'] = array(
+        'title' => t('Touch threshold'),
+        'description' => t('Swipe distance threshold.'),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][touchMove]"]' => array('checked' => TRUE))),
+      );
+
+      $options['useCSS'] = array(
+        'title' => t('Use CSS'),
+        'description' => t('Enable/Disable CSS Transitions.'),
+        'type' => 'checkbox',
+      );
+
+      $options['cssEase'] = array(
+        'title' => t('CSS ease'),
+        'description' => t('CSS3 animation easing. <a href="@ceaser">Learn</a> <a href="@bezier">more</a>.', array('@ceaser' => '//matthewlein.com/ceaser/', '@bezier' => '//cubic-bezier.com')),
+        'type' => 'textfield',
+        'states' => array('visible' => array(':input[name*="options[settings][useCSS]"]' => array('checked' => TRUE))),
+      );
+
+      $options['cssEaseBezier'] = array(
+        'type' => 'hidden',
+      );
+
+      $options['cssEaseOverride'] = array(
+        'title' => t('CSS ease override'),
+        'description' => t('If provided, this will override the CSS ease with the pre-defined CSS easings based on <a href="@ceaser">CSS Easing Animation Tool</a>. Leave it empty to use your own CSS ease.', array('@ceaser' => '//matthewlein.com/ceaser/')),
+        'type' => 'select',
+        'options' => _slick_css_easing_options(),
+        'empty_option' => t('- None -'),
+        'states' => array('visible' => array(':input[name*="options[settings][useCSS]"]' => array('checked' => TRUE))),
+      );
+
+      $options['easing'] = array(
+        'title' => t('jQuery easing'),
+        'description' => t('Add easing for jQuery animate as fallback. Use with <a href="@easing">easing</a> libraries or default easing methods. Optionally install <a href="@jqeasing">jqeasing module</a>. This will be ignored and replaced by CSS ease for supporting browsers, or effective if useCSS is disabled.', array('@jqeasing' => '//drupal.org/project/jqeasing', '@easing' => '//gsgd.co.uk/sandbox/jquery/easing/')),
+        'type' => 'select',
+        'options' => _slick_easing_options(),
+        'empty_option' => t('- None -'),
+      );
+
+      $options['variableWidth'] = array(
+        'title' => t('variableWidth'),
+        'description' => t('Disables automatic slide width calculation.'),
+        'type' => 'checkbox',
+      );
+
+      $options['vertical'] = array(
+        'title' => t('Vertical'),
+        'description' => t('Vertical slide direction.'),
+        'type' => 'checkbox',
+      );
+
+      $options['waitForAnimate'] = array(
+        'title' => t('waitForAnimate'),
+        'description' => t('Ignores requests to advance the slide while animating.'),
+        'type' => 'checkbox',
+      );
+
+      // Clone the default values from slick.elements.inc.
+      $slick_options = slick_get_options();
+      foreach ($slick_options as $name => $option) {
+        $options[$name]['default'] = $option['default'];
+        $options[$name]['cast'] = $option['cast'];
+      }
+    }
+    return $options;
+  }
+
+  /**
+   * Defines available options for the responsive Slick.
+   *
+   * @param $count
+   *   The number of breakpoints.
+   *
+   * @return array
+   *   An array of Slick responsive options.
+   */
+  public function getSlickResponsiveElements($count = 0) {
+    $options = array();
+
+    $breakpoints = drupal_map_assoc(range(0, ($count - 1)));
+    $slick_elements = slick_clean_options($this->getSlickElements());
+
+    foreach ($breakpoints as $key => $breakpoint) {
+      $options[$key] = array(
+        'title' => t('Breakpoint #@key', array('@key' => ($key + 1))),
+        'type' => 'fieldset',
+      );
+
+      $options[$key]['breakpoint'] = array(
+        'title' => t('Breakpoint'),
+        'description' => t('Breakpoint width in pixel.'),
+        'type' => 'textfield',
+        'cast' => 'int',
+        'field_suffix' => 'px',
+        'default' => FALSE,
+      );
+
+      $options[$key]['unslick'] = array(
+        'title' => t('Unslick'),
+        'description' => t("Disable Slick at a given breakpoint. Note, you can't window shrink this, once you unslick, you are unslicked."),
+        'type' => 'checkbox',
+        'cast' => 'bool',
+        'default' => '',
+      );
+
+      $options[$key]['settings'] = array();
+
+      // Duplicate relevant main settings.
+      foreach ($slick_elements as $name => $element) {
+        $options[$key]['settings'][$name] = $element;
+      }
+    }
+    return $options;
+  }
+
 }
 
 /**
- * Callback for ajax-enabled breakpoint textfield.
+ * Callback for ajax-enabled breakpoints textfield, no method allowed for D7.
  *
  * Selects and returns the fieldset with the names in it.
  */

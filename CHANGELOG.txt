@@ -1,8 +1,25 @@
 
+Slick 7.x-2.0-dev, 2015-2-26
+----------------------------
+Issue #2438041 by RAFA3L: Fixed broken Views style plugin due to removal of
+  files array from slick_views.info:
+  files[] = slick_views_plugin_style_slick.inc
+  Be sure to clear the cache to bring it back. The mistake was after PHPCS fixes.
+Fixed edge cases for slide--current class by requesting anonymous parent selector
+  with/without theme_slick_wrapper(), and with/without asnavFor.
+Optimized slick.elements.inc, and moved slick form elements from
+  slick_get_options() to the plugin page - SlickOptionsetUi.class.php.
+  The following functions are moved to slick.admin.inc:
+  - _slick_easing_options()
+  - _slick_css_easing_options()
+  - _slick_css_easing_mapping()
+Fixed undefined $overlay_style notice with Field collection nested slicks.
+
 Slick 7.x-2.0-dev, 2015-2-25
 ----------------------------
 Fixed various PHPCS complains, except the helpless CTools lowerCamel formats and
-  CSS multiline selectors due to Sass bug :unix_newlines never applied.
+  CSS multiline selectors due to Sass bug :unix_newlines never applied, nor
+  proper line break after decendant selectors.
 
 Slick 7.x-2.0-dev, 2015-2-24
 ----------------------------

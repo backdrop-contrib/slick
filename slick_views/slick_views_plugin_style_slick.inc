@@ -350,26 +350,36 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       '#description' => t('Leave anything empty/unchecked, except Optionset and Skin, if working with custom markups. <br /><small>Otherwise only relevant markups are added like Field formatter ones, and you have to add supported fields to appear here. Views preview works with jQuery > 1.7.</small>'),
     );
 
+    $no_wrappers = array(
+      'optionset',
+      'skin',
+      'slide_field_wrapper',
+      'id',
+      'asnavfor_main',
+      'grid',
+      'grid_medium',
+      'grid_small',
+      'visible_slides',
+      'preserve_keys',
+    );
+
+    $grids = array(
+      'grid_medium',
+      'grid_small',
+      'visible_slides',
+      'preserve_keys',
+    );
+
     foreach ($element as $key => $item) {
       $form['slick'][$key] = $item;
-      if (!in_array($key, array(
-        'optionset',
-        'skin',
-        'slide_field_wrapper',
-        'id',
-        'asnavfor_main',
-        'grid',
-        'grid_medium',
-        'grid_small',
-        'visible_slides',
-        'preserve_keys',
-      ))) {
+      if (!in_array($key, $no_wrappers)) {
         $form['slick'][$key]['#states'] = array(
           'visible' => array(
             ':input[name*="[slide_field_wrapper]"]' => array('checked' => TRUE),
           ),
         );
       }
+
       if (in_array($key, array('thumbnail_caption', 'asnavfor_auto'))) {
         $form['slick'][$key]['#states'] = array(
           'invisible' => array(
@@ -378,6 +388,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
           ),
         );
       }
+
       if (in_array($key, array('asnavfor_main', 'asnavfor_thumbnail'))) {
         $form['slick'][$key]['#states'] = array(
           'invisible' => array(
@@ -387,12 +398,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
           ),
         );
       }
-      $grids = array(
-        'grid_medium',
-        'grid_small',
-        'visible_slides',
-        'preserve_keys',
-      );
+
       if (in_array($key, $grids)) {
         $form['slick'][$key]['#states'] = array(
           'invisible' => array(

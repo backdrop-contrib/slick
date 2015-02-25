@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_slick().
  *
  * Elements:
  * - #settings is set via sub-modules and serves various purposes, and not
@@ -84,6 +84,7 @@ function template_preprocess_slick(&$variables) {
   }
 
   // Set the ID for each slick instance, if none provided, for quick JS lookup.
+  // Do not use this dynamic ID to style a slick, use classes instead.
   if (empty($attributes['id'])) {
     $slick_id = &drupal_static('slick_id', 0);
     $id = 'slick-' . ++$slick_id;
@@ -220,18 +221,13 @@ function template_preprocess_slick(&$variables) {
     $is_prev = isset($js['prevArrow']) && $js['prevArrow'];
     $is_next = isset($js['nextArrow']) && $js['nextArrow'];
 
+    // $default_prev = slick_get_default_value('prevArrow');
+    // $default_next = slick_get_default_value('nextArrow');
     $default_prev = _slick_optionset_defaults('prevArrow', 'settings');
     $default_next = _slick_optionset_defaults('nextArrow', 'settings');
 
     $settings['prev_arrow'] = $is_prev ? filter_xss($js['prevArrow'], $allowed_tags) : $default_prev;
     $settings['next_arrow'] = $is_next ? filter_xss($js['nextArrow'], $allowed_tags) : $default_next;
-
-    // This is the only default supported appendArrows selector.
-    $default_append_arrows = _slick_optionset_defaults('appendArrows', 'settings');
-    if ($js['appendArrows'] == $default_append_arrows) {
-      // $js['appendArrows'] = '.slick__arrow';
-      // unset($js['appendArrows']);
-    }
   }
 
   $js['mousewheel'] = $settings['mousewheel'] ? TRUE : FALSE;
@@ -292,7 +288,7 @@ function template_process_slick(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_slick_item().
  */
 function template_preprocess_slick_item(&$variables) {
   $element = $variables['element'];
@@ -458,14 +454,14 @@ function template_preprocess_slick_item(&$variables) {
 }
 
 /**
- * Implements hook_process_HOOK().
+ * Implements hook_process_slick_item().
  */
 function template_process_slick_item(&$variables) {
   $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
 }
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_slick_grid().
  *
  * Tips:
  *   - Avoid variableWidth and adaptiveHeight.
@@ -494,7 +490,7 @@ function template_preprocess_slick_grid(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_slick_media().
  */
 function template_preprocess_slick_media(&$variables) {
   $element = $variables['element'];
@@ -590,14 +586,14 @@ function template_preprocess_slick_media(&$variables) {
 }
 
 /**
- * Implements hook_process_HOOK().
+ * Implements hook_process_slick_media().
  */
 function template_process_slick_media(&$variables) {
   $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
 }
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_slick_wrapper().
  *
  * @see theme_slick_wrapper()
  */
@@ -627,7 +623,7 @@ function template_preprocess_slick_wrapper(&$variables) {
 }
 
 /**
- * Implements hook_process_HOOK().
+ * Implements hook_process_slick_wrapper().
  */
 function template_process_slick_wrapper(&$variables) {
   $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
