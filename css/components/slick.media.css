@@ -1,5 +1,6 @@
 /**
  * @file
+ * Provides media integration.
  */
 /**
  * Pure CSS fluid video wrapper.
@@ -19,10 +20,8 @@
   visibility: hidden;
 }
 
-.slide__overlay {
-  /* 16:9 ratio */
-}
 .slide__overlay .media--switch--player {
+  /* 16:9 ratio */
   height: 0;
   padding-bottom: 56.25%;
 }

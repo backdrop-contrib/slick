@@ -12,10 +12,16 @@
  */
 .slick--skin--fullwidth {
   text-shadow: none; // overrides Bartik
+
   .slide__caption {
     @include font-size(22px);
     color: $white;
   }
+
+  .slide__media img {
+    width: 100%;
+  }
+
   .slide__title {
     color: $white;
     @include font-size(48px);
@@ -48,7 +54,7 @@
     .slide__caption {
       position: relative;
     }
-    
+
     @include breakpoint($desk) {
       @include max-container-absolute(98%, 15%);
     }

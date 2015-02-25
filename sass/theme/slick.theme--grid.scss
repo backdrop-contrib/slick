@@ -44,9 +44,11 @@ $block-grid-media-queries: true;
     margin: 0 (-$block-grid-default-spacing/2);
     padding: 0;
   }
+
   .grid__content {
     position: relative;
   }
+
   .slide__caption {
     max-width: 100%;
   }

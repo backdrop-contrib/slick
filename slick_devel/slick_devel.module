@@ -6,7 +6,7 @@
  */
 
 define('SLICK_DEVEL', variable_get('slick_devel', FALSE));
-define('SLICK_DEBUG', variable_get('slick_debug', FALSE));
+define('SLICK_DEVEL_DEBUG', variable_get('slick_debug', FALSE));
 define('SLICK_DEVEL_REPLACE', variable_get('slick_devel_replace', FALSE));
 define('SLICK_DEVEL_DISABLE', variable_get('slick_devel_disable', FALSE));
 
@@ -45,7 +45,7 @@ function slick_devel_library_alter(&$libraries, $module) {
     }
   }
 
-  if (SLICK_DEBUG) {
+  if (SLICK_DEVEL_DEBUG) {
     // Switch to the development version of the slick.load.js.
     if ($module == 'slick' && isset($libraries['drupal.slick'])) {
       $libraries['drupal.slick']['js'] = array(

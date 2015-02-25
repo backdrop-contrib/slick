@@ -1,6 +1,8 @@
 /**
  * @file
+ * Provides colorbox integration.
  */
+
 (function ($, Drupal, window, document, undefined) {
 
   "use strict";
@@ -56,7 +58,6 @@
 
               // Remove these lines to disable slider scrolling under colorbox.
               if (is_slick) {
-                // curr = $slider.slick('slickCurrentSlide');
                 curr = parseInt(t.closest('.slick__slide:not(.slick-cloned)').data('slickIndex'));
                 if ($slider.parent().next('.slick').length) {
                   var $thumb = $slider.parent().next('.slick').find('.slick__slider');
@@ -102,7 +103,6 @@
       });
 
       // window.addEventListener("orientationchange", Drupal.slickColorbox.resize(context, Drupal.settings), false);
-
       $(context).bind('cbox_complete', function () {
         Drupal.attachBehaviors('#cboxLoadedContent');
       });
@@ -147,7 +147,7 @@
 
         $content.css({
           width: $container.innerWidth(),
-          height: $('body').data('mediaHeight') !== 'undefined' ? $('body').data('mediaHeight')  : 'auto'
+          height: $('body').data('mediaHeight') !== 'undefined' ? $('body').data('mediaHeight') : 'auto'
         });
 
         $container.height($content.height());

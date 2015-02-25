@@ -111,6 +111,7 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
     );
 
     // @todo map from picture, or refine for mobile.
+    // @todo use slick_inline_css_skins() to allow flexible options.
     if (in_array($settings['skin'], array('fullscreen', 'parallax'))) {
       $slide['slide'] = array();
       $fullscreen_image_url = image_style_url($settings['image_style'], $image['uri']);

@@ -519,4 +519,5 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
 
     return $build;
   }
+
 }

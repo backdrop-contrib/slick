@@ -106,7 +106,7 @@ Nested slick is a parent Slick containing slides which contain individual child
 slick per slide. The child slicks are basically regular slide overlays like
 a single video over the large background image, only with nested slicks it can
 be many videos displayed as a slideshow.
-Use Field collection, or Views to build them.
+Use Field collection, or Views to build one.
 Supported multi-value fields for the nested slicks: Image, Media, Atom reference.
 
 Usage example:
@@ -190,9 +190,9 @@ Tips:
 - Use the Slick API hook_slick_skins_info() to add your own skins.
 - Use the provided Wrapper class option at Optionset manager to have a unique
   context as needed, useful to build asNavFor aka thumbnail navigation.
-- If having JS error with jQuery v1.7, you may need to upgrade it to v1.8.
 - For nested slicks, set the parent slick to non-draggable, the child slick is,
-  to allow proper dragging with the child slicks, otherwise both are dragged.
+  or vice versa, to allow proper dragging with the child slicks, otherwise both
+  are dragged.
 
 
 
@@ -208,6 +208,8 @@ does something new.
 
 Always clear the cache when updating the module to ensure things are picked up:
 - admin/config/development/performance
+
+If having JS error with jQuery v1.7, you may need to upgrade it to v1.8.
 
 Dropped workaround for "on demand" lazyLoad. The issue is no longer valid.
 However if the issue persists at your end, please try two possible fixes below.
@@ -234,7 +236,7 @@ SLICK > 1.4:
 If you just start using Slick, you may ignore this.
 See breaking changes for more info at:
 - https://github.com/kenwheeler/slick/releases/tag/1.4.0
-- CHANGELOG.txt dated 2014-1-30.
+- CHANGELOG.txt dated 2015-1-30.
 
 Added direct child container within .slick to hold the slides, i.e.:
   .slick__slider. Previously slides are direct children of .slick container.
@@ -264,6 +266,7 @@ selectors accordingly at Field formatter and Views pages, e.g.:
 
 HTML structure:
 --------------------------------------------------------------------------------
+Note, non-BEM classes are added by JS.
 Before Slick 1.4:
 -----------------
 <div class="slick slick-processed slick-initialized slick-slider">
@@ -292,7 +295,7 @@ The following modules are supported, but optional.
 - Field collection, to have more complex layout with Media.
 - Color field, to colorize slide background invidually.
 - Block reference to have more complex slide content for Full screen/width skins.
-- Entity translation, to have translated files with Media.
+- Entity translation, to have translated file and translate links with Media.
 
 
 
@@ -334,7 +337,7 @@ CURRENT DEVELOPMENT STATUS
 It is currently feature complete, I think. I only have few left TODOs related to
 the above nice to have, but that should not stop the proper release.
 A proper release should be reasonable after proper feedbacks from the community,
-and a few small code cleanup where needed. Patches are very much welcome.
+some code cleanup, and optimization where needed. Patches are very much welcome.
 
 
 

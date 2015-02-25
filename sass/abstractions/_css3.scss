@@ -79,16 +79,16 @@
 
 @mixin perpective($perspective: 1000px) {
   -webkit-perspective: $perspective;
-	   -moz-perspective: $perspective;
-	    -ms-perspective: $perspective;
-	        perspective: $perspective;
+     -moz-perspective: $perspective;
+      -ms-perspective: $perspective;
+          perspective: $perspective;
 }
 
 @mixin perpective-origin($origin: 50% 50%) {
   -webkit-perspective-origin: $origin;
-	   -moz-perspective-origin: $origin;
-	    -ms-perspective-origin: $origin;
-	        perspective-origin: $origin;
+     -moz-perspective-origin: $origin;
+      -ms-perspective-origin: $origin;
+          perspective-origin: $origin;
 }
 
 

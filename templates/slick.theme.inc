@@ -647,7 +647,7 @@ function template_process_slick_wrapper(&$variables) {
  *
  * @ingroup themeable
  */
-function theme_slick_wrapper($variables) {
+function theme_slick_wrapper(array $variables) {
   $build = '';
 
   // Render the items.
@@ -752,7 +752,7 @@ function theme_slick_image_lazy($variables) {
  *
  * @ingroup themeable
  */
-function theme_slick_image_formatter_lazy($variables) {
+function theme_slick_image_formatter_lazy(array $variables) {
   $item = $variables['item'];
   $output = '';
   $image = array(

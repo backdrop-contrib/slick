@@ -1,6 +1,8 @@
 /**
  * @file
+ * Provides Media module integration.
  */
+
 (function ($) {
 
   "use strict";
@@ -24,19 +26,19 @@
         t.on('click.media-play', '.media-icon--play', function (e) {
           var p = $(this);
 
-            // Soundcloud needs internet, fails on disconnected local.
-            if (url === '') {
-              return false;
+          // Soundcloud needs internet, fails on disconnected local.
+          if (url === '') {
+            return false;
+          }
+          // Force autoplay, if not provided, which should not.
+          if (media.scheme === 'soundcloud') {
+            if (url.indexOf('auto_play') < 0 || url.indexOf('auto_play') === false) {
+              url = url.indexOf('?') < 0 ? url + '?auto_play=true' : url + '&amp;auto_play=true';
             }
-            // Force autoplay, if not provided, which should not.
-            if (media.scheme === 'soundcloud') {
-              if (url.indexOf('auto_play') < 0 || url.indexOf('auto_play') === false) {
-                url = url.indexOf('?') < 0 ? url + '?auto_play=true' : url + '&amp;auto_play=true';
-              }
-            }
-            else if (url.indexOf('autoplay') < 0 || url.indexOf('autoplay') === 0) {
-              url = url.indexOf('?') < 0 ? url + '?autoplay=1' : url + '&amp;autoplay=1';
-            }
+          }
+          else if (url.indexOf('autoplay') < 0 || url.indexOf('autoplay') === 0) {
+            url = url.indexOf('?') < 0 ? url + '?autoplay=1' : url + '&amp;autoplay=1';
+          }
 
           // First, reset any video to avoid multiple videos from playing.
           t.removeClass('is-playing');
@@ -50,10 +52,11 @@
 
           t.addClass('is-playing').append(newIframe);
           newIframe.attr('src', url);
+
           return false;
-        })
+        });
         // Closes the video.
-        .on('click.media-close', '.media-icon--close', function (e) {
+        t.on('click.media-close', '.media-icon--close', function (e) {
           t.removeClass('is-playing').find('iframe').remove();
           $('.is-paused').removeClass('is-paused');
           return false;
@@ -66,4 +69,5 @@
       });
     }
   };
+
 })(jQuery);

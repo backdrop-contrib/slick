@@ -10,6 +10,9 @@
   font-size: 1.375rem;
   color: #fff;
 }
+.slick--skin--fullwidth .slide__media img {
+  width: 100%;
+}
 .slick--skin--fullwidth .slide__title {
   color: #fff;
   font-size: 48px;

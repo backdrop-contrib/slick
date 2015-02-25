@@ -376,93 +376,71 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     opacity: 1;
   }
 
-  .slide__content > .slide__constrained > .slide__caption,
-  .slide__content > .slide__caption {
+  /* Here comes the price for nested slicks: over-specificity + Sass line bug */
+  .slide__content > .slide__constrained > .slide__caption, .slide__content > .slide__caption {
     left: 0;
     padding: 20px;
     position: absolute;
     top: 10%;
     width: 42%;
   }
-  .slick--display--thumbnail .slide__content > .slide__constrained > .slide__caption, .slick--display--thumbnail
-  .slide__content > .slide__caption {
-    padding: 5px 6px;
-    top: auto;
-    width: 100%;
-  }
-  .slide--caption--below > .slide__content > .slide__constrained > .slide__caption, .slide--caption--below >
-  .slide__content > .slide__caption {
+  .slide--caption--below > .slide__content > .slide__constrained > .slide__caption, .slide--caption--below > .slide__content > .slide__caption {
     padding: 20px 0;
     position: relative;
     top: auto;
     width: 100%;
   }
-  .slide--caption--center > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center >
-  .slide__content > .slide__caption {
+  .slide--caption--center > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center > .slide__content > .slide__caption {
     margin-top: -16%;
     top: 50%;
   }
-  .slide--caption--center > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center-top > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center >
-  .slide__content > .slide__caption, .slide--caption--center-top >
-  .slide__content > .slide__caption {
+  .slide--caption--center > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center-top > .slide__content > .slide__constrained > .slide__caption, .slide--caption--center > .slide__content > .slide__caption, .slide--caption--center-top > .slide__content > .slide__caption {
     left: 50%;
     margin-left: -21%;
     padding: 0;
     text-align: center;
   }
-  .slide--caption--right > .slide__content > .slide__constrained > .slide__caption, .slide--caption--right >
-  .slide__content > .slide__caption {
+  .slide--caption--right > .slide__content > .slide__constrained > .slide__caption, .slide--caption--right > .slide__content > .slide__caption {
     left: auto;
     right: 0;
   }
-  .slide--caption--top > .slide__content > .slide__constrained > .slide__caption, .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slide--caption--top >
-  .slide__content > .slide__caption, .slide--caption--bottom >
-  .slide__content > .slide__caption {
+  .slide--caption--top > .slide__content > .slide__constrained > .slide__caption, .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slide--caption--top > .slide__content > .slide__caption, .slide--caption--bottom > .slide__content > .slide__caption {
     width: 100%;
   }
-  .slide--caption--top .slide__content > .slide__constrained > .slide__caption, .slide--caption--top
-  .slide__content > .slide__caption {
+  .slide--caption--top > .slide__content > .slide__constrained > .slide__caption, .slide--caption--top > .slide__content > .slide__caption {
     top: 0;
   }
-  .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slide--caption--bottom >
-  .slide__content > .slide__caption {
+  .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slide--caption--bottom > .slide__content > .slide__caption {
     bottom: 0;
     top: auto;
   }
-  .slick--has-arrow-down .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slick--has-arrow-down .slide--caption--bottom >
-  .slide__content > .slide__caption {
+  .slick--has-arrow-down .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption, .slick--has-arrow-down .slide--caption--bottom > .slide__content > .slide__caption {
     padding-bottom: 80px;
   }
 
-  /* Caption right, stage left */
-  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption, .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption, .slide--caption--stage-zebra > .slide__content > .slide__constrained > .slide__caption, .slide--caption--stage-left >
-  .slide__content > .slide__caption, .slide--caption--stage-right >
-  .slide__content > .slide__caption, .slide--caption--stage-zebra >
-  .slide__content > .slide__caption {
+  .slick--display--thumbnail .slide__caption {
+    padding: 5px 6px;
+    top: auto;
+    width: 100%;
+  }
+
+  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption,
+  .slide--caption--stage-left > .slide__content > .slide__caption, .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption,
+  .slide--caption--stage-right > .slide__content > .slide__caption, .slide--caption--stage-zebra > .slide__content > .slide__constrained > .slide__caption,
+  .slide--caption--stage-zebra > .slide__content > .slide__caption {
     left: 50%;
     margin-left: -41%;
     padding: 0;
     width: 82%;
   }
 
-  /* Contains text or other fields within caption */
-  .slide__content > .slide__constrained > .slide__caption > .slide__data,
-  .slide__content > .slide__caption > .slide__data {
-    /* Caption right, stage left */
-    /* Caption left, stage right */
-  }
-  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-left >
-  .slide__content > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(odd) >
-  .slide__content > .slide__caption > .slide__data {
+  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-left > .slide__content > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__caption > .slide__data {
     margin-right: 56%;
   }
-  .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-right >
-  .slide__content > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(even) >
-  .slide__content > .slide__caption > .slide__data {
+  .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide--caption--stage-right > .slide__content > .slide__caption > .slide__data, .slide--caption--stage-zebra:nth-child(even) > .slide__content > .slide__caption > .slide__data {
     margin-left: 56%;
   }
 
-  /* Contains image within caption container */
   .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption > .slide__overlay, .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption > .slide__overlay {
     float: right;
     width: 52%;
@@ -481,15 +459,11 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     width: 48%;
   }
 
-  .slick--skin--split .slide--caption--split-left > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-left >
-  .slide__content > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) >
-  .slide__content > .slide__caption {
+  .slick--skin--split .slide--caption--split-left > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-left > .slide__content > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > .slide__content > .slide__caption {
     margin-left: 52%;
     width: auto;
   }
-  .slick--skin--split .slide--caption--split-right > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-right >
-  .slide__content > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(even) >
-  .slide__content > .slide__caption {
+  .slick--skin--split .slide--caption--split-right > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption, .slick--skin--split .slide--caption--split-right > .slide__content > .slide__caption, .slick--skin--split .slide--caption--split-zebra:nth-child(even) > .slide__content > .slide__caption {
     margin-right: 52%;
     width: auto;
   }
@@ -573,6 +547,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   cursor: text;
   -moz-user-select: text;
   -ms-user-select: text;
+  -o-user-select: text;
   -webkit-user-select: text;
   user-select: text;
 }

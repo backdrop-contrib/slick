@@ -11,10 +11,9 @@
  * @param string $entity_type
  *   The entity type to use with entity_get_info($entity_type) or
  *   entity_get_info($field['settings']['target_type']).
- *
  * @param bool $exclude
  *   If TRUE, then exclude some view modes, such as: 'rss', 'search_index',
- *   'search_result', 'print', 'token'
+ *   'search_result', 'print', 'token'.
  *
  * @return array
  *   An array of available view modes, excluding some.

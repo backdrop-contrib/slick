@@ -5,10 +5,10 @@
 @import "breakpoint";
 
 // Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+@import "../globals";
 /**
  * @file
+ * Provides media integration.
  */
 
 /**
@@ -35,8 +35,8 @@
 // Media swicth player overlay is always using aspect ratio to allow layering
 // properly.
 .slide__overlay {
-  /* 16:9 ratio */
   .media--switch--player {
+    /* 16:9 ratio */
     height: 0;
     padding-bottom: 56.25%;
 
@@ -63,7 +63,6 @@
 /**
  * Aspect ratio applied to the main image, unless overriden to just overlay.
  */
-.slick--ratio {}
 
 /* 16:9 ratio */
 .slick--ratio--file .media--player,

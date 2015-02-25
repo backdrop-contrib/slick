@@ -1,6 +1,8 @@
 /**
  * @file
+ * Provides Slick loader.
  */
+
 (function ($, Drupal, window) {
 
   "use strict";
@@ -83,7 +85,7 @@
     },
 
     /**
-     * Randomize slide orders, useful to manipulate cached blocks with ondemand.
+     * Randomize slide orders, for ads/products rotation within cached blocks.
      */
     randomize: function(t) {
       if (!t.parent().hasClass('slick--random')) {
@@ -134,7 +136,9 @@
     },
 
     /**
-     * Without centerMode, .slick-active can be as many as visible slides, hence
+     * Returns the current slide class.
+     *
+     * Without centerMode, .slick-active can be as many as visible slides.
      * added a specific class. Also fix total <= slidesToShow with centerMode.
      */
     setCurrent: function(t, curr) {

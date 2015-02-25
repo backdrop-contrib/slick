@@ -127,6 +127,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           }
 
           // @todo map from picture, or refine for mobile.
+          // @todo use slick_inline_css_skins() to allow flexible options.
           if (in_array($settings['skin'], array('fullscreen', 'parallax'))) {
             $slide['slide'] = array();
             $fullscreen_image_url = image_style_url($settings['image_style'], $image['uri']);
@@ -453,6 +454,8 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                 '#theme' => 'slick',
                 '#items' => $overlay_element,
                 '#settings' => $overlay_settings[$key],
+                // @todo add simple overrides for common options: draggable,
+                // arrows, and dots to keep a single optionset handy for some.
                 '#options' => array(),
                 '#attached' => slick_attach($attach),
               );

@@ -12,6 +12,7 @@
  * Adds 3d view with focal point at back, best with centerMode + 3 slidesToShow.
  * Detailed stylings are all yours, get yourself dirty.
  */
+
 // http://24ways.org/2010/intro-to-css-3d-transforms/
 $arrow-width: 50% !default;
 $rotate: 25deg !default;
@@ -54,12 +55,14 @@ $rotate: 25deg !default;
       @include scale(0);
     }
   }
+
   .slide--current {
     ~ .slide {
       .slide__media {
         @include transform(rotateY(-$rotate));
       }
     }
+
     &.slide {
       .slide__media {
         @include transform(rotateY(0deg));

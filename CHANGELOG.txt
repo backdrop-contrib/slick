@@ -1,10 +1,15 @@
 
+Slick 7.x-2.0-dev, 2015-2-25
+----------------------------
+Fixed various PHPCS complains, except the helpless CTools lowerCamel formats and
+  CSS multiline selectors due to Sass bug :unix_newlines never applied.
+
 Slick 7.x-2.0-dev, 2015-2-24
 ----------------------------
 Simplified slick.tpl.php markups for when only 1 item is available.
 Fixed slick.theme.css and slick.load.min.js to support nested slicks. Be sure
   to re-check your CSS with the new specifity introduced by nested slicks.
-  Mostly related to .slick__caption and .slide__media classes e.g.:
+  Mostly related to .slide__caption and .slide__media classes e.g.:
   Before:
   .slide--caption--below .slide__caption {}
   After:
@@ -510,9 +515,9 @@ Added mousewheel option to slick_fields.module.
 Fixed undefined index media_switch at slick_fields form.
 Changed <div class="slick__arrow"> to <nav class="slick__arrow"> at slick.tpl
   as the last fail safe against the problematic anonymous DIV slide option. It
-	is not an issue if data is passed into theme_slick() already. However copying
-	the template and creating a custom theme without being aware of the issue will
-	break the slide.
+  is not an issue if data is passed into theme_slick() already. However copying
+  the template and creating a custom theme without being aware of the issue will
+  break the slide.
 
 Slick 7.x-2.0-dev, 2014-06-16
 -----------------------------

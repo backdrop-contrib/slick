@@ -27,11 +27,11 @@
       // position: relative;
       @include transition(transform $transition-transform-1);
       width: 100%;
-		  .slide__data {
-		    margin: 0;
-		    padding: $horz-spacing-unit;
+      .slide__data {
+        margin: 0;
+        padding: $horz-spacing-unit;
         width: 100%;
-	    }
+      }
     }
 
     .slide__description {
@@ -69,10 +69,10 @@
         top: 0;
         width: 22%;
         .slide__data {
-		      margin: 0 !important;
-		      padding: $horz-spacing-unit;
+          margin: 0 !important;
+          padding: $horz-spacing-unit;
           width: 100%;
-	      }
+        }
       }
     }
 
@@ -106,8 +106,8 @@
       top: auto;
     }
 
-	  .slide--caption--stage-zebra:nth-child(odd),
-	  .slide--caption--stage-left,
+    .slide--caption--stage-zebra:nth-child(odd),
+    .slide--caption--stage-left,
     .slide--caption--left {
       .slide__caption {
         left: 0;
@@ -115,8 +115,8 @@
       }
     }
 
-	  .slide--caption--stage-zebra:nth-child(even),
-	  .slide--caption--stage-right,
+    .slide--caption--stage-zebra:nth-child(even),
+    .slide--caption--stage-right,
     .slide--caption--right {
       .slide__caption {
         left: auto;

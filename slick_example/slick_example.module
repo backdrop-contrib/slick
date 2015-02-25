@@ -112,16 +112,16 @@ function slick_example_image_default_styles() {
  */
 /* -- Delete this line if you want to use this function
 function slick_example_slick_skins_info() {
-  $module_path = drupal_get_path('module', 'slick_example');
-  return array(
-    'x_testimonial' => array(
-      'name' => t('X: Testimonial'),
-      'description' => t('Testimonial with thumbnail and description with slidesToShow 2.'),
-      'css' => array(
-        $module_path . '/css/slick.theme--x-testimonial.css' => array('weight' => 20),
-      ),
-    )
-  );
+// $module_path = drupal_get_path('module', 'slick_example');
+// return array(
+// 'x_testimonial' => array(
+// 'name' => t('X: Testimonial'),
+// 'description' => t('Testimonial with thumbnail and description with slidesToShow 2.'),
+// 'css' => array(
+// $module_path . '/css/slick.theme--x-testimonial.css' => array('weight' => 20),
+// ),
+// )
+// );
 }
 // */
 
@@ -135,35 +135,35 @@ function slick_example_slick_skins_info() {
  */
 /* -- Delete this line if you want to use this function
 function slick_example_slick_skins_info_alter(&$skins) {
-  $module_path = drupal_get_path('module', 'slick_example');
-  $theme_path = drupal_get_path('theme', 'my_theme');
+// $module_path = drupal_get_path('module', 'slick_example');
+// $theme_path = drupal_get_path('theme', 'my_theme');
 
-  // Adds slick_example.asnavfor.js to skin asNavFor thumbnail.
-  $skins['asnavfor']['js'] = array($module_path . '/js/slick_example.asnavfor.js' => array('weight' => 21));
+// Adds slick_example.asnavfor.js to skin asNavFor thumbnail.
+// $skins['asnavfor']['js'] = array($module_path . '/js/slick_example.asnavfor.js' => array('weight' => 21));
 
-  // Modify the default skin's name and description.
-  // $skins['default']['name'] = t('My Theme: Default');
-  // $skins['default']['description'] = t('My Theme default skin.');
+// Modify the default skin's name and description.
+// $skins['default']['name'] = t('My Theme: Default');
+// $skins['default']['description'] = t('My Theme default skin.');
 
-  // This one won't work.
-  // $skins['default']['css'][$theme_path . '/css/slick.theme--base.css'] = array('weight' => -22);
+// This one won't work.
+// $skins['default']['css'][$theme_path . '/css/slick.theme--base.css'] = array('weight' => -22);
 
-  // This one overrides slick.theme--default.css with slick.theme--base.css
-  // The CSS is provided by my_theme.
-  // $skins['default']['css'] = array($theme_path . '/css/slick.theme--base.css' => array('weight' => -22));
+// This one overrides slick.theme--default.css with slick.theme--base.css
+// The CSS is provided by my_theme.
+// $skins['default']['css'] = array($theme_path . '/css/slick.theme--base.css' => array('weight' => -22));
 
-  // Overrides skin asNavFor with theme CSS.
-  // The CSS is provided by my_theme.
-  // $skins['asnavfor']['name'] = t('My Theme: asnavfor');
-  // $skins['asnavfor']['css'] = array($theme_path . '/css/slick.theme--asnavfor.css' => array('weight' => 21));
+// Overrides skin asNavFor with theme CSS.
+// The CSS is provided by my_theme.
+// $skins['asnavfor']['name'] = t('My Theme: asnavfor');
+// $skins['asnavfor']['css'] = array($theme_path . '/css/slick.theme--asnavfor.css' => array('weight' => 21));
 
-  // Or with the new name.
-  // $skins['asnavfor']['css'] = array($theme_path . '/css/slick.theme--asnavfor-new.css' => array('weight' => 21));
+// Or with the new name.
+// $skins['asnavfor']['css'] = array($theme_path . '/css/slick.theme--asnavfor-new.css' => array('weight' => 21));
 
-  // Overrides skin Fullwidth with theme CSS.
-  // The CSS is provided by my_theme.
-  // $skins['fullwidth']['name'] = t('My Theme: fullwidth');
-  // $skins['fullwidth']['css'] = array($theme_path . '/css/slick.theme--fullwidth.css' => array('weight' => 22));
+// Overrides skin Fullwidth with theme CSS.
+// The CSS is provided by my_theme.
+// $skins['fullwidth']['name'] = t('My Theme: fullwidth');
+// $skins['fullwidth']['css'] = array($theme_path . '/css/slick.theme--fullwidth.css' => array('weight' => 22));
 }
 // */
 
@@ -177,20 +177,20 @@ function slick_example_slick_skins_info_alter(&$skins) {
  */
 /* -- Delete this line if you want to use this function
 function slick_example_slick_attach_info_alter(&$attach) {
-  // Disable core Slick CSS: sites/../libraries/slick/slick/slick-theme.css
-  // $attach['attach_slick_element'] = FALSE;
+// Disable core Slick CSS: sites/../libraries/slick/slick/slick-theme.css
+// $attach['attach_slick_element'] = FALSE;
 
-  // Disable module JS: slick.load.js to use your own slick JS.
-  // $attach['attach_module'] = FALSE;
+// Disable module JS: slick.load.js to use your own slick JS.
+// $attach['attach_module'] = FALSE;
 
-  // Disable module CSS: slick/css/theme/slick.theme.css
-  // $attach['attach_module_css'] = FALSE;
+// Disable module CSS: slick/css/theme/slick.theme.css
+// $attach['attach_module_css'] = FALSE;
 
-  // Disabled inline CSS after copying the output to theme at final stage.
-  // $attach['attach_inline_css'] = NULL;
+// Disabled inline CSS after copying the output to theme at final stage.
+// $attach['attach_inline_css'] = NULL;
 
-  // Disable its depencencies, otherwise slick.load.js is still loaded.
-  // $attach['attach_media'] = FALSE;
-  // $attach['attach_colorbox'] = FALSE;
+// Disable its depencencies, otherwise slick.load.js is still loaded.
+// $attach['attach_media'] = FALSE;
+// $attach['attach_colorbox'] = FALSE;
 }
 // */

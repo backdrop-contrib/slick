@@ -10,6 +10,7 @@
  * @file
  * Detailed stylings are all yours, get yourself dirty.
  */
+
 .slick--skin--boxed {
   // Applies only if 1 slideToShow, not carousel, to avoid nearby visible.
   &.slick--slider {
@@ -28,9 +29,7 @@
 
 @include breakpoint($ipad, true) {
   // Spaces only reasonable for larger device.
-  .slick--skin--boxed > {
-    .slick__slider > .slick-list {
-      margin: 0 60px;
-    }
+  .slick--skin--boxed > .slick__slider > .slick-list {
+    margin: 0 60px;
   }
 }

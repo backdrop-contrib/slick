@@ -34,6 +34,7 @@
   .slick-wrapper {
     margin: 0 auto;
   }
+
   .slick .slick__slide {
     display: none;
     &:first-child,
@@ -41,6 +42,7 @@
       display: block;
     }
   }
+
 }
 
 @include breakpoint($breakpoint-start, true) {
@@ -48,6 +50,7 @@
   .slick--float .slick__slide {
     float: left;
   }
+
   /* Fixed FireFox draggable issue, avoid asNavFor thumbnails. */
   .slick--display--main .slick__slide img {
     pointer-events: none;
@@ -58,19 +61,14 @@
     opacity: 1;
   }
 
-  .slide__content > .slide__constrained > .slide__caption,
-  .slide__content > .slide__caption {
+  /* Here comes the price for nested slicks: over-specificity + Sass line bug */
+  // https://github.com/sass/sass/issues/1604
+  .slide__content > .slide__constrained > .slide__caption, .slide__content > .slide__caption {
     left: 0;
     padding: 20px;
     position: absolute;
     top: 10%;
     width: 42%;
-
-    .slick--display--thumbnail & {
-      padding: 5px 6px;
-      top: auto;
-      width: 100%;
-    }
 
     .slide--caption--below > & {
       // bottom: 0;
@@ -103,7 +101,7 @@
       width: 100%;
     }
 
-    .slide--caption--top & {
+    .slide--caption--top > & {
       top: 0;
     }
 
@@ -117,13 +115,17 @@
     }
   }
 
-  /* Caption right, stage left */
-  .slide__content > .slide__constrained > .slide__caption,
-  .slide__content > .slide__caption {
-    // Stages are full width image with captions positioned on top of it.
-    .slide--caption--stage-left > &,
-    .slide--caption--stage-right > &,
-    .slide--caption--stage-zebra > & {
+  .slick--display--thumbnail .slide__caption {
+    padding: 5px 6px;
+    top: auto;
+    width: 100%;
+  }
+
+  // Caption right, stage left
+  // Stages are full width image with captions positioned on top of it.
+  .slide--caption--stage-left >, .slide--caption--stage-right >, .slide--caption--stage-zebra > {
+    .slide__content > .slide__constrained > .slide__caption,
+    .slide__content > .slide__caption {
       left: 50%;
       margin-left: -41%;
       padding: 0;
@@ -131,60 +133,55 @@
     }
   }
 
-  /* Contains text or other fields within caption */
-  .slide__content > .slide__constrained > .slide__caption > .slide__data,
-  .slide__content > .slide__caption > .slide__data {
-    /* Caption right, stage left */
+
+  // Makes CSS output standard over comfort due to Sass bug with line breaks.
+  // Contains text or other fields within caption
+  // Caption right, stage left
+  .slide__content > .slide__constrained > .slide__caption > .slide__data, .slide__content > .slide__caption > .slide__data {
     .slide--caption--stage-left > &,
     .slide--caption--stage-zebra:nth-child(odd) > & {
       margin-right: 56%;
     }
 
-    /* Caption left, stage right */
+    // Caption left, stage right
     .slide--caption--stage-right > &,
     .slide--caption--stage-zebra:nth-child(even) > & {
       margin-left: 56%;
     }
   }
 
-  /* Contains image within caption container */
+  // Contains image within caption container
   .slide__content > .slide__constrained > .slide__caption > .slide__overlay {
-    .slide--caption--stage-left > &,
-    .slide--caption--stage-zebra:nth-child(odd) > & {
+    .slide--caption--stage-left > &, .slide--caption--stage-zebra:nth-child(odd) > & {
       float: right;
       width: 52%;
     }
 
-    .slide--caption--stage-right > &,
-    .slide--caption--stage-zebra:nth-child(even) > & {
+    .slide--caption--stage-right > &, .slide--caption--stage-zebra:nth-child(even) > & {
       float: left;
       width: 52%;
     }
   }
 
   .slide__content > .slide__media {
-    .slick--skin--split .slide--caption--split-left > &,
-    .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > & {
+    .slick--skin--split .slide--caption--split-left > &, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > & {
       float: left;
       width: 48%;
     }
 
-    .slick--skin--split .slide--caption--split-right > &,
-    .slick--skin--split .slide--caption--split-zebra:nth-child(even) > & {
+    .slick--skin--split .slide--caption--split-right > &, .slick--skin--split .slide--caption--split-zebra:nth-child(even) > & {
       float: right;
       width: 48%;
     }
   }
 
-  .slide__content > .slide__constrained > .slide__caption,
-  .slide__content > .slide__caption {
-    .slick--skin--split .slide--caption--split-left > &,
-    .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > & {
+  .slide__content > .slide__constrained > .slide__caption, .slide__content > .slide__caption {
+    .slick--skin--split .slide--caption--split-left > &, .slick--skin--split .slide--caption--split-zebra:nth-child(odd) > & {
       margin-left: 52%;
       width: auto;
     }
-    .slick--skin--split .slide--caption--split-right > &,
-    .slick--skin--split .slide--caption--split-zebra:nth-child(even) > & {
+
+    .slick--skin--split .slide--caption--split-right > &, .slick--skin--split .slide--caption--split-zebra:nth-child(even) > & {
       margin-right: 52%;
       width: auto;
     }

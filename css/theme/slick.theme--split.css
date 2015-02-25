@@ -7,7 +7,8 @@
 }
 
 @media (min-width: 64em) {
-  .slide--caption--split-left > .slide__content > .slide__caption, .slide--caption--split-right > .slide__content > .slide__caption {
+  .slide--caption--split-left > .slide__content > .slide__caption,
+  .slide--caption--split-right > .slide__content > .slide__caption {
     left: 0;
     padding: 20px;
     position: absolute;

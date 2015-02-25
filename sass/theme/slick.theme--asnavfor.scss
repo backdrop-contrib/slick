@@ -13,6 +13,7 @@
  * Thumbnail has class "slick--display--thumbnail".
  * Tips: make sure to use odd number for slideToShow with centerMode on.
  */
+
 $thumbnail-spacing: 20px !default;
 $thumbnail-horz-spacing: 30px !default;
 .slick--display--thumbnail.slick--skin--asnavfor {
@@ -20,6 +21,7 @@ $thumbnail-horz-spacing: 30px !default;
   margin-right: auto;
   padding: 0;
   width: 96%;
+
   .slick-list {
     margin: 0 (-$thumbnail-spacing);
     padding: 30px $thumbnail-spacing *2;
@@ -30,6 +32,7 @@ $thumbnail-horz-spacing: 30px !default;
       margin: 0;
     }
   }
+
   .slide--current {
     background: $white;
   }
@@ -67,17 +70,11 @@ $thumbnail-horz-spacing: 30px !default;
         width: 0;
         z-index: 1;
       }
+
       img {
         border-color: $white;
       }
     }
-
-    // &.slick-active {
-    // opacity: 1;
-    // }
-    // &.slick-center,
-    // &.slide--current {
-    // }
   }
 
 
@@ -86,12 +83,6 @@ $thumbnail-horz-spacing: 30px !default;
       padding-bottom: $thumbnail-spacing * 2;
       padding-top: $thumbnail-spacing * 2;
     }
-    // .slick__slide {
-    //  opacity: 0;
-    // }
-    // .slick-active {
-    //  opacity: 1;
-    // }
   }
 
   .slick__arrow {
@@ -99,9 +90,11 @@ $thumbnail-horz-spacing: 30px !default;
       pointer-events: none;
       opacity: 0;
     }
+
     .slick-prev {
       left: -$thumbnail-spacing;
     }
+
     .slick-next {
       right: -$thumbnail-spacing;
     }

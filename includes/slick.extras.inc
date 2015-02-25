@@ -37,7 +37,6 @@ function slick_get_media_url($rendered_media) {
  *
  * @param string $hex
  *   A string hex value.
- *
  * @param int $steps
  *   An int step between -255 and 255 where negative means darker, and positive
  *   lighter.

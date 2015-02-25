@@ -156,44 +156,49 @@ class SlickOptionsetUi extends ctools_export_ui {
       '#attributes' => array('class' => array('fieldset--settings', 'has-tooltip')),
     );
 
-    foreach ($slick_options as $name => $values) {
+    foreach ($slick_options as $name => $setting) {
+      $default_value = isset($options['settings'][$name]) ? $options['settings'][$name] : $setting['default'];
+      if ($name == 'cssEaseBezier' && ($override = $options['settings']['cssEaseOverride']) !== '') {
+        // @todo make this function internal to this form.
+        $default_value = _slick_css_easing_mapping($override);
+      }
       $form['options']['settings'][$name] = array(
-        '#title' => $values['title'],
-        '#description' => $values['description'],
-        '#type' => $values['type'],
-        '#default_value' => isset($options['settings'][$name]) ? $options['settings'][$name] : $values['default'],
+        '#title' => isset($setting['title']) ? $setting['title'] : '',
+        '#description' => isset($setting['description']) ? $setting['description'] : '',
+        '#type' => $setting['type'],
+        '#default_value' => $default_value,
         '#attributes' => array('class' => array('is-tooltip')),
       );
 
-      if (isset($values['field_suffix'])) {
-        $form['options']['settings'][$name]['#field_suffix'] = $values['field_suffix'];
+      if (isset($setting['field_suffix'])) {
+        $form['options']['settings'][$name]['#field_suffix'] = $setting['field_suffix'];
       }
 
-      if ($values['type'] == 'textfield') {
+      if ($setting['type'] == 'textfield') {
         $form['options']['settings'][$name]['#size'] = 20;
         $form['options']['settings'][$name]['#maxlength'] = 255;
       }
 
-      if (!isset($values['field_suffix']) && $values['cast'] == 'bool') {
+      if (!isset($setting['field_suffix']) && $setting['cast'] == 'bool') {
         $form['options']['settings'][$name]['#field_suffix'] = '';
         $form['options']['settings'][$name]['#title_display'] = 'before';
       }
 
-      if ($values['cast'] == 'int') {
+      if ($setting['cast'] == 'int') {
         $form['options']['settings'][$name]['#maxlength'] = 60;
         $form['options']['settings'][$name]['#attributes']['class'][] = 'form-text--int';
       }
 
-      if (isset($values['states'])) {
-        $form['options']['settings'][$name]['#states'] = $values['states'];
+      if (isset($setting['states'])) {
+        $form['options']['settings'][$name]['#states'] = $setting['states'];
       }
 
-      if (isset($values['options'])) {
-        $form['options']['settings'][$name]['#options'] = $values['options'];
+      if (isset($setting['options'])) {
+        $form['options']['settings'][$name]['#options'] = $setting['options'];
       }
 
-      if (isset($values['empty_option'])) {
-        $form['options']['settings'][$name]['#empty_option'] = $values['empty_option'];
+      if (isset($setting['empty_option'])) {
+        $form['options']['settings'][$name]['#empty_option'] = $setting['empty_option'];
       }
 
       // Expand textfield for easy edit.
@@ -354,6 +359,7 @@ class SlickOptionsetUi extends ctools_export_ui {
       }
     }
   }
+
 }
 
 /**

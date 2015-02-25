@@ -34,8 +34,8 @@ function slick_fields_field_formatter_info() {
       'thumbnail_caption' => '',
       'slide_image' => '',
       'slide_caption' => array(),
-			'media_switch' => '',
-		  'mousewheel' => FALSE,
+      'media_switch' => '',
+      'mousewheel' => FALSE,
     ),
   );
 
@@ -208,7 +208,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#type' => 'textfield',
     '#title' => t('asNavFor main'),
     '#default_value' => $settings['asnavfor_main'],
-    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the main display, e.g.: #slick-node-page-field-images-1-thumbnail or .slick--nav. This should address the thumbnail display class or ID attributes.'),
+    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the main display, e.g.: #slick-node-page-field-images-1-thumbnail-slider, or .slick--nav. This should address the thumbnail display class or ID attributes.'),
     '#attributes' => array('class' => array('is-tooltip', 'js-expandable')),
     '#states' => array(
       'invisible' => array(
@@ -222,7 +222,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#type' => 'textfield',
     '#title' => t('asNavFor thumbnail'),
     '#default_value' => $settings['asnavfor_thumbnail'],
-    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the thumbnail display, e.g.: #slick-node-page-field-images-1 or .slick--for. This should address the main display class or ID attributes.'),
+    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the thumbnail display, e.g.: #slick-node-page-field-images-1-slider, or .slick--for. This should address the main display class or ID attributes.'),
     '#attributes' => array('class' => array('is-tooltip', 'js-expandable')),
     '#states' => array(
       'invisible' => array(
@@ -270,7 +270,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#default_value' => $settings['image_style'],
     '#empty_option' => t('None (original image)'),
     '#options' => $image_styles,
-    '#description' => t('This is to override, or fallback as needed.'),
+    '#description' => t('This is to override, or fallback as needed. This allows more variant per View mode with a single optionset.'),
     '#attributes' => array('class' => array('is-tooltip')),
   );
 
@@ -311,8 +311,12 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       $caption_options = _slick_fields_get_media_fields($instance);
       $layout_options  = _slick_fields_get_media_fields($instance, array('options_select'));
       $slide_classes   = _slick_fields_get_media_fields($instance, array('options_select', 'text_textfield'));
-      $title_options   = _slick_fields_get_media_fields($instance, array('link_field', 'text_textfield', 'text_textarea'));
-      $link_options    = _slick_fields_get_media_fields($instance, array(
+      $title_options   = _slick_fields_get_media_fields($instance, array(
+        'link_field',
+        'text_textfield',
+        'text_textarea',
+      ));
+      $link_options = _slick_fields_get_media_fields($instance, array(
         'text_textfield',
         'link_field',
         'url_external',
@@ -339,9 +343,17 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       $color_options   = _slick_fields_get_fc_fields($instance, array('text', 'color_field_rgb'));
       $layout_options  = _slick_fields_get_fc_fields($instance, array('list_text'));
       $image_options   = _slick_fields_get_fc_fields($instance, array('image', 'file'));
-      $overlay_options = _slick_fields_get_fc_fields($instance, array('image', 'file', 'atom_reference'));
-      $title_options   = _slick_fields_get_fc_fields($instance, array('link_field', 'text', 'text_long'));
-      $link_options    = _slick_fields_get_fc_fields($instance, array(
+      $overlay_options = _slick_fields_get_fc_fields($instance, array(
+        'image',
+        'file',
+        'atom_reference',
+      ));
+      $title_options = _slick_fields_get_fc_fields($instance, array(
+        'link_field',
+        'text',
+        'text_long',
+      ));
+      $link_options = _slick_fields_get_fc_fields($instance, array(
         'text',
         'link_field',
         'url',
@@ -350,7 +362,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       break;
 
     default:
-     break;
+      break;
   }
 
   // Layout to all supported fields.
@@ -395,7 +407,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         '#title' => t('Enable nested slicks'),
         '#type' => 'checkbox',
         '#default_value' => $settings['nested_slick'],
-        '#description' => t('If checked, multiple overlay items will be rendered as nested slicks, otherwise only the first image/video/audio is displayed. Applied to Image and Rendered file formatters. Alternatively, use the Slick carousel formatter for this particular overlay field at its own View mode display to build similar nested slick.'),
+        '#description' => t('If checked, multiple overlay items will be rendered as nested slicks, otherwise only the first image/video/audio is displayed. Applied to Image and Rendered file formatters. Alternatively, use the Slick carousel formatter for this particular overlay field at its own View mode display to build similar nested slick, and leave this unchecked.'),
         '#attributes' => array('class' => array('is-tooltip')),
         '#field_suffix' => '',
         '#title_display' => 'before',
@@ -456,7 +468,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       '#type' => 'checkboxes',
       '#default_value' => $settings['slide_caption'],
       '#options' => $caption_options,
-      '#description' => t('Enable any of the following fields as slide caption. These fields are treated and wrapped as captions. Make sure to make them visible at their relevant Manage display. '),
+      '#description' => t('Enable any of the following fields as slide caption. These fields are treated and wrapped as captions. Make sure to make them visible at their relevant Manage display.'),
       '#attributes' => array('class' => array('is-tooltip')),
     );
 
@@ -495,7 +507,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       '#title' => t('View mode'),
       '#options' => $view_mode_options,
       '#default_value' => $settings['view_mode'],
-      '#description' => t('The view mode is a specific display to contain the fieldable slides. Create more view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>. ', array('@url' => '//drupal.org/project/entity_view_mode')),
+      '#description' => t('The view mode is a specific display to contain the fieldable slides. Create more view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>.', array('@url' => '//drupal.org/project/entity_view_mode')),
       '#access' => count($view_mode_options) > 1,
       '#attributes' => array('class' => array('is-tooltip')),
     );
@@ -535,7 +547,11 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       '#type' => 'select',
       '#title' => t('Aspect ratio'),
       // http://en.wikipedia.org/wiki/List_of_common_resolutions
-      '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpedtedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc. Check "Aspect ratio overlay only" below to apply to Media or FC overlay field only.', array('@dimensions' => '//size43.com/jqueryVideoTool.html', '@follow' => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29', '@link' => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/')),
+      '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpedtedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc. Check "Aspect ratio overlay only" below to apply to Media or FC overlay field only.', array(
+        '@dimensions' => '//size43.com/jqueryVideoTool.html',
+        '@follow' => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
+        '@link' => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/')
+      ),
       '#options' => drupal_map_assoc(array('4:3', '16:9')),
       '#empty_option' => t('- None -'),
       '#default_value' => $settings['aspect_ratio'],
@@ -573,7 +589,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         '#title' => t('Color field'),
         '#options' => $color_options,
         '#default_value' => $settings['color_field'],
-        '#description' => t('Color text field or <a href="@url" target="_blank">color_field</a>.', array('@url' => '//drupal.org/project/color_field')),
+        '#description' => t('Color text field or <a href="@url" target="_blank">color_field</a> to colorize individual slide.', array('@url' => '//drupal.org/project/color_field')),
         '#attributes' => array('class' => array('is-tooltip')),
         '#empty_option' => t('- None -'),
       );
@@ -616,7 +632,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       '#type' => 'checkboxes',
       '#default_value' => $settings['slide_caption'],
       '#options' => $slide_caption_options,
-			'#description' => t('Captions will attempt to use Alt and Title attributes if enabled.'),
+      '#description' => t('Captions will attempt to use Alt and Title attributes if enabled.'),
       '#attributes' => array('class' => array('is-tooltip')),
     );
 
@@ -866,10 +882,10 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
       }
     }
 
-		if (isset($settings['mousewheel'])) {
-		  $mousewheel = $settings['mousewheel'] ? t('Yes') : t('No');
+    if (isset($settings['mousewheel'])) {
+      $mousewheel = $settings['mousewheel'] ? t('Yes') : t('No');
       $summary[] = t('Mousewheel: @mousewheel', array('@mousewheel' => $mousewheel));
-		}
+    }
   }
 
   // Build settings summary.
@@ -902,7 +918,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'thumbnail_hover' => FALSE,
       'media_switch' => FALSE,
       'picture' => FALSE,
-			'mousewheel' => FALSE,
+      'mousewheel' => FALSE,
       'inline_css' => '',
       'current_display' => 'main',
       'dots_main' => '',
@@ -938,14 +954,13 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $attach['attach_skin']           = $settings['skin'];
     $attach['attach_skin_thumbnail'] = $settings['skin_thumbnail'];
     $attach['attach_colorbox']       = $settings['attach_colorbox'];
-		$attach['attach_mousewheel']     = $settings['mousewheel'];
+    $attach['attach_mousewheel']     = $settings['mousewheel'];
 
     list($entity_id, , $bundle) = entity_extract_ids($entity_type, $entity);
     $slick_id = &drupal_static('slick_id', 0);
     $item_id = drupal_clean_css_identifier("slick-{$entity_type}-{$bundle}-{$field_name}-" . ++$slick_id);
     $thumbnail_id = $item_id . '-thumbnail';
-    // @todo unique_id
-    // $unique_id = uniqid();
+
     $settings['attributes']['id'] = drupal_html_id($item_id);
     $settings['content_attributes']['id'] = drupal_html_id($item_id . '-slider');
 
@@ -966,7 +981,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.image');
         $build = _slick_fields_format_image($settings, $items, $field);
-        $thumb = _slick_fields_format_image($settings, $items, $field, TRUE);
+        $thumb = $is_asnavfor ? _slick_fields_format_image($settings, $items, $field, TRUE) : '';
         break;
 
       case 'file':
@@ -976,14 +991,14 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.media');
         $build = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode);
-        $thumb = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode, TRUE);
+        $thumb = $is_asnavfor ? _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode, TRUE) : '';
         break;
 
       case 'field_collection':
         $attach['attach_media'] = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.field_collection');
         $build = _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode);
-        $thumb = _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode, TRUE);
+        $thumb = $is_asnavfor ? _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode, TRUE) : '';
         break;
     }
 
@@ -997,6 +1012,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       '#theme' => 'slick',
       '#items' => $build,
       '#settings' => $settings,
+      // @todo add simple overrides for common options: draggable, arrows, and
+      // dots to keep a single optionset handy for some.
       '#options' => array(),
       '#attached' => slick_attach($attach),
     );
@@ -1043,7 +1060,9 @@ function slick_fields_entity_info_alter(&$entity_info) {
       case 'field_collection_item':
         if (!isset($entity_info[$key]['view modes'][$view_mode])) {
           $entity_info[$key]['view modes'][$view_mode] = array(
-            'label' => t('@label' , array('@label' => ucwords(str_replace("_", " ", $view_mode)))),
+            'label' => t('@label', array(
+              '@label' => ucwords(str_replace("_", " ", $view_mode)
+            ))),
             'custom settings' => FALSE,
           );
         }

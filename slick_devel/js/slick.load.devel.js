@@ -1,6 +1,8 @@
 /**
  * @file
+ * Provides a development version of the slick.load.min.js.
  */
+
 (function ($, Drupal, window) {
 
   "use strict";
@@ -134,7 +136,9 @@
     },
 
     /**
-     * Without centerMode, .slick-active can be as many as visible slides, hence
+     * Returns the current slide class.
+     *
+     * Without centerMode, .slick-active can be as many as visible slides.
      * added a specific class. Also fix total <= slidesToShow with centerMode.
      */
     setCurrent: function(t, curr) {

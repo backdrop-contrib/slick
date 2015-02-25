@@ -5,18 +5,19 @@
 @import "breakpoint";
 
 // Import variables, abstractions, base styles and components using globbing.
-@import "../variables/**/*";
-@import "../abstractions/**/*";
+@import "../globals";
 /**
  * @file
+ * Provides colorbox integration.
  */
+
  // ALl crazy important declarations to override inline CSS by JS.
 .colorbox-on--video,
 .colorbox-on--audio {
   #colorbox,
   #cboxContent,
   #cboxLoadedContent {
-    @include box-sizing(border-box !important);
+    @include box-sizing(border-box);
   }
 
   #cboxBottomCenter,
@@ -42,7 +43,7 @@
     overflow: visible !important;
   }
   #cboxLoadedContent .cboxIframe {
-    @include background-clip(padding-box !important);
+    @include background-clip(padding-box);
     border-radius: 0;
     border: 8px solid $color-1;
   }

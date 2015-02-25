@@ -10,9 +10,10 @@
  * @file
  * Detailed stylings are all yours, get yourself dirty.
  */
-.media, 
-.slide__media {
-  .slick--skin--rounded & {
+
+.slick--skin--rounded {
+  .media,
+  .slide__media {
     border-radius: 50%;
     overflow: hidden;
   }

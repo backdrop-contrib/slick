@@ -3,9 +3,9 @@ source 'https://rubygems.org'
 group :development do
 
   # Sass, Compass and extensions.
-  # Foundation 5.5
-  gem "sass", "~> 3.4.0"
-  gem "compass", "1.0.0"
+  # Updated for Foundation 5.5, and unix_newlines issue, no joy.
+  gem "sass", "~> 3.4.12"       # February 14, 2015
+  gem "compass", "1.0.3"        # January 15, 2015 "1.0.0"
 
   gem 'sass-globbing', '1.1.0'  # Import Sass files based on globbing pattern.
   gem 'compass-validator'       # So you can `compass validate`.

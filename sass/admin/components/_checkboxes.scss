@@ -3,8 +3,8 @@
  */
 .form--slick {
   .form-disabled {
-		cursor: not-allowed;
-	}
+    cursor: not-allowed;
+  }
 
   input[type="checkbox"] {
     display: block;
@@ -82,12 +82,12 @@
     &:focus ~ .field-suffix {
       @include box-shadow(0 0.1em 0.1em rgba(0, 0, 0, 0.2) inset, 0 0.45em 0 0.1em rgba(0, 0, 0, 0.05) inset, 0 0 0.4em 1px $color-4);
     }
-		&[disabled] {
-		  ~ .field-suffix:before,
+    &[disabled] {
+      ~ .field-suffix:before,
       ~ .field-suffix:after {
-		    opacity: 0.5;
-			}
-		}
+        opacity: 0.5;
+      }
+    }
   }
 
   .form-type-checkbox label {

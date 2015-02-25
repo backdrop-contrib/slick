@@ -4,7 +4,7 @@
  * @file
  * Slick elements.
  *
- * This file is called by admin and several front end functions.
+ * This file is called by admin and several frontend functions.
  */
 
 /**
@@ -14,6 +14,8 @@
  *   All available Slick options.
  *
  * @see http://kenwheeler.github.io/slick
+ *
+ * @todo optimize by splitting them to backend and frontend.
  */
 function slick_get_options() {
   $options = &drupal_static(__FUNCTION__, NULL);
@@ -325,6 +327,12 @@ function slick_get_options() {
       'states' => array('visible' => array(':input[name*="options[settings][useCSS]"]' => array('checked' => TRUE))),
     );
 
+    $options['cssEaseBezier'] = array(
+      'type' => 'hidden',
+      'cast' => 'string',
+      'default' => '',
+    );
+
     $options['cssEaseOverride'] = array(
       'title' => t('CSS ease override'),
       'description' => t('If provided, this will override the CSS ease with the pre-defined CSS easings based on <a href="@ceaser">CSS Easing Animation Tool</a>. Leave it empty to use your own CSS ease.', array('@ceaser' => '//matthewlein.com/ceaser/')),
@@ -443,10 +451,8 @@ function slick_get_responsive_options($count = 0) {
  *
  * @param string $key
  *   Gets a specific default value [optional].
- *
  * @param string $set
  *   Gets a specific group of values [optional]: settings, general, responsives.
- *
  * @param int $breakpoints
  *   The number of breakpoints if specified.
  *
@@ -509,7 +515,6 @@ function _slick_optionset_defaults($key = NULL, $set = NULL, $breakpoints = NULL
  *
  * @param object $optionset
  *   An array of Option Set options, default is loaded if none specified.
- *
  * @param array $customs
  *   An array of hand-coded JS options defined using #options property or those
  *   manupulated at theme_slick() dependent on various options.
@@ -547,8 +552,12 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
       unset($config['swipeToSlide']);
     }
     if (isset($config['cssEaseOverride']) && $config['cssEaseOverride']) {
+      // @todo drop for the hidden cssEaseBezier to remove logic here.
       $config['cssEase'] = _slick_css_easing_mapping($config['cssEaseOverride']);
-      unset($config['cssEaseOverride']);
+      if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
+        $config['cssEase'] = $config['cssEaseBezier'];
+      }
+      unset($config['cssEaseOverride'], $config['cssEaseBezier']);
     }
   }
 
@@ -592,8 +601,12 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
             unset($cleaned[$key]['settings']['dotsClass'], $cleaned[$key]['settings']['appendDots']);
           }
           if (isset($cleaned[$key]['settings']['cssEaseOverride']) && $cleaned[$key]['settings']['cssEaseOverride']) {
+            // @todo drop for the hidden cssEaseBezier to remove logic here.
             $cleaned[$key]['settings']['cssEase'] = _slick_css_easing_mapping($cleaned[$key]['settings']['cssEaseOverride']);
-            unset($cleaned[$key]['settings']['cssEaseOverride']);
+            if (isset($cleaned[$key]['settings']['cssEaseBezier']) && $cleaned[$key]['settings']['cssEaseBezier']) {
+              $cleaned[$key]['settings']['cssEase'] = $cleaned[$key]['settings']['cssEaseBezier'];
+            }
+            unset($cleaned[$key]['settings']['cssEaseOverride'], $cleaned[$key]['settings']['cssEaseBezier']);
           }
         }
       }
@@ -607,20 +620,16 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
 }
 
 /**
- * Adds the typecasting to the given values.
+ * Returns the typecast values.
  *
  * With this, the generated JSON object has the right values.
  *
  * @param array $options
  *   An array of Option Set options, default is loaded if none specified.
- *
  * @param int $breakpoints
  *   The number of breakpoints if specified.
- *
- * @return array
- *   An array of valid typecast values ready to consume by jQuery.
  */
-function _slick_typecast_optionset(&$options, $breakpoints = NULL) {
+function _slick_typecast_optionset(&$options = array(), $breakpoints = NULL) {
   if (isset($options) && !empty($options)) {
     $slick_options = slick_get_options();
     foreach ($slick_options as $name => $values) {
@@ -690,6 +699,27 @@ function slick_skins($options = FALSE) {
 }
 
 /**
+ * Gets supported Slick skins expecting inline CSS background, not images.
+ *
+ * @return array
+ *   An array of available skins expecting inline CSS background.
+ */
+function slick_inline_css_skins() {
+  $inline_css = &drupal_static(__FUNCTION__, NULL);
+  if (!isset($inline_css)) {
+    $inline_css = array(
+      'fullscreen',
+      'parallax',
+    );
+
+    // Allows inline css skins information to be altered.
+    drupal_alter('slick_inline_css_skins_info', $inline_css);
+  }
+
+  return $inline_css;
+}
+
+/**
  * List of all easing methods available from jQuery Easing v1.3.
  *
  * @return array
@@ -746,6 +776,8 @@ function _slick_easing_options() {
  *
  * @return string
  *   A string of unfriendly bezier equivalent for the Slick, or NULL.
+ *
+ * @todo move some function to the backend to match D8.
  */
 function _slick_css_easing_mapping($easing = NULL) {
   $css_easing = '';
@@ -826,6 +858,7 @@ function _slick_css_easing_options($all = FALSE) {
  * Create a new optionset object.
  *
  * Note that this function does not save the optionset to the database.
+ *
  * @see slick_optionset_save()
  */
 function slick_optionset_create($values = array()) {
