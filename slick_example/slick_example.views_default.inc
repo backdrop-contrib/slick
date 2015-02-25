@@ -337,7 +337,6 @@ function slick_example_views_default_views() {
     'title' => 'title',
     'edit_node' => 'edit_node',
     'field_images' => 0,
-    'field_images_1' => 0,
   );
   $handler->display->display_options['style_options']['id'] = 'slick-carousel';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
@@ -360,7 +359,6 @@ function slick_example_views_default_views() {
   $handler->display->display_options['fields']['field_images']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_images']['delta_offset'] = '0';
   $handler->display->display_options['fields']['field_images']['separator'] = '';
-  $handler->display->display_options['fields']['field_images']['field_api_classes'] = TRUE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';

@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-2-26
 ----------------------------
+Fixed slick_example views with skin Rounded not being rounded due to option
+  "Use field template" under "Style settings" was checked.
 Fixed cssEaseBezier value not being mapped from cssEaseOverride at Optionset UI
   as part of optimization to move some logic to backend.
 Issue #2438041 by RAFA3L: Fixed broken Views style plugin due to removal of
