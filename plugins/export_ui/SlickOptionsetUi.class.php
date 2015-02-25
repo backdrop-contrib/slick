@@ -159,9 +159,6 @@ class SlickOptionsetUi extends ctools_export_ui {
 
     foreach ($slick_elements as $name => $element) {
       $default_value = isset($options['settings'][$name]) ? $options['settings'][$name] : $element['default'];
-      if ($name == 'cssEaseBezier' && ($override = $options['settings']['cssEaseOverride']) !== '') {
-        $default_value = _slick_css_easing_mapping($override);
-      }
       $form['options']['settings'][$name] = array(
         '#title' => isset($element['title']) ? $element['title'] : '',
         '#description' => isset($element['description']) ? $element['description'] : '',
@@ -355,6 +352,36 @@ class SlickOptionsetUi extends ctools_export_ui {
             default:
               break;
           }
+        }
+      }
+    }
+  }
+
+  /**
+   * Overrides the edit form submit handler.
+   *
+   * At this point, submission is successful. Our only responsibility is
+   * to copy anything out of values onto the item that we are able to edit.
+   *
+   * If the keys all match up to the schema, this method will not need to be
+   * overridden.
+   */
+  function edit_form_submit(&$form, &$form_state) {
+    parent::edit_form_submit($form, $form_state);
+    module_load_include('inc', 'slick', 'includes/slick.admin');
+
+    // Map and update the friendly CSS easing to its bezier equivalent.
+    $options = isset($form_state['values']['options']) ? $form_state['values']['options'] : array();
+    if(isset($options['settings']['cssEaseOverride'])) {
+      $override = $options['settings']['cssEaseOverride'] ? _slick_css_easing_mapping($options['settings']['cssEaseOverride']) : '';
+      $form_state['item']->options['settings']['cssEaseBezier'] = $override;
+    }
+
+    if (isset($options['responsives']['responsive'])) {
+      foreach ($options['responsives']['responsive'] as $key => $responsive) {
+        if (isset($responsive['settings']['cssEaseOverride'])) {
+          $responsive_override = $responsive['settings']['cssEaseOverride'] ? _slick_css_easing_mapping($responsive['settings']['cssEaseOverride']) : '';
+          $form_state['item']->options['responsives']['responsive'][$key]['settings']['cssEaseBezier'] = $responsive_override;
         }
       }
     }
@@ -708,7 +735,7 @@ class SlickOptionsetUi extends ctools_export_ui {
 /**
  * Callback for ajax-enabled breakpoints textfield, no method allowed for D7.
  *
- * Selects and returns the fieldset with the names in it.
+ * Selects and returns the responsive options.
  */
 function slick_add_breakpoints_ajax_callback($form, $form_state) {
   if ($form_state['values']['breakpoints'] && $form_state['values']['breakpoints'] >= 8) {

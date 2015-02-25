@@ -436,10 +436,8 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
     if (empty($config['swipe'])) {
       unset($config['swipeToSlide']);
     }
-    if (isset($config['cssEaseOverride']) && $config['cssEaseOverride']) {
-      if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
-        $config['cssEase'] = $config['cssEaseBezier'];
-      }
+    if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
+      $config['cssEase'] = $config['cssEaseBezier'];
       unset($config['cssEaseOverride'], $config['cssEaseBezier']);
     }
   }
@@ -483,10 +481,8 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
           if (empty($cleaned[$key]['settings']['dots'])) {
             unset($cleaned[$key]['settings']['dotsClass'], $cleaned[$key]['settings']['appendDots']);
           }
-          if (isset($cleaned[$key]['settings']['cssEaseOverride']) && $cleaned[$key]['settings']['cssEaseOverride']) {
-            if (isset($cleaned[$key]['settings']['cssEaseBezier']) && $cleaned[$key]['settings']['cssEaseBezier']) {
-              $cleaned[$key]['settings']['cssEase'] = $cleaned[$key]['settings']['cssEaseBezier'];
-            }
+          if (isset($cleaned[$key]['settings']['cssEaseBezier']) && $cleaned[$key]['settings']['cssEaseBezier']) {
+            $cleaned[$key]['settings']['cssEase'] = $cleaned[$key]['settings']['cssEaseBezier'];
             unset($cleaned[$key]['settings']['cssEaseOverride'], $cleaned[$key]['settings']['cssEaseBezier']);
           }
         }
@@ -660,7 +656,8 @@ function slick_optionset_load_all() {
   $optionsets = ctools_export_crud_load_all('slick_optionset');
   foreach ($optionsets as $optionset) {
     // Ensure the optionset is typecast after being loaded from DB.
-    _slick_typecast_optionset($optionset->options, $optionset->breakpoints);
+    $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
+    _slick_typecast_optionset($optionset->options, $breakpoints);
   }
 
   return $optionsets;
@@ -676,7 +673,8 @@ function slick_optionset_load($optionset_name) {
   ctools_include('export');
   $optionset = ctools_export_crud_load('slick_optionset', $optionset_name);
   // Ensure the optionset is typecast after being loaded from DB.
-  _slick_typecast_optionset($optionset->options, $optionset->breakpoints);
+  $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
+  _slick_typecast_optionset($optionset->options, $breakpoints);
   return $optionset;
 }
 
