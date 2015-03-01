@@ -98,7 +98,8 @@ body {
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.media-widget .button:hover, .media-widget .button:active,
+.media-widget .button:hover,
+.media-widget .button:active,
 .form--compact .button:hover,
 .form--compact .button:active,
 .form--compact .form-submit:hover,
@@ -124,6 +125,7 @@ body {
 .form--slick .form-disabled {
   cursor: not-allowed;
 }
+
 .form--slick input[type="checkbox"] {
   display: block;
   height: 24px;
@@ -134,6 +136,7 @@ body {
   position: absolute;
   z-index: 3;
 }
+
 .form--slick input[type="checkbox"] ~ .field-suffix {
   background: white;
   background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMC4wIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g'), url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuMCIgeTE9IjAuNSIgeDI9IjEuMCIgeTI9IjAuNSI+PHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiM2YWQzZWYiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=');
@@ -160,11 +163,14 @@ body {
   vertical-align: middle;
   width: 48px;
 }
-.form--slick input[type="checkbox"] ~ .field-suffix:before, .form--slick input[type="checkbox"] ~ .field-suffix:after {
+
+.form--slick input[type="checkbox"] ~ .field-suffix:before,
+.form--slick input[type="checkbox"] ~ .field-suffix:after {
   font: bold 11px/20px sans-serif;
   text-transform: uppercase;
   line-height: 22px;
 }
+
 .form--slick input[type="checkbox"] ~ .field-suffix:after {
   color: rgba(0, 0, 0, 0.45);
   content: 'Off';
@@ -172,11 +178,13 @@ body {
   text-indent: 4px;
   text-shadow: none;
 }
+
 .form--slick input[type="checkbox"]:checked ~ .field-suffix {
   padding-left: 48px;
   width: 22px;
   background-position: 0 0;
 }
+
 .form--slick input[type="checkbox"]:checked ~ .field-suffix:before {
   background: white;
   background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMC4wIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g');
@@ -196,16 +204,20 @@ body {
   text-indent: -32px;
   width: 22px;
 }
+
 .form--slick input[type="checkbox"]:active ~ .field-suffix:before {
   background-color: #e7e7e7;
 }
+
 .form--slick input[type="checkbox"]:focus ~ .field-suffix {
   box-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.2) inset, 0 0.45em 0 0.1em rgba(0, 0, 0, 0.05) inset, 0 0 0.4em 1px #6ad3ef;
 }
+
 .form--slick input[type="checkbox"][disabled] ~ .field-suffix:before,
 .form--slick input[type="checkbox"][disabled] ~ .field-suffix:after {
   opacity: 0.5;
 }
+
 .form--slick .form-type-checkbox label {
   display: inline-block;
   float: none;
@@ -239,61 +251,69 @@ body {
 /**
  * Fieldset.
  */
-.form--slick {
-  /**
-   * Overrides over-specified Seven fieldset.
-   */
-}
 .form--slick fieldset {
   margin: 40px 0;
   padding: 30px 0;
   border-color: #808080;
 }
+
 .form--slick fieldset .fieldset-description {
   padding: 5px 15px;
 }
+
 .form--slick fieldset.form-wrapper {
   margin: 0 0 20px;
   padding: 30px 0;
   border: 0;
 }
+
 .form--slick fieldset.filter-wrapper {
   margin: 2px 0 0;
   padding: 0;
 }
+
 .form--slick fieldset legend {
   font-size: 18px;
   font-size: 1.125rem;
   padding: 0 0.8em;
 }
+
 .form--slick fieldset .fieldset-title {
   color: #111;
   display: block;
 }
+
 .form--slick fieldset .fieldset-title:hover {
   color: #ff6d2c;
   text-decoration: none;
 }
+
 .form--slick fieldset .fieldset-title:focus {
   outline: 0;
 }
+
 .form--slick fieldset {
   padding: 30px 15px;
 }
+
 .form--slick fieldset fieldset {
   background: none;
   padding: 60px 0 1em;
 }
+
 .form--slick .vertical-tabs fieldset {
   padding-left: 0;
   padding-right: 0;
 }
+
 .form--slick .fieldset--responsive--ajax {
   padding: 0;
 }
+
 .form--slick .fieldset--responsive--ajax > .fieldset-wrapper {
   padding: 0;
 }
+
 .form--slick .fieldset--responsive--ajax > legend,
 .form--slick .fieldset--responsive--ajax .fieldset--settings > legend {
   position: absolute !important;
@@ -303,15 +323,18 @@ body {
   width: 1px;
   word-wrap: normal;
 }
+
 .form--slick .fieldset--responsive--ajax .fieldset--responsive {
   padding-left: 0;
   padding-right: 0;
   padding-top: 60px;
 }
+
 .form--slick .fieldset--responsive--ajax .fieldset--responsive > .fieldset-wrapper {
   padding-left: 15px;
   padding-right: 15px;
 }
+
 .form--slick .fieldset--responsive--ajax .fieldset--responsive .fieldset--settings {
   border: 1px solid #dadada;
   padding: 0;
@@ -321,6 +344,7 @@ html.js .form--slick .collapsible,
 html.js .form--slick .collapsed {
   border: 0;
 }
+
 html.js .form--slick .collapsible legend,
 html.js .form--slick .collapsed legend {
   display: block;
@@ -328,6 +352,7 @@ html.js .form--slick .collapsed legend {
   position: relative;
   width: 100%;
 }
+
 html.js .form--slick .collapsible .fieldset-legend,
 html.js .form--slick .collapsed .fieldset-legend {
   background: none;
@@ -336,6 +361,7 @@ html.js .form--slick .collapsed .fieldset-legend {
   position: absolute;
   width: 100%;
 }
+
 html.js .form--slick .collapsible .fieldset-legend span.summary {
   position: absolute !important;
   clip: rect(1px, 1px, 1px, 1px);
@@ -345,6 +371,7 @@ html.js .form--slick .collapsible .fieldset-legend span.summary {
   word-wrap: normal;
   margin: 0;
 }
+
 html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix {
   background: #37465b;
   display: inline-block;
@@ -361,14 +388,16 @@ html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix {
   -webkit-transition: background 0.3s 0.5s ease;
   transition: background 0.3s 0.5s ease;
 }
-html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix:before, html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix:after {
+
+html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix:before,
+html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix:after {
   display: inline-block;
   width: 1.25rem;
   height: 0.17857rem;
   background: #fff;
   border-radius: 0.08929rem;
   -webkit-transition: 0.3s;
-          transition: 0.3s;
+  transition: 0.3s;
   position: absolute;
   left: 8px;
   content: '';
@@ -379,37 +408,45 @@ html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix:befor
   -webkit-transition: top 0.3s 0.6s ease, -webkit-transform 0.3s ease;
   transition: top 0.3s 0.6s ease, transform 0.3s ease;
 }
+
 html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix:before {
   -ms-transform: rotate3d(0, 0, 1, 45deg);
   -webkit-transform: rotate3d(0, 0, 1, 45deg);
   transform: rotate3d(0, 0, 1, 45deg);
   top: 18px;
 }
+
 html.js .form--slick .collapsible .fieldset-legend .fieldset-legend-prefix:after {
   -ms-transform: rotate3d(0, 0, 1, -45deg);
   -webkit-transform: rotate3d(0, 0, 1, -45deg);
   transform: rotate3d(0, 0, 1, -45deg);
   top: 18px;
 }
+
 html.js .form--slick .collapsed {
   height: 40px;
   margin: 20px 0;
   padding: 0;
 }
+
 html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix {
   background: #bbc6d6;
 }
-html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:before, html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
+
+html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:before,
+html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   -webkit-transition: top 0.3s ease, -webkit-transform 0.3s 0.5s ease;
   transition: top 0.3s ease, transform 0.3s 0.5s ease;
   top: 16px;
   width: 18px;
 }
+
 html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:before {
   -ms-transform: rotate3d(0, 0, 1, 90deg);
   -webkit-transform: rotate3d(0, 0, 1, 90deg);
   transform: rotate3d(0, 0, 1, 90deg);
 }
+
 html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   -ms-transform: rotate3d(0, 0, 1, 180deg);
   -webkit-transform: rotate3d(0, 0, 1, 180deg);
@@ -423,6 +460,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
 .has-tooltip .form-item {
   position: relative;
 }
+
 .has-tooltip .form-item > .description {
   background: #000;
   background: rgba(0, 0, 0, 0.8);
@@ -448,10 +486,12 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   white-space: normal;
   z-index: 99;
 }
+
 .has-tooltip .form-item > .description a {
   color: #fff;
   font-weight: 600;
 }
+
 .has-tooltip .form-item > .description:after {
   border: 10px solid transparent;
   border-right: 10px solid #000;
@@ -466,25 +506,33 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   width: 0;
   z-index: 99;
 }
-.has-tooltip .form-item.form-type-checkboxes > .description, .has-tooltip .form-item.form-type-textarea > .description {
+
+.has-tooltip .form-item.form-type-checkboxes > .description,
+.has-tooltip .form-item.form-type-textarea > .description {
   margin-left: -30% !important;
   max-width: 60% !important;
   min-width: 60% !important;
   width: 60% !important;
 }
-.has-tooltip .form-item.selected > .description, .has-tooltip .form-item.hover > .description {
+
+.has-tooltip .form-item.selected > .description,
+.has-tooltip .form-item.hover > .description {
   bottom: 100%;
   display: block;
   opacity: 1 !important;
   visibility: visible;
   overflow: visible !important;
 }
-.has-tooltip .form-item.selected .hint, .has-tooltip .form-item.hover .hint {
+
+.has-tooltip .form-item.selected .hint,
+.has-tooltip .form-item.hover .hint {
   display: block;
 }
+
 .has-tooltip .form-item.selected > .description {
   padding-left: 20px !important;
 }
+
 .has-tooltip .form-item.selected > .description:before {
   color: #dadada;
   content: "x";
@@ -528,10 +576,12 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   top: 5px;
   z-index: 8;
 }
+
 .form--slick__header .form-item .hint {
   top: 16px;
   right: -5px;
 }
+
 .form-item:hover .hint {
   display: block;
 }
@@ -539,17 +589,14 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
 /**
  * Form items
  */
-.form--slick {
-  /**
-   * Overrides over-specified stuffs.
-  */
-}
 .form--slick .form-item {
   position: relative;
 }
+
 .form--slick .form-item .description {
   color: #808080;
 }
+
 .form--slick .form-item .form-text,
 .form--slick .form-item .form-select,
 .form--slick .form-item .form-textarea {
@@ -560,17 +607,20 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   padding: 2px 5px;
   width: auto;
 }
-.fieldset--compact .form--slick .form-item .form-text, .fieldset--compact
-.form--slick .form-item .form-select, .fieldset--compact
+
+.fieldset--compact .form--slick .form-item .form-text,
+.form--slick .form-item .form-select,
 .form--slick .form-item .form-textarea {
   width: 98%;
 }
+
 .form--slick .form-item .form-text:focus,
 .form--slick .form-item .form-select:focus,
 .form--slick .form-item .form-textarea:focus {
   border-color: #ff6d2c;
   box-shadow: 0 0 7px #ff6d2c;
 }
+
 .form--slick .form-item .form-select {
   line-height: 22px;
   min-width: 120px;
@@ -581,13 +631,16 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   text-indent: .01px;
   text-overflow: "";
 }
+
 .form--slick .form-type-textfield .field-prefix {
   float: left;
   padding: 5px;
 }
+
 .form--slick .form-type-textfield .field-suffix {
   padding-left: 5px;
 }
+
 .form--slick .form-item {
   background: white;
   background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmYWZhZmEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=');
@@ -606,12 +659,14 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   padding: 20px 0 12px;
   width: 33.3333%;
 }
+
 .form--slick .form-item input,
 .form--slick .form-item select {
   float: left;
   max-width: 140px;
   min-width: 40px;
 }
+
 .form--slick .form-item label {
   float: left;
   padding: 5px 5px 5px 0 !important;
@@ -620,31 +675,38 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   text-align: right;
   white-space: normal;
 }
+
 .form--slick .form-item label,
 .form--slick .form-item label.option {
   font-weight: 400;
   line-height: 1;
 }
+
 .form--slick .form-item.form-type-textfield input {
   width: auto;
   max-width: 140px;
 }
+
 .form--slick .form-item.form-type-textfield .form-text--int {
   max-width: 50px;
 }
+
 .form--slick .form-item.form-type-textfield .js-expandable {
   -webkit-transition: width 0.6s ease-out 0.8s, max-width 0.5s linear 0s;
   transition: width 0.6s ease-out 0.8s, max-width 0.5s linear 0s;
 }
+
 .form--slick .form-item.form-type-textfield.js-on-focus {
   z-index: 3;
 }
+
 .form--slick .form-item.form-type-textfield.js-on-focus .js-expandable {
   max-width: 280px;
   position: absolute;
   width: 280px;
   z-index: 2;
 }
+
 .form--slick .form-type-checkbox input {
   min-height: 100%;
   left: 0;
@@ -654,12 +716,14 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   width: 100%;
   z-index: 2;
 }
+
 .form--slick .form-type-checkboxes {
   margin-bottom: -1px;
   padding-bottom: 0;
   padding-top: 0;
   width: 100%;
 }
+
 .form--slick .form-type-checkboxes > label {
   border-bottom: 1px solid #e7e7e7;
   border-top: 1px solid #e7e7e7;
@@ -670,38 +734,48 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   padding-top: 20px;
   width: 100%;
 }
+
 .form--slick .vertical-tabs .form-item {
   border-left: 1px solid #e7e7e7;
   border-right: 1px solid #e7e7e7;
   margin-left: -1px;
 }
+
 .form--slick .vertical-tabs .form-item:nth-child(3n+1) {
   border-right: 0;
 }
+
 .form--slick .vertical-tabs .form-type-checkboxes {
   background: none;
   padding: 0;
 }
+
 .form--slick .vertical-tabs .form-type-checkboxes .form-item {
   margin: -1px -1px 0 0;
   padding-top: 20px;
 }
+
 .form--slick .vertical-tabs .form-type-checkboxes .form-item:nth-child(3n+1) {
   border-left: 0;
 }
+
 .form--slick .vertical-tabs .fieldset-wrapper {
   margin-right: -4px;
 }
+
 .form--slick .vertical-tabs .fieldset-wrapper {
   padding: 0;
 }
+
 .form--slick .vertical-tabs .fieldset--responsive > .fieldset-wrapper {
   padding: 0 15px;
 }
+
 .form--slick .vertical-tabs .fieldset--responsive .form-item input,
 .form--slick .vertical-tabs .fieldset--responsive .form-item select {
   max-width: 100px;
 }
+
 .form--slick .vertical-tabs .fieldset--responsive .form-item .form-checkbox {
   max-width: 100%;
 }
@@ -714,11 +788,13 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   border: 0;
   background: none;
 }
+
 .form--slick .form-item.form-type-checkboxes {
   clear: both;
   float: none;
   width: 100%;
 }
+
 .form--slick .form-item.form-type-checkboxes > label {
   clear: both;
   float: none;
@@ -727,6 +803,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   text-transform: uppercase;
   width: 100%;
 }
+
 .form--slick .fieldset--no-checkboxes-label .form-item.form-type-checkboxes > label {
   position: absolute !important;
   clip: rect(1px, 1px, 1px, 1px);
@@ -747,6 +824,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
     width: 50%;
   }
 }
+
 @media screen and (max-width: 900px) {
   .form--slick.form--field .form-item,
   .form--slick .vertical-tabs-panes .form-item {
@@ -754,6 +832,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
     padding: 10px 15px;
     width: 50%;
   }
+
   .form--slick.form--field .form-item label,
   .form--slick .vertical-tabs-panes .form-item label {
     float: none;
@@ -761,6 +840,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
     width: 100%;
   }
 }
+
 @media screen and (max-width: 767px) {
   .form--slick.form--field .form-item input,
   .form--slick.form--field .form-item select,
@@ -770,15 +850,18 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   .form--slick .vertical-tabs-panes .form-type-textfield input {
     max-width: 200px;
   }
+
   .form--slick.form--field .form-item:nth-child(3n+1),
   .form--slick .vertical-tabs-panes .form-item:nth-child(3n+1) {
     border-left: 1px solid #e7e7e7;
   }
+
   .form--slick.form--field .form-item:nth-child(3n+1),
   .form--slick .vertical-tabs-panes .form-item:nth-child(3n+1) {
     border-right: 1px solid #e7e7e7;
   }
 }
+
 @media screen and (max-width: 660px) {
   .form--slick.form--field .form-item,
   .form--slick .vertical-tabs-panes .form-item {
@@ -786,6 +869,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
     padding: 10px 15px;
     width: 100%;
   }
+
   .form--slick.form--field .form-item label,
   .form--slick.form--field .form-item label.option,
   .form--slick .vertical-tabs-panes .form-item label,
@@ -796,6 +880,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
     line-height: 22px;
     width: 120px;
   }
+
   .form--slick.form--field .form-item .form-item input,
   .form--slick.form--field .form-item .form-item select,
   .form--slick.form--field .form-item .form-type-textfield input,
@@ -809,6 +894,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
     width: 200px;
   }
 }
+
 @media screen and (max-width: 480px) {
   .form--slick.form--field .form-item,
   .form--slick .vertical-tabs-panes .form-item {
@@ -818,6 +904,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
     padding: 10px 15px;
     width: 100%;
   }
+
   .form--slick.form--field .form-item label,
   .form--slick .vertical-tabs-panes .form-item label {
     display: block;
@@ -825,6 +912,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
     text-align: center;
     width: auto;
   }
+
   .form--slick.form--field .form-item .form-type-checkbox input,
   .form--slick .vertical-tabs-panes .form-item .form-type-checkbox input {
     left: auto;
@@ -847,11 +935,13 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   *zoom: 1;
   padding: 0;
 }
+
 .form--slick:after {
   content: "";
   display: table;
   clear: both;
 }
+
 .form--slick > .fieldset-wrapper {
   padding: 0;
 }
@@ -872,6 +962,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   text-transform: uppercase;
   width: 100%;
 }
+
 .form--slick__title small {
   display: block;
   text-transform: none;
@@ -891,29 +982,36 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   padding-left: 4px;
   padding-right: 4px;
 }
+
 .form--slick .form--slick__header .form-item input {
   width: 210px;
   max-width: 210px;
 }
+
 .form--slick .form--slick__header .form-item label {
   float: none;
   text-align: left;
 }
+
 .form--slick .form--slick__header .form-item-label {
   width: 72%;
 }
+
 .form--slick .form--slick__header .form-item-skin,
 .form--slick .form--slick__header .form-item-breakpoints {
   float: right;
   width: auto;
 }
+
 .form--slick .form--slick__header .form-item-skin label,
 .form--slick .form--slick__header .form-item-breakpoints label {
   width: auto;
 }
+
 .form--slick .form--slick__header div[class*="-breakpoint"] input {
   width: 40px;
 }
+
 .form--slick .form--slick__header .form-item-skin .description {
   bottom: 90% !important;
   max-width: 480px;
@@ -940,6 +1038,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   font: 12px/16px Arial,serif;
   width: 100px;
 }
+
 .form--compact .form-radios .form-item input {
   cursor: pointer;
   display: block;
@@ -950,6 +1049,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix:after {
   width: 100%;
   z-index: 9;
 }
+
 .form--compact .form-radios label {
   display: block;
   font-size: 12px;

@@ -24,7 +24,7 @@
       <?php endforeach; ?>
     </div>
 
-    <?php if ($settings['arrows']): ?>
+    <?php // if ($settings['arrows']): ?>
       <nav class="slick__arrow">
         <?php isset($settings['prev_arrow']) && print $settings['prev_arrow']; ?>
         <?php if ($settings['has_arrow_down']): ?>
@@ -36,7 +36,7 @@
         <?php endif; ?>
         <?php isset($settings['next_arrow']) && print $settings['next_arrow']; ?>
       </nav>
-    <?php endif; ?>
+    <?php // endif; ?>
 
   <?php else: ?>
 

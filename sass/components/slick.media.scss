@@ -168,14 +168,16 @@
     width: 80px;
     @include transform(rotate(45deg));
   }
+
   &:after {
     @include transform(rotate(-45deg));
   }
+
   &:hover:before,
   &:hover:after {
     background-color: $color-2;
   }
-  
+
   .is-playing & {
     visibility: hidden;
   }
@@ -184,6 +186,7 @@
 .media-icon--play {
   border: 8px solid white;
   border-radius: 50%;
+
   &:before {
     border: 16px solid transparent;
     border-left: 24px solid white;
@@ -192,8 +195,10 @@
     margin: -16px 0 0 -6px;
     top: 50%;
   }
+
   &:hover {
     border-color: $color-2;
+
     &:before {
       border-left-color: $color-2;
     }

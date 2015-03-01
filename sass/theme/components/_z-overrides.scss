@@ -25,6 +25,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   }
   // So add proper z-index for the actual current.
   &.slide--current {
-    z-index: 2;
+    z-index: 4;
   }
 }

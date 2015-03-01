@@ -89,10 +89,13 @@ function slick_devel_libraries_info_alter(&$libraries) {
  */
 function slick_devel_preprocess_slick(&$variables) {
   $element = $variables['element'];
+  $settings = $variables['settings'];
 
   if (SLICK_DEVEL_DISABLE && isset($variables['content_attributes_array']['data-config'])) {
+    // Currently data-slick only works for a single slick, not asNavFor,
+    // @see http://jsfiddle.net/o4toq31q/62/
     $variables['content_attributes_array']['data-slick'] = $variables['content_attributes_array']['data-config'];
-    unset($variables['content_attributes_array']['data-config']);
+    unset($variables['content_attributes_array']['data-config'], $variables['settings']['prev_arrow'], $variables['settings']['next_arrow']);
     // kpr($variables);
   }
 }

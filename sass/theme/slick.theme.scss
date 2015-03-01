@@ -16,6 +16,21 @@
 @import "../base/**/*";
 @import "components/**/*";
 
+.draggable {
+  cursor: grab;
+  cursor: -webkit-grab;
+  &:active {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+
+    .slide__caption {
+      cursor: grabbing;
+      cursor: -webkit-grabbing;
+      @include user-select(none);
+    }
+  }
+}
+
 .media,
 .slide__media  {
   overflow: hidden;

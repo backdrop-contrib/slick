@@ -5,6 +5,7 @@
 .slick--skin--boxed.slick--slider .slick__slide .slide__caption {
   visibility: hidden;
 }
+
 .slick--skin--boxed.slick--slider .slick__slide.slick-active .slide__caption {
   visibility: visible;
 }

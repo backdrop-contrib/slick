@@ -25,6 +25,7 @@
   height: 0;
   padding-bottom: 56.25%;
 }
+
 .slide__overlay .media--switch--player .media__iframe,
 .slide__overlay .media--switch--player .slick__image,
 .slide__overlay .media--switch--player picture {
@@ -37,6 +38,7 @@
   width: 100%;
   z-index: 0;
 }
+
 .slide__overlay .media--switch--player picture .slide__image {
   height: auto;
   position: relative;
@@ -67,6 +69,7 @@
   width: 100%;
   z-index: 0;
 }
+
 .slick--ratio--file .media--player picture .slide__image,
 .slick--ratio--field-collection .slide__media picture .slide__image {
   height: auto;
@@ -74,7 +77,8 @@
 }
 
 /* 4:3 ratio */
-.slick--ratio--43.slick--ratio--field-collection .slide__media, .slick--ratio--43.slick--ratio--file .media--player {
+.slick--ratio--43.slick--ratio--field-collection .slide__media,
+.slick--ratio--43.slick--ratio--file .media--player {
   padding-bottom: 75%;
 }
 
@@ -86,12 +90,14 @@
   height: auto;
   padding-bottom: 0;
 }
+
 .slick--ratio-overlay.slick--ratio--field-collection .slide__media picture,
 .slick--ratio-overlay.slick--ratio--field-collection .slide__media .media__iframe,
 .slick--ratio-overlay.slick--ratio--field-collection .slide__media .slick__image {
   height: auto;
   position: relative;
 }
+
 .slick--ratio-overlay.slick--ratio--43 .slide__overlay .media--switch {
   padding-bottom: 75%;
 }
@@ -130,7 +136,8 @@
   pointer-events: none;
 }
 
-.media-icon--close:before, .media-icon--close:after {
+.media-icon--close:before,
+.media-icon--close:after {
   background: white;
   border-radius: 4px;
   height: 8px;
@@ -142,14 +149,18 @@
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
 .media-icon--close:after {
   -ms-transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
-.media-icon--close:hover:before, .media-icon--close:hover:after {
+
+.media-icon--close:hover:before,
+.media-icon--close:hover:after {
   background-color: #ff6d2c;
 }
+
 .is-playing .media-icon--close {
   visibility: hidden;
 }
@@ -158,6 +169,7 @@
   border: 8px solid white;
   border-radius: 50%;
 }
+
 .media-icon--play:before {
   border: 16px solid transparent;
   border-left: 24px solid white;
@@ -166,9 +178,11 @@
   margin: -16px 0 0 -6px;
   top: 50%;
 }
+
 .media-icon--play:hover {
   border-color: #ff6d2c;
 }
+
 .media-icon--play:hover:before {
   border-left-color: #ff6d2c;
 }
@@ -213,6 +227,7 @@
   opacity: 0;
   visibility: hidden;
 }
+
 .no-js .media--switch .media__iframe {
   opacity: 1;
   visibility: visible;

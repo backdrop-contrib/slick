@@ -1,6 +1,6 @@
 Slick Example Module
 ================================================================================
-You don't need this module if you are a developer, or site builder.
+You may not need this module if you are a developer, or site builder.
 
 No fields installed by default, unless there is enough interest which can be
 done without using Features.

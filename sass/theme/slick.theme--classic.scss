@@ -23,15 +23,10 @@
       left: auto;
       margin: 0; // nullify caption position for the classic skin.
       min-height: 80px;
-      padding: 0;
+      padding: $horz-spacing-unit;
       // position: relative;
       @include transition(transform $transition-transform-1);
       width: 100%;
-      .slide__data {
-        margin: 0;
-        padding: $horz-spacing-unit;
-        width: 100%;
-      }
     }
 
     .slide__description {
@@ -102,7 +97,6 @@
       bottom: 0;
       @include transform(translateY(210px));
       min-height: 120px;
-      position: relative;
       top: auto;
     }
 

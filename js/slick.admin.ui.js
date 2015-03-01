@@ -25,6 +25,15 @@
         $('html').addClass('js');
       }
 
+      var $form = $('.form--slick');
+
+      $('.form-checkbox', $form).once('slick-checkbox', function () {
+        var checkbox = $(this);
+        if (!checkbox.next('.field-suffix').length) {
+          checkbox.after('<span class="field-suffix"></span>');
+        }
+      });
+
       $('.form--slick', context).removeClass('no-js').once('slick-admin', function () {
         var t = $(this);
         $('.fieldset-legend-prefix', t).removeClass('element-invisible');

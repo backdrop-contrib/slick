@@ -127,8 +127,8 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           }
 
           // @todo map from picture, or refine for mobile.
-          // @todo use slick_inline_css_skins() to allow flexible options.
-          if (in_array($settings['skin'], array('fullscreen', 'parallax'))) {
+          $inline_css_skins = slick_inline_css_skins();
+          if (in_array($settings['skin'], $inline_css_skins)) {
             $slide['slide'] = array();
             $fullscreen_image_url = image_style_url($settings['image_style'], $image['uri']);
             $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$fullscreen_image_url}')}";

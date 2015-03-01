@@ -19,10 +19,6 @@
       padding: 2px 5px;
       width: auto;
 
-      .fieldset--compact & {
-        width: 98%;
-      }
-
       &:focus {
         border-color: $color-2;
         box-shadow: 0 0 7px $color-2;

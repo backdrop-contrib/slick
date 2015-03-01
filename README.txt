@@ -343,7 +343,7 @@ some code cleanup, and optimization where needed. Patches are very much welcome.
 
 ROADMAP
 --------------------------------------------------------------------------------
-- Bug fixes.
+- Bug fixes, code cleanup, and optimization.
 - Drupal 8 port, see if you can help/ provide suggestion:
   https://www.drupal.org/node/2412863
 

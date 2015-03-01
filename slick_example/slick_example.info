@@ -3,5 +3,5 @@ description = "Provides Slick examples, the last carousel examples."
 package = Slick
 core = 7.x
 
-dependencies[] = views
-dependencies[] = slick
+dependencies[] = slick_fields
+dependencies[] = slick_views

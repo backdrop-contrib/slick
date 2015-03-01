@@ -44,7 +44,7 @@
           <?php endif; ?>
 
           <?php if (isset($caption['data']) || isset($caption['title'])): ?>
-            <div class="slide__data">
+            <?php if (isset($caption['overlay'])): ?><div class="slide__data"><?php endif; ?>
               <?php if (!empty($caption['title'])): ?>
                 <h2 class="slide__title"><?php print render($caption['title']); ?></h2>
               <?php endif; ?>
@@ -60,7 +60,7 @@
               <?php if (isset($caption['link'])): ?>
                 <div class="slide__link"><?php print render($caption['link']); ?></div>
               <?php endif; ?>
-            </div>
+            <?php if (isset($caption['overlay'])): ?></div><?php endif; ?>
           <?php endif; ?>
         </div>
 

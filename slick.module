@@ -392,16 +392,27 @@ function slick_attach(array $attach) {
   // avoid dup options in the markups. This is the only JS head injection we
   // have since responsives got no inheritance and no context without, pity.
   if ($attach['attach_default']) {
-    $defaults = _slick_optionset_defaults(NULL, 'settings');
+    $defaults = _slick_optionset_defaults('settings');
+
     // Prevents JS error with Slick > 1.3.11 within responsive display clone.
+    // Prevents main settings from screwing up responsive settings.
     // Error: Syntax error, unrecognized expression: $(element).
-    unset($defaults['appendDots'], $defaults['cssEaseOverride']);
-    $defaults['asNavFor'] = NULL;
-    $defaults['appendArrows'] = '.slick__arrow';
+    unset(
+      $defaults['mobileFirst'],
+      $defaults['appendDots'],
+      $defaults['appendArrows'],
+      $defaults['asNavFor'],
+      $defaults['prevArrow'],
+      $defaults['nextArrow']
+    );
+
     $load['js'][] = array(
-      'data' => array('slick' => $defaults),
+      'data' => array(
+        'slick' => $defaults,
+      ),
       'type' => 'setting',
     );
+
   }
 
   return $load;

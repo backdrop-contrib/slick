@@ -96,7 +96,7 @@ function slick_optionset_save($optionset, $new = FALSE) {
     $breakpoints = $optionset->breakpoints;
   }
 
-  $optionset_defaults = _slick_optionset_defaults(NULL, NULL, $breakpoints);
+  $optionset_defaults = _slick_optionset_defaults(NULL, $breakpoints);
   $optionset->options = $optionset_defaults += $optionset->options;
 
   // Prepare the database values.

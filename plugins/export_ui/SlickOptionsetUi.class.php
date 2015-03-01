@@ -13,7 +13,8 @@ class SlickOptionsetUi extends ctools_export_ui {
   function edit_form(&$form, &$form_state) {
     parent::edit_form($form, $form_state);
 
-    module_load_include('inc', 'slick', 'includes/slick.admin');
+    ctools_form_include($form_state, 'slick.admin', 'slick');
+
     $module_path = drupal_get_path('module', 'slick');
     $optionset = $form_state['item'];
 
@@ -368,7 +369,6 @@ class SlickOptionsetUi extends ctools_export_ui {
    */
   function edit_form_submit(&$form, &$form_state) {
     parent::edit_form_submit($form, $form_state);
-    module_load_include('inc', 'slick', 'includes/slick.admin');
 
     // Map and update the friendly CSS easing to its bezier equivalent.
     $options = isset($form_state['values']['options']) ? $form_state['values']['options'] : array();
@@ -409,7 +409,7 @@ class SlickOptionsetUi extends ctools_export_ui {
 
       $options['asNavFor'] = array(
         'title' => t('asNavFor target'),
-        'description' => t('Set the slider to be the navigation of other slider (Class or ID Name). Use selector identifier ("." or "#") accordingly. If class, use the provided Wrapper class under General as needed, e.g.: if the main display has class "slick--for", and the thumbnail navigation "slick--nav", place the opposite here as its target. Or use existing classes based on optionsets, e.g.: .slick--optionset--main, or .slick--optionset--main-nav. Overriden per field formatter.'),
+        'description' => t('Leave empty if using sub-modules to have it auto-matched. Set the slider to be the navigation of other slider (Class or ID Name). Use selector identifier ("." or "#") accordingly. If class, use the provided Wrapper class under General as needed, e.g.: if the main display has class "slick--for", and the thumbnail navigation "slick--nav", place the opposite here as its target. Or use existing classes based on optionsets, e.g.: .slick--optionset--main, or .slick--optionset--main-nav. Overriden per field formatter.'),
         'type' => 'textfield',
       );
 

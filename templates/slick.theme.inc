@@ -195,8 +195,15 @@ function template_preprocess_slick(&$variables) {
   // Implementor is now responsible to pass the proper asnavfor_target.
   if ($settings['optionset_thumbnail'] && $settings['asnavfor_target']) {
     // Enforce clickable thumbnail, and solves old lingering "div".
-    $js['slide'] = '.slick__slide';
+    if ($settings['current_display'] == 'thumbnail') {
+      $js['slide'] = '.slick__slide';
+      $js['focusOnSelect'] = TRUE;
+    }
     $js['asNavFor'] = $settings['asnavfor_target'];
+  }
+  // Prevents non-empty, but not-used, asNavFor from breaking the slide.
+  else {
+    $js['asNavFor'] = '';
   }
 
   // The slider must have the attribute "dir" set to "rtl", if so configured.
@@ -204,31 +211,18 @@ function template_preprocess_slick(&$variables) {
     $content_attributes['dir'] = 'rtl';
   }
 
-  // Arrows may be unset and empty if arrows option is disabled, so fallback to
-  // the default in code.
+  // Arrows must be set to allow responsive options hide/show them.
   // Limit sanitization with button and a few reasonable selectors.
-  if ($settings['arrows'] = $js['arrows']) {
-    $allowed_tags = array(
-      'a',
-      'em',
-      'strong',
-      'button',
-      'p',
-      'div',
-      'i',
-      'span',
-    );
-    $is_prev = isset($js['prevArrow']) && $js['prevArrow'];
-    $is_next = isset($js['nextArrow']) && $js['nextArrow'];
+  $settings['arrows'] = $js['arrows'];
+  $allowed_tags = array('a', 'em', 'strong', 'button', 'p', 'div', 'i', 'span');
+  $is_prev = isset($js['prevArrow']) && $js['prevArrow'];
+  $is_next = isset($js['nextArrow']) && $js['nextArrow'];
 
-    // $default_prev = slick_get_default_value('prevArrow');
-    // $default_next = slick_get_default_value('nextArrow');
-    $default_prev = _slick_optionset_defaults('prevArrow', 'settings');
-    $default_next = _slick_optionset_defaults('nextArrow', 'settings');
+  $default_prev = slick_get_default_value('prevArrow');
+  $default_next = slick_get_default_value('nextArrow');
 
-    $settings['prev_arrow'] = $is_prev ? filter_xss($js['prevArrow'], $allowed_tags) : $default_prev;
-    $settings['next_arrow'] = $is_next ? filter_xss($js['nextArrow'], $allowed_tags) : $default_next;
-  }
+  $settings['prev_arrow'] = $is_prev ? filter_xss($js['prevArrow'], $allowed_tags) : $default_prev;
+  $settings['next_arrow'] = $is_next ? filter_xss($js['nextArrow'], $allowed_tags) : $default_next;
 
   $js['mousewheel'] = $settings['mousewheel'] ? TRUE : FALSE;
 
@@ -280,7 +274,7 @@ function template_preprocess_slick(&$variables) {
 }
 
 /**
- * Implements hook_process_HOOK().
+ * Implements hook_process_slick().
  */
 function template_process_slick(&$variables) {
   $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);

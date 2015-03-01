@@ -258,7 +258,7 @@ function slick_get_responsive_options($count = 0) {
     $options[$key] = array(
       'breakpoint' => array(
         'cast' => 'int',
-        'default' => '',
+        'default' => 0,
       ),
       'unslick' => array(
         'cast' => 'bool',
@@ -274,6 +274,21 @@ function slick_get_responsive_options($count = 0) {
   }
 
   return $options;
+}
+
+/**
+ * Returns overridable options to re-use one optionset.
+ *
+ * @return array
+ *   An array of overridable options.
+ */
+function slick_get_overridable_options() {
+  return array(
+    'arrows' => t('Arrows'),
+    'autoplay' => t('Autoplay'),
+    'dots' => t('Dots'),
+    'draggable' => t('Draggable'),
+  );
 }
 
 /**
@@ -317,8 +332,6 @@ function slick_clean_options(array $options) {
 /**
  * Default settings for a newly created option set.
  *
- * @param string $key
- *   Gets a specific default value [optional].
  * @param string $set
  *   Gets a specific group of values [optional]: settings, general, responsives.
  * @param int $breakpoints
@@ -326,10 +339,8 @@ function slick_clean_options(array $options) {
  *
  * @return array
  *   An array of default options, or a specific group if $set is specified.
- *
- * @todo simplify the logic by slick_get_default_value().
  */
-function _slick_optionset_defaults($key = NULL, $set = NULL, $breakpoints = NULL) {
+function _slick_optionset_defaults($set = NULL, $breakpoints = NULL) {
   $slick_options = slick_get_options();
   $defaults = array();
   foreach ($slick_options as $name => $values) {
@@ -369,14 +380,8 @@ function _slick_optionset_defaults($key = NULL, $set = NULL, $breakpoints = NULL
   // Typecast the values.
   _slick_typecast_optionset($defaults, $breakpoints);
 
-  // Return the specific item out of the JS settings alone.
-  // @todo drop for slick_get_default_value().
-  if (isset($key) && $key && $set && array_key_exists($key, $defaults[$set])) {
-    return $defaults[$set][$key];
-  }
-
   // Returns a specific group, or all items.
-  return !empty($set) && $defaults[$set] ? $defaults[$set] : $defaults;
+  return $set && isset($defaults[$set]) ? $defaults[$set] : $defaults;
 }
 
 /**
@@ -391,7 +396,7 @@ function _slick_optionset_defaults($key = NULL, $set = NULL, $breakpoints = NULL
  *   Returns the default value of the property, otherwise FALSE.
  */
 function slick_get_default_value($property, $group = 'settings') {
-  $defaults = _slick_optionset_defaults(NULL, $group);
+  $defaults = _slick_optionset_defaults($group);
   return isset($defaults[$property]) ? $defaults[$property] : FALSE;
 }
 
@@ -412,11 +417,11 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
 
   $options = $optionset->options;
   $breakpoints = $optionset->breakpoints ? $optionset->breakpoints : 0;
-  $defaults = _slick_optionset_defaults(NULL, NULL, $breakpoints);
+  $defaults = _slick_optionset_defaults('settings', $breakpoints);
 
   // Clean up the main options.
   $settings = $customs ? $customs : $options['settings'];
-  $config = array_diff_assoc($settings, $defaults['settings']);
+  $config = array_diff_assoc($settings, $defaults);
 
   // Must be empty if all is default optionset.
   if ($config) {
@@ -466,7 +471,7 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
           unset($cleaned_responsives[$key]['unslick']);
         }
         else {
-          $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults['settings']);
+          $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults);
 
           // Remove wasted dependent options if disabled, empty or not.
           if (empty($cleaned[$key]['settings']['autoplay'])) {
@@ -634,7 +639,7 @@ function slick_optionset_create($values = array()) {
   }
 
   // Merge default settings with any given settings, and removed duplicates.
-  $optionset_defaults = _slick_optionset_defaults(NULL, NULL, $optionset->breakpoints);
+  $optionset_defaults = _slick_optionset_defaults(NULL, $optionset->breakpoints);
   $optionset->options = $optionset->options + $optionset_defaults;
 
   // Clean up default settings.

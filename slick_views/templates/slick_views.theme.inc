@@ -9,22 +9,16 @@
  * Implements hook_preprocess_HOOK().
  */
 function template_preprocess_slick_views(&$variables) {
-  $element = array();
 
   // Prepare all data to be passed to theme_slick().
-  if (!empty($variables['view'])) {
-    $view = $variables['view'];
+  if ($view = $variables['view']) {
     $view_name = check_plain($view->name);
     $settings = $variables['options'];
-
+    $element = array();
     $items = array();
     $thumbs = array();
-
     $attach = array(
-      'attach_media' => FALSE,
-      'attach_colorbox' => FALSE,
-      'attach_skin' => NULL,
-      'attach_skin_thumbnail' => NULL,
+      'attach_skin' => $settings['skin'],
     );
 
     foreach ($variables['rows'] as $id => $row) {
@@ -47,6 +41,7 @@ function template_preprocess_slick_views(&$variables) {
           $attach['attach_media'] = TRUE;
           $item['slide'] = $row->image;
 
+          // Add thumbnail navigation if so configured.
           if (isset($row->thumbnail) && !empty($row->thumbnail)) {
             $settings['thumbnail_style'] = TRUE;
             $thumb['slide'] = $row->thumbnail;
@@ -89,13 +84,18 @@ function template_preprocess_slick_views(&$variables) {
 
       $items[] = $item;
 
+      // Allows text-only thumbnail navigation, like regular tabs.
+      if (isset($row->thumbnail_caption) && !empty($row->thumbnail_caption)) {
+        $thumb['caption']['data']['#markup'] = filter_xss_admin($row->thumbnail_caption);
+        if (!isset($thumb['slide'])) {
+          $thumb['slide'] = array();
+        }
+      }
+
       if ($thumb) {
         $thumb['item']['type'] = 'views';
         $thumb['item']['view_name'] = $view_name;
-        $thumb['caption'] = array();
-        if (isset($row->thumbnail_caption) && !empty($row->thumbnail_caption)) {
-          $thumb['caption']['data']['#markup'] = filter_xss_admin($row->thumbnail_caption);
-        }
+
         $thumbs[] = $thumb;
       }
     }
@@ -104,34 +104,22 @@ function template_preprocess_slick_views(&$variables) {
 
     // Add the settings.
     $settings['current_display'] = 'main';
-    if ($settings['skin']) {
-      $attach['attach_skin'] = $settings['skin'];
-    }
-
-    if (isset($settings['skin_thumbnail']) && $settings['skin_thumbnail']) {
-      $attach['attach_skin_thumbnail'] = $settings['skin_thumbnail'];
-    }
-
     $is_asnavfor = isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'] && $thumbs;
     $is_asnavfor_auto = isset($settings['asnavfor_auto']) && $settings['asnavfor_auto'];
 
     // Build the Slick attributes.
-    if ($settings['id']) {
-      $id = $settings['id'];
-    }
-    else {
-      $slick_id = &drupal_static('slick_id', 0);
-      $id = drupal_clean_css_identifier("slick-views-{$view_name}-" . ++$slick_id);
-    }
-
+    $slick_id = &drupal_static('slick_id', 0);
+    $id = $settings['id'] ? $settings['id'] : drupal_clean_css_identifier("slick-views-{$view_name}-" . ++$slick_id);
     $thumbnail_id = $id . '-thumbnail';
 
     // Enforce ID for easy asNavFor selectors.
     $settings['attributes']['id'] = $id;
     $settings['content_attributes']['id'] = $id . '-slider';
-    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
+    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view_name);
 
     if ($is_asnavfor) {
+      $attach['attach_skin_thumbnail'] = $settings['skin_thumbnail'];
+
       if ($is_asnavfor_auto) {
         $settings['asnavfor_target'] = '#' . $thumbnail_id . '-slider';
       }
@@ -141,19 +129,18 @@ function template_preprocess_slick_views(&$variables) {
     }
 
     // Build the Slick grid.
-    $grid = isset($settings['grid']) && $settings['grid'] ? $settings['grid'] : '';
-    if ($grid) {
+    if (isset($settings['grid']) && $settings['grid']) {
       $visible_slides = $settings['visible_slides'];
       $preserve_keys = isset($settings['preserve_keys']) && $settings['preserve_keys'] ? TRUE : FALSE;
       // Only if we do have a reasonable amount of grid items.
       if ($visible_slides && count($variables['rows']) > $visible_slides) {
-        $grid_items = array_chunk($items, $visible_slides);
+        $grid_items = array_chunk($items, $visible_slides, $preserve_keys);
 
         $grids = array();
-        foreach ($grid_items as $delta => $grid_children) {
+        foreach ($grid_items as $delta => $grid_item) {
           $grids[] = array(
             '#theme' => 'slick_grid',
-            '#items' => $grid_children,
+            '#items' => $grid_item,
             '#delta' => $delta,
             '#settings' => $settings,
           );
@@ -164,6 +151,9 @@ function template_preprocess_slick_views(&$variables) {
       }
     }
 
+    // Mimick the Slick wrapper attributes as we _can't actually use it till D8.
+    $variables['attributes_array']['class'] = array('slick-wrapper');
+
     // Build the Slick main display.
     $element[0] = array(
       '#theme' => 'slick',
@@ -172,12 +162,24 @@ function template_preprocess_slick_views(&$variables) {
       '#attached' => slick_attach($attach),
     );
 
+    // Overrides common options to re-use an optionset.
+    if (isset($settings['override']) && $settings['override']) {
+      $overridables = array();
+      // Respect empty values, meaning FALSE.
+      foreach ($settings['overridables'] as $key => $override) {
+        $override = empty($override) ? FALSE : TRUE;
+        $overridables[$key] = $override;
+      }
+      $element[0]['#options'] = $overridables;
+    }
+
     // Build the Slick thumbnail display.
     if ($is_asnavfor) {
       $settings['optionset'] = $settings['optionset_thumbnail'];
       $settings['current_display'] = 'thumbnail';
       $settings['attributes']['id'] = $thumbnail_id;
       $settings['content_attributes']['id'] = $thumbnail_id . '-slider';
+      $variables['attributes_array']['class'][] = 'slick-wrapper--asnavfor';
 
       if ($is_asnavfor_auto) {
         $settings['asnavfor_target'] = '#' . $id . '-slider';
@@ -194,17 +196,11 @@ function template_preprocess_slick_views(&$variables) {
       );
     }
 
-    // Updates rows to contain Slick instances now.
+    // Update rows to contain Slick instances now.
     $variables['rows'] = $element;
 
-    // Mimick the Slick wrapper attributes as we don't actually use it till D8.
-    $variables['attributes_array']['class'] = array('slick-wrapper');
-    if (isset($settings['skin']) && $settings['skin']) {
+    if ($settings['skin']) {
       $variables['attributes_array']['class'][] = drupal_clean_css_identifier('slick-wrapper--' . $settings['skin']);
-    }
-
-    if (isset($settings['asnavfor_thumbnail']) && $settings['asnavfor_thumbnail']) {
-      $variables['attributes_array']['class'][] = 'slick-wrapper--asnavfor';
     }
 
     // Populate classes_array expected by Omega 3.

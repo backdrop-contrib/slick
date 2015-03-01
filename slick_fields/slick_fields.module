@@ -36,6 +36,8 @@ function slick_fields_field_formatter_info() {
       'slide_caption' => array(),
       'media_switch' => '',
       'mousewheel' => FALSE,
+      'override' => FALSE,
+      'overridables' => array(),
     ),
   );
 
@@ -94,7 +96,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   $slick_module_path = drupal_get_path('module', 'slick');
   $display  = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  $element  = array();
+  $elements = array();
 
   $field_type = $field['type'];
   $field_name = $field['field_name'];
@@ -104,8 +106,8 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     $field_type = $instance['entity_type'];
   }
 
-  module_load_include('inc', 'slick', 'includes/slick.admin');
-  module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.admin');
+  form_load_include($form_state, 'inc', 'slick', 'includes/slick.admin');
+  form_load_include($form_state, 'inc', 'slick_fields', 'includes/slick_fields.formatters.admin');
 
   $is_picture  = function_exists('picture_get_mapping_options');
   $is_colorbox = function_exists('_colorbox_doheader');
@@ -118,55 +120,56 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   $slide_classes   = array();
   $thumbnail_caption_options = array();
   $optionsets = slick_optionset_options();
+  $is_tooltip = array('class' => array('is-tooltip'));
 
   $is_views_ui = '';
   if ($instance['entity_type'] == 'ctools') {
     $is_views_ui = '<h3 class="form--slick__title">' . t('Make sure to check "Use field template" under "Style settings" below, if using multiple-value field for the slides. Views preview works with jQuery > 1.7.') . '</h3>';
   }
 
-  $element['opening'] = array(
+  $elements['opening'] = array(
     '#markup' => '<div class="form--slick form--compact form--field has-tooltip">' . $is_views_ui,
   );
 
-  $element['optionset'] = array(
+  $elements['optionset'] = array(
     '#title' => t('Option set main'),
     '#type' => 'select',
     '#options' => $optionsets,
     '#default_value' => $settings['optionset'],
     '#description' => t('Manage optionsets at <a href="@link" target="_blank">Slick carousel admin page</a>.', array('@link' => url('admin/config/media/slick'))),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
   // This is to avoid loading optionset just to read their label at the Summary.
-  $element['optionset_label'] = array(
+  $elements['optionset_label'] = array(
     '#type' => 'hidden',
     '#default_value' => $optionsets[$settings['optionset']],
   );
 
   $skins = slick_skins(TRUE);
-  $element['skin'] = array(
+  $elements['skin'] = array(
     '#type' => 'select',
     '#title' => t('Skin main'),
     '#options' => $skins,
     '#default_value' => $settings['skin'],
     '#empty_option' => t('- None -'),
     '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See main <a href="@url" target="_blank">README</a> for details on Skins.', array('@url' => url($slick_module_path . '/README.txt'))),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
   // Thumbnail navigation.
-  $element['optionset_thumbnail'] = array(
+  $elements['optionset_thumbnail'] = array(
     '#title' => t('Option set thumbnail'),
     '#type' => 'select',
     '#options' => $optionsets,
     '#empty_option' => t('- None -'),
     '#default_value' => isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'] ? $settings['optionset_thumbnail'] : '',
     '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Provide each optionset a unique asNavFor class at <a href="@url" target="_blank">Slick carousel admin page</a>. Leave empty to not use thumbnail navigation.', array('@url' => url('admin/config/media/slick'))),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
   // This is to avoid loading optionset just to read their label at the Summary.
-  $element['optionset_thumbnail_label'] = array(
+  $elements['optionset_thumbnail_label'] = array(
     '#type' => 'hidden',
     '#default_value' => isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'] ? $optionsets[$settings['optionset_thumbnail']] : '',
   );
@@ -184,27 +187,27 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   }
 
   // This is to avoid loading optionset till needed at theme_slick.
-  $element['dots_main'] = array(
+  $elements['dots_main'] = array(
     '#type' => 'hidden',
     '#default_value' => isset($optionset->options['settings']['dots']) ? $optionset->options['settings']['dots'] : '',
   );
 
-  $element['dots_thumbnail'] = array(
+  $elements['dots_thumbnail'] = array(
     '#type' => 'hidden',
     '#default_value' => isset($optionset_thumbnail->options['settings']['dots']) ? $optionset_thumbnail->options['settings']['dots'] : '',
   );
 
-  $element['skin_thumbnail'] = array(
+  $elements['skin_thumbnail'] = array(
     '#type' => 'select',
     '#title' => t('Skin thumbnail'),
     '#options' => $skins,
     '#default_value' => isset($settings['skin_thumbnail']) && $settings['skin_thumbnail'] ? $settings['skin_thumbnail'] : '',
     '#empty_option' => t('- None -'),
     '#description' => t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', array('@url' => url($slick_module_path . '/README.txt'))),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
-  $element['asnavfor_main'] = array(
+  $elements['asnavfor_main'] = array(
     '#type' => 'textfield',
     '#title' => t('asNavFor main'),
     '#default_value' => $settings['asnavfor_main'],
@@ -218,7 +221,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     ),
   );
 
-  $element['asnavfor_thumbnail'] = array(
+  $elements['asnavfor_thumbnail'] = array(
     '#type' => 'textfield',
     '#title' => t('asNavFor thumbnail'),
     '#default_value' => $settings['asnavfor_thumbnail'],
@@ -232,14 +235,14 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     ),
   );
 
-  $element['asnavfor_auto'] = array(
+  $elements['asnavfor_auto'] = array(
     '#title' => t('asNavFor auto selectors'),
     '#type' => 'checkbox',
     '#default_value' => $settings['asnavfor_auto'],
     '#field_suffix' => '',
     '#title_display' => 'before',
     '#description' => t('If checked, asNavFor selectors will be determined by the current field ID selectors automatically. Check if unsure with selectors.'),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
     '#states' => array(
       'invisible' => array(
         'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
@@ -247,14 +250,14 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     ),
   );
 
-  $element['thumbnail_caption'] = array(
+  $elements['thumbnail_caption'] = array(
     '#type' => 'select',
     '#title' => t('Thumbnail caption'),
     '#default_value' => isset($settings['thumbnail_caption']) && $settings['thumbnail_caption'] ? $settings['thumbnail_caption'] : '',
     '#options' => array(),
     '#empty_option' => t('- None -'),
     '#description' => t('Thumbnail caption maybe just titles.'),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
     '#states' => array(
       'invisible' => array(
         'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
@@ -264,27 +267,27 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   );
 
   $image_styles = image_style_options(FALSE, PASS_THROUGH);
-  $element['image_style'] = array(
+  $elements['image_style'] = array(
     '#title' => t('Image style'),
     '#type' => 'select',
     '#default_value' => $settings['image_style'],
     '#empty_option' => t('None (original image)'),
     '#options' => $image_styles,
     '#description' => t('This is to override, or fallback as needed. This allows more variant per View mode with a single optionset.'),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
-  $element['thumbnail_style'] = array(
+  $elements['thumbnail_style'] = array(
     '#title' => t('Thumbnail style'),
     '#type' => 'select',
     '#default_value' => $settings['thumbnail_style'],
     '#empty_option' => t('- None -'),
     '#options' => $image_styles,
     '#description' => t('If <em>Option set thumbnail</em> provided, it will be used for asNavFor thumbnail navigation slider. Otherwise thumbnails may also be displayed when hovering over dots.'),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
-  $element['thumbnail_hover'] = array(
+  $elements['thumbnail_hover'] = array(
     '#title' => t('Dots with thumbnail'),
     '#type' => 'checkbox',
     '#default_value' => $settings['thumbnail_hover'],
@@ -296,7 +299,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       ),
     ),
     '#description' => t('Dependent on dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
   $field_entity_type = $field_type;
@@ -366,49 +369,49 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   }
 
   // Layout to all supported fields.
-  $element['slide_layout'] = array(
+  $elements['slide_layout'] = array(
     '#title' => t('Slide layout'),
     '#type' => 'select',
     '#default_value' => $settings['slide_layout'],
     '#options' => $layout_options,
     '#empty_option' => t('- None -'),
     '#description' => t('This affects the entire slides. Split half requires any skin Split. Leave empty to DIY.'),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
-    $element['slide_layout']['#prefix'] = '<h3 class="form--slick__title">' . t('Fields') . '</h3>';
+    $elements['slide_layout']['#prefix'] = '<h3 class="form--slick__title">' . t('Fields') . '</h3>';
     // Complex slide layout is provided by FC alone.
     // Skip media file field as it is the main/ background media already.
     if (in_array($field_entity_type, array('field_collection_item'))) {
-      $element['slide_image'] = array(
+      $elements['slide_image'] = array(
         '#title' => t('Main image field'),
         '#type' => 'select',
         '#options' => $image_options,
         '#empty_option' => t('None'),
         '#default_value' => $settings['slide_image'],
         '#description' => t('Main background image field'),
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
       );
 
       // Field collection overlay.
-      $element['slide_overlay'] = array(
+      $elements['slide_overlay'] = array(
         '#title' => t('Overlay image/video field'),
         '#type' => 'select',
         '#options' => $overlay_options,
         '#empty_option' => t('- None -'),
         '#default_value' => $settings['slide_overlay'],
         '#description' => t('If audio/video, be sure the display is not image display. You can manage its display at its own entity View mode display, or below for the supported formatters: Image and Rendered file. Nested Slick carousel is supported. Supported fields: Image, Media, Atom reference'),
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
       );
 
       // Field collection nested slicks, slicks within a slick.
-      $element['nested_slick'] = array(
+      $elements['nested_slick'] = array(
         '#title' => t('Enable nested slicks'),
         '#type' => 'checkbox',
         '#default_value' => $settings['nested_slick'],
         '#description' => t('If checked, multiple overlay items will be rendered as nested slicks, otherwise only the first image/video/audio is displayed. Applied to Image and Rendered file formatters. Alternatively, use the Slick carousel formatter for this particular overlay field at its own View mode display to build similar nested slick, and leave this unchecked.'),
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
         '#field_suffix' => '',
         '#title_display' => 'before',
         '#states' => array(
@@ -418,14 +421,14 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         ),
       );
 
-      $element['nested_style'] = array(
+      $elements['nested_style'] = array(
         '#title' => t('Nested image style'),
         '#type' => 'select',
         '#default_value' => $settings['nested_style'],
         '#empty_option' => t('- None -'),
         '#options' => $image_styles,
         '#description' => t('Choose the image style for the nested slicks to get them uniformly.'),
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
         '#states' => array(
           'invisible' => array(
             array('select[name*="[slide_overlay]"]' => array('value' => '')),
@@ -434,14 +437,14 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         ),
       );
 
-      $element['nested_optionset'] = array(
+      $elements['nested_optionset'] = array(
         '#title' => t('Nested optionset'),
         '#type' => 'select',
         '#options' => $optionsets,
         '#empty_option' => t('- None -'),
         '#default_value' => $settings['nested_optionset'],
         '#description' => t('Choose the optionset for the nested slicks.'),
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
         '#states' => array(
           'invisible' => array(
             array('select[name*="[slide_overlay]"]' => array('value' => '')),
@@ -452,83 +455,83 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     }
 
     // Title field.
-    $element['slide_title'] = array(
+    $elements['slide_title'] = array(
       '#title' => t('Slide title field'),
       '#type' => 'select',
       '#empty_option' => t('None'),
       '#options' => $title_options,
       '#default_value' => $settings['slide_title'],
       '#description' => t('If provided, it will bre wrapped with H2 and class .slide__title.'),
-      '#attributes' => array('class' => array('is-tooltip')),
+      '#attributes' => $is_tooltip,
     );
 
     // Caption fields for FC and Media.
-    $element['slide_caption'] = array(
+    $elements['slide_caption'] = array(
       '#title' => t('Caption fields'),
       '#type' => 'checkboxes',
       '#default_value' => $settings['slide_caption'],
       '#options' => $caption_options,
       '#description' => t('Enable any of the following fields as slide caption. These fields are treated and wrapped as captions. Make sure to make them visible at their relevant Manage display.'),
-      '#attributes' => array('class' => array('is-tooltip')),
+      '#attributes' => $is_tooltip,
     );
 
     // Add empty suffix to style checkboxes like iOS.
-    foreach ($element['slide_caption']['#options'] as $key => $value) {
-      $element['slide_caption'][$key]['#field_suffix'] = '';
-      $element['slide_caption'][$key]['#title_display'] = 'before';
+    foreach ($elements['slide_caption']['#options'] as $key => $value) {
+      $elements['slide_caption'][$key]['#field_suffix'] = '';
+      $elements['slide_caption'][$key]['#title_display'] = 'before';
     }
 
     if ($field_entity_type == 'field_collection_item') {
-      $element['slide_caption']['#description'] .= t('And not choose the same field as main/ background image.');
+      $elements['slide_caption']['#description'] .= t('And not choose the same field as main/ background image.');
     }
 
     if (empty($caption_options)) {
-      $element['slide_caption']['#description'] = t('No fields found for the captions. You need to add relevant fields for the captions.');
+      $elements['slide_caption']['#description'] = t('No fields found for the captions. You need to add relevant fields for the captions.');
     }
 
     // Link field.
-    $element['slide_link'] = array(
+    $elements['slide_link'] = array(
       '#title' => t('Link field'),
       '#type' => 'select',
       '#empty_option' => t('None'),
       '#options' => $link_options,
       '#default_value' => $settings['slide_link'],
       '#description' => t('Link to content: Read more, View Case Study, etc, wrapped with class .slide__link.'),
-      '#attributes' => array('class' => array('is-tooltip')),
+      '#attributes' => $is_tooltip,
     );
 
     // Layout fields to make individual slide more variant.
-    $element['slide_layout']['#title'] = t('Slide layout field');
-    $element['slide_layout']['#description'] = t('Create a dedicated List (text - max number 1) field related to the caption placement with the following supported keys: top, right, bottom, left, center, center-top, etc. See <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Split half requires any skin Split. Leave empty to DIY.', array('@url' => url($path . '/README.txt')));
+    $elements['slide_layout']['#title'] = t('Slide layout field');
+    $elements['slide_layout']['#description'] = t('Create a dedicated List (text - max number 1) field related to the caption placement with the following supported keys: top, right, bottom, left, center, center-top, etc. See <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Split half requires any skin Split. Leave empty to DIY.', array('@url' => url($path . '/README.txt')));
 
     $view_mode_options = _slick_fields_view_modes($field_entity_type, TRUE);
-    $element['view_mode'] = array(
+    $elements['view_mode'] = array(
       '#type' => 'select',
       '#title' => t('View mode'),
       '#options' => $view_mode_options,
       '#default_value' => $settings['view_mode'],
       '#description' => t('The view mode is a specific display to contain the fieldable slides. Create more view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>.', array('@url' => '//drupal.org/project/entity_view_mode')),
       '#access' => count($view_mode_options) > 1,
-      '#attributes' => array('class' => array('is-tooltip')),
+      '#attributes' => $is_tooltip,
     );
 
     if ($field_entity_type == 'file') {
-      $element['view_mode']['#description'] .= t('For video, make sure to choose relevant video display, not as image.');
+      $elements['view_mode']['#description'] .= t('For video, make sure to choose relevant video display, not as image.');
 
       // Slide class field.
-      $element['slide_classes'] = array(
+      $elements['slide_classes'] = array(
         '#title' => t('Slide class field'),
         '#type' => 'select',
         '#empty_option' => t('None'),
         '#options' => $slide_classes,
         '#default_value' => $settings['slide_classes'],
         '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split.'),
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
       );
     }
   }
 
-  $element['media_switch'] = array(
+  $elements['media_switch'] = array(
     '#title' => t('Media switcher'),
     '#type' => 'select',
     '#default_value' => $settings['media_switch'],
@@ -537,13 +540,13 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     ),
     '#empty_option' => t('- None -'),
     '#description' => t('Supports Colorbox and Media iframe switcher.'),
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
-    $element['media_switch']['#description'] .= t('<br />Iframe switcher: audio/video iframe is hidden below image overlay until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.');
+    $elements['media_switch']['#description'] .= t('<br />Iframe switcher: audio/video iframe is hidden below image overlay until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.');
 
-    $element['aspect_ratio'] = array(
+    $elements['aspect_ratio'] = array(
       '#type' => 'select',
       '#title' => t('Aspect ratio'),
       // http://en.wikipedia.org/wiki/List_of_common_resolutions
@@ -555,7 +558,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       '#options' => drupal_map_assoc(array('4:3', '16:9')),
       '#empty_option' => t('- None -'),
       '#default_value' => $settings['aspect_ratio'],
-      '#attributes' => array('class' => array('is-tooltip')),
+      '#attributes' => $is_tooltip,
       '#states' => array(
         'visible' => array(
           'select[name*="[media_switch]"]' => array('value' => 'iframe-switch'),
@@ -564,9 +567,9 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     );
 
     if ($field_entity_type == 'field_collection_item') {
-      $element['media_switch']['#title'] = t('Media overlay switcher');
-      $element['media_switch']['#description'] .= t('<br />Both applied to overlay only.');
-      $element['aspect_ratio_overlay'] = array(
+      $elements['media_switch']['#title'] = t('Media overlay switcher');
+      $elements['media_switch']['#description'] .= t('<br />Both applied to overlay only.');
+      $elements['aspect_ratio_overlay'] = array(
         '#title' => t('Aspect ratio overlay only'),
         '#type' => 'checkbox',
         '#default_value' => $settings['aspect_ratio_overlay'],
@@ -581,16 +584,16 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
           ),
         ),
         '#description' => t('Apply aspect ratio to overlay media only, excluding main/background image.'),
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
       );
 
-      $element['color_field'] = array(
+      $elements['color_field'] = array(
         '#type' => 'select',
         '#title' => t('Color field'),
         '#options' => $color_options,
         '#default_value' => $settings['color_field'],
         '#description' => t('Color text field or <a href="@url" target="_blank">color_field</a> to colorize individual slide.', array('@url' => '//drupal.org/project/color_field')),
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
         '#empty_option' => t('- None -'),
       );
     }
@@ -598,10 +601,10 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
 
   // Optional colorbox integration.
   if ($is_colorbox) {
-    $element['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox switcher');
-    $element['media_switch']['#description'] .= t('<br />Colorbox switcher: image to colorbox switch.');
+    $elements['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox switcher');
+    $elements['media_switch']['#description'] .= t('<br />Colorbox switcher: image to colorbox switch.');
 
-    $element['colorbox_style'] = array(
+    $elements['colorbox_style'] = array(
       '#title' => t('Colorbox image style'),
       '#type' => 'select',
       '#default_value' => $settings['colorbox_style'],
@@ -617,9 +620,9 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
 
   // Good old core image field.
   if ($field_entity_type == 'image') {
-    unset($element['media_switch']['#options']['iframe-switch']);
+    unset($elements['media_switch']['#options']['iframe-switch']);
     if (!$is_colorbox) {
-      unset($element['media_switch']);
+      unset($elements['media_switch']);
     }
 
     $slide_caption_options = $thumbnail_caption_options = array(
@@ -627,19 +630,19 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       'alt_field' => t('Alt'),
     );
 
-    $element['slide_caption'] = array(
+    $elements['slide_caption'] = array(
       '#title' => t('Caption fields'),
       '#type' => 'checkboxes',
       '#default_value' => $settings['slide_caption'],
       '#options' => $slide_caption_options,
       '#description' => t('Captions will attempt to use Alt and Title attributes if enabled.'),
-      '#attributes' => array('class' => array('is-tooltip')),
+      '#attributes' => $is_tooltip,
     );
 
     // Add empty suffix to style checkboxes like iOS.
-    foreach ($element['slide_caption']['#options'] as $key => $value) {
-      $element['slide_caption'][$key]['#field_suffix'] = '';
-      $element['slide_caption'][$key]['#title_display'] = 'before';
+    foreach ($elements['slide_caption']['#options'] as $key => $element) {
+      $elements['slide_caption'][$key]['#field_suffix'] = '';
+      $elements['slide_caption'][$key]['#title_display'] = 'before';
     }
 
     // If the image field doesn't have the Title field enabled, tell the user.
@@ -650,9 +653,9 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
 
       // Loosen up for Views UI.
       if ($instance['entity_type'] != 'ctools') {
-        $element['slide_caption']['#disabled'] = TRUE;
+        $elements['slide_caption']['#disabled'] = TRUE;
       }
-      $element['slide_caption']['#description'] = t('You need to <a href="@url" target="_blank">enable both title and alt fields</a> to use them as caption.', array(
+      $elements['slide_caption']['#description'] = t('You need to <a href="@url" target="_blank">enable both title and alt fields</a> to use them as caption.', array(
         '@url' => url('admin/structure/types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'],
             array(
               'fragment' => 'edit-instance-settings-title-field',
@@ -666,25 +669,25 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   }
 
   if ($thumbnail_caption_options) {
-    $element['thumbnail_caption']['#options'] = $thumbnail_caption_options;
-    $element['thumbnail_caption']['#access'] = TRUE;
+    $elements['thumbnail_caption']['#options'] = $thumbnail_caption_options;
+    $elements['thumbnail_caption']['#access'] = TRUE;
   }
 
   // Picture module integration.
   // The Slick image_style with the picture mapping config.
   if ($is_picture) {
-    $element['picture'] = array(
+    $elements['picture'] = array(
       '#type' => 'checkbox',
       '#title' => t('Picture mapping'),
       '#description' => t('Picture mapping is only reasonable for large images.'),
       '#default_value' => $settings['picture'],
       '#field_suffix' => '',
       '#title_display' => 'before',
-      '#attributes' => array('class' => array('is-tooltip')),
+      '#attributes' => $is_tooltip,
     );
 
     $options = picture_get_mapping_options();
-    $element['picture_style'] = array(
+    $elements['picture_style'] = array(
       '#title' => t('Picture group'),
       '#states' => array(
         'visible' => array(
@@ -694,22 +697,22 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     );
 
     if (!empty($options)) {
-      $element['picture_style'] += array(
+      $elements['picture_style'] += array(
         '#type' => 'select',
         '#description' => t('Picture mapping for the main stage image.'),
         '#options' => $options,
         '#default_value' => $settings['picture_style'],
-        '#attributes' => array('class' => array('is-tooltip')),
+        '#attributes' => $is_tooltip,
       );
     }
     else {
-      $element['picture_style'] += array(
+      $elements['picture_style'] += array(
         '#type' => 'item',
         '#markup' => t('<a href="@url" target="_blank">No picture mappings</a> defined.', array('@url' => url('admin/config/media/picture'))),
       );
     }
 
-    $element['picture_fallback'] = array(
+    $elements['picture_fallback'] = array(
       '#title' => t('Fallback image style'),
       '#type' => 'select',
       '#default_value' => $settings['picture_fallback'],
@@ -723,25 +726,57 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     );
   }
 
-  $element['mousewheel'] = array(
+  $elements['mousewheel'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable mousewheel'),
     '#description' => t('Make sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
     '#default_value' => $settings['mousewheel'],
     '#field_suffix' => '',
     '#title_display' => 'before',
-    '#attributes' => array('class' => array('is-tooltip')),
+    '#attributes' => $is_tooltip,
   );
 
-  $element['closing'] = array(
+  $elements['override'] = array(
+    '#title' => t('Override optionset'),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['override'],
+    '#description' => t('If checked, the following options will override the main optionset. Useful to re-use one optionset for several different displays.'),
+    '#attributes' => $is_tooltip,
+    '#field_suffix' => '',
+    '#title_display' => 'before',
+  );
+
+  $overridable_options = slick_get_overridable_options();
+  $overridable_values = is_array($settings['overridables']) ? array_values($settings['overridables']) : $settings['overridables'];
+  $elements['overridables'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Overridable options'),
+    '#description' => t("Override the main optionset to re-use one. Anything dictated here will override the current optionset. OFF means FALSE"),
+    '#options' => $overridable_options,
+    '#default_value' => $overridable_values,
+    '#attributes' => $is_tooltip,
+    '#states' => array(
+      'visible' => array(
+        ':input[name$="[override]"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  // Add empty suffix to style checkboxes like iOS.
+  foreach ($elements['overridables']['#options'] as $key => $element) {
+    $elements['overridables'][$key]['#field_suffix'] = '';
+    $elements['overridables'][$key]['#title_display'] = 'before';
+  }
+
+  $elements['closing'] = array(
     '#markup' => '</div>',
   );
 
   if ($display['type'] == 'slick') {
-    $element['#attached']['library'][] = array('slick', 'slick.admin');
+    $elements['#attached']['library'][] = array('slick', 'slick.admin');
   }
 
-  return $element;
+  return $elements;
 }
 
 /**
@@ -886,6 +921,11 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
       $mousewheel = $settings['mousewheel'] ? t('Yes') : t('No');
       $summary[] = t('Mousewheel: @mousewheel', array('@mousewheel' => $mousewheel));
     }
+
+    if (isset($settings['override'])) {
+      $override = $settings['override'] ? t('Yes') : t('No');
+      $summary[] = t('Override optionset: @override', array('@override' => $override));
+    }
   }
 
   // Build settings summary.
@@ -1012,11 +1052,19 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       '#theme' => 'slick',
       '#items' => $build,
       '#settings' => $settings,
-      // @todo add simple overrides for common options: draggable, arrows, and
-      // dots to keep a single optionset handy for some.
-      '#options' => array(),
       '#attached' => slick_attach($attach),
     );
+
+    // Overrides common options to re-use an optionset.
+    if (isset($settings['override']) && $settings['override']) {
+      $overridables = array();
+      // Respect empty values, meaning FALSE.
+      foreach ($settings['overridables'] as $key => $override) {
+        $override = empty($override) ? FALSE : TRUE;
+        $overridables[$key] = $override;
+      }
+      $slick[0]['#options'] = $overridables;
+    }
 
     if ($is_asnavfor) {
       $settings['attributes']['id'] = $thumbnail_id;
