@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-3-1
 ---------------------------
+Fixed left-over overridable options for Field collection.
 Fixed PHPCS complains with CSS multiline selectors leaving ignorable lowerCamel.
 Fixed edge case asNavFor selectors -- non-empty, but not-used, asNavFor from
   breaking the slide. When it has value, but not actually used, or forgot to

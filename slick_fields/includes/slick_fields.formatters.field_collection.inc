@@ -452,11 +452,19 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                 '#theme' => 'slick',
                 '#items' => $overlay_element,
                 '#settings' => $overlay_settings[$key],
-                // @todo add simple overrides for common options: draggable,
-                // arrows, and dots to keep a single optionset handy for some.
-                '#options' => array(),
                 '#attached' => slick_attach($attach),
               );
+
+              // Overrides common options to re-use an optionset.
+              if (isset($settings['override']) && $settings['override']) {
+                $overridables = array();
+                // Respect empty values, meaning FALSE.
+                foreach ($settings['overridables'] as $key => $override) {
+                  $override = empty($override) ? FALSE : TRUE;
+                  $overridables[$key] = $override;
+                }
+                $overlay_elements[$key]['#options'] = $overridables;
+              }
 
               // Stop craziness.
               $settings['nested_slick'] = FALSE;

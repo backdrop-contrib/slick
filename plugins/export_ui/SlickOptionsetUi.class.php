@@ -370,6 +370,7 @@ class SlickOptionsetUi extends ctools_export_ui {
   function edit_form_submit(&$form, &$form_state) {
     parent::edit_form_submit($form, $form_state);
 
+    // @todo cleanup values similar to defaults to cut-down epic options.
     // Map and update the friendly CSS easing to its bezier equivalent.
     $options = isset($form_state['values']['options']) ? $form_state['values']['options'] : array();
     if(isset($options['settings']['cssEaseOverride'])) {
