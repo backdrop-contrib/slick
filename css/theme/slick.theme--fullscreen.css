@@ -36,6 +36,11 @@ body.page-admin {
   min-height: 100%;
 }
 
+.page-admin .slick-wrapper--fullscreen .slick--skin--fullscreen,
+.page-admin .slick-wrapper--fullscreen .slick__slider {
+  min-height: 120px;
+}
+
 .slick-wrapper--fullscreen .slick--skin--fullscreen .slick-list,
 .slick-wrapper--fullscreen .slick--skin--fullscreen .slick-track,
 .slick-wrapper--fullscreen .slick--skin--fullscreen .slick__slide,

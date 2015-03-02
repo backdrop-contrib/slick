@@ -187,12 +187,12 @@ function template_preprocess_slick(&$variables) {
 
   // focusOnSelect will not work with empty slide value, so add proper selector.
   // Intentionaly empty the fallback, not using the useless old selector "div"
-  // anymore to use the new blank default, and clean up old JSON object.
+  // anymore in favor of the new blank default, and clean up old JSON object.
   // @see https://github.com/kenwheeler/slick/issues/789
   $js['slide'] = !$js['slide'] && $js['focusOnSelect'] ? '.slick__slide' : '';
 
   // Only add asNavFor if we do have thumbnail optionset.
-  // Implementor is now responsible to pass the proper asnavfor_target.
+  // Implementor is now responsible to pass the proper asnavfor targets.
   if ($settings['optionset_thumbnail'] && $settings['asnavfor_target']) {
     // Enforce clickable thumbnail, and solves old lingering "div".
     if ($settings['current_display'] == 'thumbnail') {
@@ -207,7 +207,7 @@ function template_preprocess_slick(&$variables) {
   }
 
   // The slider must have the attribute "dir" set to "rtl", if so configured.
-  if ($js['rtl']) {
+  if (isset($js['rtl']) && $js['rtl']) {
     $content_attributes['dir'] = 'rtl';
   }
 
@@ -224,11 +224,16 @@ function template_preprocess_slick(&$variables) {
   $settings['prev_arrow'] = $is_prev ? filter_xss($js['prevArrow'], $allowed_tags) : $default_prev;
   $settings['next_arrow'] = $is_next ? filter_xss($js['nextArrow'], $allowed_tags) : $default_next;
 
-  $js['mousewheel'] = $settings['mousewheel'] ? TRUE : FALSE;
+  if ($settings['mousewheel']) {
+    $js['mousewheel'] = TRUE;
+  }
 
-  // Add the configuration as JSON object into the slick container.
-  // data-config is kept rather than the new data-slick, otherwise Slick will
-  // be initialized too early, causing other functions fail. data-slick is very
+  // Add the configuration as JSON object into the slick container using HTML5
+  // data attributes. This is much more efficient than regular head JS settings
+  // which stuffs horrible bunch of JS settings for slide instances into the
+  // <head>. This prevents possible collision and ID leak with multiple slicks.
+  // The data-config is kept in favor of the new data-slick, otherwise Slick
+  // will be initialized too early, causing other functions fail. data-slick is
   // useful if you have no extra needs.
   // @see https://github.com/kenwheeler/slick/pull/407
   if ($count > 1 && !isset($content_attributes['data-config'])) {
@@ -458,7 +463,7 @@ function template_process_slick_item(&$variables) {
  * Implements hook_preprocess_slick_grid().
  *
  * Tips:
- *   - Avoid variableWidth and adaptiveHeight.
+ *   - Avoid variableWidth and adaptiveHeight, unless using Masonry.
  *   - Use slidesToSHow > 1 to build more complex grids.
  */
 function template_preprocess_slick_grid(&$variables) {
@@ -628,7 +633,7 @@ function template_process_slick_wrapper(&$variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - items: An array of slick items.
+ *   - items: An array of slick instances: main and thumbnail slicks.
  *   - classes: A string containing the classes for the wrapping div.
  *   - attributes: A string containing the attributes for the wrapping div.
  *

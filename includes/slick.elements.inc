@@ -295,7 +295,8 @@ function slick_get_overridable_options() {
  * Removes problematic options for the responsive Slick.
  *
  * The problematic options are those that should exist once for a given Slick
- *   instance, or no easy way to deal with in the responsive context.
+ *   instance, or no easy way to deal with, or doesn't make sense in the
+ *   responsive context.
  *   JS takes care of the relevant copy on each responsive setting instead.
  *
  * @param array $options
@@ -406,7 +407,7 @@ function slick_get_default_value($property, $group = 'settings') {
  * @param object $optionset
  *   The Optionset options object.
  * @param array $customs
- *   An array of hand-coded JS options defined using #options property or those
+ *   An array of handed-over JS options defined using #options property or those
  *   manipulated at theme_slick() dependent on various options.
  *
  * @return array
@@ -511,11 +512,11 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
  * @param int $breakpoints
  *   The number of breakpoints if specified.
  */
-function _slick_typecast_optionset(&$options = array(), $breakpoints = NULL) {
+function _slick_typecast_optionset(&$options = array(), $breakpoints = 0) {
   if (isset($options) && !empty($options)) {
     $slick_options = slick_get_options();
     foreach ($slick_options as $name => $values) {
-      if (isset($slick_options[$name]['cast'])) {
+      if (isset($options['settings'][$name]) && isset($slick_options[$name]['cast'])) {
         settype($options['settings'][$name], $slick_options[$name]['cast']);
       }
     }
@@ -527,13 +528,15 @@ function _slick_typecast_optionset(&$options = array(), $breakpoints = NULL) {
           switch ($name) {
             case 'breakpoint':
             case 'unslick':
-              settype($options['responsives']['responsive'][$i][$name], $groups['cast']);
+              if (isset($options['responsives']['responsive'][$i][$name])) {
+                settype($options['responsives']['responsive'][$i][$name], $groups['cast']);
+              }
               break;
 
             case 'settings':
               if (is_array($groups)) {
                 foreach ($groups as $key => $group) {
-                  if (is_array($group) && isset($group['cast']) && isset($group['default'])) {
+                  if (is_array($group) && isset($options['responsives']['responsive'][$i][$name][$key]) && isset($group['cast']) && isset($group['default'])) {
                     settype($options['responsives']['responsive'][$i][$name][$key], $group['cast']);
                   }
                 }
@@ -660,7 +663,7 @@ function slick_optionset_load_all() {
   ctools_include('export');
   $optionsets = ctools_export_crud_load_all('slick_optionset');
   foreach ($optionsets as $optionset) {
-    // Ensure the optionset is typecast after being loaded from DB.
+    // Ensure the optionset is typecast after being loaded from storage.
     $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
     _slick_typecast_optionset($optionset->options, $breakpoints);
   }
@@ -677,7 +680,8 @@ function slick_optionset_load_all() {
 function slick_optionset_load($optionset_name) {
   ctools_include('export');
   $optionset = ctools_export_crud_load('slick_optionset', $optionset_name);
-  // Ensure the optionset is typecast after being loaded from DB.
+
+  // Ensure the optionset is typecast after being loaded from storage.
   $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
   _slick_typecast_optionset($optionset->options, $breakpoints);
   return $optionset;

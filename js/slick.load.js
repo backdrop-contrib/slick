@@ -17,7 +17,7 @@
           a = $('~ .slick__arrow', t),
           configs = t.data('config') || {},
           merged = $.extend({}, settings.slick, configs),
-          globals = Drupal.slick.globals(t, a, merged)
+          globals = Drupal.slick.globals(t, a, merged);
 
         // Populate defaults + globals into each breakpoint.
         if (typeof configs.responsive !== 'undefined') {
@@ -79,7 +79,7 @@
         }, 800, options.easing || 'swing');
       });
 
-      if ($.isFunction($.fn.mousewheel) && options.mousewheel == true) {
+      if ($.isFunction($.fn.mousewheel) && options.mousewheel) {
         t.on('mousewheel', function(e, delta) {
           e.preventDefault();
           var wheeler = (delta < 0) ? t.slick('slickNext') : t.slick('slickPrev');
@@ -92,7 +92,7 @@
      */
     options: function(slider) {
       var breakpoint = slider.activeBreakpoint || null;
-      return breakpoint && slider.windowWidth < breakpoint ? slider.breakpointSettings[breakpoint] : slider.options;
+      return breakpoint && (slider.windowWidth < breakpoint) ? slider.breakpointSettings[breakpoint] : slider.options;
     },
 
     /**

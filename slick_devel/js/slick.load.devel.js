@@ -17,7 +17,7 @@
           a = $('~ .slick__arrow', t),
           configs = t.data('config') || {},
           merged = $.extend({}, settings.slick, configs),
-          globals = Drupal.slick.globals(t, a, merged)
+          globals = Drupal.slick.globals(t, a, merged);
 
         // Populate defaults + globals into each breakpoint.
         if (typeof configs.responsive !== 'undefined') {

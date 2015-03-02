@@ -54,7 +54,7 @@ function slick_theme($existing, $type, $theme, $path) {
     ),
     // Slick lazy load image.
     // This is required at D7 due to hardcoded SRC attributes, but dropped at D8
-    // that better supports inline image.
+    // that supports inline image, or kept replacing slick_image_formatter_lazy.
     'slick_image_lazy' => $base + array(
       'variables' => array(
         'style_name' => NULL,
@@ -390,7 +390,7 @@ function slick_attach(array $attach) {
 
   // Attach default JS settings to allow responsive options have a lookup and
   // avoid dup options in the markups. This is the only JS head injection we
-  // have since responsives got no inheritance and no context without, pity.
+  // have since responsives got no inheritance, and no context without, pity.
   if ($attach['attach_default']) {
     $defaults = _slick_optionset_defaults('settings');
 
@@ -412,7 +412,6 @@ function slick_attach(array $attach) {
       ),
       'type' => 'setting',
     );
-
   }
 
   return $load;
@@ -421,14 +420,8 @@ function slick_attach(array $attach) {
 /**
  * Loads the required JS and CSS for a slick instance, excluding JS settings.
  *
- * Individual JS settings are stored as JSON object via inline HTML5 data
- * attributes at individual slide instance when optionset is provided.
- * This approach is much more efficient than regular head JS settings which
- * stuffs horrible bunch of JS settings for slide instances into the <head>.
- *
- * slick_add() will be ignored if element #attached is provided to theme_slick,
- * useful for more fine-grained control over libraries to load using renderable
- * array.
+ * The slick_add() will be ignored if element #attached is provided to
+ * theme_slick, useful for more fine-grained control over libraries to load.
  *
  * Notes: This is not used since the sub modules implements #attached property
  * instead. It is here to load library for custom works as needed, or fallback.

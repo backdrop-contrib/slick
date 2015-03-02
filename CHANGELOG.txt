@@ -1,4 +1,12 @@
 
+Slick 7.x-2.0-dev, 2015-3-2
+---------------------------
+Fixed Undefined index: rtl in template_preprocess_slick().
+Fixed typecast values before storing. It doesn't affect slick, just cleanup.
+Removed mousewheel data when disabled. It doesn't affect slick, just cleanup.
+Removed useless options at slick_fields.module display Formatter form: optionset
+  and optionset thumbnail labels.
+
 Slick 7.x-2.0-dev, 2015-3-1
 ---------------------------
 Fixed left-over overridable options for Field collection.

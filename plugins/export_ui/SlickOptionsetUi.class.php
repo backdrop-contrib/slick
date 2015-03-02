@@ -370,13 +370,15 @@ class SlickOptionsetUi extends ctools_export_ui {
   function edit_form_submit(&$form, &$form_state) {
     parent::edit_form_submit($form, $form_state);
 
-    // @todo cleanup values similar to defaults to cut-down epic options.
+    $options = $form_state['values']['options'];
+
     // Map and update the friendly CSS easing to its bezier equivalent.
-    $options = isset($form_state['values']['options']) ? $form_state['values']['options'] : array();
-    if(isset($options['settings']['cssEaseOverride'])) {
-      $override = $options['settings']['cssEaseOverride'] ? _slick_css_easing_mapping($options['settings']['cssEaseOverride']) : '';
-      $form_state['item']->options['settings']['cssEaseBezier'] = $override;
+    $override = '';
+    if($form_state['values']['options']['settings']['cssEaseOverride']) {
+      $override = _slick_css_easing_mapping($form_state['values']['options']['settings']['cssEaseOverride']);
     }
+
+    $form_state['item']->options['settings']['cssEaseBezier'] = $override;
 
     if (isset($options['responsives']['responsive'])) {
       foreach ($options['responsives']['responsive'] as $key => $responsive) {
@@ -385,6 +387,14 @@ class SlickOptionsetUi extends ctools_export_ui {
           $form_state['item']->options['responsives']['responsive'][$key]['settings']['cssEaseBezier'] = $responsive_override;
         }
       }
+    }
+
+    // Typecast the values.
+    _slick_typecast_optionset($form_state['item']->options, $form_state['values']['breakpoints']);
+
+    // Remove useless option.
+    if (isset($options['options__active_tab'])) {
+      unset($form_state['item']->options['options__active_tab']);
     }
   }
 

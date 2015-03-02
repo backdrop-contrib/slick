@@ -18,19 +18,15 @@ function slick_fields_field_formatter_info() {
     'settings' => array(
       'optionset' => 'default',
       'optionset_thumbnail' => '',
-      'optionset_label' => 'Default',
-      'optionset_thumbnail_label' => '',
       'asnavfor_main' => '',
       'asnavfor_thumbnail' => '',
-      'asnavfor_auto' => '',
-      'dots_main' => '',
-      'dots_thumbnail' => '',
+      'asnavfor_auto' => FALSE,
       'skin' => '',
       'skin_thumbnail' => '',
       'slide_layout' => '',
       'image_style' => '',
       'thumbnail_style' => '',
-      'thumbnail_hover' => '',
+      'thumbnail_hover' => FALSE,
       'thumbnail_caption' => '',
       'slide_image' => '',
       'slide_caption' => array(),
@@ -64,13 +60,13 @@ function slick_fields_field_formatter_info() {
       'slide_title' => '',
       'view_mode' => '',
       'aspect_ratio' => '',
-      'aspect_ratio_overlay' => 0,
+      'aspect_ratio_overlay' => FALSE,
     );
   }
 
   if (module_exists('picture')) {
     $formatters['slick']['settings'] += array(
-      'picture' => 0,
+      'picture' => FALSE,
       'picture_style' => '',
       'picture_fallback' => '',
     );
@@ -140,12 +136,6 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#attributes' => $is_tooltip,
   );
 
-  // This is to avoid loading optionset just to read their label at the Summary.
-  $elements['optionset_label'] = array(
-    '#type' => 'hidden',
-    '#default_value' => $optionsets[$settings['optionset']],
-  );
-
   $skins = slick_skins(TRUE);
   $elements['skin'] = array(
     '#type' => 'select',
@@ -166,35 +156,6 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#default_value' => isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'] ? $settings['optionset_thumbnail'] : '',
     '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Provide each optionset a unique asNavFor class at <a href="@url" target="_blank">Slick carousel admin page</a>. Leave empty to not use thumbnail navigation.', array('@url' => url('admin/config/media/slick'))),
     '#attributes' => $is_tooltip,
-  );
-
-  // This is to avoid loading optionset just to read their label at the Summary.
-  $elements['optionset_thumbnail_label'] = array(
-    '#type' => 'hidden',
-    '#default_value' => isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'] ? $optionsets[$settings['optionset_thumbnail']] : '',
-  );
-
-  $optionset = $settings['optionset'];
-  // Load the selected optionset.
-  if (!empty($optionset)) {
-    $optionset = slick_optionset_load($optionset);
-  }
-
-  $optionset_thumbnail = $settings['optionset_thumbnail'];
-  // Load the selected optionset.
-  if (!empty($optionset_thumbnail)) {
-    $optionset_thumbnail = slick_optionset_load($optionset_thumbnail);
-  }
-
-  // This is to avoid loading optionset till needed at theme_slick.
-  $elements['dots_main'] = array(
-    '#type' => 'hidden',
-    '#default_value' => isset($optionset->options['settings']['dots']) ? $optionset->options['settings']['dots'] : '',
-  );
-
-  $elements['dots_thumbnail'] = array(
-    '#type' => 'hidden',
-    '#default_value' => isset($optionset_thumbnail->options['settings']['dots']) ? $optionset_thumbnail->options['settings']['dots'] : '',
   );
 
   $elements['skin_thumbnail'] = array(
@@ -802,18 +763,14 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
       $summary[] = t('Skin thumbnail: @skin_thumbnail', array('@skin_thumbnail' => $skin_thumbnail));
     }
 
-    if (isset($settings['optionset_label'])) {
-      $optionset_label = $settings['optionset_label'] ? $settings['optionset_label'] : t('Default settings');
-      $summary[] = t('Option set: @optionset_label', array('@optionset_label' => $optionset_label));
-    }
-
-    if (isset($settings['optionset_thumbnail_label'])) {
-      $optionset_thumbnail_label = $settings['optionset_thumbnail_label'] ? $settings['optionset_thumbnail_label'] : t('None');
-      $summary[] = t('Option set thumbnail: @optionset_thumbnail_label', array('@optionset_thumbnail_label' => $optionset_thumbnail_label));
+    if (isset($settings['optionset'])) {
+      $optionset = $settings['optionset'] ? $settings['optionset'] : t('Default');
+      $summary[] = t('Optionset: @optionset', array('@optionset' => $optionset));
     }
 
     if (isset($settings['optionset_thumbnail'])) {
-
+      $optionset_thumbnail = $settings['optionset_thumbnail'] ? $settings['optionset_thumbnail'] : t('None');
+      $summary[] = t('Optionset thumbnail: @optionset_thumbnail', array('@optionset_thumbnail' => $optionset_thumbnail));
       $summary[] = isset($settings['thumbnail_caption']) && $settings['thumbnail_caption'] ? t('Yes') : t('None');
 
       if (isset($settings['asnavfor_auto']) && $settings['asnavfor_auto']) {
@@ -961,8 +918,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'mousewheel' => FALSE,
       'inline_css' => '',
       'current_display' => 'main',
-      'dots_main' => '',
-      'dots_thumbnail' => '',
+      // 'dots_main' => '',
+      // 'dots_thumbnail' => '',
       'lazy' => '',
     );
 
@@ -974,23 +931,12 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $is_asnavfor = isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'];
     $is_asnavfor_auto = isset($settings['asnavfor_auto']) && $settings['asnavfor_auto'];
 
-    // Load the optionset to check for lazyLoad.
-    $optionset = $settings['optionset'];
-    if (!empty($optionset)) {
-      $optionset = slick_optionset_load($optionset);
-    }
-
-    // Check if an optionset was loaded.
-    if (empty($optionset)) {
-      // Fall back to 'default' option set.
-      $optionset = slick_optionset_load('default');
-      watchdog('slick', 'Fallback to default optionset.', array(), WATCHDOG_WARNING);
-    }
-
+    // Load the optionset to check for lazyLoad, and other settings.
+    $optionset = slick_optionset_load($settings['optionset']);
     $settings['lazy'] = $optionset->options['settings']['lazyLoad'];
+    $settings['dots_main'] = $optionset->options['settings']['dots'];
 
     $attach                          = array();
-    $attach['attach_media']          = FALSE;
     $attach['attach_skin']           = $settings['skin'];
     $attach['attach_skin_thumbnail'] = $settings['skin_thumbnail'];
     $attach['attach_colorbox']       = $settings['attach_colorbox'];
@@ -1005,6 +951,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $settings['content_attributes']['id'] = drupal_html_id($item_id . '-slider');
 
     if ($is_asnavfor) {
+      $optionset_thumbnail = slick_optionset_load($settings['optionset_thumbnail']);
+      $settings['dots_thumbnail'] = $optionset_thumbnail->options['settings']['dots'];
       if ($is_asnavfor_auto) {
         $settings['asnavfor_target'] = '#' . $thumbnail_id . '-slider';
       }
@@ -1021,7 +969,9 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.image');
         $build = _slick_fields_format_image($settings, $items, $field);
-        $thumb = $is_asnavfor ? _slick_fields_format_image($settings, $items, $field, TRUE) : '';
+        if ($is_asnavfor) {
+          $thumb = _slick_fields_format_image($settings, $items, $field, TRUE);
+        }
         break;
 
       case 'file':
@@ -1031,18 +981,22 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.media');
         $build = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode);
-        $thumb = $is_asnavfor ? _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode, TRUE) : '';
+        if ($is_asnavfor) {
+          $thumb = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode, TRUE);
+        }
         break;
 
       case 'field_collection':
         $attach['attach_media'] = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.field_collection');
         $build = _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode);
-        $thumb = $is_asnavfor ? _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode, TRUE) : '';
+        if ($is_asnavfor) {
+          $thumb = _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode, TRUE);
+        }
         break;
     }
 
-    // @fixme not working with Views preview.
+    // @todo not working with Views preview.
     if ($settings['inline_css']) {
       $css = implode("\n", $settings['inline_css']);
       $attach['attach_inline_css'] = $css;
