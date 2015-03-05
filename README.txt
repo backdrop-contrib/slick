@@ -79,7 +79,7 @@ To create your optionsets, go to:
 These will be available at Manage display field format, and Views UI.
 
 To store optionsets in code for versioning and performance, use CTools Bulk
-exporter or Features. And revert them via UI to Default to avoid database lookup.
+exporter or Features. And revert it via UI to Default to avoid database lookup.
 
 
 
@@ -107,18 +107,18 @@ slick per slide. The child slicks are basically regular slide overlays like
 a single video over the large background image, only with nested slicks it can
 be many videos displayed as a slideshow.
 Use Field collection, or Views to build one.
-Supported multi-value fields for the nested slicks: Image, Media, Atom reference.
+Supported multi-value fields for nested slicks: Image, Media, Atom reference.
 
 Usage example:
 - A home slideshow containing multiple videos per slide for quick overview.
-- A large product slideshow containing a grid of slides displaying various items.
+- A large product slideshow containing a grid of slides.
 - A news slideshow containing latest related news items per slide.
 
 
 
 SKINS:
 --------------------------------------------------------------------------------
-Skins allow swappable layouts like next/prev links, split image and caption, etc.
+Skins allow swappable layouts like next/prev links, split image or caption, etc.
 Make sure to enable slick_fields.module and provide a dedicated slide layout
 per field to get more control over caption placements. However a combination of
 skins and options may lead to unpredictable layouts, get dirty yourself.
@@ -294,7 +294,7 @@ The following modules are supported, but optional.
 - Media, to have fairly variant slides: image, video, audio.
 - Field collection, to have more complex layout with Media.
 - Color field, to colorize slide background invidually.
-- Block reference to have more complex slide content for Full screen/width skins.
+- Block reference to have more complex slide content for Fullscreen/width skins.
 - Entity translation, to have translated file and translate links with Media.
 
 

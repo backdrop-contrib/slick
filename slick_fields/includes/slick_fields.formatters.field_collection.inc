@@ -16,7 +16,6 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
   $field_type = $field['type'];
   $image_style = $settings['image_style'];
   $slick_id = $settings['attributes']['id'];
-  $asnavfor = 'main';
 
   foreach ($items as $key => $item) {
     $slide = array(
@@ -110,7 +109,6 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           else {
             $slide['slide'] = $thumbnail;
             $settings['type'] = 'image';
-            $asnavfor = 'thumbnail';
 
             // Thumbnail static to copy over by JS.
             if ($settings['dots_thumbnail'] && $thumbnail_hover) {
@@ -141,7 +139,6 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         // Overlay image/video.
         if ($settings['slide_overlay'] && isset($fc_fields[$settings['slide_overlay']])) {
           $slide_overlay = $fc_fields[$settings['slide_overlay']];
-          $count = count($slide_overlay['#items']);
 
           $settings['has_overlay'] = TRUE;
           $settings['is_media'] = FALSE;
@@ -245,7 +242,6 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                   $media = file_view_file($file, $view_mode);
 
                   if ($media && isset($media['#uri'])) {
-                    $wrapper = file_stream_wrapper_get_instance_by_uri($media['#uri']);
                     $overset['is_media'] = TRUE;
                     if (isset($media['#options'])) {
                       $overset['media_height'] = $media['#options']['height'] ? $media['#options']['height'] : 640;
@@ -562,7 +558,6 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
             }
 
             if ($color) {
-              $dark = slick_color_brightness($color, -42);
               $light = slick_color_brightness($color, 42);
               $hover = slick_color_brightness($color, 62);
 

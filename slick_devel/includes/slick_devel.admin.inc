@@ -24,11 +24,11 @@ function slick_devel_form_settings() {
     '#default_value' => variable_get('slick_devel', FALSE),
   );
 
-  $form['library']['slick_debug'] = array(
+  $form['library']['slick_devel_debug'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use non-minified slick.load.js'),
     '#description' => t('Replace slick.load.min.js with slick.load.js. Only useful to debug it.'),
-    '#default_value' => variable_get('slick_debug', FALSE),
+    '#default_value' => variable_get('slick_devel_debug', FALSE),
   );
 
   $form['library']['slick_devel_disable'] = array(
@@ -38,7 +38,7 @@ function slick_devel_form_settings() {
     '#default_value' => variable_get('slick_devel_disable', FALSE),
     '#states' => array(
       'invisible' => array(
-        array(':input[name="slick_debug"]' => array('checked' => TRUE)),
+        array(':input[name="slick_devel_debug"]' => array('checked' => TRUE)),
       ),
     ),
   );

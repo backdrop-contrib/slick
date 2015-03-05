@@ -7,8 +7,6 @@
 
   "use strict";
 
-  Drupal.slick = Drupal.slick || {};
-
   Drupal.behaviors.slick = {
     attach: function(context, settings) {
 
@@ -47,7 +45,10 @@
       t.on('init', function(e, slick) {
         var options = Drupal.slick.options(slick);
         Drupal.slick.thumbnail(t, options.dotsClass);
-        Drupal.slick.arrows(a, slick.slideCount, options);
+        // Check for nested slick.
+        if (t.attr('id') === slick.$slider.attr('id')) {
+          Drupal.slick.arrows(a, slick.slideCount, options);
+        }
       });
     },
 

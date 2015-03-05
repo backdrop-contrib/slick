@@ -28,7 +28,6 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
 
     // Setup the variables for the image.
     $image_style     = $settings['image_style'];
-    $fid             = $slide['item']['fid'];
     $image['uri']    = $slide['item']['uri'];
     $image['width']  = isset($slide['item']['metadata']['width']) ? $slide['item']['metadata']['width'] : NULL;
     $image['height'] = isset($slide['item']['metadata']['height']) ? $slide['item']['metadata']['height'] : NULL;
@@ -143,7 +142,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
 
       // Link, if so configured.
       if (!empty($settings['slide_link'])) {
-        if ($field_link = field_get_items('file', $file, $settings['slide_link'])) {
+        if (field_get_items('file', $file, $settings['slide_link'])) {
           $link = field_view_field('file', $file, $settings['slide_link'], $view_mode);
           $slide['caption']['link'] = $link;
         }

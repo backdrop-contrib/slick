@@ -13,7 +13,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
   /**
    * Set default options.
    */
-  function option_definition() {
+  public function option_definition() {
     $options = parent::option_definition();
     $options += array(
       'optionset' => array('default' => 'default'),
@@ -48,7 +48,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
   /**
    * Show a form to edit the style options.
    */
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     ctools_form_include($form_state, 'slick.admin', 'slick');
@@ -335,6 +335,17 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       $elements['slide_caption'][$key]['#title_display'] = 'before';
     }
 
+    $elements['id'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Element ID'),
+      '#description' => t("Manually define the Slick carousel container ID attribute <em>Ensure you don't display similar ID elements on the same page</em>. If you provide Option set thumbnail and asNavFor, slick thumbnail navigation ID is suffixed with '-thumbnail'."),
+      '#size' => 40,
+      '#maxlength' => 255,
+      '#default_value' => $settings['id'],
+      '#attributes' => $is_tooltip,
+      '#field_prefix' => '#',
+    );
+
     $elements['override'] = array(
       '#title' => t('Override optionset'),
       '#type' => 'checkbox',
@@ -366,17 +377,6 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       $elements['overridables'][$key]['#field_suffix'] = '';
       $elements['overridables'][$key]['#title_display'] = 'before';
     }
-
-    $elements['id'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Element ID'),
-      '#description' => t("Manually define the Slick carousel container ID attribute <em>Ensure you don't display similar ID elements on the same page</em>. If you provide Option set thumbnail and asNavFor, slick thumbnail navigation ID is suffixed with '-thumbnail'."),
-      '#size' => 40,
-      '#maxlength' => 255,
-      '#default_value' => $settings['id'],
-      '#attributes' => $is_tooltip,
-      '#field_prefix' => '#',
-    );
 
     $form['slick'] = array(
       '#type' => 'fieldset',
@@ -459,7 +459,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
   /**
    * Performs some cleanup tasks on the options array before saving it.
    */
-  function options_submit(&$form, &$form_state) {
+  public function options_submit(&$form, &$form_state) {
     $options = &$form_state['values']['style_options'];
 
     // In some cases, namely when the style settings are overriden for this
@@ -475,7 +475,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
   /**
    * Render the display in this style.
    */
-  function render() {
+  public function render() {
 
     // Group the rows according to the grouping field, if specified.
     $sets = $this->render_grouping($this->view->result, $this->options['grouping']);

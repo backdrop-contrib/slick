@@ -20,6 +20,7 @@ body {
 
 body {
   overflow: hidden;
+
   // Prevent fullscreen slick preview from interfering the Views admin.
   &.page-admin {
     overflow: visible;
@@ -58,6 +59,7 @@ body {
     .media,
     .slide__media {
       height: 100% !important; // vertical issue!
+      min-height: 320px; // provide views preview.
     }
 
     .slick-track {
@@ -94,7 +96,7 @@ body {
       }
 
       @include breakpoint($desk) {
-        @include max-container-absolute(98%, 15%);
+        @include max-container-absolute(98%, 20%);
       }
 
       @include breakpoint($desk-large) {
@@ -132,5 +134,9 @@ body {
         text-decoration: none;
       }
     }
+  }
+  
+  .slick-dots {
+    bottom: 20px;
   }
 }

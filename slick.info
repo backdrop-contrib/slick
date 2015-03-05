@@ -6,3 +6,5 @@ package = Slick
 dependencies[] = libraries (>=2.x)
 dependencies[] = ctools
 dependencies[] = jquery_update
+
+files[] = tests/slick.test

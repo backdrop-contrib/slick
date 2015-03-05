@@ -8,6 +8,40 @@
 define('SLICK_VERSION', '1.4');
 
 /**
+ * Implements hook_help().
+ */
+function slick_help($path, $arg) {
+  $module_path = drupal_get_path('module', 'slick');
+  switch ($path) {
+    case 'admin/help#slick':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t("The Slick carousel module is a field formatter to create the last carousel you'll ever need. Also available as Views style plugin. <br />To get up running quickly, <a href='@slick_example' target='_blank'>enable Slick example</a> module.", array('@slick_example' => url('admin/modules', array('fragment' => 'edit-modules-slick')))) . '</p>';
+      $output .= '<p>' . t('Read <a href="@readme_example" target="_blank">more info</a> about Slick example before you proceed.', array('@readme_example' => url($module_path . '/slick_example/README.txt'))) . '</p>';
+      $output .= '<p>' . t('Read <a href="@readme" target="_blank">more info</a> about Slick in general, including some troubleshootings.', array('@readme' => url($module_path . '/README.txt'))) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt><strong>' . t('Creating optionsets') . '</strong></dt>';
+      $output .= '<dd>' . t('Create optionsets at <a href="@slick_collection" target="_blank">Slick collection</a> page. Optionsets are a collection of re-usable options to ease up building various slick carousels. These will be available at sub-modules field formatters and Views style plugin.', array('@slick_collection' => url('admin/config/media/slick'))) . '</dd>';
+      $output .= '<dt><strong>' . t('Usage as a field formatter') . '</strong></dt>';
+      $output .= '<dd>' . t('At any fieldable entity, e.g. <a href="@content_type" target="_blank">Content types</a> -- click "Manage display". Under "Format" of the active view mode, choose "Slick carousel" for any of the following supported fields: Image, Media, Field collection.', array('@content_type' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dd>' . t('Click the "Configure" icon to have some extra options. Read more each option for more info.') . '</dd>';
+      $output .= '<dd>' . t('See relevant <a href="@readme_field" target="_blank">README.txt</a> for Fields integration.', array('@readme_field' => url($module_path . '/slick_fields/README.txt'))) . '</dd>';
+      $output .= '<dt><strong>' . t('Usage as a Views style plugin') . '</strong></dt>';
+      $output .= '<dd>' . t('Create a new View at <a href="@views_collection" target="_blank">Views collection page</a>.', array('@views_collection' => url('admin/structure/views'))) . '</dd>';
+      $output .= '<dd>' . t('Add a <strong>Slick carousel</strong> style if you are aggregating multiple entity instances.') . '</dd>';
+      $output .= '<dd>' . t('Or add an <strong>Unformatted list</strong> if you are targetting a single entity with a supported multi-value field, such as Image/Media/Field colection, and make it formatted as Slick carousel. Make sure to check "Use field formatter" under "Style settings".') . '</dd>';
+      $output .= '<dd>' . t('See relevant <a href="@readme_field" target="_blank">README.txt</a> for Views integration.', array('@readme_field' => url($module_path . '/slick_views/README.txt'))) . '</dd>';
+      $output .= '</dl>';
+      $output .= '<p>' . t('See the <a href="@field">Field module help</a> and the <a href="@field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="@slick_readme" target="_blank">Slick readme module</a>.', array(
+        '@field' => url('admin/help/field'),
+        '@field_ui' => url('admin/help/field_ui'),
+        '@slick_readme' => url($module_path . '/README.txt'))) . '</p>';
+      return $output;
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function slick_theme($existing, $type, $theme, $path) {
@@ -115,8 +149,8 @@ function slick_hook_info() {
  * Implements hook_library().
  */
 function slick_library() {
-  $slick_library_path = libraries_get_path('slick');
-  $slick_module_path = drupal_get_path('module', 'slick');
+  $library_path = libraries_get_path('slick');
+  $path = drupal_get_path('module', 'slick');
   $info = system_get_info('module', 'slick');
 
   $common = array(
@@ -157,10 +191,10 @@ function slick_library() {
     'website' => 'http://kenwheeler.github.io/slick/',
     'version' => SLICK_VERSION,
     'js' => array(
-      $slick_library_path . '/slick/slick.min.js' => array('group' => JS_LIBRARY, 'weight' => -4),
+      $library_path . '/slick/slick.min.js' => array('group' => JS_LIBRARY, 'weight' => -4),
     ),
     'css' => array(
-      $slick_library_path . '/slick/slick.css',
+      $library_path . '/slick/slick.css',
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -171,7 +205,7 @@ function slick_library() {
   $libraries['drupal.slick'] = $common + array(
     'title' => 'Slick module',
     'js' => array(
-      $slick_module_path . '/js/slick.load.min.js' => array('group' => JS_DEFAULT, 'weight' => 0),
+      $path . '/js/slick.load.min.js' => array('group' => JS_DEFAULT, 'weight' => 0),
     ),
     'dependencies' => array(
       array('system', 'jquery.once'),
@@ -183,10 +217,10 @@ function slick_library() {
   $libraries['drupal.slick.colorbox'] = $common + array(
     'title' => 'Slick colorbox',
     'js' => array(
-      $slick_module_path . '/js/slick.colorbox.min.js' => array('group' => JS_DEFAULT, 'weight' => 1),
+      $path . '/js/slick.colorbox.min.js' => array('group' => JS_DEFAULT, 'weight' => 1),
     ),
     'css' => array(
-      $slick_module_path . '/css/components/slick.colorbox.css',
+      $path . '/css/components/slick.colorbox.css',
     ),
     'dependencies' => array(
       array('system', 'jquery.once'),
@@ -199,10 +233,10 @@ function slick_library() {
   $libraries['drupal.slick.media'] = $common + array(
     'title' => 'Slick media',
     'js' => array(
-      $slick_module_path . '/js/slick.media.min.js' => array('group' => JS_DEFAULT, 'weight' => 2),
+      $path . '/js/slick.media.min.js' => array('group' => JS_DEFAULT, 'weight' => 2),
     ),
     'css' => array(
-      $slick_module_path . '/css/components/slick.media.css',
+      $path . '/css/components/slick.media.css',
     ),
     'dependencies' => array(
       array('system', 'jquery.once'),
@@ -215,11 +249,11 @@ function slick_library() {
   $libraries['slick.admin'] = $common + array(
     'title' => 'Slick admin',
     'js' => array(
-      $slick_module_path . '/js/slick.admin.ui.min.js' => array('group' => JS_DEFAULT, 'weight' => 3),
+      $path . '/js/slick.admin.ui.min.js' => array('group' => JS_DEFAULT, 'weight' => 3),
     ),
     'css' => array(
-      $slick_module_path . '/css/admin/slick.admin--ui.css' => array(),
-      $slick_module_path . '/css/admin/slick.admin--ui--field.css' => array(),
+      $path . '/css/admin/slick.admin--ui.css' => array(),
+      $path . '/css/admin/slick.admin--ui--field.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery.once'),
@@ -403,7 +437,9 @@ function slick_attach(array $attach) {
       $defaults['appendArrows'],
       $defaults['asNavFor'],
       $defaults['prevArrow'],
-      $defaults['nextArrow']
+      $defaults['nextArrow'],
+      $defaults['cssEaseBezier'],
+      $defaults['cssEaseOverride']
     );
 
     $load['js'][] = array(

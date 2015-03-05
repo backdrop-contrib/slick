@@ -14,6 +14,12 @@ REQUIREMENTS
 
 The last two requirements may be adjusted to available instances, see below.
 
+To have various slick displays, recommended to put both "field_image" and
+"field_images" at the same content type. This allows building nested slick or
+asNavFor at its very basic usage. You can later use the pattern to build more
+complex nested slick with video/audio via Media file fields or SCALD atom
+reference when using with Field collection.
+
 We don't want to install unneeded fields, nor depend on Features for something
 you will not actually use. I have seen at least a client site which doesn't
 actually use Features, but they enable it just to learn Flexslider example,
@@ -36,7 +42,7 @@ The Slick example is just providing basic samples of the Slick usage:
 - Several view blocks available at "admin/structure/views"
 - Several slick image styles at "admin/config/media/image-styles"
 
-You may want to edit the Views before usage, and adjust possible broken settings:
+You may want to edit the Views before usage, adjust possible broken settings:
 admin/structure/views/view/slick_x/edit
 
 The first block depends on node ID 3 which is expected to have "field_images":

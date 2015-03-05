@@ -39,6 +39,7 @@
 
   .form-type-checkboxes {
     border: 4px solid lighten($light-grey, 5);
+    clear: both;
     margin-bottom: 0;
     padding-bottom: 0;
     padding-top: 0;
@@ -68,8 +69,14 @@
   width: 100%;
 }
 
-#edit-style-options-slick.form--slick {
-  .fieldset-description {
-    padding: 5px 15px;
+#edit-style-options-slick {
+  &.form--slick {
+    .fieldset-description {
+      padding: 5px 15px;
+    }
+  }
+
+  .form-item-style-options-slick-slide-field-wrapper {
+    z-index: 4;
   }
 }

@@ -10,7 +10,10 @@
  */
 class SlickOptionsetUi extends ctools_export_ui {
 
-  function edit_form(&$form, &$form_state) {
+  /**
+   * Overrides the actual editing form.
+   */
+  public function edit_form(&$form, &$form_state) {
     parent::edit_form($form, $form_state);
 
     ctools_form_include($form_state, 'slick.admin', 'slick');
@@ -33,7 +36,7 @@ class SlickOptionsetUi extends ctools_export_ui {
     $form['info']['label']['#prefix'] = '<div class="form--slick__header has-tooltip clearfix">';
 
     // Skins. We don't provide skin_thumbnail as each optionset may be deployed
-    // as main or thumbnail navigation.
+    // as main display, or thumbnail navigation.
     $skins = slick_skins(TRUE);
     $form['skin'] = array(
       '#type' => 'select',
@@ -238,7 +241,13 @@ class SlickOptionsetUi extends ctools_export_ui {
           '#description' => isset($responsives['description']) ? $responsives['description'] : '',
           '#collapsible' => TRUE,
           '#collapsed' => TRUE,
-          '#attributes' => array('class' => array('fieldset--responsive', 'fieldset--' . $fieldset_class, 'has-tooltip')),
+          '#attributes' => array(
+            'class' => array(
+              'fieldset--responsive',
+              'fieldset--' . $fieldset_class,
+              'has-tooltip',
+            ),
+          ),
         );
 
         foreach ($responsives as $key => $responsive) {
@@ -282,7 +291,13 @@ class SlickOptionsetUi extends ctools_export_ui {
                 '#type' => 'fieldset',
                 '#collapsible' => FALSE,
                 '#collapsed' => FALSE,
-                '#attributes' => array('class' => array('fieldset--settings', 'fieldset--' . $fieldset_class, 'has-tooltip')),
+                '#attributes' => array(
+                  'class' => array(
+                    'fieldset--settings',
+                    'fieldset--' . $fieldset_class,
+                    'has-tooltip',
+                  ),
+                ),
                 '#states' => array('visible' => array(':input[name*="[responsive][' . $i . '][unslick]"]' => array('checked' => FALSE))),
               );
               unset($responsive['title'], $responsive['type']);
@@ -367,14 +382,14 @@ class SlickOptionsetUi extends ctools_export_ui {
    * If the keys all match up to the schema, this method will not need to be
    * overridden.
    */
-  function edit_form_submit(&$form, &$form_state) {
+  public function edit_form_submit(&$form, &$form_state) {
     parent::edit_form_submit($form, $form_state);
 
     $options = $form_state['values']['options'];
 
     // Map and update the friendly CSS easing to its bezier equivalent.
     $override = '';
-    if($form_state['values']['options']['settings']['cssEaseOverride']) {
+    if ($form_state['values']['options']['settings']['cssEaseOverride']) {
       $override = _slick_css_easing_mapping($form_state['values']['options']['settings']['cssEaseOverride']);
     }
 
@@ -696,7 +711,7 @@ class SlickOptionsetUi extends ctools_export_ui {
   /**
    * Defines available options for the responsive Slick.
    *
-   * @param $count
+   * @param int $count
    *   The number of breakpoints.
    *
    * @return array

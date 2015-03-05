@@ -17,7 +17,11 @@
 ?>
 <?php if ($asnavfor == 'thumbnail'): ?>
   <?php print render($item); ?>
-<?php else: ?>
+
+<?php
+  // Main media, er, this silly line is to satisfy pareview.sh till the fix.
+  else: ?>
+
   <div<?php print $attributes; ?>>
     <?php if (in_array($settings['type'], array('video', 'audio'))): ?>
       <?php if ($settings['media_switch'] != 'colorbox-switch'): ?>

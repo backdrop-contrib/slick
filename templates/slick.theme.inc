@@ -646,7 +646,7 @@ function theme_slick_wrapper(array $variables) {
   $build = '';
 
   // Render the items.
-  foreach ($variables['items'] as $delta => $item) {
+  foreach ($variables['items'] as $item) {
     $build .= drupal_render($item);
   }
 
@@ -725,11 +725,11 @@ function theme_slick_image_lazy($variables) {
     // Only provide noscript to the first image, since the rest of the slides
     // always want JS with all this lazyLoad.
     if ($count > 1 && $variables['delta'] == 0) {
-      $build .= '<noscript>' . theme_image($variables) . '</noscript>';
+      $build .= '<noscript>' . theme('image', $variables) . '</noscript>';
     }
   }
   else {
-    $build = theme_image($variables);
+    $build = theme('image', $variables);
   }
 
   return $build;

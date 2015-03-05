@@ -14,7 +14,7 @@ SUPPORTED FIELDS:
 - Field collection
 
 Additional supported fields:
-- Scald for the audio/video overlay, alternative to Media, within Field collection
+- Scald for audio/video overlay, alternative to Media, within Field collection
 - Color field module to colorize individual slide text within Field collection
 
 

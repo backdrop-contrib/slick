@@ -59,7 +59,13 @@ function slick_optionset_options() {
 }
 
 /**
- * Checks whether an option set with the given name already exists.
+ * Checks whether an optionset with the given name already exists.
+ *
+ * @param string $optionset_name
+ *   The Optionset machine name.
+ *
+ * @return bool
+ *   Returns TRUE if exists, FALSE otherwise.
  */
 function slick_optionset_exists($optionset_name) {
   ctools_include('export');
@@ -71,6 +77,11 @@ function slick_optionset_exists($optionset_name) {
  * Saves the given option set to the database.
  *
  * Set the $new flag if this set has not been written before.
+ *
+ * @param object $optionset
+ *   The Optionset object.
+ * @param bool $new
+ *   The Optionset machine name.
  *
  * @return object
  *   Returns the newly saved object, FALSE otherwise.
@@ -97,14 +108,15 @@ function slick_optionset_save($optionset, $new = FALSE) {
   }
 
   $optionset_defaults = _slick_optionset_defaults(NULL, $breakpoints);
-  $optionset->options = $optionset_defaults += $optionset->options;
+  $optionset->options = $optionset->options + $optionset_defaults;
+  _slick_typecast_optionset($optionset->options, $breakpoints);
 
   // Prepare the database values.
   $db_values = array(
     'name' => $optionset->name,
     'label' => $optionset->label,
     'breakpoints' => $breakpoints,
-    'options' => _slick_typecast_optionset($optionset->options, $breakpoints),
+    'options' => $optionset->options,
   );
 
   if ($new) {
@@ -127,16 +139,13 @@ function slick_optionset_save($optionset, $new = FALSE) {
  * Deletes the given option set from the database.
  *
  * @param string|object $optionset
- *   Optionset object, or machine name.
+ *   Optionset object to convert to string, or machine name.
  */
 function slick_optionset_delete($optionset) {
-  if (isset($optionset->name)) {
-    $name = $optionset->name;
-  }
-  else {
-    $name = $optionset;
-  }
-  db_delete('slick_optionset')->condition('name', $name)->execute();
+  ctools_include('export');
+  $object = is_object($optionset) ? $optionset : slick_optionset_load($optionset);
+
+  ctools_export_crud_delete('slick_optionset', $object);
 }
 
 /**
@@ -205,6 +214,8 @@ function _slick_css_easing_mapping($easing = NULL) {
     $easings = _slick_css_easing_options(TRUE);
     list($readable_easing, $bezier) = array_pad(array_map('trim', explode("|", $easings[$easing], 2)), 2, NULL);
     $css_easing = $bezier;
+    // Satisfies pareview.
+    unset($readable_easing);
   }
 
   return $css_easing;
@@ -265,8 +276,10 @@ function _slick_css_easing_options($all = FALSE) {
     );
 
     foreach ($available_easings as $key => $easing) {
-      list($readable_easing, $css_easing) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
+      list($readable_easing, $bezier) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
       $css_easings[$key] = $all ? $easing : $readable_easing;
+      // Satisfies pareview.
+      unset($bezier);
     }
   }
 

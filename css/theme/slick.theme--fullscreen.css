@@ -13,6 +13,7 @@ body {
 body {
   overflow: hidden;
 }
+
 body.page-admin {
   overflow: visible;
 }
@@ -48,6 +49,7 @@ body.page-admin {
 .slick-wrapper--fullscreen .slick--skin--fullscreen .media,
 .slick-wrapper--fullscreen .slick--skin--fullscreen .slide__media {
   height: 100% !important;
+  min-height: 320px;
 }
 
 .slick-wrapper--fullscreen .slick--skin--fullscreen .slick-track {
@@ -91,7 +93,7 @@ body.page-admin {
     left: 50%;
     margin-left: -49%;
     position: absolute;
-    top: 15%;
+    top: 20%;
     width: 98%;
     z-index: 2;
   }
@@ -135,4 +137,8 @@ body.page-admin {
   border-color: #fff;
   color: #fff;
   text-decoration: none;
+}
+
+.slick--skin--fullscreen .slick-dots {
+  bottom: 20px;
 }

@@ -405,7 +405,7 @@ function slick_get_default_value($property, $group = 'settings') {
  * Strip out options with default values from the Option Set options.
  *
  * @param object $optionset
- *   The Optionset options object.
+ *   The Optionset object.
  * @param array $customs
  *   An array of handed-over JS options defined using #options property or those
  *   manipulated at theme_slick() dependent on various options.
@@ -617,7 +617,7 @@ function slick_optionset_create($values = array()) {
   $optionset = ctools_export_crud_new('slick_optionset');
 
   // Set the options to an array.
-  $optionset->options = array();
+  $optionset->options = $optionset->options['settings'] = array();
 
   // Assign specified values.
   if (isset($values['name'])) {
@@ -645,23 +645,23 @@ function slick_optionset_create($values = array()) {
   $optionset_defaults = _slick_optionset_defaults(NULL, $optionset->breakpoints);
   $optionset->options = $optionset->options + $optionset_defaults;
 
-  // Clean up default settings.
-  if (isset($values['options']['settings']) and is_array($values['options']['settings'])) {
-    $optionset->options['settings'] = _slick_remove_default_optionset_options($optionset, $values['options']['settings']);
-  }
-
   return $optionset;
 }
 
 /**
  * Fetches all option sets from the database.
  *
+ * @param bool $reset
+ *   If TRUE, the static cache of all objects will be flushed prior to
+ *   loading all. This can be important on listing pages where items
+ *   might have changed on the page load.
+ *
  * @return array
  *   The associative array of all options.
  */
-function slick_optionset_load_all() {
+function slick_optionset_load_all($reset = FALSE) {
   ctools_include('export');
-  $optionsets = ctools_export_crud_load_all('slick_optionset');
+  $optionsets = ctools_export_crud_load_all('slick_optionset', $reset);
   foreach ($optionsets as $optionset) {
     // Ensure the optionset is typecast after being loaded from storage.
     $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
@@ -685,6 +685,14 @@ function slick_optionset_load($optionset_name) {
   $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
   _slick_typecast_optionset($optionset->options, $breakpoints);
   return $optionset;
+}
+
+/**
+ * Determine if an optionset is overridden.
+ */
+function slick_optionset_is_overridden($optionset) {
+  $status = EXPORT_IN_CODE + EXPORT_IN_DATABASE;
+  return ($optionset->export_type == $status) ? TRUE : FALSE;
 }
 
 /**

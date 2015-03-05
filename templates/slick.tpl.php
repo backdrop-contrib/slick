@@ -24,21 +24,21 @@
       <?php endforeach; ?>
     </div>
 
-    <?php // if ($settings['arrows']): ?>
-      <nav class="slick__arrow">
-        <?php isset($settings['prev_arrow']) && print $settings['prev_arrow']; ?>
-        <?php if ($settings['has_arrow_down']): ?>
-          <?php
-            $is_target = $settings['arrow_down_target'] ? ' data-target="#' . $settings['arrow_down_target'] . '"' : '';
-            $is_offset = $settings['arrow_down_offset'] ? ' data-offset="' . $settings['arrow_down_offset'] . '"' : '';
-          ?>
-          <button class="slick-down jump-scroll"<?php print $is_target . $is_offset; ?>></button>
-        <?php endif; ?>
-        <?php isset($settings['next_arrow']) && print $settings['next_arrow']; ?>
-      </nav>
-    <?php // endif; ?>
+    <nav class="slick__arrow">
+      <?php isset($settings['prev_arrow']) && print $settings['prev_arrow']; ?>
+      <?php if ($settings['has_arrow_down']): ?>
+        <?php
+          $is_target = $settings['arrow_down_target'] ? ' data-target="#' . $settings['arrow_down_target'] . '"' : '';
+          $is_offset = $settings['arrow_down_offset'] ? ' data-offset="' . $settings['arrow_down_offset'] . '"' : '';
+        ?>
+        <button class="slick-down jump-scroll"<?php print $is_target . $is_offset; ?>></button>
+      <?php endif; ?>
+      <?php isset($settings['next_arrow']) && print $settings['next_arrow']; ?>
+    </nav>
 
-  <?php else: ?>
+  <?php
+    // A single item slick (unslick) with simplified markup to avoid arrows.
+    else: ?>
 
     <?php foreach ($items as $delta => $item): ?>
       <?php print render($item); ?>

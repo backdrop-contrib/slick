@@ -6,7 +6,7 @@
  */
 
 define('SLICK_DEVEL', variable_get('slick_devel', FALSE));
-define('SLICK_DEVEL_DEBUG', variable_get('slick_debug', FALSE));
+define('SLICK_DEVEL_DEBUG', variable_get('slick_devel_debug', FALSE));
 define('SLICK_DEVEL_REPLACE', variable_get('slick_devel_replace', FALSE));
 define('SLICK_DEVEL_DISABLE', variable_get('slick_devel_disable', FALSE));
 
@@ -88,9 +88,6 @@ function slick_devel_libraries_info_alter(&$libraries) {
  * Implements hook_preprocess_HOOK().
  */
 function slick_devel_preprocess_slick(&$variables) {
-  $element = $variables['element'];
-  $settings = $variables['settings'];
-
   if (SLICK_DEVEL_DISABLE && isset($variables['content_attributes_array']['data-config'])) {
     // Currently data-slick only works for a single slick, not asNavFor,
     // @see http://jsfiddle.net/o4toq31q/62/

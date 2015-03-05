@@ -17,6 +17,7 @@
  * Notes:
  * .slide__pattern is also to fix draggable issue in Firefox, apart from
  * displaying overlay pattern. It is conditionally provided based on settings.
+ *
  * @see template_preprocess_slick_item()
  */
 ?>
@@ -26,7 +27,10 @@
     <?php if ($caption): ?>
       <div class="slide__caption"><?php print render($caption); ?></div>
     <?php endif; ?>
-  <?php else: ?>
+
+  <?php
+    // Main slide may be grid items, nested slicks, or a regular image/video.
+    else: ?>
 
     <<?php print $content_tag; ?><?php print $content_attributes; ?>>
 

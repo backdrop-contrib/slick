@@ -4,6 +4,7 @@
  * @file
  * Default theme implementation for the Slick views template.
  *
+ * Available variables:
  * - $rows: The array of items.
  * - $options: Array of available settings via Views UI.
  */

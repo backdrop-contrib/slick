@@ -45,7 +45,7 @@ function hook_slick_skins_info() {
         $theme_path . '/js/my-theme.slick.theme--slider.js',
         $theme_path . '/js/my-theme.slick.theme--carousel.js',
       ),
-    )
+    ),
   );
 }
 
@@ -53,39 +53,38 @@ function hook_slick_skins_info() {
  * Alter Slick skins.
  *
  * This function lives in module file, not my_module.slick.inc.
- * Overriding skin CSS can be done via my_theme.info, hook_css_alter(), or below.
+ * Overriding skin CSS can be done via theme.info, hook_css_alter(), or below.
  *
- * @param $skins
+ * @param array $skins
  *   The associative array of skin information from hook_slick_skins_info().
  *
  * @see hook_slick_skins_info()
  * @see slick_example.module
  */
-function hook_slick_skins_info_alter(&$skins) {
+function hook_slick_skins_info_alter(array &$skins) {
   // The source can be theme or module.
   // The CSS is provided by my_theme.
-  $theme_path = drupal_get_path('theme', 'my_theme');
+  $path = drupal_get_path('theme', 'my_theme');
 
   // Modify the default skin's name and description.
   $skins['default']['name'] = t('My Theme: Default');
   $skins['default']['description'] = t('My Theme default skin.');
 
   // This one won't work.
-  // $skins['default']['css'][$theme_path . '/css/slick.theme--base.css'] = array('weight' => -22);
-
+  // $skins['default']['css'][$path . '/css/slick.theme--base.css'] = array();
   // This one overrides slick.theme--default.css with slick.theme--base.css.
-  $skins['default']['css'] = array($theme_path . '/css/slick.theme--base.css' => array('weight' => -22));
+  $skins['default']['css'] = array($path . '/css/slick.theme--base.css' => array('weight' => -22));
 
   // Overrides skin asNavFor with theme CSS.
   $skins['asnavfor']['name'] = t('My Theme: asnavfor');
-  $skins['asnavfor']['css'] = array($theme_path . '/css/slick.theme--asnavfor.css' => array('weight' => 21));
+  $skins['asnavfor']['css'] = array($path . '/css/slick.theme--asnavfor.css' => array('weight' => 21));
 
   // Or with the new name.
-  $skins['asnavfor']['css'] = array($theme_path . '/css/slick.theme--asnavfor-new.css' => array('weight' => 21));
+  $skins['asnavfor']['css'] = array($path . '/css/slick.theme--asnavfor-new.css' => array('weight' => 21));
 
   // Overrides skin Fullwidth with theme CSS.
   $skins['fullwidth']['name'] = t('My Theme: fullwidth');
-  $skins['fullwidth']['css'] = array($theme_path . '/css/slick.theme--fullwidth.css' => array('weight' => 22));
+  $skins['fullwidth']['css'] = array($path . '/css/slick.theme--fullwidth.css' => array('weight' => 22));
 }
 
 /**
@@ -93,13 +92,13 @@ function hook_slick_skins_info_alter(&$skins) {
  *
  * This function lives in module file, not my_module.slick.inc.
  *
- * @param $attach
+ * @param array $attach
  *   The associative array of attach information from slick_attach().
  *
  * @see slick_attach()
  * @see slick_example.module
  */
-function hook_slick_attach_info_alter(&$attach) {
+function hook_slick_attach_info_alter(array &$attach) {
   // Disable inline CSS after copying the output to theme at final stage.
   $attach['attach_inline_css'] = NULL;
 

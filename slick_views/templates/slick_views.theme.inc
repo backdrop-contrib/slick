@@ -34,8 +34,6 @@ function template_preprocess_slick_views(&$variables) {
       $thumb = array();
 
       if (!empty($settings['slide_field_wrapper'])) {
-        $slide_image = $settings['slide_image'];
-
         // Main image, if so configured.
         if (isset($row->image) && !empty($row->image)) {
           $attach['attach_media'] = TRUE;

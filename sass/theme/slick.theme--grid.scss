@@ -15,9 +15,9 @@
 // foundation.zurb.com
 // Licensed under MIT Open Source
 
-@import "../vendor/foundation/components/global";
-// @import "../vendor/foundation/components/grid";
-@import "../vendor/foundation/components/block-grid";
+@import "../vendors/foundation/components/global";
+// @import "../vendors/foundation/components/grid";
+@import "../vendors/foundation/components/block-grid";
 
 // We use this to control whether or not CSS classes come through in the gem files.
 $include-html-classes: false;

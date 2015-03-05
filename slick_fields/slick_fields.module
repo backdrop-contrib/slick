@@ -95,7 +95,6 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   $elements = array();
 
   $field_type = $field['type'];
-  $field_name = $field['field_name'];
   // $field empty at admin/structure/file-types/manage/image/file-display,
   // and this form is loaded there via file_entity_file_formatter_info().
   if (empty($field)) {
@@ -291,8 +290,6 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     // This should go as a separate module, but alas.
     case 'field_collection':
       $field_entity_type = 'field_collection_item';
-      $instance_bundle = $field['field_name'];
-      $bundle = 'field_collection_item';
       $caption_options = _slick_fields_get_fc_fields($instance, array(
         'file',
         'image',
@@ -918,8 +915,6 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'mousewheel' => FALSE,
       'inline_css' => '',
       'current_display' => 'main',
-      // 'dots_main' => '',
-      // 'dots_thumbnail' => '',
       'lazy' => '',
     );
 
@@ -949,6 +944,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
 
     $settings['attributes']['id'] = drupal_html_id($item_id);
     $settings['content_attributes']['id'] = drupal_html_id($item_id . '-slider');
+    $settings['entity_id'] = $entity_id;
 
     if ($is_asnavfor) {
       $optionset_thumbnail = slick_optionset_load($settings['optionset_thumbnail']);
@@ -996,7 +992,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         break;
     }
 
-    // @todo not working with Views preview.
+    // Fullscreen is working with Views preview by adding a min-height 320px.
     if ($settings['inline_css']) {
       $css = implode("\n", $settings['inline_css']);
       $attach['attach_inline_css'] = $css;

@@ -1,6 +1,19 @@
 
+Slick 7.x-2.0-dev, 2015-3-5
+---------------------------
+Fixed off-screen/ hidden dots with Fullscreen due to core negative margin -45px.
+Fixed Views admin preview with full screen skin by adding a min-height 320px.
+Fixed various pareview.sh complains, and a few resolvable false positives.
+Fixed CRUD typecasting with slick_optionset_save().
+Fixed various tests failures locally sans codespell.
+Added tests for simpletest based on flexslider.test, and corrected its failures.
+  Due credit to Flexslider.
+Added hook_help().
+
 Slick 7.x-2.0-dev, 2015-3-2
 ---------------------------
+Fixed arrows not being recognized for the nested slicks.
+Fixed JS settings typecast for slick_example_slick_default_presets().
 Fixed Undefined index: rtl in template_preprocess_slick().
 Fixed typecast values before storing. It doesn't affect slick, just cleanup.
 Removed mousewheel data when disabled. It doesn't affect slick, just cleanup.
@@ -16,7 +29,7 @@ Fixed edge case asNavFor selectors -- non-empty, but not-used, asNavFor from
   have the thumbnails. Otherwise breaking the slide.
 Fixed arrows not being updated with different visibility and responsive options,
   as this is said left to implementor/module when arrows are customized.
-  With the fix, arrows are now enforced, but updated accordingly based on option.
+  With the fix, arrows are enforced, but updated accordingly based on option.
 Changed module_load_include() to form_load_include() or ctools_load_include() in
   the form context.
 Added options to override optionset to re-use one optionset for a few different
@@ -25,7 +38,7 @@ Added options to override optionset to re-use one optionset for a few different
 Slick 7.x-2.0-dev, 2015-2-27
 ----------------------------
 Fixed un-styled checkbox for grouping at Views UI.
-Added relevant cursors to slick.theme.css for draggable slick: grab and grabbing.
+Added relevant cursor to slick.theme.css for draggable slick: grab and grabbing.
 Changed dependencies on slick_example to make use of sub-modules instead.
 
 Slick 7.x-2.0-dev, 2015-2-26
@@ -38,8 +51,8 @@ Fixed cssEaseBezier value not being mapped from cssEaseOverride at Optionset UI
 Issue #2438041 by RAFA3L: Fixed broken Views style plugin due to removal of
   files array from slick_views.info:
   files[] = slick_views_plugin_style_slick.inc
-  Be sure to clear the cache to bring it back. The mistake was after PHPCS fixes.
-Fixed edge cases for slide--current class by requesting anonymous parent selector
+  Be sure to clear cache to bring it back. The mistake was after PHPCS fixes.
+Fixed edge cases for slide--current class by requesting anon parent selector
   with/without theme_slick_wrapper(), and with/without asnavFor.
 Optimized slick.elements.inc, and moved slick form elements from
   slick_get_options() to the plugin page - SlickOptionsetUi.class.php.
@@ -126,7 +139,7 @@ Updated slick.load.js to reflect the 1.4.1 fixes.
 
 Slick 7.x-2.0-dev, 2015-2-3
 ---------------------------
-Added more info related to ROADMAP and current delvelopment status at README.txt.
+Added more info related to ROADMAP and current delvelopment status at README.
 Issue #2418149 by nrutkowski: Fixed for Slick 1.4 breaking changes.
 Updated to Slick 1.4 with more tests and cleanups.
 Fixed nullified edgeFriction due to typecast integer to float.

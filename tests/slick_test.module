@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Provides tests for Slick carousel.
+ */
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function slick_test_ctools_plugin_api($module, $api) {
+  if ($module == 'slick' && $api == 'slick_default_preset') {
+    return array('version' => 1);
+  }
+}
