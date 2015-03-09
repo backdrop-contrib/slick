@@ -44,7 +44,7 @@
   min-height: 210px;
 }
 
-.slick--skin--fullwidth .slide__constrained:after {
+.slick--skin--fullwidth .slide__constrained::after {
   content: "";
   display: table;
   clear: both;

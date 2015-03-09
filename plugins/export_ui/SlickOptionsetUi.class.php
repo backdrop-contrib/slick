@@ -80,7 +80,7 @@ class SlickOptionsetUi extends ctools_export_ui {
     $form['options']['general']['normal'] = array(
       '#type' => 'select',
       '#title' => t('Image style'),
-      '#description' => t('Image style for the main/background image, overriden by field formatter.'),
+      '#description' => t('Image style for the main/background image, overriden by field formatter. Useful for custom work.'),
       '#empty_option' => t('None (original image)'),
       '#options' => $image_styles,
       '#default_value' => isset($options['general']['normal']) ? $options['general']['normal'] : '',
@@ -91,7 +91,7 @@ class SlickOptionsetUi extends ctools_export_ui {
     $form['options']['general']['thumbnail'] = array(
       '#type' => 'select',
       '#title' => t('Thumbnail style'),
-      '#description' => t('Image style for the thumbnail image if using asNavFor, overriden by field formatter.'),
+      '#description' => t('Image style for the thumbnail image if using asNavFor, overriden by field formatter Useful for custom work.'),
       '#empty_option' => t('None (original image)'),
       '#options' => $image_styles,
       '#default_value' => isset($options['general']['thumbnail']) ? $options['general']['thumbnail'] : '',
@@ -688,7 +688,7 @@ class SlickOptionsetUi extends ctools_export_ui {
 
       $options['vertical'] = array(
         'title' => t('Vertical'),
-        'description' => t('Vertical slide direction.'),
+        'description' => t('Vertical slide direction. See <a href="@url" target="_blank">relevant issue</a>.', array('@url' => '//github.com/kenwheeler/slick/issues/1001')),
         'type' => 'checkbox',
       );
 
@@ -754,6 +754,54 @@ class SlickOptionsetUi extends ctools_export_ui {
       }
     }
     return $options;
+  }
+
+  /**
+   * Overrides parent::list_build_row.
+   */
+  public function list_build_row($item, &$form_state, $operations) {
+    parent::list_build_row($item, $form_state, $operations);
+
+    $name = $item->{$this->plugin['export']['key']};
+    $skins = slick_skins();
+    $breakpoints = $this->items[$name]->breakpoints ? $this->items[$name]->breakpoints : 0;
+    $skin = $this->items[$name]->skin;
+    $skin_name = $skin ? check_plain($skin) : t('None');
+
+    if ($skin) {
+      $description = isset($skins[$skin]['description']) && $skins[$skin]['description'] ? filter_xss_admin($skins[$skin]['description']) : '';
+      if ($description) {
+        $skin_name .= '<br /><em>' . $description . '</em>';
+      }
+    }
+
+    $breakpoints_row[] = array(
+      'data' => $breakpoints,
+      'class' => array('ctools-export-ui-breakpoints'),
+    );
+    array_splice($this->rows[$name]['data'], 2, 0, $breakpoints_row);
+
+    $skin_row[] = array(
+      'data' => $skin_name,
+      'class' => array('ctools-export-ui-skin'),
+      'style' => "white-space: normal; word-wrap: break-word; max-width: 320px;",
+    );
+    array_splice($this->rows[$name]['data'], 3, 0, $skin_row);
+  }
+
+  /**
+   * Overrides parent::list_table_header.
+   */
+  public function list_table_header() {
+    $headers = parent::list_table_header();
+
+    $breakpoints_header[] = array('data' => t('Breakpoint'), 'class' => array('ctools-export-ui-breakpoints'));
+    array_splice($headers, 2, 0, $breakpoints_header);
+
+    $skin_header[] = array('data' => t('Skin'), 'class' => array('ctools-export-ui-skin'));
+    array_splice($headers, 3, 0, $skin_header);
+
+    return $headers;
   }
 
 }

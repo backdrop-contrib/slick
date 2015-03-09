@@ -11,8 +11,8 @@
   margin: 30px 0;
 }
 
-#field-display-overview .field-formatter-settings-edit-form .form--slick:after,
-.form--field.form--slick:after {
+#field-display-overview .field-formatter-settings-edit-form .form--slick::after,
+.form--field.form--slick::after {
   content: "";
   display: table;
   clear: both;

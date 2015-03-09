@@ -15,7 +15,7 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
   $build = '';
 
   // Must be similar for the colorbox rel gallery for image/video/audio.
-  $id = isset($settings['colorbox_id']) ? $settings['colorbox_id'] : $settings['attributes']['id'];
+  $id = isset($settings['lightbox_id']) ? $settings['lightbox_id'] : $settings['attributes']['id'];
 
   // We are safe to load picture, without relying on function_exists.
   if ($settings['picture_ready'] && $settings['picture'] && $settings['picture_style']) {
@@ -42,6 +42,7 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
       '#breakpoints' => $breakpoints,
     );
 
+    // Only Colorbox is supported by Picture.
     if ($settings['media_switch'] == 'colorbox-switch' && $settings['colorbox_style']) {
       $image_slide = array(
         '#theme'       => 'picture_formatter_colorbox',
@@ -73,15 +74,16 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
       'image_style' => $settings['image_style'],
       'count' => $settings['count'],
       'options' => array(
-        'colorbox' => FALSE,
+        'lightbox' => '',
         'type' => $settings['type'],
         'lazy' => $settings['lazy'],
+        'has_pattern' => $settings['has_pattern'],
       ),
     );
 
-    // Provide relevant link path if it is a colorbox: media audio/video should
+    // Provide relevant link path if it is a lightbox: media audio/video should
     // provide URL to the actual audio/video URL, image to colorbox image URL.
-    if ($settings['colorbox_ready'] && $settings['media_switch'] == 'colorbox-switch' && $settings['colorbox_style']) {
+    if ($settings['is_lightbox'] && $settings['box_ready'] && $settings['colorbox_style']) {
       if ($media_url) {
         $url = $media_url;
       }
@@ -89,22 +91,30 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
         $url = image_style_url($settings['colorbox_style'], $image['uri']);
       }
 
-      $image_variables['path'] = array(
-        'path' => $url,
-        'options' => array(
-          'attributes' => array(
-            'class' => array('slick__colorbox', 'slick__capture'),
-          ),
-        ),
-      );
-
+      $image_variables['path']['path'] = $url;
       $data_media = array('type' => $settings['type']);
-      if (isset($settings['scheme'])) {
-        $data_media['scheme'] = $settings['scheme'];
+
+      if ($settings['media_switch'] == 'colorbox-switch') {
+        $box_classes = array('slick__colorbox', 'slick__capture');
+        if ($settings['count'] > 1) {
+          $data_media['rel'] = $id;
+        }
+      }
+      elseif ($settings['media_switch'] == 'photobox-switch') {
+        $box_classes = array('slick__photobox', 'slick__capture');
+        if ($media_url) {
+          $image_variables['path']['options']['attributes']['rel'] = 'video';
+        }
+        if ($settings['thumbnail_style']) {
+          $thumbnail_url = image_style_url($settings['thumbnail_style'], $image['uri']);
+          $image_variables['item']['attributes']['data-src'] = $thumbnail_url;
+        }
       }
 
-      if ($settings['count'] > 1) {
-        $data_media['rel'] = $id;
+      $image_variables['path']['options']['attributes']['class'] = $box_classes;
+
+      if (isset($settings['scheme'])) {
+        $data_media['scheme'] = $settings['scheme'];
       }
 
       // Video/audio has special attributes for JS interaction.
@@ -117,7 +127,9 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
 
       $image_variables['path']['options']['attributes']['data-media'] = drupal_json_encode($data_media);
 
-      $image_variables['options']['colorbox'] = TRUE;
+      // Re-use a generic flag for both lightboxes: Colorbox and Photobox.
+      $switcher = str_replace('-switch', '', $settings['media_switch']);
+      $image_variables['options']['lightbox'] = $switcher;
     }
 
     // Render the configured slide using lazyLoad.

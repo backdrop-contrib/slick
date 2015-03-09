@@ -11,13 +11,7 @@
  * Tests the Slick optionsets, configuration options and permission controls.
  *
  * Usage:
- * @code
- *
- * $ drush test-run --uri=http://test7.dev --xml=x/tests SlickTestCase
- *
- * @encode
- *
- * You should have x/tests directory at Drupal document root to view its result.
+ * $ drush test-run --uri=http://test7.dev SlickTestCase
  * Or check Slick tests at: admin/config/development/testing, and hit Run tests.
  *
  * @see https://www.drupal.org/simpletest-tutorial-drupal7

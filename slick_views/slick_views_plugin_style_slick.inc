@@ -20,6 +20,8 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       'optionset_thumbnail' => array('default' => ''),
       'skin' => array('default' => ''),
       'skin_thumbnail' => array('default' => ''),
+      'skin_arrows' => array('default' => ''),
+      'skin_dots' => array('default' => ''),
       'asnavfor_main' => array('default' => ''),
       'asnavfor_thumbnail' => array('default' => ''),
       'asnavfor_auto' => array('default' => FALSE),
@@ -97,6 +99,38 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       '#description' => t('Thumbnail navigation skin. Leave empty to not use thumbnail navigation.'),
       '#attributes' => $is_tooltip,
     );
+
+    $elements['skin_arrows'] = array(
+      '#type' => 'select',
+      '#title' => t('Skin arrows'),
+      '#options' => array(),
+      '#default_value' => $settings['skin_arrows'],
+      '#empty_option' => t('- None -'),
+      '#description' => t('Use hook_slick_arrows_info() to add your own arrows skins, in the same format as hook_slick_skins_info().'),
+      '#attributes' => $is_tooltip,
+      '#access' => FALSE,
+    );
+
+    if ($arrows = slick_navigations('arrows', TRUE)) {
+      $elements['skin_arrows']['#options'] = $arrows;
+      $elements['skin_arrows']['#access'] = TRUE;
+    }
+
+    $elements['skin_dots'] = array(
+      '#type' => 'select',
+      '#title' => t('Skin dots'),
+      '#options' => array(),
+      '#default_value' => $settings['skin_dots'],
+      '#empty_option' => t('- None -'),
+      '#description' => t('Use hook_slick_dots_info() to add your own dots skins, in the same format as hook_slick_skins_info().'),
+      '#attributes' => $is_tooltip,
+      '#access' => FALSE,
+    );
+
+    if ($dots = slick_navigations('dots', TRUE)) {
+      $elements['skin_dots']['#options'] = $dots;
+      $elements['skin_dots']['#access'] = TRUE;
+    }
 
     $elements['asnavfor_main'] = array(
       '#type' => 'textfield',
@@ -388,6 +422,8 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
     $no_wrappers = array(
       'optionset',
       'skin',
+      'skin_arrows',
+      'skin_dots',
       'id',
       'asnavfor_main',
       'grid',

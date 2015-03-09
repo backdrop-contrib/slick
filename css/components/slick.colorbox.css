@@ -2,6 +2,7 @@
  * @file
  * Provides colorbox integration.
  */
+
 .colorbox-on--video #colorbox,
 .colorbox-on--video #cboxContent,
 .colorbox-on--video #cboxLoadedContent,
@@ -52,68 +53,4 @@
   background-clip: padding-box;
   border-radius: 0;
   border: 8px solid #37465b;
-}
-
-.media-icon--colorbox {
-  cursor: pointer;
-  display: block;
-  height: 80px;
-  left: 50%;
-  margin: -40px 0 0 -40px;
-  opacity: 0;
-  position: absolute;
-  top: 50%;
-  width: 80px;
-  visibility: hidden;
-  z-index: 9;
-  -webkit-transition: visibility 0s linear 0.5s, opacity 0.5s linear;
-  transition: visibility 0s linear 0.5s, opacity 0.5s linear;
-}
-
-.media-icon--colorbox:before,
-.media-icon--colorbox:after {
-  content: '';
-  display: block;
-  position: absolute;
-  pointer-events: none;
-}
-
-.media-icon--colorbox {
-  z-index: 9;
-}
-
-.media-icon--colorbox:before,
-.media-icon--colorbox:after {
-  background: white;
-  border-radius: 4px;
-  height: 2px;
-  left: 50%;
-  margin: -1px 0 0 -40px;
-  top: 50%;
-  width: 80px;
-  -ms-transform: rotate(0deg);
-  -webkit-transform: rotate(0deg);
-  transform: rotate(0deg);
-}
-
-.media-icon--colorbox:after {
-  -ms-transform: rotate(-90deg);
-  -webkit-transform: rotate(-90deg);
-  transform: rotate(-90deg);
-}
-
-.media-icon--colorbox:hover:before,
-.media-icon--colorbox:hover:after {
-  background-color: #ff6d2c;
-}
-
-.media:hover .media-icon--colorbox {
-  -webkit-transition-delay: 0s;
-  transition-delay: 0s;
-}
-
-.media:hover .media-icon--colorbox,
-.media--switch .slick__image {
-  opacity: 1;
-  visibility: visible;
 }

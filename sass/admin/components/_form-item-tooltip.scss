@@ -35,7 +35,7 @@
       font-weight: 600;
     }
 
-    &:after {
+    &::after {
       border: 10px solid rgba(0,0,0,0);
       border-right: 10px solid $dark;
       border-top: 0;
@@ -85,7 +85,7 @@
   &.selected {
     > .description {
       padding-left: 20px !important;
-      &:before {
+      &::before {
         color: $light-grey;
         content: "x";
         display: block;

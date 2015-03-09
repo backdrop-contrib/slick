@@ -92,7 +92,7 @@
  */
 /* Overrides too tiny bullets from core slick.css */
 // I don't like dots styling, should be pure CSS, but leave it for now.
-.slick-dots li button:before {
+.slick-dots li button::before {
   @include font-size(12px);
 }
 

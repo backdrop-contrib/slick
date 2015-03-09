@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+// Import external libraries.
+@import "compass";
+@import "breakpoint";
+
+// Import variables, abstractions, base styles and components using globbing.
+@import "../globals";
+/**
+ * @file
+ * Provides shared lightbox stylings for both Colorbox and Photobox.
+ */
+
+.media-icon--lightbox {
+  cursor: pointer;
+  display: block;
+  height: 80px;
+  left: 50%;
+  margin: -40px 0 0 -40px;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  width: 80px;
+  visibility: hidden;
+  z-index: 9;
+  @include transition(visibility 0s linear 0.5s, opacity 0.5s linear);
+}
+
+.media-icon--lightbox::before,
+.media-icon--lightbox::after {
+  content: '';
+  display: block;
+  position: absolute;
+  pointer-events: none;
+}
+
+.media-icon--lightbox {
+  z-index: 9;
+
+  &::before,
+  &::after {
+    background: white;
+    border-radius: 4px;
+    height: 2px;
+    left: 50%;
+    margin: -1px 0 0 -40px;
+    top: 50%;
+    width: 80px;
+    @include transform(rotate(0deg));
+  }
+
+  &::after {
+    @include transform(rotate(-90deg));
+  }
+
+  &:hover::before,
+  &:hover::after {
+    background-color: $color-2;
+  }
+}
+
+.media:hover .media-icon--lightbox {
+  @include transition-delay(0s);
+}
+
+.media:hover .media-icon--lightbox,
+.media--switch .slick__image {
+  opacity: 1;
+  visibility: visible;
+}

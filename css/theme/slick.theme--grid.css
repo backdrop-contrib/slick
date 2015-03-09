@@ -8,13 +8,13 @@
   margin: 0 -0.625rem;
 }
 
-[class*="block-grid-"]:before,
-[class*="block-grid-"]:after {
+[class*="block-grid-"]::before,
+[class*="block-grid-"]::after {
   content: " ";
   display: table;
 }
 
-[class*="block-grid-"]:after {
+[class*="block-grid-"]::after {
   clear: both;
 }
 

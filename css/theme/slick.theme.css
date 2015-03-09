@@ -4,8 +4,8 @@
  * Detailed stylings are all yours, get yourself dirty.
  */
 .slick *,
-.slick *:before,
-.slick *:after {
+.slick *::before,
+.slick *::after {
   -ms-box-sizing: border-box;
   -o-box-sizing: border-box;
   box-sizing: border-box;
@@ -79,12 +79,12 @@ img {
   outline: 0;
 }
 
-.slick-prev:before,
-.slick-prev:after,
-.slick-next:before,
-.slick-next:after,
-.slick-down:before,
-.slick-down:after {
+.slick-prev::before,
+.slick-prev::after,
+.slick-next::before,
+.slick-next::after,
+.slick-down::before,
+.slick-down::after {
   pointer-events: none;
 }
 
@@ -97,15 +97,15 @@ img {
   right: 0;
 }
 
-.slick-prev:before,
-.slick-next:before {
+.slick-prev::before,
+.slick-next::before {
   color: #ff6d2c;
   font-size: 36px;
   font-size: 2.25rem;
 }
 
-.slick-prev:hover:before,
-.slick-next:hover:before {
+.slick-prev:hover::before,
+.slick-next:hover::before {
   color: #37465b;
 }
 
@@ -129,8 +129,8 @@ img {
   background: #37465b;
 }
 
-.slick-down:before,
-.slick-down:after {
+.slick-down::before,
+.slick-down::after {
   border-right: 3px solid;
   color: #fff;
   content: '';
@@ -146,15 +146,15 @@ img {
   width: 0;
 }
 
-.slick-down:after {
+.slick-down::after {
   right: 18px;
   -ms-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
 
-.slick-down:hover:before,
-.slick-down:hover:after {
+.slick-down:hover::before,
+.slick-down:hover::after {
   color: #fff;
 }
 
@@ -172,7 +172,7 @@ img {
   z-index: 2;
 }
 
-.slide__content .edit-link:before {
+.slide__content .edit-link::before {
   display: block;
   font-size: 18px;
   font-size: 1.125rem;
@@ -214,9 +214,9 @@ img {
 }
 
 /**
- * Thumbnails inside bullets.
+ * Thumbnails inside dots.
  */
-.slick__slide .slide__thumbnail--placeholder {
+.slide__thumbnail--placeholder {
   position: absolute !important;
   clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
@@ -225,8 +225,8 @@ img {
   word-wrap: normal;
 }
 
-/* The main thumbnail container */
-.slick__thumbnail {
+/* The main thumbnail container is slick-dots modifier */
+.slick-dots--thumbnail {
   list-style: none;
   *zoom: 1;
   overflow: visible;
@@ -238,29 +238,29 @@ img {
   z-index: 3;
 }
 
-.slick__thumbnail:after {
+.slick-dots--thumbnail::after {
   content: "";
   display: table;
   clear: both;
 }
 
-.block .slick__thumbnail {
+.block .slick-dots--thumbnail {
   margin-left: 0;
   padding: 0;
 }
 
-.slick-initialized .slick__thumbnail {
+.slick-initialized .slick-dots--thumbnail {
   visibility: visible;
 }
 
-.slick__thumbnail li {
+.slick-dots--thumbnail li {
   overflow: hidden;
   position: relative;
   vertical-align: top;
   /* Individual thumbnail, adjust accordingly to actual thumbnail size */
 }
 
-.slick__thumbnail li img {
+.slick-dots--thumbnail li img {
   background: #fff;
   border: 2px solid transparent;
   display: block;
@@ -271,7 +271,7 @@ img {
   pointer-events: auto;
 }
 
-.slick__thumbnail li .slide__thumbnail {
+.slick-dots--thumbnail li .slide__thumbnail {
   bottom: 140%;
   left: 50%;
   margin: -60px 0 0 -60px;
@@ -286,11 +286,11 @@ img {
   transition: 0.3s;
 }
 
-.slick__thumbnail li .slide__thumbnail img {
+.slick-dots--thumbnail li .slide__thumbnail img {
   pointer-events: none;
 }
 
-.slick__thumbnail li .slide__thumbnail:after {
+.slick-dots--thumbnail li .slide__thumbnail::after {
   border: 7px solid transparent;
   border-bottom: 0;
   border-top-color: #ff6d2c;
@@ -304,11 +304,11 @@ img {
   width: 0;
 }
 
-.slick__thumbnail li:hover {
+.slick-dots--thumbnail li:hover {
   overflow: visible;
 }
 
-.slick__thumbnail li:hover .slide__thumbnail {
+.slick-dots--thumbnail li:hover .slide__thumbnail {
   bottom: 120%;
   margin-top: -20px;
   opacity: 1;
@@ -318,8 +318,8 @@ img {
   z-index: 3;
 }
 
-.slick__thumbnail li:hover img,
-.slick__thumbnail li.slick-active img {
+.slick-dots--thumbnail li:hover img,
+.slick-dots--thumbnail li.slick-active img {
   border: 2px solid #ff6d2c;
   opacity: 1;
   -webkit-transition-delay: 0s;
@@ -569,7 +569,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   *zoom: 1;
 }
 
-.slide__content:after {
+.slide__content::after {
   content: "";
   display: table;
   clear: both;
@@ -619,7 +619,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
  * Bullets.
  */
 /* Overrides too tiny bullets from core slick.css */
-.slick-dots li button:before {
+.slick-dots li button::before {
   font-size: 12px;
   font-size: 0.75rem;
 }

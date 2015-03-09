@@ -24,7 +24,7 @@
 
   <div<?php print $attributes; ?>>
     <?php if (in_array($settings['type'], array('video', 'audio'))): ?>
-      <?php if ($settings['media_switch'] != 'colorbox-switch'): ?>
+      <?php if (!$is_lightbox): ?>
         <iframe<?php print $content_attributes; ?> allowfullscreen><?php print $alternative_content; ?></iframe>
       <?php endif; ?>
       <?php if ($settings['media_switch'] == 'iframe-switch'): ?>

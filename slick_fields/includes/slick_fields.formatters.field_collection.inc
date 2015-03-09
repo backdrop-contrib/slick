@@ -45,7 +45,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           $field_type = $slide_image['#field_type'];
 
           // It is un-reasonable to make large image as colorbox, so disable it.
-          $settings['colorbox_ready'] = FALSE;
+          $settings['box_ready'] = FALSE;
           $settings['picture_ready'] = TRUE;
           switch ($field_type) {
             case 'file':
@@ -142,7 +142,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
 
           $settings['has_overlay'] = TRUE;
           $settings['is_media'] = FALSE;
-          $settings['colorbox_ready'] = TRUE;
+          $settings['box_ready'] = TRUE;
           $settings['picture_ready'] = FALSE;
           $optionset = $settings['nested_optionset'] ? $settings['nested_optionset'] : 'default';
           $optionset = slick_optionset_load($optionset);
@@ -397,7 +397,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               // since we don't provide UI to manage small pictures, and
               // picture is only reasonable for large images.
               $overlay_settings[$key][$idx]['count'] = $overlay_count;
-              $overlay_settings[$key][$idx]['colorbox_ready'] = $settings['media_switch'] == 'colorbox-switch';
+              $overlay_settings[$key][$idx]['box_ready'] = $settings['media_switch'] == 'colorbox-switch';
               $overlay_settings[$key][$idx]['colorbox_style'] = $settings['colorbox_style'];
               $overlay_settings[$key][$idx]['picture_ready'] = FALSE;
               $overlay_settings[$key][$idx]['media_switch'] = $settings['media_switch'];
@@ -408,7 +408,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               // Must be similar across all slide items within a particular
               // Slick for the colorbox gallery ID - GID to work.
               $id = $settings['attributes']['id'] . '-' . $key;
-              $overlay_settings[$key][$idx]['colorbox_id'] = $id;
+              $overlay_settings[$key][$idx]['lightbox_id'] = $id;
             }
 
             if ($settings['nested_slick']) {

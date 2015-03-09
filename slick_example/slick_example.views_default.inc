@@ -310,7 +310,6 @@ function slick_example_views_default_views() {
   $handler->display->display_options['fields']['field_images']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_images']['delta_offset'] = '0';
   $handler->display->display_options['fields']['field_images']['separator'] = '';
-  $handler->display->display_options['fields']['field_images']['field_api_classes'] = TRUE;
   $handler->display->display_options['block_description'] = 'Slick X: asnavfor';
 
   /* Display: Block: carousel */
@@ -436,7 +435,7 @@ function slick_example_views_default_views() {
   $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '32';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '36';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'slick';
@@ -444,10 +443,12 @@ function slick_example_views_default_views() {
   $handler->display->display_options['style_options']['skin'] = 'grid';
   $handler->display->display_options['style_options']['asnavfor_main'] = '#slick-grid-thumbnail';
   $handler->display->display_options['style_options']['asnavfor_thumbnail'] = '#slick-grid';
-  $handler->display->display_options['style_options']['grid'] = '5';
+  $handler->display->display_options['style_options']['asnavfor_auto'] = 0;
+  $handler->display->display_options['style_options']['grid'] = '6';
   $handler->display->display_options['style_options']['grid_medium'] = '3';
-  $handler->display->display_options['style_options']['grid_small'] = '1';
-  $handler->display->display_options['style_options']['visible_slides'] = '10';
+  $handler->display->display_options['style_options']['grid_small'] = '2';
+  $handler->display->display_options['style_options']['visible_slides'] = '12';
+  $handler->display->display_options['style_options']['preserve_keys'] = 0;
   $handler->display->display_options['style_options']['slide_field_wrapper'] = 1;
   $handler->display->display_options['style_options']['slide_image'] = 'field_image';
   $handler->display->display_options['style_options']['slide_caption'] = array(
@@ -455,6 +456,13 @@ function slick_example_views_default_views() {
     'title' => 0,
     'edit_node' => 0,
     'body' => 0,
+  );
+  $handler->display->display_options['style_options']['override'] = 0;
+  $handler->display->display_options['style_options']['overridables'] = array(
+    'arrows' => 0,
+    'autoplay' => 0,
+    'dots' => 0,
+    'draggable' => 0,
   );
   $handler->display->display_options['style_options']['id'] = 'slick-grid';
   $handler->display->display_options['defaults']['style_options'] = FALSE;

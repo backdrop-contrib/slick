@@ -11,7 +11,7 @@
     text-indent: -9999px;
     top: 0;
     z-index: 2;
-    &:before {
+    &::before {
       display: block;
       @include font-size(18px);
       text-indent: 0;

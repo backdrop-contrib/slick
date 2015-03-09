@@ -24,8 +24,8 @@
       <?php endforeach; ?>
     </div>
 
-    <nav class="slick__arrow">
-      <?php isset($settings['prev_arrow']) && print $settings['prev_arrow']; ?>
+    <nav<?php print $arrow_attributes; ?>>
+      <?php print $settings['prev_arrow']; ?>
       <?php if ($settings['has_arrow_down']): ?>
         <?php
           $is_target = $settings['arrow_down_target'] ? ' data-target="#' . $settings['arrow_down_target'] . '"' : '';
@@ -33,7 +33,7 @@
         ?>
         <button class="slick-down jump-scroll"<?php print $is_target . $is_offset; ?>></button>
       <?php endif; ?>
-      <?php isset($settings['next_arrow']) && print $settings['next_arrow']; ?>
+      <?php print $settings['next_arrow']; ?>
     </nav>
 
   <?php

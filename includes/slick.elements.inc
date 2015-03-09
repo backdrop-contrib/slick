@@ -292,6 +292,44 @@ function slick_get_overridable_options() {
 }
 
 /**
+ * Returns HTML or layout related settings, none of JS, except mousewheel.
+ *
+ * @param int $count
+ *   The number of available slick items.
+ *
+ * @return array
+ *   An array of alterable default settings.
+ */
+function slick_get_element_default_settings($count = 0) {
+  $settings = array(
+    'count' => $count,
+    'optionset' => '',
+    'optionset_thumbnail' => '',
+    'asnavfor_target' => '',
+    'skin' => '',
+    'skin_thumbnail' => '',
+    'thumbnail_hover' => '',
+    'thumbnail_style' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'grid' => '',
+    'field_type' => '',
+    'media_switch' => FALSE,
+    'is_carousel' => FALSE,
+    'has_pattern' => FALSE,
+    'has_arrow_down' => FALSE,
+    'mousewheel' => FALSE,
+    'aspect_ratio_overlay' => FALSE,
+    'current_display' => 'main',
+  );
+
+  // Allows default settings information to be altered.
+  drupal_alter('slick_default_settings_info', $settings);
+
+  return $settings;
+}
+
+/**
  * Removes problematic options for the responsive Slick.
  *
  * The problematic options are those that should exist once for a given Slick
@@ -300,7 +338,7 @@ function slick_get_overridable_options() {
  *   JS takes care of the relevant copy on each responsive setting instead.
  *
  * @param array $options
- *   Array of all available options.
+ *   An array of all available options.
  *
  * @return array
  *   An array of cleaned out options.
@@ -324,7 +362,7 @@ function slick_clean_options(array $options) {
     // 'easing' => FALSE,
   );
 
-  // Allows removable responsive options to be altered.
+  // Allows removable responsive options information to be altered.
   drupal_alter('slick_clean_options_info', $cleaned_options);
 
   return array_diff_key($options, $cleaned_options);
@@ -581,6 +619,37 @@ function slick_skins($options = FALSE) {
   }
 
   return $skins;
+}
+
+/**
+ * Gets supported Slick skin arrows/dots, and additional ones.
+ *
+ * @param bool $options
+ *   Flag to limit the returned values for select options.
+ *
+ * @return array
+ *   An array of available skin arrows.
+ */
+function slick_navigations($type = 'arrows', $options = FALSE) {
+  $navigations = &drupal_static(__FUNCTION__, NULL);
+
+  if (!isset($navigations)) {
+    // Collects a list of the currently available skin arrows/dots.
+    $navigations = module_invoke_all('slick_' . $type . '_info');
+
+    // Allows skin arrows/dots information to be altered.
+    drupal_alter('slick_' . $type . '_info', $navigations);
+
+    if ($options) {
+      $available_navigations = array();
+      foreach ($navigations as $navigation => $properties) {
+        $available_navigations[$navigation] = $properties['name'];
+      }
+      $navigations = $available_navigations;
+    }
+  }
+
+  return $navigations;
 }
 
 /**

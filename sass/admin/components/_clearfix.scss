@@ -1,21 +1,21 @@
 /**
  * Clearfix
  */
-.form-item:before,
-.form-item:after,
-.form-type-checkboxes:before,
-.form-type-checkboxes:after,
-.fieldset-wrapper:before,
-.fieldset-wrapper:after,
-.clearfix:before,
-.clearfix:after {
+.form-item::before,
+.form-item::after,
+.form-type-checkboxes::before,
+.form-type-checkboxes::after,
+.fieldset-wrapper::before,
+.fieldset-wrapper::after,
+.clearfix::before,
+.clearfix::after {
   content: " ";
   display: table;
 }
 
-.clearfix:after,
-.fieldset-wrapper:after,
-.form-item:after,
-.form-type-checkboxes:after {
+.clearfix::after,
+.fieldset-wrapper::after,
+.form-item::after,
+.form-type-checkboxes::after {
   clear: both;
 }

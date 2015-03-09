@@ -134,7 +134,7 @@ html.js .form--slick {
       width: 36px;
       @include transition(background .3s .5s ease);
 
-      &:before, &:after {
+      &::before, &::after {
         @include line($white);
         position: absolute;
         left: 8px;
@@ -144,12 +144,12 @@ html.js .form--slick {
         @include transition(top .3s .6s ease, transform .3s ease);
       }
 
-      &:before {
+      &::before {
         @include transform(rotate3d(0,0,1,45deg));
         top: 18px;
       }
 
-      &:after {
+      &::after {
         @include transform(rotate3d(0,0,1,-45deg));
         top: 18px;
       }
@@ -164,18 +164,18 @@ html.js .form--slick {
     .fieldset-legend .fieldset-legend-prefix {
       background: lighten($color-1, 50);
 
-      &:before,
-      &:after {
+      &::before,
+      &::after {
         @include transition(top .3s ease, transform .3s .5s ease);
         top: 16px;
         width: 18px;
       }
 
-      &:before {
+      &::before {
         @include transform(rotate3d(0,0,1,90deg));
       }
 
-      &:after {
+      &::after {
         @include transform(rotate3d(0,0,1,180deg));
       }
     }

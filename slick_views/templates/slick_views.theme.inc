@@ -19,6 +19,8 @@ function template_preprocess_slick_views(&$variables) {
     $thumbs = array();
     $attach = array(
       'attach_skin' => $settings['skin'],
+      'attach_skin_arrows' => $settings['skin_arrows'],
+      'attach_skin_dots' => $settings['skin_dots'],
     );
 
     foreach ($variables['rows'] as $id => $row) {
@@ -102,6 +104,7 @@ function template_preprocess_slick_views(&$variables) {
 
     // Add the settings.
     $settings['current_display'] = 'main';
+    $settings['count'] = count($items);
     $is_asnavfor = isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'] && $thumbs;
     $is_asnavfor_auto = isset($settings['asnavfor_auto']) && $settings['asnavfor_auto'];
 

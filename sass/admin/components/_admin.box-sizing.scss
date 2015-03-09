@@ -1,6 +1,6 @@
 .form--slick *,
-.form--slick *:before,
-.form--slick *:after {
+.form--slick *::before,
+.form--slick *::after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;

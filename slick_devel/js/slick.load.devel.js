@@ -7,8 +7,6 @@
 
   "use strict";
 
-  Drupal.slick = Drupal.slick || {};
-
   Drupal.behaviors.slick = {
     attach: function(context, settings) {
 
@@ -46,8 +44,7 @@
 
       t.on('init', function(e, slick) {
         var options = Drupal.slick.options(slick);
-        Drupal.slick.thumbnail(t, options.dotsClass);
-        // Check for nested slick.
+        // Update arrows with possible nested slick.
         if (t.attr('id') === slick.$slider.attr('id')) {
           Drupal.slick.arrows(a, slick.slideCount, options);
         }
@@ -82,7 +79,7 @@
         }, 800, options.easing || 'swing');
       });
 
-      if ($.isFunction($.fn.mousewheel) && options.mousewheel == true) {
+      if ($.isFunction($.fn.mousewheel) && options.mousewheel) {
         t.on('mousewheel', function(e, delta) {
           e.preventDefault();
           var wheeler = (delta < 0) ? t.slick('slickNext') : t.slick('slickPrev');
@@ -95,7 +92,7 @@
      */
     options: function(slider) {
       var breakpoint = slider.activeBreakpoint || null;
-      return breakpoint && slider.windowWidth < breakpoint ? slider.breakpointSettings[breakpoint] : slider.options;
+      return breakpoint && (slider.windowWidth < breakpoint) ? slider.breakpointSettings[breakpoint] : slider.options;
     },
 
     /**
@@ -121,16 +118,6 @@
       a.find('>*').addClass('slick-nav');
       // Do not remove arrows, to allow responsive have different options.
       var arrows = total <= options.slidesToShow || options.arrows === false ? a.hide() : a.show();
-    },
-
-    /**
-     * Update slick-dots to use thumbnail classes if available.
-     */
-    thumbnail: function(t, dotsClass) {
-      if ($('.slick__slide:first .slide__thumbnail', t).length) {
-        $('> .' + dotsClass, t).addClass('slick__thumbnail');
-        $('.slick__slide .slide__thumbnail--placeholder', t).hide();
-      }
     },
 
     /**

@@ -38,9 +38,15 @@ adjust the example references to images accordingly at the Views edit page.
 See "admin/reports/fields" for the list of your fields.
 
 The Slick example is just providing basic samples of the Slick usage:
-- Several optionsets prefixed with "X" available at "admin/config/media/slick"
-- Several view blocks available at "admin/structure/views"
-- Several slick image styles at "admin/config/media/image-styles"
+- Several optionsets prefixed with "X" available at "admin/config/media/slick".
+  You can clone what is needed, and make them disabled, or uninstalled later.
+
+- Several view blocks available at "admin/structure/views".
+  You can clone it to make it yours, and ajust anything accordingly.
+
+- Several slick image styles at "admin/config/media/image-styles".
+  You can re-create your own styles, and adjust the sample Views accordingly
+  after cloning them.
 
 You may want to edit the Views before usage, adjust possible broken settings:
 admin/structure/views/view/slick_x/edit

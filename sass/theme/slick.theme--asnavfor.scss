@@ -56,7 +56,7 @@ $thumbnail-horz-spacing: 30px !default;
       @include transform(scale(1.3));
       @include transition-delay(0s);
       z-index: 3;
-      &:before  {
+      &::before  {
         content: '';
         display: block;
         border: 8px solid transparent;

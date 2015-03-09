@@ -1,4 +1,37 @@
 
+Slick 7.x-2.0-dev, 2015-3-9
+---------------------------
+Updated slick_example asNavFor to not use field template for the main display.
+Removed extra ISSET checks by proper definition in slick_get_element_default_settings().
+Removed wasted "slick--progressive" class, and only provided "slick--ondemand"
+  class only if the lazyLoad is ondemand to keep the current fix with excessive
+  height of dummy image.
+Removed wasted "slick--display--main" class, and only provide one if it has
+  thumbnail navigation in companion with "slick--display--thumbnail".
+Split "media-icon--lightbox" rules from "slick.colorbox.css" into
+  "slick.lightbox.css" to share icon stylings between Colorbox and Photobox.
+Deprecated "media-icon--colorbox" for the more generic "media-icon--lightbox".
+Updated slick-media.tpl.php to reflect the support for Photobox, adding
+  variable $is_lightbox to check for either Colorbox or Photobox.
+Added Photobox integration.
+Removed Drupal.slick.thumbnail(), and moved the relevant "slick-dots--thumbnail"
+  class to dotsClass option instead.
+Deprecated "slick__thumbnail" class in favor of "slick-dots--thumbnail".
+  If you customized it, be sure to update to "slick-dots--thumbnail", as it will
+  be removed at proper release. It is a problematic class, since dotsClass is
+  actually alterable child element. However default "slick-dots" is the only
+  class to rely on now as a child block level element. If you change the
+  options, assumed you know how to handle them consistently anyway.
+Added skin description and breakpoints to the slick collection page at:
+  admin/config/media/slick
+Added slick_navigations(), hook_slick_dots_info() and hook_slick_arrows_info()
+  to add custom dots and arrows CSS programatically, similar to existing
+  hook_slick_skins_info(), only without defaults and cares for CSS. It reduces
+  repetitive tasks with different sets of re-usable arrows and dots skin assets.
+Added an alterable slick_fields_get_default_settings() to avoid database lookup
+  just to check if a setting is already set, or not, reducing a few extra ISSET
+  checks at frontend.
+
 Slick 7.x-2.0-dev, 2015-3-5
 ---------------------------
 Fixed off-screen/ hidden dots with Fullscreen due to core negative margin -45px.

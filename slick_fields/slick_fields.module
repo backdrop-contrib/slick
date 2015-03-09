@@ -15,70 +15,77 @@ function slick_fields_field_formatter_info() {
   $formatters['slick'] = array(
     'label' => t('Slick carousel'),
     'field types' => array('image'),
-    'settings' => array(
-      'optionset' => 'default',
-      'optionset_thumbnail' => '',
-      'asnavfor_main' => '',
-      'asnavfor_thumbnail' => '',
-      'asnavfor_auto' => FALSE,
-      'skin' => '',
-      'skin_thumbnail' => '',
-      'slide_layout' => '',
-      'image_style' => '',
-      'thumbnail_style' => '',
-      'thumbnail_hover' => FALSE,
-      'thumbnail_caption' => '',
-      'slide_image' => '',
-      'slide_caption' => array(),
-      'media_switch' => '',
-      'mousewheel' => FALSE,
-      'override' => FALSE,
-      'overridables' => array(),
-    ),
+    'settings' => slick_fields_get_default_settings(),
   );
 
-  if (module_exists('file_entity') || module_exists('field_collection')) {
-    if (module_exists('file_entity')) {
-      $formatters['slick']['field types'][] = 'file';
-      $formatters['slick']['settings'] += array(
-        'slide_classes' => '',
-      );
-    }
-    if (module_exists('field_collection')) {
-      $formatters['slick']['field types'][] = 'field_collection';
-      $formatters['slick']['settings'] += array(
-        'color_field' => '',
-        'nested_slick' => FALSE,
-        'nested_optionset' => '',
-        'nested_style' => '',
-      );
-    }
-
-    $formatters['slick']['settings'] += array(
-      'slide_overlay' => array(),
-      'slide_link' => '',
-      'slide_title' => '',
-      'view_mode' => '',
-      'aspect_ratio' => '',
-      'aspect_ratio_overlay' => FALSE,
-    );
+  if (module_exists('file_entity')) {
+    $formatters['slick']['field types'][] = 'file';
   }
 
-  if (module_exists('picture')) {
-    $formatters['slick']['settings'] += array(
-      'picture' => FALSE,
-      'picture_style' => '',
-      'picture_fallback' => '',
-    );
-  }
-
-  if (module_exists('colorbox')) {
-    $formatters['slick']['settings'] += array(
-      'colorbox_style' => '',
-    );
+  if (module_exists('field_collection')) {
+    $formatters['slick']['field types'][] = 'field_collection';
   }
 
   return $formatters;
+}
+
+/**
+ * Gets default field formatter settings.
+ *
+ * Field default settings are only available once they are saved, so provide
+ * them beforehand to avoid notices, and extra checks when a feature is added/
+ * unavailable conditionally. The settings form will store relevant settings by
+ * the current supported field type.
+ *
+ * @return array
+ *   An alterable array of all supported field formatter settings.
+ */
+function slick_fields_get_default_settings() {
+  $settings = array(
+    'optionset' => 'default',
+    'optionset_thumbnail' => '',
+    'asnavfor_main' => '',
+    'asnavfor_thumbnail' => '',
+    'asnavfor_auto' => FALSE,
+    'skin' => '',
+    'skin_thumbnail' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'slide_layout' => '',
+    'image_style' => '',
+    'thumbnail_style' => '',
+    'thumbnail_hover' => FALSE,
+    'thumbnail_caption' => '',
+    'slide_image' => '',
+    'slide_caption' => array(),
+    'media_switch' => '',
+    'mousewheel' => FALSE,
+    'override' => FALSE,
+    'overridables' => array(),
+
+    // Declare all conditional settings to avoid extra checks.
+    'slide_classes' => '',
+    'color_field' => '',
+    'nested_slick' => FALSE,
+    'nested_optionset' => '',
+    'nested_style' => '',
+    'slide_overlay' => array(),
+    'slide_link' => '',
+    'slide_title' => '',
+    'view_mode' => '',
+    'aspect_ratio' => '',
+    'aspect_ratio_overlay' => FALSE,
+    'picture' => FALSE,
+    'picture_style' => '',
+    'picture_fallback' => '',
+    'colorbox_style' => '',
+    'is_lightbox' => FALSE,
+  );
+
+  // Allows settings information to be altered.
+  drupal_alter('slick_fields_default_settings_info', $settings);
+
+  return $settings;
 }
 
 /**
@@ -96,7 +103,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
 
   $field_type = $field['type'];
   // $field empty at admin/structure/file-types/manage/image/file-display,
-  // and this form is loaded there via file_entity_file_formatter_info().
+  // and this form is also loaded there via file_entity_file_formatter_info().
   if (empty($field)) {
     $field_type = $instance['entity_type'];
   }
@@ -106,6 +113,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
 
   $is_picture  = function_exists('picture_get_mapping_options');
   $is_colorbox = function_exists('_colorbox_doheader');
+  $is_photobox = function_exists('photobox_library');
 
   $layout_options  = array();
   $caption_options = array();
@@ -142,7 +150,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#options' => $skins,
     '#default_value' => $settings['skin'],
     '#empty_option' => t('- None -'),
-    '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See main <a href="@url" target="_blank">README</a> for details on Skins.', array('@url' => url($slick_module_path . '/README.txt'))),
+    '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to DIY, or use hook_slick_skins_info() to override one.', array('@url' => url($slick_module_path . '/README.txt'))),
     '#attributes' => $is_tooltip,
   );
 
@@ -152,7 +160,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#type' => 'select',
     '#options' => $optionsets,
     '#empty_option' => t('- None -'),
-    '#default_value' => isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'] ? $settings['optionset_thumbnail'] : '',
+    '#default_value' => $settings['optionset_thumbnail'],
     '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Provide each optionset a unique asNavFor class at <a href="@url" target="_blank">Slick carousel admin page</a>. Leave empty to not use thumbnail navigation.', array('@url' => url('admin/config/media/slick'))),
     '#attributes' => $is_tooltip,
   );
@@ -161,11 +169,43 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#type' => 'select',
     '#title' => t('Skin thumbnail'),
     '#options' => $skins,
-    '#default_value' => isset($settings['skin_thumbnail']) && $settings['skin_thumbnail'] ? $settings['skin_thumbnail'] : '',
+    '#default_value' => $settings['skin_thumbnail'],
     '#empty_option' => t('- None -'),
     '#description' => t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', array('@url' => url($slick_module_path . '/README.txt'))),
     '#attributes' => $is_tooltip,
   );
+
+  $elements['skin_arrows'] = array(
+    '#type' => 'select',
+    '#title' => t('Skin arrows'),
+    '#options' => array(),
+    '#default_value' => $settings['skin_arrows'],
+    '#empty_option' => t('- None -'),
+    '#description' => t('Use hook_slick_arrows_info() to add your own arrows skins, in the same format as hook_slick_skins_info().'),
+    '#attributes' => $is_tooltip,
+    '#access' => FALSE,
+  );
+
+  if ($arrows = slick_navigations('arrows', TRUE)) {
+    $elements['skin_arrows']['#options'] = $arrows;
+    $elements['skin_arrows']['#access'] = TRUE;
+  }
+
+  $elements['skin_dots'] = array(
+    '#type' => 'select',
+    '#title' => t('Skin dots'),
+    '#options' => array(),
+    '#default_value' => $settings['skin_dots'],
+    '#empty_option' => t('- None -'),
+    '#description' => t('Use hook_slick_dots_info() to add your own dots skins, in the same format as hook_slick_skins_info().'),
+    '#attributes' => $is_tooltip,
+    '#access' => FALSE,
+  );
+
+  if ($dots = slick_navigations('dots', TRUE)) {
+    $elements['skin_dots']['#options'] = $dots;
+    $elements['skin_dots']['#access'] = TRUE;
+  }
 
   $elements['asnavfor_main'] = array(
     '#type' => 'textfield',
@@ -213,7 +253,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   $elements['thumbnail_caption'] = array(
     '#type' => 'select',
     '#title' => t('Thumbnail caption'),
-    '#default_value' => isset($settings['thumbnail_caption']) && $settings['thumbnail_caption'] ? $settings['thumbnail_caption'] : '',
+    '#default_value' => $settings['thumbnail_caption'],
     '#options' => array(),
     '#empty_option' => t('- None -'),
     '#description' => t('Thumbnail caption maybe just titles.'),
@@ -497,7 +537,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       'iframe-switch' => t('Image to iframe switcher'),
     ),
     '#empty_option' => t('- None -'),
-    '#description' => t('Supports Colorbox and Media iframe switcher.'),
+    '#description' => t('Supports Colorbox/ Photobox and Media iframe switcher.'),
     '#attributes' => $is_tooltip,
   );
 
@@ -558,10 +598,9 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
   }
 
   // Optional colorbox integration.
-  if ($is_colorbox) {
-    $elements['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox switcher');
-    $elements['media_switch']['#description'] .= t('<br />Colorbox switcher: image to colorbox switch.');
+  if ($is_colorbox || $is_photobox) {
 
+    // Re-use the same image style for both boxes.
     $elements['colorbox_style'] = array(
       '#title' => t('Colorbox image style'),
       '#type' => 'select',
@@ -570,17 +609,29 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       '#options' => $image_styles,
       '#states' => array(
         'visible' => array(
-          'select[name*="[media_switch]"]' => array('value' => 'colorbox-switch'),
+          array('select[name*="[media_switch]"]' => array('value' => 'colorbox-switch')),
+          array('select[name*="[media_switch]"]' => array('value' => 'photobox-switch')),
         ),
       ),
     );
+
+    if ($is_colorbox) {
+      $elements['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox switcher');
+      $elements['media_switch']['#description'] .= t('<br />Colorbox switcher: image to colorbox switch.');
+    }
+
+    if ($is_photobox) {
+      $elements['media_switch']['#options']['photobox-switch'] = t('Image to photobox switcher');
+      $elements['media_switch']['#description'] .= t('<br />Photobox switcher: image to photobox switch. Be sure to select Thumbnail style for the overlay thumbnails.');
+      $elements['colorbox_style']['#title'] = t('Photobox image style');
+    }
   }
 
   // Good old core image field.
   if ($field_entity_type == 'image') {
     unset($elements['media_switch']['#options']['iframe-switch']);
-    if (!$is_colorbox) {
-      unset($elements['media_switch']);
+    if (!$is_colorbox && !$is_photobox) {
+      $elements['media_switch']['#access'] = FALSE;
     }
 
     $slide_caption_options = $thumbnail_caption_options = array(
@@ -892,59 +943,59 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
  * Displays the supported Image, Field collection and Media fields.
  */
 function slick_fields_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-
   $element = array();
-  $build = array();
-  $thumb = array();
+  $build   = array();
+  $thumb   = array();
 
   if (count($items) > 0) {
-    $settings = array(
-      'count' => count($items),
-      'has_overlay' => FALSE,
-      'nested_slick' => FALSE,
-      'has_media' => FALSE,
-      'colorbox_ready' => FALSE,
-      'picture_ready' => FALSE,
-      'field_type' => $field['type'],
-      'field_name' => $field['field_name'],
-      'slide_caption' => FALSE,
-      'attach_colorbox' => FALSE,
-      'thumbnail_hover' => FALSE,
-      'media_switch' => FALSE,
-      'picture' => FALSE,
-      'mousewheel' => FALSE,
-      'inline_css' => '',
-      'current_display' => 'main',
-      'lazy' => '',
-    );
-
-    $settings = array_merge($settings, $display['settings']);
-    $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
-    $settings['attach_colorbox'] = $settings['media_switch'] == 'colorbox-switch';
-    $field_name = $settings['field_name'];
-    $view_mode = !empty($settings['view_mode']) ? $settings['view_mode'] : 'full';
-    $is_asnavfor = isset($settings['optionset_thumbnail']) && $settings['optionset_thumbnail'];
-    $is_asnavfor_auto = isset($settings['asnavfor_auto']) && $settings['asnavfor_auto'];
-
-    // Load the optionset to check for lazyLoad, and other settings.
-    $optionset = slick_optionset_load($settings['optionset']);
-    $settings['lazy'] = $optionset->options['settings']['lazyLoad'];
-    $settings['dots_main'] = $optionset->options['settings']['dots'];
-
-    $attach                          = array();
-    $attach['attach_skin']           = $settings['skin'];
-    $attach['attach_skin_thumbnail'] = $settings['skin_thumbnail'];
-    $attach['attach_colorbox']       = $settings['attach_colorbox'];
-    $attach['attach_mousewheel']     = $settings['mousewheel'];
-
+    module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.global');
     list($entity_id, , $bundle) = entity_extract_ids($entity_type, $entity);
-    $slick_id = &drupal_static('slick_id', 0);
-    $item_id = drupal_clean_css_identifier("slick-{$entity_type}-{$bundle}-{$field_name}-" . ++$slick_id);
+    $field_name   = $field['field_name'];
+    $field_type   = $field['type'];
+    $slick_id     = &drupal_static('slick_id', 0);
+    $item_id      = drupal_clean_css_identifier("slick-{$entity_type}-{$bundle}-{$field_name}-" . ++$slick_id);
     $thumbnail_id = $item_id . '-thumbnail';
 
-    $settings['attributes']['id'] = drupal_html_id($item_id);
-    $settings['content_attributes']['id'] = drupal_html_id($item_id . '-slider');
-    $settings['entity_id'] = $entity_id;
+    // Prepare settings for conditional features.
+    $settings = slick_fields_get_default_settings();
+    $settings += array(
+      'count'              => count($items),
+      'field_type'         => $field_type,
+      'field_name'         => $field_name,
+      'entity_id'          => $entity_id,
+      'has_overlay'        => FALSE,
+      'has_media'          => FALSE,
+      'box_ready'          => FALSE,
+      'picture_ready'      => FALSE,
+      'inline_css'         => '',
+      'lazy'               => '',
+      'current_display'    => 'main',
+      'attributes'         => array('id' => drupal_html_id($item_id)),
+      'content_attributes' => array('id' => drupal_html_id($item_id . '-slider')),
+    );
+
+    $settings         = array_merge($settings, $display['settings']);
+    $view_mode        = $settings['view_mode'] ? $settings['view_mode'] : 'full';
+    $is_asnavfor      = $settings['optionset_thumbnail'];
+    $is_asnavfor_auto = $settings['asnavfor_auto'];
+
+    // Load the optionset to check for lazyLoad, and other settings.
+    $optionset                 = slick_optionset_load($settings['optionset']);
+    $settings['lazy']          = $optionset->options['settings']['lazyLoad'];
+    $settings['dots_main']     = $optionset->options['settings']['dots'];
+    $settings['has_pattern']   = $optionset->options['general']['goodies']['pattern'];
+    $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
+    $settings['is_lightbox']   = strpos($settings['media_switch'], 'box') !== FALSE;
+
+    $attach = array(
+      'attach_skin'           => $settings['skin'],
+      'attach_skin_thumbnail' => $settings['skin_thumbnail'],
+      'attach_skin_arrows'    => $settings['skin_arrows'],
+      'attach_skin_dots'      => $settings['skin_dots'],
+      'attach_colorbox'       => $settings['media_switch'] == 'colorbox-switch',
+      'attach_photobox'       => $settings['media_switch'] == 'photobox-switch',
+      'attach_mousewheel'     => $settings['mousewheel'],
+    );
 
     if ($is_asnavfor) {
       $optionset_thumbnail = slick_optionset_load($settings['optionset_thumbnail']);
@@ -957,11 +1008,10 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       }
     }
 
-    module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.global');
-    switch ($field['type']) {
+    switch ($field_type) {
       case 'image':
         $attach['attach_media']     = FALSE;
-        $settings['colorbox_ready'] = TRUE;
+        $settings['box_ready']      = TRUE;
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.image');
         $build = _slick_fields_format_image($settings, $items, $field);
@@ -973,7 +1023,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       case 'file':
         $attach['attach_media']     = TRUE;
         $settings['has_media']      = TRUE;
-        $settings['colorbox_ready'] = TRUE;
+        $settings['box_ready']      = TRUE;
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.media');
         $build = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode);
@@ -992,7 +1042,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         break;
     }
 
-    // Fullscreen is working with Views preview by adding a min-height 320px.
+    // Inline CSS is to colorize individual slide, or for fullscreen skin.
     if ($settings['inline_css']) {
       $css = implode("\n", $settings['inline_css']);
       $attach['attach_inline_css'] = $css;
@@ -1006,7 +1056,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     );
 
     // Overrides common options to re-use an optionset.
-    if (isset($settings['override']) && $settings['override']) {
+    if ($settings['override']) {
       $overridables = array();
       // Respect empty values, meaning FALSE.
       foreach ($settings['overridables'] as $key => $override) {

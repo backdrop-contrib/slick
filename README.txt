@@ -54,6 +54,7 @@ OPTIONAL INTEGRATION:
 --------------------------------------------------------------------------------
 Slick supports enhancements and more complex layouts.
 - Colorbox
+- Photobox
 - Picture, to get truly responsive image using art direction technique.
   D8 in core: Responsive image.
 - Media, including media_youtube, media_vimeo, and media_soundcloud.
@@ -233,7 +234,7 @@ over them, and click a dark question mark.
 
 SLICK > 1.4:
 --------------------------------------------------------------------------------
-If you just start using Slick, you may ignore this.
+If you just start using Slick, or never override templates, you may ignore this.
 See breaking changes for more info at:
 - https://github.com/kenwheeler/slick/releases/tag/1.4.0
 - CHANGELOG.txt dated 2015-1-30.
@@ -291,6 +292,7 @@ RECOMMENDED MODULES
 --------------------------------------------------------------------------------
 The following modules are supported, but optional.
 - Colorbox, to have small grids/slides that open up images/videos in overlay.
+- Photobox, idem ditto.
 - Media, to have fairly variant slides: image, video, audio.
 - Field collection, to have more complex layout with Media.
 - Color field, to colorize slide background invidually.
@@ -303,7 +305,7 @@ NICE TO HAVE
 --------------------------------------------------------------------------------
 These should not block the proper release, but nice to have before then.
 - Multi resolution fullscreen background image sizes.
-- Photobox integration.
+- Photobox integration (FIXED - Slick 7.x-2.0-dev, 2015-3-9).
 
 
 

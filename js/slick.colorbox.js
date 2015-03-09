@@ -1,6 +1,6 @@
 /**
  * @file
- * Provides colorbox integration.
+ * Provides Colorbox integration for Image and Media fields.
  */
 
 (function ($, Drupal, window, document, undefined) {

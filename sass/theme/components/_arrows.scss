@@ -44,8 +44,8 @@
     box-shadow: none;
     outline: 0;
   }
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     pointer-events: none;
   }
 }
@@ -61,11 +61,11 @@
 
 .slick-prev,
 .slick-next {
-  &:before {
+  &::before {
     color: $color-2;
     @include font-size(36px);
   }
-  &:hover:before {
+  &:hover::before {
     color: $color-1;
   }
 }
@@ -89,8 +89,8 @@
   }
 
   /* Pure CSS arrow down, override by icon font accordingly */
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     border-right: 3px solid;
     color: $white;
     content: '';
@@ -104,13 +104,13 @@
     width: 0;
   }
 
-  &:after {
+  &::after {
     right: 18px;
     @include transform(rotate(45deg));
   }
 
-  &:hover:before,
-  &:hover:after {
+  &:hover::before,
+  &:hover::after {
     color: $white;
   }
 }

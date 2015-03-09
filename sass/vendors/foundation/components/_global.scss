@@ -159,7 +159,7 @@ $base-line-height: 1.5 !default;
       0 (2 * $gap + 2*$thickness) 0 $thickness $color;
     width: $width;
   }
-  span:hover:after {
+  span:hover::after {
     box-shadow:
       0 0 0 $thickness $hover-color,
       0 $gap + $thickness 0 $thickness $hover-color,
@@ -169,8 +169,8 @@ $base-line-height: 1.5 !default;
 
 // We use this to do clear floats
 @mixin clearfix {
-  &:before, &:after { content: " "; display: table; }
-  &:after { clear: both; }
+  &::before, &::after { content: " "; display: table; }
+  &::after { clear: both; }
 }
 
 // @mixins

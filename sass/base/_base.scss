@@ -1,6 +1,6 @@
 .slick *,
-.slick *:before,
-.slick *:after {
+.slick *::before,
+.slick *::after {
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   -o-box-sizing: border-box;

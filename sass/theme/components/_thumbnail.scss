@@ -1,13 +1,13 @@
 /**
- * Thumbnails inside bullets.
+ * Thumbnails inside dots.
  */
-.slick__slide .slide__thumbnail--placeholder {
+.slide__thumbnail--placeholder {
   @include visually-hidden;
 }
 
 // Default to anything but full width.
-/* The main thumbnail container */
-.slick__thumbnail {
+/* The main thumbnail container is slick-dots modifier */
+.slick-dots--thumbnail {
   list-style: none;
   @include pie-clearfix;
   overflow: visible;
@@ -60,7 +60,7 @@
         pointer-events: none;
       }
 
-      &:after {
+      &::after {
         border: 7px solid transparent;
         border-bottom: 0;
         border-top-color: $color-2;

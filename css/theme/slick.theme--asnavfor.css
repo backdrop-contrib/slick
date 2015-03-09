@@ -51,7 +51,7 @@
   z-index: 3;
 }
 
-.slick--display--thumbnail.slick--skin--asnavfor .slick__slide.slide--current:before {
+.slick--display--thumbnail.slick--skin--asnavfor .slick__slide.slide--current::before {
   content: '';
   display: block;
   border: 8px solid transparent;
