@@ -82,19 +82,6 @@
             }
           };
 
-        // Force autoplay, if not provided, which should not.
-        if (isMedia) {
-          if (media.scheme === 'soundcloud') {
-            if (url.indexOf('auto_play') < 0 || url.indexOf('auto_play') === false) {
-              url = url + '&amp;auto_play=true';
-            }
-          }
-          else if (url.indexOf('autoplay') < 0 || url.indexOf('autoplay') === 0) {
-            url = url + '&amp;autoplay=1';
-          }
-          t.attr('href', url);
-        }
-
         t.colorbox($.extend({}, settings.colorbox, runtimeOptions));
       });
 

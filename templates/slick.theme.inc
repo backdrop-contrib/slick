@@ -80,7 +80,7 @@ function template_preprocess_slick(&$variables) {
   $settings['id'] = $id;
 
   // Since 1.4, Slick is moved to content attributes to allow placing arrows
-  // within the slick container, otherwise arrows are slides.
+  // within the slick container, otherwise custom arrows are slides.
   if (!isset($content_attributes['id'])) {
     $content_attributes['id'] = $id . '-slider';
   }
@@ -219,7 +219,6 @@ function template_preprocess_slick(&$variables) {
   if ($settings['thumbnail_style'] && $settings['thumbnail_hover']) {
     // A problematic block element, or modifier since dotsClass is alterable.
     // @todo deprecate slick__thumbnail for slick-dots--thumbnail.
-    // Will be removed at proper release.
     $js['dotsClass'] .= ' slick-dots--thumbnail slick__thumbnail';
   }
 
@@ -234,13 +233,9 @@ function template_preprocess_slick(&$variables) {
   }
 
   // Add the configuration as JSON object into the slick container using HTML5
-  // data attributes. This is much more efficient than regular head JS settings
+  // data attributes. This is much more efficient than regular JS settings loop
   // which stuffs horrible bunch of JS settings for slide instances into the
   // <head>. This prevents possible collision and ID leak with multiple slicks.
-  // The data-config is kept in favor of the new data-slick, otherwise Slick
-  // will be initialized too early, causing other functions fail. data-slick is
-  // useful if you have no extra needs.
-  // @see https://github.com/kenwheeler/slick/pull/407
   if ($count > 1 && !isset($content_attributes['data-config'])) {
     $js_data = _slick_remove_default_optionset_options($optionset, $js);
 
@@ -370,7 +365,7 @@ function template_preprocess_slick_item(&$variables) {
 
   // Main image/background. Media module has type: image, audio, video, etc.
   // as opposed to field_type.
-  if (isset($settings['type'])) {
+  if ($settings['type']) {
     $attributes['class'][] = drupal_clean_css_identifier('slide--' . $settings['type']);
   }
 
@@ -579,7 +574,7 @@ function template_preprocess_slick_media(&$variables) {
         $variables['content_attributes_array']['data-media'] = drupal_json_encode($data_media);
         $variables['content_attributes_array']['data-lazy'] = $variables['url'];
       }
-      $variables['alternative_content'] = check_plain($settings['media_filename']);
+      $variables['alternative_content'] = check_plain($settings['filename']);
     }
 
     // Lightbox switcher applies to all media types, including core image field.
@@ -811,7 +806,6 @@ function theme_slick_image_formatter_lazy(array $variables) {
   // processed, the link path must at least be an empty string.
   if (isset($variables['path']['path'])) {
     if (isset($variables['options']['lightbox']) && $variables['options']['lightbox']) {
-      // @todo deprecated media-icon--colorbox for generic media-icon--lightbox.
       $switcher = $variables['options']['lightbox'];
       $output .= '<i class="media-icon media-icon--lightbox media-icon--' . $switcher . '"></i>';
       if ($variables['options']['has_pattern']) {

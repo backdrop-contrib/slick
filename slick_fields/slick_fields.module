@@ -965,7 +965,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'entity_id'          => $entity_id,
       'has_overlay'        => FALSE,
       'has_media'          => FALSE,
-      'box_ready'          => FALSE,
+      'lightbox_ready'     => FALSE,
       'picture_ready'      => FALSE,
       'inline_css'         => '',
       'lazy'               => '',
@@ -1011,7 +1011,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     switch ($field_type) {
       case 'image':
         $attach['attach_media']     = FALSE;
-        $settings['box_ready']      = TRUE;
+        $settings['lightbox_ready'] = TRUE;
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.image');
         $build = _slick_fields_format_image($settings, $items, $field);
@@ -1023,7 +1023,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       case 'file':
         $attach['attach_media']     = TRUE;
         $settings['has_media']      = TRUE;
-        $settings['box_ready']      = TRUE;
+        $settings['lightbox_ready'] = TRUE;
         $settings['picture_ready']  = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.media');
         $build = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode);

@@ -39,98 +39,90 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
 
       // Customize display to tame Field collection.
       // Main background image.
-      if ($settings['slide_image']) {
-        if (isset($fc_fields[$settings['slide_image']])) {
-          $slide_image = $fc_fields[$settings['slide_image']];
-          $field_type = $slide_image['#field_type'];
+      if ($settings['slide_image'] && isset($fc_fields[$settings['slide_image']])) {
+        $slide_image = $fc_fields[$settings['slide_image']];
+        $field_type = $slide_image['#field_type'];
 
-          // It is un-reasonable to make large image as colorbox, so disable it.
-          $settings['box_ready'] = FALSE;
-          $settings['picture_ready'] = TRUE;
-          switch ($field_type) {
-            case 'file':
-              // Large background video is not supported, any taker?
-              $file = $slide_image[0]['file'];
-              $fallback = $slide_image['#items'][0];
-              $image_style = isset($file['#style_name']) ? $file['#style_name'] : (isset($file['#image_style']) ? $file['#image_style'] : $image_style);
-              $image['uri'] = isset($file['#path']) && $file['#path'] ? $file['#path'] : $fallback['uri'];
-              $image['width'] = isset($file['#width']) ? $file['#width'] : NULL;
-              $image['height'] = isset($file['#height']) ? $file['#height'] : NULL;
-              $image['alt'] = isset($file['#alt']) ? $file['#alt'] : $fallback['alt'];
-              $image['title'] = isset($file['#title']) ? $file['#title'] : $fallback['title'];
+        // It is un-reasonable to make large image as colorbox, so disable it.
+        $settings['lightbox_ready'] = FALSE;
+        $settings['picture_ready'] = TRUE;
+        switch ($field_type) {
+          case 'file':
+            // Large background video is not supported, any taker?
+            $file            = $slide_image[0]['file'];
+            $fallback        = $slide_image['#items'][0];
+            $image_style     = isset($file['#style_name']) ? $file['#style_name'] : (isset($file['#image_style']) ? $file['#image_style'] : $image_style);
+            $image['uri']    = isset($file['#path']) && $file['#path'] ? $file['#path'] : $fallback['uri'];
+            $image['width']  = isset($file['#width']) ? $file['#width'] : NULL;
+            $image['height'] = isset($file['#height']) ? $file['#height'] : NULL;
+            $image['alt']    = isset($file['#alt']) ? $file['#alt'] : $fallback['alt'];
+            $image['title']  = isset($file['#title']) ? $file['#title'] : $fallback['title'];
 
-              break;
+            break;
 
-            case 'image':
-              $file = $slide_image[0]['#item'];
-              $image_style = isset($file['#image_style']) ? $file['#image_style'] : $image_style;
-              $image['uri'] = $file['uri'];
-              $image['width'] = $file['width'];
-              $image['height'] = $file['height'];
-              $image['alt'] = $file['alt'];
-              $image['title'] = $file['title'];
+          case 'image':
+            $file            = $slide_image[0]['#item'];
+            $image_style     = isset($file['#image_style']) ? $file['#image_style'] : $image_style;
+            $image['uri']    = $file['uri'];
+            $image['width']  = $file['width'];
+            $image['height'] = $file['height'];
+            $image['alt']    = $file['alt'];
+            $image['title']  = $file['title'];
 
-              break;
+            break;
 
-            default:
-              break;
-          }
+          default:
+            break;
+        }
 
-          // Provide thumbnail pagers if so configured.
-          $thumbnail = '';
-          $thumbnail_hover = '';
+        // Provide thumbnail pagers if so configured.
+        $thumbnail = '';
+        if ($thumbnail_style = $settings['thumbnail_style']) {
+          $image['path'] = $image['uri'];
+          $image['style_name'] = $thumbnail_style;
+          $thumbnail_variables = $image;
 
-          if (isset($settings['thumbnail_style']) && $settings['thumbnail_style']) {
-            $image['path'] = $image['uri'];
-            $image['style_name'] = $settings['thumbnail_style'];
-
-            $thumbnail = theme('image_style', $image);
-
-            if ($settings['thumbnail_hover']) {
-              $thumbnail_hover = '<div class="slide__thumbnail--placeholder"><div class="slide__thumbnail">' . $thumbnail . '</div>';
-              $thumbnail_hover .= '<button type="button" data-role="none">' . ($key + 1) . '</button></div>';
+          // Provides hidden static thumbnail revealed on dots hover.
+          if ($settings['thumbnail_hover']) {
+            $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
+            if ($settings['dots_thumbnail']) {
+              $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
+            }
+            if ($settings['dots_main']) {
+              $image['attributes']['data-thumb'] = $thumbnail_url;
             }
           }
 
-          if (!$thumb_nav) {
-            $settings['type'] = $field_type;
-            $settings['media_height'] = $image['height'];
-            $settings['media_width'] = $image['width'];
-            $settings['image_style'] = $image_style;
-            $settings['current_item'] = 'main';
-            // Image with picture and colorbox supports.
-            $slide['slide'] = _slick_fields_get_picture($settings, $image, $key);
+          $thumbnail = theme('image_style', $thumbnail_variables);
+        }
 
-            // Thumbnail static to copy over by JS.
-            if ($settings['dots_main'] && $thumbnail_hover) {
-              $slide['slide'] .= $thumbnail_hover;
+        if (!$thumb_nav) {
+          $settings['type']         = $field_type;
+          $settings['media_height'] = $image['height'];
+          $settings['media_width']  = $image['width'];
+          $settings['image_style']  = $image_style;
+          $settings['current_item'] = 'main';
+          // Image with picture and colorbox supports.
+          $slide['slide'] = _slick_fields_get_picture($settings, $image, $key);
+        }
+        else {
+          $slide['slide'] = $thumbnail;
+          $settings['type'] = 'image';
+
+          // Thumbnail captions.
+          if ($thumbnail_caption = $settings['thumbnail_caption']) {
+            if (isset($fc[$thumbnail_caption][$langcode][0]['safe_value']) && $fc[$thumbnail_caption][$langcode][0]['safe_value']) {
+              $slide['caption']['data']['#markup'] = $fc[$thumbnail_caption][$langcode][0]['safe_value'];
             }
           }
-          else {
-            $slide['slide'] = $thumbnail;
-            $settings['type'] = 'image';
+        }
 
-            // Thumbnail static to copy over by JS.
-            if ($settings['dots_thumbnail'] && $thumbnail_hover) {
-              $slide['slide'] .= $thumbnail_hover;
-            }
-
-            // Thumbnail captions.
-            if (isset($settings['thumbnail_caption']) && !empty($settings['thumbnail_caption'])) {
-              $thumbnail_caption = $settings['thumbnail_caption'];
-              if (isset($fc[$thumbnail_caption][$langcode][0]['safe_value']) && $fc[$thumbnail_caption][$langcode][0]['safe_value']) {
-                $slide['caption']['data']['#markup'] = $fc[$thumbnail_caption][$langcode][0]['safe_value'];
-              }
-            }
-          }
-
-          // @todo map from picture, or refine for mobile.
-          $inline_css_skins = slick_inline_css_skins();
-          if (in_array($settings['skin'], $inline_css_skins)) {
-            $slide['slide'] = array();
-            $fullscreen_image_url = image_style_url($settings['image_style'], $image['uri']);
-            $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$fullscreen_image_url}')}";
-          }
+        // @todo map from picture, or refine for mobile.
+        $inline_css_skins = slick_inline_css_skins();
+        if (in_array($settings['skin'], $inline_css_skins)) {
+          $slide['slide'] = array();
+          $fullscreen_image_url = image_style_url($settings['image_style'], $image['uri']);
+          $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$fullscreen_image_url}')}";
         }
       }
 
@@ -140,14 +132,15 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         if ($settings['slide_overlay'] && isset($fc_fields[$settings['slide_overlay']])) {
           $slide_overlay = $fc_fields[$settings['slide_overlay']];
 
-          $settings['has_overlay'] = TRUE;
-          $settings['is_media'] = FALSE;
-          $settings['box_ready'] = TRUE;
-          $settings['picture_ready'] = FALSE;
+          $settings['has_overlay']    = TRUE;
+          $settings['is_media']       = FALSE;
+          $settings['lightbox_ready'] = TRUE;
+          $settings['picture_ready']  = FALSE;
           $optionset = $settings['nested_optionset'] ? $settings['nested_optionset'] : 'default';
           $optionset = slick_optionset_load($optionset);
+
           // Makes consistent image styles across slicks within a slick.
-          if (isset($settings['nested_style']) && $settings['nested_style']) {
+          if ($settings['nested_style']) {
             $overlay_style = $settings['nested_style'];
           }
 
@@ -162,21 +155,20 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           $formatter = $slide_overlay['#formatter'];
 
           // Media is a flag to determine that we have iframe to render.
-          $media = '';
           // Media URL is expected by colorbox if so configured.
-          $media_url = '';
+          $media = $media_url = '';
 
           switch ($field_type) {
             case 'image':
               if (in_array($formatter, array('image', 'file_rendered'))) {
                 $overset = array();
                 foreach ($slide_overlay['#items'] as $i => $sub_overlay) {
-                  $rendered = $slide_overlay[$i];
-                  $overlay['uri'] = $sub_overlay['uri'];
-                  $overlay['width'] = $sub_overlay['width'];
+                  $rendered          = $slide_overlay[$i];
+                  $overlay['uri']    = $sub_overlay['uri'];
+                  $overlay['width']  = $sub_overlay['width'];
                   $overlay['height'] = $sub_overlay['height'];
-                  $overlay['alt'] = $sub_overlay['alt'];
-                  $overlay['title'] = $sub_overlay['title'];
+                  $overlay['alt']    = $sub_overlay['alt'];
+                  $overlay['title']  = $sub_overlay['title'];
 
                   if (!isset($overlay_style)) {
                     $overlay_style = isset($rendered['#image_style']) ? $rendered['#image_style'] : $image_style;
@@ -212,26 +204,26 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                     $overlay_style = isset($file_style['#style_name']) ? $file_style['#style_name'] : $image_style;
                   }
 
-                  $overlay['uri'] = $uri;
-                  $overlay['width'] = isset($file_style['#width']) ? $file_style['#width'] : NULL;
+                  $overlay['uri']    = $uri;
+                  $overlay['width']  = isset($file_style['#width']) ? $file_style['#width'] : NULL;
                   $overlay['height'] = isset($file_style['#height']) ? $file_style['#height'] : NULL;
-                  $overlay['alt'] = $file->alt;
-                  $overlay['title'] = $file->title;
+                  $overlay['alt']    = $file->alt;
+                  $overlay['title']  = $file->title;
 
                   // If a file has invalid type, allow file_view_file() to work.
                   if (!file_type_is_enabled($file->type)) {
                     $file->type = file_get_type($file);
                   }
 
-                  $overset['type'] = $overlay['type'] = $file->type;
-                  $overset['scheme'] = file_uri_scheme($uri);
-                  $overset['has_media'] = TRUE;
-                  $overset['media_uri'] = $uri;
-                  $overset['media_fid'] = $file->fid;
-                  $overset['media_filename'] = $file->filename;
-                  $overset['image_style'] = $overlay_style;
+                  $overset['type']         = $overlay['type'] = $file->type;
+                  $overset['scheme']       = file_uri_scheme($uri);
+                  $overset['has_media']    = TRUE;
+                  $overset['media_uri']    = $uri;
+                  $overset['media_fid']    = $file->fid;
                   $overset['media_height'] = $overlay['height'];
-                  $overset['media_width'] = $overlay['width'];
+                  $overset['media_width']  = $overlay['width'];
+                  $overset['image_style']  = $overlay_style;
+                  $overset['filename']     = $file->filename;
 
                   // Get audio/video thumbnail uri.
                   if ($media_image_uri = _slick_fields_get_media_thumbnail($overset, $uri, $overlay_style)) {
@@ -245,7 +237,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                     $overset['is_media'] = TRUE;
                     if (isset($media['#options'])) {
                       $overset['media_height'] = $media['#options']['height'] ? $media['#options']['height'] : 640;
-                      $overset['media_width'] = $media['#options']['width'] ? $media['#options']['width'] : 360;
+                      $overset['media_width']  = $media['#options']['width'] ? $media['#options']['width'] : 360;
                     }
 
                     $rendered_media = render($media);
@@ -330,7 +322,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                 $overlay['url'] = $overset['url'];
 
                 // Alternate content.
-                $overset['media_filename'] = check_plain($atom->title);
+                $overset['filename'] = check_plain($atom->title);
                 $overset['media_fid'] = $sid;
 
                 $overlay_height = '';
@@ -366,7 +358,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                 image_style_transform_dimensions($overlay_style, $dimensions);
 
                 $overlay['height'] = $overset['media_height'] = $dimensions['height'];
-                $overlay['width'] = $overset['media_width'] = $dimensions['width'];
+                $overlay['width']  = $overset['media_width'] = $dimensions['width'];
 
                 $overset['type'] = $overlay['type'] = $atom->type == 'slick' ? 'image' : $atom->type;
                 $overset['image_style'] = $overlay_style;
@@ -396,14 +388,14 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               // Image with picture supports, but disabled for small overlay,
               // since we don't provide UI to manage small pictures, and
               // picture is only reasonable for large images.
-              $overlay_settings[$key][$idx]['count'] = $overlay_count;
-              $overlay_settings[$key][$idx]['box_ready'] = $settings['media_switch'] == 'colorbox-switch';
+              $overlay_settings[$key][$idx]['count']          = $overlay_count;
+              $overlay_settings[$key][$idx]['lightbox_ready'] = $settings['media_switch'] == 'colorbox-switch';
               $overlay_settings[$key][$idx]['colorbox_style'] = $settings['colorbox_style'];
-              $overlay_settings[$key][$idx]['picture_ready'] = FALSE;
-              $overlay_settings[$key][$idx]['media_switch'] = $settings['media_switch'];
-              $overlay_settings[$key][$idx]['picture'] = FALSE;
-              $overlay_settings[$key][$idx]['lazy'] = $settings['lazy'];
-              $overlay_settings[$key][$idx]['attributes'] = $settings['attributes'];
+              $overlay_settings[$key][$idx]['picture_ready']  = FALSE;
+              $overlay_settings[$key][$idx]['media_switch']   = $settings['media_switch'];
+              $overlay_settings[$key][$idx]['picture']        = FALSE;
+              $overlay_settings[$key][$idx]['lazy']           = $settings['lazy'];
+              $overlay_settings[$key][$idx]['attributes']     = $settings['attributes'];
 
               // Must be similar across all slide items within a particular
               // Slick for the colorbox gallery ID - GID to work.
@@ -452,7 +444,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               );
 
               // Overrides common options to re-use an optionset.
-              if (isset($settings['override']) && $settings['override']) {
+              if ($settings['override']) {
                 $overridables = array();
                 // Respect empty values, meaning FALSE.
                 foreach ($settings['overridables'] as $key => $override) {
@@ -495,8 +487,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         }
 
         // Title, if so configured.
-        if (!empty($settings['slide_title'])) {
-          $slide_title = $settings['slide_title'];
+        if ($slide_title = $settings['slide_title']) {
           $title = '';
           // Plain text title.
           if (isset($fc[$slide_title][$langcode][0]['safe_value'])) {
@@ -516,9 +507,9 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         }
 
         // Other caption fields, if so configured.
-        if (!empty($settings['slide_caption'])) {
+        if ($slide_caption = $settings['slide_caption']) {
           $caption_items = array();
-          foreach ($settings['slide_caption'] as $i => $caption_field) {
+          foreach ($slide_caption as $i => $caption_field) {
             if (isset($fc_fields[$caption_field])) {
               $caption_items[$i] = $fc_fields[$caption_field];
             }
@@ -530,47 +521,45 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         }
 
         // Link, if so configured.
-        if (!empty($settings['slide_link']) && isset($fc_fields[$settings['slide_link']])) {
+        if ($settings['slide_link'] && isset($fc_fields[$settings['slide_link']])) {
           $slide['caption']['link'] = $fc_fields[$settings['slide_link']];
         }
 
         // Layout, if so configured.
-        if (!empty($settings['slide_layout']) && isset($fc[$settings['slide_layout']][$langcode][0]['value'])) {
+        if ($settings['slide_layout'] && isset($fc[$settings['slide_layout']][$langcode][0]['value'])) {
           $layout = $fc[$settings['slide_layout']][$langcode][0]['value'];
           $slide['caption']['layout'] = check_plain($layout);
         }
 
         // Color.
-        if (isset($settings['color_field']) && $settings['color_field']) {
-          if (isset($fc_fields[$settings['color_field']])) {
-            $color_field = $fc_fields[$settings['color_field']];
-            $field_type = $color_field['#field_type'];
-            $color = '';
+        if ($settings['color_field'] && isset($fc_fields[$settings['color_field']])) {
+          $color_field = $fc_fields[$settings['color_field']];
+          $field_type = $color_field['#field_type'];
+          $color = '';
 
-            switch ($field_type) {
-              case 'text':
-                $color = $color_field['#items'][0]['safe_value'];
-                break;
+          switch ($field_type) {
+            case 'text':
+              $color = $color_field['#items'][0]['safe_value'];
+              break;
 
-              case 'color_field_rgb':
-                $color = strip_tags($color_field['#items'][0]['rgb']);
-                break;
-            }
+            case 'color_field_rgb':
+              $color = strip_tags($color_field['#items'][0]['rgb']);
+              break;
+          }
 
-            if ($color) {
-              $light = slick_color_brightness($color, 42);
-              $hover = slick_color_brightness($color, 62);
+          if ($color) {
+            $light = slick_color_brightness($color, 42);
+            $hover = slick_color_brightness($color, 62);
 
-              $css[] = "#{$slick_id} .slide--{$key} {color: {$color}}";
-              $css[] = "#{$slick_id} .slide--{$key} .slide__title {color: {$color}}";
-              // @see http://tympanus.net/Development/CreativeLinkEffects/
-              $css[] = "#{$slick_id} .slide--{$key} .slide__link a::before, #{$slick_id} .slide--{$key} .slide__link a::after {background-color: {$color}}";
+            $css[] = "#{$slick_id} .slide--{$key} {color: {$color}}";
+            $css[] = "#{$slick_id} .slide--{$key} .slide__title {color: {$color}}";
+            // @see http://tympanus.net/Development/CreativeLinkEffects/
+            $css[] = "#{$slick_id} .slide--{$key} .slide__link a::before, #{$slick_id} .slide--{$key} .slide__link a::after {background-color: {$color}}";
 
-              if ($color != '#fff' || $color != '#ffffff') {
-                $css[] = "#{$slick_id} .slide--{$key} .slide__link a {color: {$color}}";
-                $css[] = "#{$slick_id} .slide--{$key} .slide__link a:hover {color: {$hover}}";
-                $css[] = "#{$slick_id} .slide--{$key} .slide__caption {color: {$light}}";
-              }
+            if ($color != '#fff' || $color != '#ffffff') {
+              $css[] = "#{$slick_id} .slide--{$key} .slide__link a {color: {$color}}";
+              $css[] = "#{$slick_id} .slide--{$key} .slide__link a:hover {color: {$hover}}";
+              $css[] = "#{$slick_id} .slide--{$key} .slide__caption {color: {$light}}";
             }
           }
         }

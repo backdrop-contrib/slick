@@ -83,16 +83,29 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
 
     // Provide relevant link path if it is a lightbox: media audio/video should
     // provide URL to the actual audio/video URL, image to colorbox image URL.
-    if ($settings['is_lightbox'] && $settings['box_ready'] && $settings['colorbox_style']) {
+    if ($settings['is_lightbox'] && $settings['lightbox_ready'] && $settings['colorbox_style']) {
+      $data_media = array('type' => $settings['type']);
+      if (isset($settings['scheme'])) {
+        $data_media['scheme'] = $settings['scheme'];
+      }
+
       if ($media_url) {
         $url = $media_url;
+        // Force autoplay for media URL on lightboxes saving another click.
+        if ($data_media['scheme'] == 'soundcloud') {
+          if (strpos($url, 'auto_play') === FALSE || strpos($url, 'auto_play=false') !== FALSE) {
+            $url = strpos($url, '?') === FALSE ? $url . '?auto_play=true' : $url . '&amp;auto_play=true';
+          }
+        }
+        elseif (strpos($url, 'autoplay') === FALSE || strpos($url, 'auto_play=0') !== FALSE) {
+          $url = strpos($url, '?') === FALSE ? $url . '?autoplay=1' : $url . '&amp;autoplay=1';
+        }
       }
       else {
         $url = image_style_url($settings['colorbox_style'], $image['uri']);
       }
 
       $image_variables['path']['path'] = $url;
-      $data_media = array('type' => $settings['type']);
 
       if ($settings['media_switch'] == 'colorbox-switch') {
         $box_classes = array('slick__colorbox', 'slick__capture');
@@ -112,10 +125,6 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
       }
 
       $image_variables['path']['options']['attributes']['class'] = $box_classes;
-
-      if (isset($settings['scheme'])) {
-        $data_media['scheme'] = $settings['scheme'];
-      }
 
       // Video/audio has special attributes for JS interaction.
       if ($settings['type'] != 'image') {

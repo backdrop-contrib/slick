@@ -37,44 +37,43 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
     $settings['media_width']  = $image['width'];
 
     $thumbnail = '';
-    $thumbnail_hover = '';
-    $image_slide = '';
-
-    if (isset($settings['thumbnail_style']) && $settings['thumbnail_style']) {
+    if ($thumbnail_style = $settings['thumbnail_style']) {
       $image['path'] = $image['uri'];
-      $image['style_name'] = $settings['thumbnail_style'];
+      $image['style_name'] = $thumbnail_style;
+      $thumbnail_variables = $image;
 
-      $thumbnail = theme('image_style', $image);
-
+      // Provides hidden static thumbnail revealed on dots hover.
       if ($settings['thumbnail_hover']) {
-        $thumbnail_hover = '<div class="slide__thumbnail--placeholder"><div class="slide__thumbnail">' . $thumbnail . '</div>';
-        $thumbnail_hover .= '<button type="button" data-role="none">' . ($key + 1) . '</button></div>';
+        $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
+        if ($settings['dots_thumbnail']) {
+          $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
+        }
+        if ($settings['dots_main']) {
+          $image['attributes']['data-thumb'] = $thumbnail_url;
+        }
       }
+
+      $thumbnail = theme('image_style', $thumbnail_variables);
     }
 
     if (!$thumb_nav) {
       // Slide captions.
-      if (!empty($settings['slide_caption'])) {
-        if (!empty($image['title'])) {
+      if ($settings['slide_caption']) {
+        if ($image['title']) {
           $slide['caption']['title']['#markup'] = filter_xss($image['title']);
         }
-        if (!empty($image['alt'])) {
+        if ($image['alt']) {
           $slide['caption']['alt']['#markup'] = filter_xss($image['alt']);
         }
       }
 
       // Slide layouts.
-      if (!empty($settings['slide_layout'])) {
+      if ($settings['slide_layout']) {
         $slide['caption']['layout'] = check_plain($settings['slide_layout']);
       }
 
       // Image with picture and colorbox supports.
       $image_slide = _slick_fields_get_picture($settings, $image, $key);
-
-      // Thumbnail static.
-      if ($settings['dots_main'] && $thumbnail_hover) {
-        $image_slide .= $thumbnail_hover;
-      }
     }
     else {
       // Thumbnail slider if so configured.
@@ -82,18 +81,13 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
       $settings['type'] = 'image';
       $asnavfor = 'thumbnail';
 
-      // Thumbnail static.
-      if ($settings['dots_thumbnail'] && $thumbnail_hover) {
-        $image_slide .= $thumbnail_hover;
-      }
-
       // Thumbnail captions.
-      if (isset($settings['thumbnail_caption']) && !empty($settings['thumbnail_caption'])) {
+      if ($settings['thumbnail_caption']) {
         $thumbnail_caption = '';
-        if ($settings['thumbnail_caption'] == 'title_field' && !empty($image['title'])) {
+        if ($settings['thumbnail_caption'] == 'title_field' && $image['title']) {
           $thumbnail_caption = $image['title'];
         }
-        elseif ($settings['thumbnail_caption'] == 'alt_field' && !empty($image['alt'])) {
+        elseif ($settings['thumbnail_caption'] == 'alt_field' && $image['alt']) {
           $thumbnail_caption = $image['alt'];
         }
         if ($thumbnail_caption) {

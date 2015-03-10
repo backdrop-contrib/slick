@@ -1,4 +1,4 @@
-name = Slick Example
+name = Slick example
 description = "Provides Slick examples, the last carousel examples."
 package = Slick
 core = 7.x

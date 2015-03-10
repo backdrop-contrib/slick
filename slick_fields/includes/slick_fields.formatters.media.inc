@@ -34,10 +34,10 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
     $image['alt']    = $slide['item']['alt'];
     $image['title']  = $slide['item']['title'];
 
-    $settings['has_media']      = TRUE;
-    $settings['is_media']       = FALSE;
-    $settings['media_height']   = $image['height'];
-    $settings['media_width']    = $image['width'];
+    $settings['has_media']    = TRUE;
+    $settings['is_media']     = FALSE;
+    $settings['media_height'] = $image['height'];
+    $settings['media_width']  = $image['width'];
 
     $file = (object) $slide['item'];
     $uri = $file->uri;
@@ -55,9 +55,9 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
         $settings['media_height'] = $media['#options']['height'] ? $media['#options']['height'] : 640;
         $settings['media_width'] = $media['#options']['width'] ? $media['#options']['width'] : 360;
       }
-      $settings['media_uri']      = $media['#uri'];
-      $settings['media_fid']      = $file->fid;
-      $settings['media_filename'] = $file->filename;
+      $settings['media_uri'] = $media['#uri'];
+      $settings['media_fid'] = $file->fid;
+      $settings['filename']  = $file->filename;
     }
     $scheme = file_uri_scheme($uri);
     $image_style = isset($media['#style_name']) ? $media['#style_name'] : $image_style;
@@ -73,25 +73,30 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
 
     // Provide thumbnail pagers if so configured.
     $thumbnail = '';
-    $thumbnail_hover = '';
-
-    if (isset($settings['thumbnail_style']) && $settings['thumbnail_style']) {
+    if ($thumbnail_style = $settings['thumbnail_style']) {
       $image['path'] = $image['uri'];
-      $image['style_name'] = $settings['thumbnail_style'];
+      $image['style_name'] = $thumbnail_style;
+      $thumbnail_variables = $image;
 
-      $thumbnail = theme('image_style', $image);
-
+      // Provides hidden static thumbnail revealed on dots hover.
       if ($settings['thumbnail_hover']) {
-        $thumbnail_hover = '<div class="slide__thumbnail--placeholder"><div class="slide__thumbnail">' . $thumbnail . '</div>';
-        $thumbnail_hover .= '<button type="button" data-role="none">' . ($key + 1) . '</button></div>';
+        $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
+        if ($settings['dots_thumbnail']) {
+          $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
+        }
+        if ($settings['dots_main']) {
+          $image['attributes']['data-thumb'] = $thumbnail_url;
+        }
       }
+
+      $thumbnail = theme('image_style', $thumbnail_variables);
     }
 
     if (!$thumb_nav) {
       // Title, if so configured.
       $title = '';
-      if (!empty($settings['slide_title'])) {
-        if ($field_title = field_get_items('file', $file, $settings['slide_title'])) {
+      if ($slide_title = $settings['slide_title']) {
+        if ($field_title = field_get_items('file', $file, $slide_title)) {
           // Plain text title.
           if (isset($field_title[0]['safe_value'])) {
             $title = $field_title[0]['safe_value'];
@@ -99,7 +104,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
           // Link field.
           elseif (isset($field_title[0]['url'])) {
             // The $item paramater expected here is $field_title[0].
-            $title = field_view_value('file', $file, $settings['slide_title'], $field_title[0], $view_mode);
+            $title = field_view_value('file', $file, $slide_title, $field_title[0], $view_mode);
           }
 
           $slide['caption']['title'] = $title;
@@ -108,8 +113,8 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
 
       // Other caption fields, if so configured.
       $caption_items = array();
-      if (!empty($settings['slide_caption'])) {
-        foreach ($settings['slide_caption'] as $i => $caption_field) {
+      if ($slide_caption = $settings['slide_caption']) {
+        foreach ($slide_caption as $i => $caption_field) {
           $is_caption = field_get_items('file', $file, $caption_field);
           if ($is_caption && ($caption = field_view_field('file', $file, $caption_field, $view_mode))) {
             $caption_items[$i] = $caption;
@@ -118,6 +123,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
         $slide['caption']['data'] = $caption_items;
       }
 
+      // Editor links.
       if (file_entity_access('update', $file)) {
         // This is basically to trigger/ bring to translation tab as defined at
         // admin/config/regional/entity_translation/translatable/FIELD_NAME
@@ -141,18 +147,17 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       }
 
       // Link, if so configured.
-      if (!empty($settings['slide_link'])) {
-        if (field_get_items('file', $file, $settings['slide_link'])) {
-          $link = field_view_field('file', $file, $settings['slide_link'], $view_mode);
+      if ($slide_link = $settings['slide_link']) {
+        if (field_get_items('file', $file, $slide_link)) {
+          $link = field_view_field('file', $file, $slide_link, $view_mode);
           $slide['caption']['link'] = $link;
         }
       }
 
       // Layout, if so configured.
-      if (!empty($settings['slide_layout'])) {
+      if ($settings['slide_layout']) {
         if ($field_layout = field_get_items('file', $file, $settings['slide_layout'])) {
-          $layout = $field_layout[0]['value'];
-          $slide['caption']['layout'] = check_plain($layout);
+          $slide['caption']['layout'] = check_plain($field_layout[0]['value']);
         }
       }
 
@@ -165,36 +170,24 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
 
       // Image with picture and colorbox supports.
       $image_slide = _slick_fields_get_picture($settings, $image, $key, $media_url);
-
-      // Thumbnail static.
-      if ($settings['dots_main'] && $thumbnail_hover) {
-        $image_slide .= $thumbnail_hover;
-      }
     }
     else {
       $image_slide = $thumbnail;
       $settings['type'] = 'image';
       $asnavfor = 'thumbnail';
 
-      // Thumbnail static.
-      if ($settings['dots_thumbnail'] && $thumbnail_hover) {
-        $image_slide .= $thumbnail_hover;
-      }
-
       // Thumbnail captions.
-      if (isset($settings['thumbnail_caption']) && !empty($settings['thumbnail_caption'])) {
-        if ($field_thumbnail_caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
-          $thumbnail_caption = $field_thumbnail_caption[0]['value'];
-          $slide['caption']['data']['#markup'] = filter_xss($thumbnail_caption);
+      if ($settings['thumbnail_caption']) {
+        if ($thumbnail_caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
+          $slide['caption']['data']['#markup'] = filter_xss($thumbnail_caption[0]['value']);
         }
       }
     }
 
     // Slide classes, if so configured.
-    if (!empty($settings['slide_classes'])) {
-      if ($field_slide_classes = field_get_items('file', $file, $settings['slide_classes'])) {
-        $slide_classes = $field_slide_classes[0]['value'];
-        $settings['classes'] = strip_tags($slide_classes);
+    if ($settings['slide_classes']) {
+      if ($slide_classes = field_get_items('file', $file, $settings['slide_classes'])) {
+        $settings['classes'] = strip_tags($slide_classes[0]['value']);
       }
     }
 

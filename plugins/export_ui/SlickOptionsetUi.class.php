@@ -91,7 +91,7 @@ class SlickOptionsetUi extends ctools_export_ui {
     $form['options']['general']['thumbnail'] = array(
       '#type' => 'select',
       '#title' => t('Thumbnail style'),
-      '#description' => t('Image style for the thumbnail image if using asNavFor, overriden by field formatter Useful for custom work.'),
+      '#description' => t('Image style for the thumbnail image if using asNavFor, overriden by field formatter. Useful for custom work.'),
       '#empty_option' => t('None (original image)'),
       '#options' => $image_styles,
       '#default_value' => isset($options['general']['thumbnail']) ? $options['general']['thumbnail'] : '',

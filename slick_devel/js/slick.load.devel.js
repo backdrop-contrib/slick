@@ -139,7 +139,7 @@
      * Declare global options explicitly to copy into responsives.
      */
     globals: function(t, a, merged) {
-      var globals = {
+      return {
         slide: merged.slide,
         lazyLoad: merged.lazyLoad,
         dotsClass: merged.dotsClass,
@@ -149,10 +149,11 @@
         nextArrow: $('.slick-next', a),
         appendArrows: a,
         customPaging: function(slick, i) {
-          return slick.$slides.eq(i).find('.slide__thumbnail--placeholder').html() || slick.defaults.customPaging(slick, i);
+          var tn = slick.$slides.eq(i).find('[data-thumb]') || null,
+            dots_thumb = tn.length ? '<div class="slide__thumbnail"><img alt="' + tn.attr('alt') + '" src="' + tn.data('thumb') + '"></div>' : '';
+          return dots_thumb + slick.defaults.customPaging(slick, i);
         }
       };
-      return globals;
     }
   };
 

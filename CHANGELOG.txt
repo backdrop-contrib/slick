@@ -1,4 +1,12 @@
 
+
+Slick 7.x-2.0-dev, 2015-3-10
+----------------------------
+Fixed autoplay for Photobox videos, and moved the Colorbox autoplay logic from
+  JS to PHP to share between lightboxes.
+Removed thumbnail_hover DOM markups -- thumbnails which appear on hovering dots,
+  and used data-thumb attributes managed by JS option customPaging instead.
+
 Slick 7.x-2.0-dev, 2015-3-9
 ---------------------------
 Updated slick_example asNavFor to not use field template for the main display.

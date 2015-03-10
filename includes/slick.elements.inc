@@ -314,6 +314,7 @@ function slick_get_element_default_settings($count = 0) {
     'skin_dots' => '',
     'grid' => '',
     'field_type' => '',
+    'type' => '',
     'media_switch' => FALSE,
     'is_carousel' => FALSE,
     'has_pattern' => FALSE,
@@ -324,7 +325,7 @@ function slick_get_element_default_settings($count = 0) {
   );
 
   // Allows default settings information to be altered.
-  drupal_alter('slick_default_settings_info', $settings);
+  drupal_alter('slick_element_default_settings_info', $settings);
 
   return $settings;
 }
@@ -622,13 +623,15 @@ function slick_skins($options = FALSE) {
 }
 
 /**
- * Gets supported Slick skin arrows/dots, and additional ones.
+ * Returns supported Slick skin arrows/dots, and additional ones.
  *
+ * @param string $type
+ *   The hook type: arrows or dots.
  * @param bool $options
  *   Flag to limit the returned values for select options.
  *
  * @return array
- *   An array of available skin arrows.
+ *   The associative array of available skin arrows or dots.
  */
 function slick_navigations($type = 'arrows', $options = FALSE) {
   $navigations = &drupal_static(__FUNCTION__, NULL);
@@ -653,7 +656,7 @@ function slick_navigations($type = 'arrows', $options = FALSE) {
 }
 
 /**
- * Gets supported Slick skins expecting inline CSS background, not images.
+ * Returns supported Slick skins expecting inline CSS background, not images.
  *
  * @return array
  *   An array of available skins expecting inline CSS background.
@@ -677,6 +680,12 @@ function slick_inline_css_skins() {
  * Create a new optionset object.
  *
  * Note that this function does not save the optionset to the database.
+ *
+ * @param array $values
+ *   The given values to build the optionset if provided.
+ *
+ * @return object
+ *   Returns it as an optionset object.
  *
  * @see slick_optionset_save()
  * @see slick_slick_default_presets()
@@ -710,7 +719,7 @@ function slick_optionset_create($values = array()) {
     $optionset->options = $values['options'];
   }
 
-  // Merge default settings with any given settings, and removed duplicates.
+  // Merge default settings with any given settings.
   $optionset_defaults = _slick_optionset_defaults(NULL, $optionset->breakpoints);
   $optionset->options = $optionset->options + $optionset_defaults;
 
@@ -726,7 +735,7 @@ function slick_optionset_create($values = array()) {
  *   might have changed on the page load.
  *
  * @return array
- *   The associative array of all options.
+ *   The associative array of all optionsets.
  */
 function slick_optionset_load_all($reset = FALSE) {
   ctools_include('export');
@@ -743,17 +752,39 @@ function slick_optionset_load_all($reset = FALSE) {
 /**
  * Fetches the given option set.
  *
+ * @param string $id
+ *   The optionset ID.
+ *
  * @return object
  *   Returns it as an object or NULL, if no set could be found.
  */
-function slick_optionset_load($optionset_name) {
+function slick_optionset_load($id) {
   ctools_include('export');
-  $optionset = ctools_export_crud_load('slick_optionset', $optionset_name);
+  $optionset = ctools_export_crud_load('slick_optionset', $id);
 
   // Ensure the optionset is typecast after being loaded from storage.
   $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
   _slick_typecast_optionset($optionset->options, $breakpoints);
   return $optionset;
+}
+
+/**
+ * Returns the current setting under group 'settings'.
+ *
+ * @param string $id
+ *   The optionset ID.
+ * @param string $setting_name
+ *   The name of setting.
+ * @param string $group
+ *   The optionset group: general, settings, responsives.
+ *
+ * @return mixed|FALSE
+ *   The current setting value, or FALSE if none matching.
+ */
+function slick_optionset_get_setting($id, $setting_name, $group = 'settings') {
+  $optionset = slick_optionset_load($id);
+  $options = $optionset->options[$group];
+  return isset($options[$setting_name]) ? $options[$setting_name] : FALSE;
 }
 
 /**
