@@ -2,6 +2,9 @@
 
 Slick 7.x-2.0-dev, 2015-3-10
 ----------------------------
+Added info about the data-slick to be removed at Slick 1.5 to slick_devel.
+  See https://github.com/kenwheeler/slick/issues/1058
+  The data-slick is never used by the module unless for development purposes.
 Fixed autoplay for Photobox videos, and moved the Colorbox autoplay logic from
   JS to PHP to share between lightboxes.
 Removed thumbnail_hover DOM markups -- thumbnails which appear on hovering dots,
@@ -10,7 +13,8 @@ Removed thumbnail_hover DOM markups -- thumbnails which appear on hovering dots,
 Slick 7.x-2.0-dev, 2015-3-9
 ---------------------------
 Updated slick_example asNavFor to not use field template for the main display.
-Removed extra ISSET checks by proper definition in slick_get_element_default_settings().
+Removed extra ISSET checks by proper definitions in
+  slick_get_element_default_settings().
 Removed wasted "slick--progressive" class, and only provided "slick--ondemand"
   class only if the lazyLoad is ondemand to keep the current fix with excessive
   height of dummy image.
