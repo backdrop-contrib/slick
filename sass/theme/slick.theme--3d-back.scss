@@ -39,6 +39,7 @@ $rotate: 25deg !default;
 
     .slide__media {
       margin: $vert-spacing-unit 0;
+      outline: 1px solid transparent; // fixed jaggy edges.
       @include transform(rotateY($rotate));
       @include backface-visibility(hidden);
       @include transition(opacity 1s ease 0s, transform 1s);

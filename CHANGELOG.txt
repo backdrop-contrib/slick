@@ -2,6 +2,10 @@
 
 Slick 7.x-2.0-dev, 2015-3-10
 ----------------------------
+Added the bad boy verticalScrolling option to drag up and down the slide. Use
+  slick_devel module to test it. "Ken tired of this":
+  https://github.com/kenwheeler/slick/issues/1001
+  If you want your feature request fullfilled, make him tired ;)
 Added info about the data-slick to be removed at Slick 1.5 to slick_devel.
   See https://github.com/kenwheeler/slick/issues/1058
   The data-slick is never used by the module unless for development purposes.

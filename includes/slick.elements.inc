@@ -226,6 +226,11 @@ function slick_get_options() {
       'default' => FALSE,
     );
 
+    $options['verticalScrolling'] = array(
+      'cast' => 'bool',
+      'default' => FALSE,
+    );
+
     $options['waitForAnimate'] = array(
       'cast' => 'bool',
       'default' => TRUE,
@@ -481,6 +486,9 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
     if (empty($config['swipe'])) {
       unset($config['swipeToSlide']);
     }
+    if (empty($config['vertical'])) {
+      unset($config['verticalScrolling']);
+    }
     if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
       $config['cssEase'] = $config['cssEaseBezier'];
       unset($config['cssEaseOverride'], $config['cssEaseBezier']);
@@ -525,6 +533,9 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
           }
           if (empty($cleaned[$key]['settings']['dots'])) {
             unset($cleaned[$key]['settings']['dotsClass'], $cleaned[$key]['settings']['appendDots']);
+          }
+          if (empty($cleaned[$key]['settings']['vertical'])) {
+            unset($cleaned[$key]['settings']['verticalScrolling']);
           }
           if (isset($cleaned[$key]['settings']['cssEaseBezier']) && $cleaned[$key]['settings']['cssEaseBezier']) {
             $cleaned[$key]['settings']['cssEase'] = $cleaned[$key]['settings']['cssEaseBezier'];

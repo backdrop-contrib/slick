@@ -343,6 +343,10 @@ class SlickOptionsetUi extends ctools_export_ui {
                     case 'cssEaseOverride':
                       $states = array('visible' => array(':input[name*="[' . $i . '][settings][useCSS]"]' => array('checked' => TRUE)));
                       break;
+
+                    case 'verticalScrolling':
+                      $states = array('visible' => array(':input[name*="[' . $i . '][settings][vertical]"]' => array('checked' => TRUE)));
+                      break;
                   }
 
                   if ($states) {
@@ -690,6 +694,13 @@ class SlickOptionsetUi extends ctools_export_ui {
         'title' => t('Vertical'),
         'description' => t('Vertical slide direction. See <a href="@url" target="_blank">relevant issue</a>.', array('@url' => '//github.com/kenwheeler/slick/issues/1001')),
         'type' => 'checkbox',
+      );
+
+      $options['verticalScrolling'] = array(
+        'title' => t('Vertical scrolling'),
+        'description' => t('Vertical slide scrolling/ dragging.'),
+        'type' => 'checkbox',
+        'states' => array('visible' => array(':input[name*="options[settings][vertical]"]' => array('checked' => TRUE))),
       );
 
       $options['waitForAnimate'] = array(
