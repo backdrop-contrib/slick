@@ -1,5 +1,30 @@
 
 
+Slick 7.x-2.0-dev, 2015-3-21
+----------------------------
+Fixed edge-case issues with deleted optionset while being used.
+
+Slick 7.x-2.0-dev, 2015-3-14
+----------------------------
+Changed "data-thumb" to be always available not only for dots thumbnail hover,
+  but also for custom advanced works with arrows containing thumbnails as long
+  as "Thumbnail style" option is provided. It is up to you to build such complex
+  arrows. See the current customPaging implementation on how to manipulate dots
+  with lazy-loaded thumbnails which appears on hovering dots. The similar
+  technique is also applied to build Photobox thumbnail navigation. If you
+  don't make use thumbnails dots, nor arrows, nor Photobox thumbnails, simply
+  leave the option empty.
+Removed wasted slide--before and slide--after classes from
+  Drupal.slick.setCurrent() since it is never implemented so far.
+Fixed skin arrows and dots not being recognized by slick_navigations(), and
+  dropped it in favor of slick_dots() and slick_arrows() instead.
+Added slick_elements_info_alter(), slick_responsive_elements_info_alter(), and
+  slick_options_info_alter() to allow modifying slick options and form elements
+  by custom module after stable release without having to wait for the features
+  to be added or another release. Or when a module wants to modify slick options
+  internally such as when building a modular slick.
+Fixed for duplicated/cloned thumbnails being displayed at Photobox.
+
 Slick 7.x-2.0-dev, 2015-3-10
 ----------------------------
 Added the bad boy verticalScrolling option to drag up and down the slide. Use

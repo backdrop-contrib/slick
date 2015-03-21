@@ -19,222 +19,54 @@ function slick_get_options() {
   $options = &drupal_static(__FUNCTION__, NULL);
 
   if (!isset($options)) {
-    $options = array();
-
-    $options['mobileFirst'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
+    $options = array(
+      'mobileFirst'       => FALSE,
+      'asNavFor'          => '',
+      'accessibility'     => TRUE,
+      'adaptiveHeight'    => FALSE,
+      'autoplay'          => FALSE,
+      'autoplaySpeed'     => 3000,
+      'pauseOnHover'      => TRUE,
+      'pauseOnDotsHover'  => FALSE,
+      'arrows'            => TRUE,
+      'appendArrows'      => '$(element)',
+      'prevArrow'         => '<button type="button" data-role="none" class="slick-prev">Previous</button>',
+      'nextArrow'         => '<button type="button" data-role="none" class="slick-next">Next</button>',
+      'centerMode'        => FALSE,
+      'centerPadding'     => '50px',
+      'dots'              => FALSE,
+      'dotsClass'         => 'slick-dots',
+      'appendDots'        => '$(element)',
+      'draggable'         => TRUE,
+      'fade'              => FALSE,
+      'focusOnSelect'     => FALSE,
+      'infinite'          => TRUE,
+      'initialSlide'      => 0,
+      'lazyLoad'          => 'ondemand',
+      'respondTo'         => 'window',
+      'rtl'               => FALSE,
+      'slide'             => '',
+      'slidesToShow'      => 1,
+      'slidesToScroll'    => 1,
+      'speed'             => 500,
+      'swipe'             => TRUE,
+      'swipeToSlide'      => FALSE,
+      'edgeFriction'      => 0.35,
+      'touchMove'         => TRUE,
+      'touchThreshold'    => 5,
+      'useCSS'            => TRUE,
+      'cssEase'           => 'ease',
+      'cssEaseBezier'     => '',
+      'cssEaseOverride'   => '',
+      'easing'            => 'linear',
+      'variableWidth'     => FALSE,
+      'vertical'          => FALSE,
+      'verticalScrolling' => FALSE,
+      'waitForAnimate'    => TRUE,
     );
 
-    $options['asNavFor'] = array(
-      'cast' => 'string',
-      'default' => '',
-    );
-
-    $options['accessibility'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
-
-    $options['adaptiveHeight'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['autoplay'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['autoplaySpeed'] = array(
-      'cast' => 'int',
-      'default' => 3000,
-    );
-
-    $options['pauseOnHover'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
-
-    $options['pauseOnDotsHover'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['arrows'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
-
-    $options['appendArrows'] = array(
-      'cast' => 'string',
-      'default' => '$(element)',
-    );
-
-    $options['prevArrow'] = array(
-      'cast' => 'string',
-      'default' => '<button type="button" data-role="none" class="slick-prev">Previous</button>',
-    );
-
-    $options['nextArrow'] = array(
-      'cast' => 'string',
-      'default' => '<button type="button" data-role="none" class="slick-next">Next</button>',
-    );
-
-    $options['centerMode'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['centerPadding'] = array(
-      'cast' => 'string',
-      'default' => '50px',
-    );
-
-    $options['dots'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['dotsClass'] = array(
-      'cast' => 'string',
-      'default' => 'slick-dots',
-    );
-
-    $options['appendDots'] = array(
-      'cast' => 'string',
-      'default' => '$(element)',
-    );
-
-    $options['draggable'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
-
-    $options['fade'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['focusOnSelect'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['infinite'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
-
-    $options['initialSlide'] = array(
-      'cast' => 'int',
-      'default' => 0,
-    );
-
-    $options['lazyLoad'] = array(
-      'cast' => 'string',
-      'default' => 'ondemand',
-    );
-
-    $options['respondTo'] = array(
-      'cast' => 'string',
-      'default' => 'window',
-    );
-
-    $options['rtl'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['slide'] = array(
-      'cast' => 'string',
-      'default' => '',
-    );
-
-    $options['slidesToShow'] = array(
-      'cast' => 'int',
-      'default' => 1,
-    );
-
-    $options['slidesToScroll'] = array(
-      'cast' => 'int',
-      'default' => 1,
-    );
-
-    $options['speed'] = array(
-      'cast' => 'int',
-      'default' => 500,
-    );
-
-    $options['swipe'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
-
-    $options['swipeToSlide'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['edgeFriction'] = array(
-      'cast' => 'float',
-      'default' => 0.35,
-    );
-
-    $options['touchMove'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
-
-    $options['touchThreshold'] = array(
-      'cast' => 'int',
-      'default' => 5,
-    );
-
-    $options['useCSS'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
-
-    $options['cssEase'] = array(
-      'cast' => 'string',
-      'default' => 'ease',
-    );
-
-    $options['cssEaseBezier'] = array(
-      'cast' => 'string',
-      'default' => '',
-    );
-
-    $options['cssEaseOverride'] = array(
-      'cast' => 'string',
-      'default' => '',
-    );
-
-    $options['easing'] = array(
-      'cast' => 'string',
-      'default' => 'linear',
-    );
-
-    $options['variableWidth'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['vertical'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['verticalScrolling'] = array(
-      'cast' => 'bool',
-      'default' => FALSE,
-    );
-
-    $options['waitForAnimate'] = array(
-      'cast' => 'bool',
-      'default' => TRUE,
-    );
+    // Allows options information to be altered.
+    drupal_alter('slick_options_info', $options);
   }
 
   return $options;
@@ -261,20 +93,14 @@ function slick_get_responsive_options($count = 0) {
 
   foreach ($breakpoints as $key => $breakpoint) {
     $options[$key] = array(
-      'breakpoint' => array(
-        'cast' => 'int',
-        'default' => 0,
-      ),
-      'unslick' => array(
-        'cast' => 'bool',
-        'default' => FALSE,
-      ),
+      'breakpoint' => 0,
+      'unslick' => FALSE,
       'settings' => array(),
     );
 
     // Duplicate main relevant settings.
-    foreach ($slick_options as $name => $option) {
-      $options[$key]['settings'][$name] = $option;
+    foreach ($slick_options as $name => $value) {
+      $options[$key]['settings'][$name] = $value;
     }
   }
 
@@ -288,12 +114,17 @@ function slick_get_responsive_options($count = 0) {
  *   An array of overridable options.
  */
 function slick_get_overridable_options() {
-  return array(
+  $overridables = array(
     'arrows' => t('Arrows'),
     'autoplay' => t('Autoplay'),
     'dots' => t('Dots'),
     'draggable' => t('Draggable'),
   );
+
+  // Allows default settings information to be altered.
+  drupal_alter('slick_overridable_options_info', $overridables);
+
+  return $overridables;
 }
 
 /**
@@ -388,28 +219,24 @@ function slick_clean_options(array $options) {
 function _slick_optionset_defaults($set = NULL, $breakpoints = NULL) {
   $slick_options = slick_get_options();
   $defaults = array();
-  foreach ($slick_options as $name => $values) {
-    $defaults['settings'][$name] = $values['default'];
+  foreach ($slick_options as $name => $value) {
+    $defaults['settings'][$name] = $value;
   }
 
   // Breakpoint settings.
   if ($breakpoints) {
     $slick_responsive_options = slick_get_responsive_options($breakpoints);
     foreach ($slick_responsive_options as $i => $items) {
-      foreach ($items as $name => $groups) {
+      foreach ($items as $name => $setting) {
         switch ($name) {
           case 'breakpoint':
           case 'unslick':
-            $defaults['responsives']['responsive'][$i][$name] = $groups['default'];
+            $defaults['responsives']['responsive'][$i][$name] = $setting;
             break;
 
           case 'settings':
-            if (is_array($groups)) {
-              foreach ($groups as $k => $group) {
-                if (is_array($group) && isset($group['default'])) {
-                  $defaults['responsives']['responsive'][$i][$name][$k] = $group['default'];
-                }
-              }
+            foreach ((array) $setting as $key => $value) {
+              $defaults['responsives']['responsive'][$i][$name][$key] = $value;
             }
             break;
         }
@@ -444,24 +271,44 @@ function slick_get_default_value($property, $group = 'settings') {
   $defaults = _slick_optionset_defaults($group);
   return isset($defaults[$property]) ? $defaults[$property] : FALSE;
 }
+/**
+ * Returns the current optionset setting under group 'settings'.
+ *
+ * @param string $id
+ *   The optionset ID.
+ * @param string $setting_name
+ *   The name of setting.
+ * @param string $group
+ *   The optionset group: general, settings, responsives.
+ *
+ * @return mixed|FALSE
+ *   The current setting value, or FALSE if none matching.
+ */
+function slick_optionset_get_setting($id, $setting_name, $group = 'settings') {
+  $optionset = slick_optionset_load($id);
+  $options = $optionset->options[$group];
+  return isset($options[$setting_name]) ? $options[$setting_name] : FALSE;
+}
 
 /**
- * Strip out options with default values from the Option Set options.
+ * Strip out options similar to default values from the optionset options.
  *
  * @param object $optionset
  *   The Optionset object.
  * @param array $customs
  *   An array of handed-over JS options defined using #options property or those
  *   manipulated at theme_slick() dependent on various options.
+ * @param array $context
+ *   The context to check for before doing alteration, such as module settings.
  *
  * @return array
  *   An array of reduced duplicated Option set options performance wise.
  */
-function _slick_remove_default_optionset_options($optionset, $customs = array()) {
+function _slick_remove_default_optionset_options($optionset, $customs = array(), $context = array()) {
   $config = array();
 
   $options = $optionset->options;
-  $breakpoints = $optionset->breakpoints ? $optionset->breakpoints : 0;
+  $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : 0;
   $defaults = _slick_optionset_defaults('settings', $breakpoints);
 
   // Clean up the main options.
@@ -549,6 +396,9 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
     }
   }
 
+  // Allows options removal information to be altered.
+  drupal_alter('slick_remove_options_info', $config, $customs, $options, $context);
+
   return $config;
 }
 
@@ -565,29 +415,32 @@ function _slick_remove_default_optionset_options($optionset, $customs = array())
 function _slick_typecast_optionset(&$options = array(), $breakpoints = 0) {
   if (isset($options) && !empty($options)) {
     $slick_options = slick_get_options();
-    foreach ($slick_options as $name => $values) {
-      if (isset($options['settings'][$name]) && isset($slick_options[$name]['cast'])) {
-        settype($options['settings'][$name], $slick_options[$name]['cast']);
+    foreach ($slick_options as $name => $value) {
+      if (isset($options['settings'][$name])) {
+        if ($cast = _slick_gettype($slick_options[$name])) {
+          settype($options['settings'][$name], $cast);
+        }
       }
     }
 
     if (isset($options['responsives']['responsive']) && $breakpoints) {
       $slick_responsive_options = slick_get_responsive_options($breakpoints);
       foreach ($slick_responsive_options as $i => $items) {
-        foreach ($items as $name => $groups) {
+        foreach ($items as $name => $item) {
           switch ($name) {
             case 'breakpoint':
+              settype($options['responsives']['responsive'][$i][$name], 'int');
+              break;
+
             case 'unslick':
-              if (isset($options['responsives']['responsive'][$i][$name])) {
-                settype($options['responsives']['responsive'][$i][$name], $groups['cast']);
-              }
+              settype($options['responsives']['responsive'][$i][$name], 'bool');
               break;
 
             case 'settings':
-              if (is_array($groups)) {
-                foreach ($groups as $key => $group) {
-                  if (is_array($group) && isset($options['responsives']['responsive'][$i][$name][$key]) && isset($group['cast']) && isset($group['default'])) {
-                    settype($options['responsives']['responsive'][$i][$name][$key], $group['cast']);
+              foreach ($item as $key => $setting) {
+                if (isset($options['responsives']['responsive'][$i][$name][$key])) {
+                  if ($cast = _slick_gettype($item[$key])) {
+                    settype($options['responsives']['responsive'][$i][$name][$key], $cast);
                   }
                 }
               }
@@ -599,19 +452,37 @@ function _slick_typecast_optionset(&$options = array(), $breakpoints = 0) {
         }
       }
     }
+
+    // Allows typecasting information to be altered.
+    drupal_alter('slick_typecast_optionset_info', $options, $breakpoints);
   }
+}
+
+/**
+ * Returns the printed typecast from the given value.
+ *
+ * @param mixed $value
+ *   The given value to check for.
+ *
+ * @return string
+ *   The typecast string value, or FALSE for array type.
+ */
+function _slick_gettype($value) {
+  // Skip array.
+  if (is_array($value)) {
+    return FALSE;
+  }
+
+  return gettype($value);
 }
 
 /**
  * Gets supported Slick skins, and additional ones.
  *
- * @param bool $options
- *   Flag to limit the returned values for select options.
- *
  * @return array
  *   An array of available skins.
  */
-function slick_skins($options = FALSE) {
+function slick_skins() {
   $skins = &drupal_static(__FUNCTION__, NULL);
 
   if (!isset($skins)) {
@@ -620,50 +491,49 @@ function slick_skins($options = FALSE) {
 
     // Allows skin information to be altered.
     drupal_alter('slick_skins_info', $skins);
-
-    if ($options) {
-      $available_skins = array();
-      foreach ($skins as $skin => $properties) {
-        $available_skins[$skin] = $properties['name'];
-      }
-      $skins = $available_skins;
-    }
   }
 
   return $skins;
 }
 
 /**
- * Returns supported Slick skin arrows/dots, and additional ones.
- *
- * @param string $type
- *   The hook type: arrows or dots.
- * @param bool $options
- *   Flag to limit the returned values for select options.
+ * Returns Slick skin arrows created programatically.
  *
  * @return array
- *   The associative array of available skin arrows or dots.
+ *   The associative array of available skin arrows.
  */
-function slick_navigations($type = 'arrows', $options = FALSE) {
-  $navigations = &drupal_static(__FUNCTION__, NULL);
+function slick_arrows() {
+  $arrows = &drupal_static(__FUNCTION__, NULL);
 
-  if (!isset($navigations)) {
-    // Collects a list of the currently available skin arrows/dots.
-    $navigations = module_invoke_all('slick_' . $type . '_info');
+  if (!isset($arrows)) {
+    // Collects a list of the currently available skin arrows.
+    $arrows = module_invoke_all('slick_arrows_info');
 
-    // Allows skin arrows/dots information to be altered.
-    drupal_alter('slick_' . $type . '_info', $navigations);
-
-    if ($options) {
-      $available_navigations = array();
-      foreach ($navigations as $navigation => $properties) {
-        $available_navigations[$navigation] = $properties['name'];
-      }
-      $navigations = $available_navigations;
-    }
+    // Allows skin arrows information to be altered.
+    drupal_alter('slick_arrows_info', $arrows);
   }
 
-  return $navigations;
+  return $arrows;
+}
+
+/**
+ * Returns Slick skin dots created programatically.
+ *
+ * @return array
+ *   The associative array of available skin dots.
+ */
+function slick_dots() {
+  $dots = &drupal_static(__FUNCTION__, NULL);
+
+  if (!isset($dots)) {
+    // Collects a list of the currently available skin dots.
+    $dots = module_invoke_all('slick_dots_info');
+
+    // Allows skin dots information to be altered.
+    drupal_alter('slick_dots_info', $dots);
+  }
+
+  return $dots;
 }
 
 /**
@@ -767,43 +637,24 @@ function slick_optionset_load_all($reset = FALSE) {
  *   The optionset ID.
  *
  * @return object
- *   Returns it as an object or NULL, if no set could be found.
+ *   Returns it as an object, or default, if no set could be found.
  */
 function slick_optionset_load($id) {
   ctools_include('export');
   $optionset = ctools_export_crud_load('slick_optionset', $id);
 
+  // Ensures deleted optionset while being used doesn't screw up.
+  if (!isset($optionset->name)) {
+    // Fall back to 'default' option set.
+    $optionset = ctools_export_crud_load('slick_optionset', 'default');
+    watchdog('slick', 'Fallback to default optionset.', array(), WATCHDOG_WARNING);
+  }
+
   // Ensure the optionset is typecast after being loaded from storage.
   $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
   _slick_typecast_optionset($optionset->options, $breakpoints);
+
   return $optionset;
-}
-
-/**
- * Returns the current setting under group 'settings'.
- *
- * @param string $id
- *   The optionset ID.
- * @param string $setting_name
- *   The name of setting.
- * @param string $group
- *   The optionset group: general, settings, responsives.
- *
- * @return mixed|FALSE
- *   The current setting value, or FALSE if none matching.
- */
-function slick_optionset_get_setting($id, $setting_name, $group = 'settings') {
-  $optionset = slick_optionset_load($id);
-  $options = $optionset->options[$group];
-  return isset($options[$setting_name]) ? $options[$setting_name] : FALSE;
-}
-
-/**
- * Determine if an optionset is overridden.
- */
-function slick_optionset_is_overridden($optionset) {
-  $status = EXPORT_IN_CODE + EXPORT_IN_DATABASE;
-  return ($optionset->export_type == $status) ? TRUE : FALSE;
 }
 
 /**

@@ -78,16 +78,11 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       $image['style_name'] = $thumbnail_style;
       $thumbnail_variables = $image;
 
-      // Provides hidden static thumbnail revealed on dots hover.
-      if ($settings['thumbnail_hover']) {
-        $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
-        if ($settings['dots_thumbnail']) {
-          $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
-        }
-        if ($settings['dots_main']) {
-          $image['attributes']['data-thumb'] = $thumbnail_url;
-        }
-      }
+      // Provides hidden static thumbnail revealed on dots hover, or custom
+      // advanced work with thumbnail arrows.
+      $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
+      $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
+      $image['attributes']['data-thumb'] = $thumbnail_url;
 
       $thumbnail = theme('image_style', $thumbnail_variables);
     }

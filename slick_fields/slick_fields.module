@@ -143,7 +143,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#attributes' => $is_tooltip,
   );
 
-  $skins = slick_skins(TRUE);
+  $skins = slick_skins_options();
   $elements['skin'] = array(
     '#type' => 'select',
     '#title' => t('Skin main'),
@@ -186,7 +186,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#access' => FALSE,
   );
 
-  if ($arrows = slick_navigations('arrows', TRUE)) {
+  if ($arrows = slick_arrows_options()) {
     $elements['skin_arrows']['#options'] = $arrows;
     $elements['skin_arrows']['#access'] = TRUE;
   }
@@ -202,7 +202,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#access' => FALSE,
   );
 
-  if ($dots = slick_navigations('dots', TRUE)) {
+  if ($dots = slick_dots_options()) {
     $elements['skin_dots']['#options'] = $dots;
     $elements['skin_dots']['#access'] = TRUE;
   }
@@ -283,7 +283,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     '#default_value' => $settings['thumbnail_style'],
     '#empty_option' => t('- None -'),
     '#options' => $image_styles,
-    '#description' => t('If <em>Option set thumbnail</em> provided, it will be used for asNavFor thumbnail navigation slider. Otherwise thumbnails may also be displayed when hovering over dots.'),
+    '#description' => t('If <em>Option set thumbnail</em> provided, it is for asNavFor thumbnail navigation. Otherwise displayed when hovering over dots if <em>Dots with thumbnail</em> selected. Or to build arrows with thumbnails via the provided data-thumb attributes with your custom work. Leave empty to not use thumbnails.'),
     '#attributes' => $is_tooltip,
   );
 
@@ -799,15 +799,15 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
 
   $summary = array();
   if ($display['type'] == 'slick') {
-    $skins = slick_skins(TRUE);
+    $skins = slick_skins();
 
     if (isset($settings['skin'])) {
-      $skin = $settings['skin'] ? $skins[$settings['skin']] : t('None');
+      $skin = $settings['skin'] ? $skins[$settings['skin']]['name'] : t('None');
       $summary[] = t('Skin: @skin', array('@skin' => $skin));
     }
 
     if (isset($settings['skin_thumbnail'])) {
-      $skin_thumbnail = $settings['skin_thumbnail'] ? $skins[$settings['skin_thumbnail']] : t('None');
+      $skin_thumbnail = $settings['skin_thumbnail'] ? $skins[$settings['skin_thumbnail']]['name'] : t('None');
       $summary[] = t('Skin thumbnail: @skin_thumbnail', array('@skin_thumbnail' => $skin_thumbnail));
     }
 
@@ -983,7 +983,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $optionset                 = slick_optionset_load($settings['optionset']);
     $settings['lazy']          = $optionset->options['settings']['lazyLoad'];
     $settings['dots_main']     = $optionset->options['settings']['dots'];
-    $settings['has_pattern']   = $optionset->options['general']['goodies']['pattern'];
+    $settings['has_pattern']   = isset($optionset->options['general']['goodies']['pattern']) ? $optionset->options['general']['goodies']['pattern'] : FALSE;
     $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
     $settings['is_lightbox']   = strpos($settings['media_switch'], 'box') !== FALSE;
 
@@ -995,6 +995,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'attach_colorbox'       => $settings['media_switch'] == 'colorbox-switch',
       'attach_photobox'       => $settings['media_switch'] == 'photobox-switch',
       'attach_mousewheel'     => $settings['mousewheel'],
+      'attach_dots_thumbnail' => $settings['thumbnail_hover'],
     );
 
     if ($is_asnavfor) {
@@ -1060,8 +1061,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       $overridables = array();
       // Respect empty values, meaning FALSE.
       foreach ($settings['overridables'] as $key => $override) {
-        $override = empty($override) ? FALSE : TRUE;
-        $overridables[$key] = $override;
+        $overridables[$key] = empty($override) ? FALSE : TRUE;
       }
       $slick[0]['#options'] = $overridables;
     }

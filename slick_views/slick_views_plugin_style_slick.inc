@@ -57,7 +57,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
 
     $elements = array();
     $settings = $this->options;
-    $skins = slick_skins(TRUE);
+    $skins = slick_skins_options();
     $optionsets = slick_optionset_options();
     $is_tooltip = array('class' => array('is-tooltip'));
 
@@ -111,7 +111,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       '#access' => FALSE,
     );
 
-    if ($arrows = slick_navigations('arrows', TRUE)) {
+    if ($arrows = slick_arrows_options()) {
       $elements['skin_arrows']['#options'] = $arrows;
       $elements['skin_arrows']['#access'] = TRUE;
     }
@@ -127,7 +127,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       '#access' => FALSE,
     );
 
-    if ($dots = slick_navigations('dots', TRUE)) {
+    if ($dots = slick_dots_options()) {
       $elements['skin_dots']['#options'] = $dots;
       $elements['skin_dots']['#access'] = TRUE;
     }

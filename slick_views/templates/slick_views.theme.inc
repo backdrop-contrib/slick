@@ -168,8 +168,7 @@ function template_preprocess_slick_views(&$variables) {
       $overridables = array();
       // Respect empty values, meaning FALSE.
       foreach ($settings['overridables'] as $key => $override) {
-        $override = empty($override) ? FALSE : TRUE;
-        $overridables[$key] = $override;
+        $overridables[$key] = empty($override) ? FALSE : TRUE;
       }
       $element[0]['#options'] = $overridables;
     }

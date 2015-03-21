@@ -23,12 +23,12 @@
   }
 
   .slick__slide {
-    opacity: 0.8;
+    // opacity: 0.8;
     @include transition(all 300ms ease);
 
-    &.slide--current,
-    &.slick-active {
-      opacity: 1;
-    }
+    // &.slide--current,
+    // &.slick-active {
+    // opacity: 1;
+    // }
   }
 }

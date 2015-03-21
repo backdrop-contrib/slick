@@ -38,6 +38,61 @@ function slick_layouts() {
 }
 
 /**
+ * Gets supported Slick skins, and additional ones for select options.
+ *
+ * @return array
+ *   An array of available skins.
+ */
+function slick_skins_options() {
+  $skins = &drupal_static(__FUNCTION__, NULL);
+
+  if (!isset($skins)) {
+    $skins = array();
+    foreach (slick_skins() as $skin => $properties) {
+      $skins[$skin] = $properties['name'];
+    }
+  }
+
+  return $skins;
+}
+
+/**
+ * Returns supported Slick skin dots for select options.
+ *
+ * @return array
+ *   The associative array of available skin dots.
+ */
+function slick_dots_options() {
+  $dots = &drupal_static(__FUNCTION__, NULL);
+
+  if (!isset($dots)) {
+    $dots = array();
+    foreach (slick_dots() as $key => $properties) {
+      $dots[$key] = $properties['name'];
+    }
+  }
+  return $dots;
+}
+
+/**
+ * Returns supported Slick skin arrows for select options.
+ *
+ * @return array
+ *   The associative array of available skin arrows.
+ */
+function slick_arrows_options() {
+  $arrows = &drupal_static(__FUNCTION__, NULL);
+
+  if (!isset($arrows)) {
+    $arrows = array();
+    foreach (slick_arrows() as $key => $properties) {
+      $arrows[$key] = $properties['name'];
+    }
+  }
+  return $arrows;
+}
+
+/**
  * Load all slick optionsets as select options.
  *
  * @return array
@@ -71,6 +126,14 @@ function slick_optionset_exists($optionset_name) {
   ctools_include('export');
   $optionset = ctools_export_crud_load('slick_optionset', $optionset_name);
   return isset($optionset->name);
+}
+
+/**
+ * Determine if an optionset is overridden.
+ */
+function slick_optionset_is_overridden($optionset) {
+  $status = EXPORT_IN_CODE + EXPORT_IN_DATABASE;
+  return ($optionset->export_type == $status) ? TRUE : FALSE;
 }
 
 /**
@@ -139,12 +202,14 @@ function slick_optionset_save($optionset, $new = FALSE) {
  * Deletes the given option set from the database.
  *
  * @param string|object $optionset
- *   Optionset object to convert to string, or machine name.
+ *   Optionset object, or string machine name.
  */
 function slick_optionset_delete($optionset) {
   ctools_include('export');
   $object = is_object($optionset) ? $optionset : slick_optionset_load($optionset);
 
+  // This only deletes from the database, which means that if an item is in
+  // code, then this is actually a revert.
   ctools_export_crud_delete('slick_optionset', $object);
 }
 
@@ -214,7 +279,7 @@ function _slick_css_easing_mapping($easing = NULL) {
     $easings = _slick_css_easing_options(TRUE);
     list($readable_easing, $bezier) = array_pad(array_map('trim', explode("|", $easings[$easing], 2)), 2, NULL);
     $css_easing = $bezier;
-    // Satisfies pareview.
+    // Satisfies pareview.sh.
     unset($readable_easing);
   }
 
@@ -278,7 +343,7 @@ function _slick_css_easing_options($all = FALSE) {
     foreach ($available_easings as $key => $easing) {
       list($readable_easing, $bezier) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
       $css_easings[$key] = $all ? $easing : $readable_easing;
-      // Satisfies pareview.
+      // Satisfies pareview.sh.
       unset($bezier);
     }
   }

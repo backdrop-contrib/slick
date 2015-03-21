@@ -356,8 +356,8 @@ function slick_libraries_info() {
 function slick_attach(array $attach) {
   $path   = drupal_get_path('module', 'slick');
   $skins  = slick_skins();
-  $arrows = slick_navigations('arrows');
-  $dots   = slick_navigations('dots');
+  $arrows = slick_arrows();
+  $dots   = slick_dots();
   $load   = array();
   $defaults = array(
     'attach_default'        => TRUE,
@@ -374,6 +374,7 @@ function slick_attach(array $attach) {
     'attach_skin_thumbnail' => NULL,
     'attach_skin_arrows'    => NULL,
     'attach_skin_dots'      => NULL,
+    'attach_dots_thumbnail' => NULL,
     'attach_inline_css'     => NULL,
   );
 
@@ -425,6 +426,10 @@ function slick_attach(array $attach) {
 
       if ($attach['attach_module_css']) {
         $load['css'] += array($path . '/css/theme/slick.theme.css' => array('weight' => -99));
+      }
+
+      if ($attach['attach_dots_thumbnail']) {
+        $load['css'] += array($path . '/css/components/slick.dots--thumbnail.css' => array('weight' => -98));
       }
 
       if (is_array($skins[$skin]['css'])) {
@@ -493,6 +498,9 @@ function slick_attach(array $attach) {
       'type' => 'setting',
     );
   }
+
+  // Allows load information to be altered with $attach and $skins context.
+  drupal_alter('slick_attach_load_info', $load, $attach, $skins);
 
   return $load;
 }

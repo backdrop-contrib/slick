@@ -82,16 +82,11 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           $image['style_name'] = $thumbnail_style;
           $thumbnail_variables = $image;
 
-          // Provides hidden static thumbnail revealed on dots hover.
-          if ($settings['thumbnail_hover']) {
-            $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
-            if ($settings['dots_thumbnail']) {
-              $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
-            }
-            if ($settings['dots_main']) {
-              $image['attributes']['data-thumb'] = $thumbnail_url;
-            }
-          }
+          // Provides hidden static thumbnail revealed on dots hover, or custom
+          // advanced work with thumbnail arrows.
+          $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
+          $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
+          $image['attributes']['data-thumb'] = $thumbnail_url;
 
           $thumbnail = theme('image_style', $thumbnail_variables);
         }
@@ -136,7 +131,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           $settings['is_media']       = FALSE;
           $settings['lightbox_ready'] = TRUE;
           $settings['picture_ready']  = FALSE;
-          $optionset = $settings['nested_optionset'] ? $settings['nested_optionset'] : 'default';
+          $optionset = $settings['nested_optionset'];
           $optionset = slick_optionset_load($optionset);
 
           // Makes consistent image styles across slicks within a slick.

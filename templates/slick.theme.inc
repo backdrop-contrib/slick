@@ -16,8 +16,8 @@
  */
 function template_preprocess_slick(&$variables) {
   $element = $variables['element'];
-  $items = $element['#items'];
-  $count = count($items);
+  $items   = $element['#items'];
+  $count   = count($items);
 
   // HTML or layout related settings, none of JS settings, except mousewheel.
   $defaults = slick_get_element_default_settings($count);
@@ -25,31 +25,17 @@ function template_preprocess_slick(&$variables) {
   $customs  = isset($element['#options']) ? $element['#options'] : array();
 
   // Optionset may be defined via custom code, CTools UI, or sub-modules.
-  $optionset = isset($customs['optionset']) ? $customs['optionset'] : $settings['optionset'];
+  $optionset_name = isset($customs['optionset']) ? check_plain($customs['optionset']) : $settings['optionset'];
 
-  // Load the selected optionset.
-  if (!empty($optionset)) {
-    $optionset = slick_optionset_load($optionset);
-  }
-
-  // Check if an optionset was loaded.
-  if (empty($optionset)) {
-    // Fall back to 'default' option set.
-    $optionset = slick_optionset_load('default');
-    watchdog('slick', 'Fallback to default optionset.', array(), WATCHDOG_WARNING);
-  }
-
-  $options = $optionset->options;
-  $general = $options['general'];
-  $goodies = $general['goodies'];
-  $optionset_name = $optionset->name;
+  // Load the selected optionset, or fallback to default.
+  $optionset = slick_optionset_load($optionset_name);
+  $options   = $optionset->options;
+  $general   = $options['general'];
+  $goodies   = $general['goodies'];
+  $skin      = $settings['skin'] ? $settings['skin'] : $optionset->skin;
 
   // The Slick JS settings defined either via custom #options, or CTools UI.
   $js = $customs ? array_merge($options['settings'], $customs) : $options['settings'];
-
-  // Field or Views options override the optionset ones.
-  $settings['has_arrow_down'] = $settings['has_arrow_down'] ? TRUE : isset($goodies['arrow-down']) && $goodies['arrow-down'];
-  $settings['has_pattern'] = $settings['has_pattern'] ? TRUE : isset($goodies['pattern']) && $goodies['pattern'];
 
   // Configure attributes for containing elements.
   $attributes = $variables['attributes_array'];
@@ -62,6 +48,7 @@ function template_preprocess_slick(&$variables) {
     $attributes += $settings['attributes'];
     $id = isset($attributes['id']) ? $attributes['id'] : '';
   }
+
   if (isset($settings['content_attributes']) && is_array($settings['content_attributes'])) {
     $content_attributes += $settings['content_attributes'];
   }
@@ -108,7 +95,6 @@ function template_preprocess_slick(&$variables) {
 
   // Field or Views options override the optionset ones.
   // With asNavFor, skin maybe skin or skin_thumbnail.
-  $skin = $settings['skin'] ? $settings['skin'] : $optionset->skin;
   if ($settings['current_display'] == 'thumbnail') {
     $skin = isset($settings['skin_thumbnail']) && $settings['skin_thumbnail'] ? $settings['skin_thumbnail'] : $skin;
   }
@@ -123,25 +109,21 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = drupal_clean_css_identifier('slick--skin--' . $skin);
   }
 
-  $attributes['class'][] = $js['centerMode'] ? 'slick--center' : 'slick--float';
+  $attributes['class'][] = isset($js['centerMode']) && $js['centerMode'] ? 'slick--center' : 'slick--float';
 
   // This is needed by Slick media for the aspect ratio option.
   if ($settings['field_type']) {
     $attributes['class'][] = drupal_clean_css_identifier('slick--' . $settings['field_type']);
   }
 
+  // Field or Views options override the optionset ones.
+  $settings['has_arrow_down'] = $settings['has_arrow_down'] ? TRUE : isset($goodies['arrow-down']) && $goodies['arrow-down'];
+  $settings['has_pattern'] = $settings['has_pattern'] ? TRUE : isset($goodies['pattern']) && $goodies['pattern'];
+
   // Some settings are only reasonable for the main display, not thumbnail.
   if ($settings['current_display'] == 'main') {
     if ($settings['has_pattern']) {
       $attributes['class'][] = 'slick--has-pattern';
-    }
-
-    if ($settings['media_switch'] == 'iframe-switch') {
-      if ($settings['aspect_ratio']) {
-        $attributes['class'][] = $settings['aspect_ratio_overlay'] ? 'slick--ratio-overlay' : 'slick--ratio';
-        $attributes['class'][] = drupal_clean_css_identifier('slick--ratio--' . $settings['aspect_ratio']);
-        $attributes['class'][] = drupal_clean_css_identifier('slick--ratio--' . $settings['field_type']);
-      }
     }
 
     if ($settings['has_arrow_down']) {
@@ -152,6 +134,14 @@ function template_preprocess_slick(&$variables) {
         $settings['arrow_down_target'] = str_replace(array('#', '.'), '', $general['arrow_down_target']);
       }
       $settings['arrow_down_offset'] = $general['arrow_down_offset'] ? $general['arrow_down_offset'] : 125;
+    }
+
+    if ($settings['media_switch'] == 'iframe-switch') {
+      if ($settings['aspect_ratio']) {
+        $attributes['class'][] = $settings['aspect_ratio_overlay'] ? 'slick--ratio-overlay' : 'slick--ratio';
+        $attributes['class'][] = drupal_clean_css_identifier('slick--ratio--' . $settings['aspect_ratio']);
+        $attributes['class'][] = drupal_clean_css_identifier('slick--ratio--' . $settings['field_type']);
+      }
     }
   }
 
@@ -171,7 +161,8 @@ function template_preprocess_slick(&$variables) {
   $js['slide'] = !$js['slide'] && $js['focusOnSelect'] ? '.slick__slide' : '';
 
   // Only add asNavFor if we do have thumbnail optionset.
-  // Implementor is now responsible to pass the proper asnavfor targets.
+  // Implementor is now responsible to pass the proper asnavfor targets which is
+  // defined for both main and thumbnail display accordingly.
   if ($settings['optionset_thumbnail'] && $settings['asnavfor_target']) {
     // Enforce clickable thumbnail, and solves old lingering "div".
     if ($settings['current_display'] == 'thumbnail') {
@@ -184,7 +175,7 @@ function template_preprocess_slick(&$variables) {
     // The asnavfor_target can be main or thumbnail display accordingly.
     $js['asNavFor'] = $settings['asnavfor_target'];
   }
-  // Prevents non-empty, but not-used asNavFor from breaking the slide.
+  // Prevents non-empty, but not-used, asNavFor from breaking the slide.
   else {
     $js['asNavFor'] = '';
   }
@@ -194,8 +185,8 @@ function template_preprocess_slick(&$variables) {
     $content_attributes['dir'] = 'rtl';
   }
 
-  // Arrows must be set to allow responsive options hide/show them.
-  // Limit sanitization with button and a few reasonable selectors.
+  // Arrows are enforced to allow responsive options hide/show them.
+  // Limit sanitization with button, and a few reasonable tags.
   $settings['arrows'] = $js['arrows'];
   $allowed_tags = array('a', 'em', 'strong', 'button', 'p', 'div', 'i', 'span');
   $is_prev = isset($js['prevArrow']) && $js['prevArrow'];
@@ -212,14 +203,14 @@ function template_preprocess_slick(&$variables) {
   // hook_slick_dots_info() like hook_slick_skins_info().
   $arrow_attributes = array('class' => array('slick__arrow'));
   if ($settings['skin_arrows']) {
-    $arrow_attributes['class'][] = drupal_clean_css_identifier('slick__arrow--' . $settings['skin_arrows']);
+    $skin_arrows = drupal_clean_css_identifier($settings['skin_arrows']);
+    $arrow_attributes['class'][] = 'slick__arrow--' . $skin_arrows;
   }
 
   // Provides helper class if thumbnail on dots hover provided.
   if ($settings['thumbnail_style'] && $settings['thumbnail_hover']) {
     // A problematic block element, or modifier since dotsClass is alterable.
-    // @todo deprecate slick__thumbnail for slick-dots--thumbnail.
-    $js['dotsClass'] .= ' slick-dots--thumbnail slick__thumbnail';
+    $js['dotsClass'] .= ' slick-dots--thumbnail';
   }
 
   // Provides dots skin modifier class if provided.
@@ -237,7 +228,9 @@ function template_preprocess_slick(&$variables) {
   // which stuffs horrible bunch of JS settings for slide instances into the
   // <head>. This prevents possible collision and ID leak with multiple slicks.
   if ($count > 1 && !isset($content_attributes['data-config'])) {
-    $js_data = _slick_remove_default_optionset_options($optionset, $js);
+    // Use hook_slick_remove_options_info_alter() to manipulate the values prior
+    // to being printed into data-config attributes.
+    $js_data = _slick_remove_default_optionset_options($optionset, $js, $settings);
 
     // Remove empty lazyLoad, or left to default ondemand, to avoid JS error.
     if (empty($js_data['lazyLoad'])) {
@@ -619,7 +612,7 @@ function template_preprocess_slick_wrapper(&$variables) {
 
   $variables['attributes_array'] = array('class' => array('slick-wrapper'));
 
-  if (isset($settings['skin']) && $settings['skin']) {
+  if (isset($settings['skin']) && $settings['skin'] && $settings['skin'] != 'asnavfor') {
     $variables['attributes_array']['class'][] = drupal_clean_css_identifier('slick-wrapper--' . $settings['skin']);
   }
 
