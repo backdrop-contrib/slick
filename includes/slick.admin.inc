@@ -277,10 +277,7 @@ function _slick_css_easing_mapping($easing = NULL) {
 
   if ($easing) {
     $easings = _slick_css_easing_options(TRUE);
-    list($readable_easing, $bezier) = array_pad(array_map('trim', explode("|", $easings[$easing], 2)), 2, NULL);
-    $css_easing = $bezier;
-    // Satisfies pareview.sh.
-    unset($readable_easing);
+    list( , $css_easing) = array_pad(array_map('trim', explode("|", $easings[$easing], 2)), 2, NULL);
   }
 
   return $css_easing;
@@ -341,10 +338,8 @@ function _slick_css_easing_options($all = FALSE) {
     );
 
     foreach ($available_easings as $key => $easing) {
-      list($readable_easing, $bezier) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
+      list($readable_easing, ) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
       $css_easings[$key] = $all ? $easing : $readable_easing;
-      // Satisfies pareview.sh.
-      unset($bezier);
     }
   }
 

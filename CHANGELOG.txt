@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-3-30
 ----------------------------
+Fixed disappeared admin tooltip after AJAX which seemingly broke at some point.
+Fixed phpcs complains with Closing parenthesis of array declaration.
 Issue #2459669 by emcniece: Handle non-init'd jQuery Update module settings.
 Issue #2459657 by emcniece: Add better error message for missing files /
   improper library install.

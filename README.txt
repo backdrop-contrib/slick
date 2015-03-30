@@ -295,9 +295,10 @@ The following modules are supported, but optional.
 - Photobox, idem ditto.
 - Media, to have fairly variant slides: image, video, audio.
 - Field collection, to have more complex layout with Media.
-- Color field, to colorize slide background invidually.
+- Color field, to colorize slide background individually.
 - Block reference to have more complex slide content for Fullscreen/width skins.
 - Entity translation, to have translated file and translate links with Media.
+- Field formatter settings, to modify field formatter settings and summaries.
 
 
 
@@ -345,9 +346,9 @@ some code cleanup, and optimization where needed. Patches are very much welcome.
 
 ROADMAP
 --------------------------------------------------------------------------------
-- Bug fixes, code cleanup, and optimization.
+- Bug fixes, code cleanup, optimization, and proper release.
 - Drupal 8 port, see if you can help/ provide suggestion:
-  https://www.drupal.org/node/2412863
+  https://www.drupal.org/node/2432711
 
 
 

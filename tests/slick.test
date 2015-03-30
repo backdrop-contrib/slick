@@ -40,7 +40,7 @@ class SlickTestCase extends DrupalWebTestCase {
    * Overrides DrupalWebTestCase::setUp.
    */
   public function setUp() {
-    parent::setUp('libraries', 'ctools', 'slick');
+    parent::setUp('libraries', 'ctools', 'jquery_update', 'slick');
 
     // Create users.
     $this->adminUser = $this->drupalCreateUser(array('administer slick'));
@@ -106,7 +106,8 @@ class SlickTestCase extends DrupalWebTestCase {
         $message = t('<strong>@key</strong>: default:<strong>@value</strong> matches saved:<strong>@new_value</strong>.', array(
           '@key' => $key,
           '@value' => $read_value,
-          '@new_value' => $read_new_value));
+          '@new_value' => $read_new_value,
+        ));
         $this->assertEqual($value, $new_value, $message);
       }
     }
@@ -121,12 +122,15 @@ class SlickTestCase extends DrupalWebTestCase {
     foreach ($optionsets as $key => $optionset) {
       $this->assertTrue(isset($optionset->name), t('<strong>@key</strong>: Loaded optionsets have a defined machine <strong>@name</strong>', array(
         '@key' => $key,
-        '@name' => $optionset->name)));
+        '@name' => $optionset->name,
+      )));
       $this->assertTrue(isset($optionset->label), t('<strong>@key</strong>: Loaded optionsets have a defined human readable name <strong>@label</strong>', array(
         '@key' => $key,
-        '@label' => $optionset->label)));
+        '@label' => $optionset->label,
+      )));
       $this->assertTrue(isset($optionset->options), t('<strong>@key</strong>: Loaded optionsets have a defined array of options', array(
-        '@key' => $key)));
+        '@key' => $key,
+      )));
     }
 
     // Update the optionset.
@@ -146,7 +150,8 @@ class SlickTestCase extends DrupalWebTestCase {
       $message = t('<strong>@key</strong>: saved value:<strong>@saved_value</strong> can be overriden by set2:<strong>@value</strong>.', array(
         '@key' => $key,
         '@saved_value' => $read_saved_value,
-        '@value' => $read_value));
+        '@value' => $read_value,
+      ));
       $this->assertNotEqual($saved_value, $value, $message);
     }
 
@@ -169,7 +174,8 @@ class SlickTestCase extends DrupalWebTestCase {
       $message = t('<strong>@key</strong>: saved value:<strong>@saved_value</strong> matches set2:<strong>@value</strong>.', array(
         '@key' => $key,
         '@saved_value' => $read_saved_value,
-        '@value' => $read_value));
+        '@value' => $read_value,
+      ));
       $this->assertEqual($saved_value, $value, $message);
     }
 
@@ -231,7 +237,8 @@ class SlickTestCase extends DrupalWebTestCase {
         $read_value = $this->getPrintedValue($value);
         $this->assertFieldByName("options[settings][$v]", $value, t("@v:<strong>@value</strong> inserted correctly.", array(
           '@value' => $read_value,
-          '@v' => $v)));
+          '@v' => $v,
+        )));
       }
     }
 

@@ -551,8 +551,8 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
       '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpedtedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc. Check "Aspect ratio overlay only" below to apply to Media or FC overlay field only.', array(
         '@dimensions' => '//size43.com/jqueryVideoTool.html',
         '@follow' => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
-        '@link' => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/')
-      ),
+        '@link' => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
+      )),
       '#options' => drupal_map_assoc(array('4:3', '16:9')),
       '#empty_option' => t('- None -'),
       '#default_value' => $settings['aspect_ratio'],
@@ -1109,8 +1109,8 @@ function slick_fields_entity_info_alter(&$entity_info) {
         if (!isset($entity_info[$key]['view modes'][$view_mode])) {
           $entity_info[$key]['view modes'][$view_mode] = array(
             'label' => t('@label', array(
-              '@label' => ucwords(str_replace("_", " ", $view_mode)
-            ))),
+              '@label' => ucwords(str_replace("_", " ", $view_mode)),
+            )),
             'custom settings' => FALSE,
           );
         }

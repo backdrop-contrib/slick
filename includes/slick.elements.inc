@@ -271,6 +271,7 @@ function slick_get_default_value($property, $group = 'settings') {
   $defaults = _slick_optionset_defaults($group);
   return isset($defaults[$property]) ? $defaults[$property] : FALSE;
 }
+
 /**
  * Returns the current optionset setting under group 'settings'.
  *

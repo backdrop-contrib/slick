@@ -25,26 +25,17 @@
         $('html').addClass('js');
       }
 
-      var $form = $('.form--slick');
+      var $form = $('.form--slick').removeClass('no-js');
+      $('.fieldset-legend-prefix', $form).removeClass('element-invisible');
+      $('.form-checkboxes .form-checkbox', $form).removeClass('is-tooltip');
 
       $('.form-checkbox', $form).once('slick-checkbox', function () {
-        var checkbox = $(this);
-        if (!checkbox.next('.field-suffix').length) {
-          checkbox.after('<span class="field-suffix"></span>');
+        var $checkbox = $(this);
+        if (!$checkbox.next('.field-suffix').length) {
+          $checkbox.after('<span class="field-suffix"></span>');
         }
-      });
 
-      $('.form--slick', context).removeClass('no-js').once('slick-admin', function () {
-        var t = $(this);
-        $('.fieldset-legend-prefix', t).removeClass('element-invisible');
-
-        $('.is-tooltip', t).each(function () {
-          if (!$(this).closest('.form-item').find('.hint').length) {
-            $(this).closest('.form-item:not(.form-checkboxes .form-type-checkbox)').append('<span class="hint">?</span>');
-          }
-        });
-
-        $('.form-item > .form-checkbox', t).click(function () {
+        $checkbox.click(function () {
           var t = $(this);
           if (t.prop('checked')) {
             t.addClass('on');
@@ -53,22 +44,33 @@
             t.removeClass('on');
           }
         });
+      });
 
-        $('.form-item > .hint', t).hover(function () {
+      $('.is-tooltip', $form).once('slick-tooltip', function () {
+        var t = $(this);
+        if (!t.closest('.form-item').find('> .hint').length) {
+          t.closest('.form-item').append('<span class="hint">?</span>');
+        }
+
+        $('~ .hint', t).hover(function () {
           $(this).closest('.form-item').addClass('hover');
         },
         function () {
           $(this).closest('.form-item').removeClass('hover');
         });
 
-        $('.form-item > .hint', t).click(function () {
+        $('~ .hint', t).click(function () {
           $('.form--slick .form-item.selected').removeClass('selected');
           $(this).parent().toggleClass('selected');
         });
 
-        $('.form-item > .description', t).click(function () {
+        $('~ .description', t).click(function () {
           $(this).parent().removeClass('selected');
         });
+      });
+
+      $('.form--slick', context).once('slick-admin', function () {
+        var t = $(this);
 
         $('.form-type-textfield > .form-text.js-expandable', t).focus(function () {
           $(this).parent().addClass('js-on-focus');

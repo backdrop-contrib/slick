@@ -41,7 +41,8 @@ function slick_help($path, $arg) {
       $output .= '<p>' . t('See the <a href="@field">Field module help</a> and the <a href="@field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="@slick_readme" target="_blank">Slick readme module</a>.', array(
         '@field' => url('admin/help/field'),
         '@field_ui' => url('admin/help/field_ui'),
-        '@slick_readme' => url($module_path . '/README.txt'))) . '</p>';
+        '@slick_readme' => url($module_path . '/README.txt'),
+      )) . '</p>';
       return $output;
   }
 }
