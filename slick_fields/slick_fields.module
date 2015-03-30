@@ -952,7 +952,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $field_name   = $field['field_name'];
     $field_type   = $field['type'];
     $slick_id     = &drupal_static('slick_id', 0);
-    $item_id      = drupal_clean_css_identifier("slick-{$entity_type}-{$bundle}-{$field_name}-" . ++$slick_id);
+    $item_id      = drupal_clean_css_identifier("slick-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}-" . ++$slick_id);
     $thumbnail_id = $item_id . '-thumbnail';
 
     // Prepare settings for conditional features.
@@ -969,8 +969,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'inline_css'         => '',
       'lazy'               => '',
       'current_display'    => 'main',
-      'attributes'         => array('id' => drupal_html_id($item_id)),
-      'content_attributes' => array('id' => drupal_html_id($item_id . '-slider')),
+      'attributes'         => array('id' => $item_id),
+      'content_attributes' => array('id' => $item_id . '-slider'),
     );
 
     $settings         = array_merge($settings, $display['settings']);
