@@ -1,7 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-3-30
 ----------------------------
-Issue #2459657 by by emcniece: Add better error message for missing files /
+Issue #2459669 by emcniece: Handle non-init'd jQuery Update module settings.
+Issue #2459657 by emcniece: Add better error message for missing files /
   improper library install.
 Updated SLICK_VERSION from 1.4 to 1.x to avoid chasing minor releases.
 Changed slick_attach() to move slick_arrows() and slick_dots() invocation till
