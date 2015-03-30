@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-3-30
 ----------------------------
+Fixed both phpcs and coder false positive with list() skipped value.
 Fixed disappeared admin tooltip after AJAX which seemingly broke at some point.
 Fixed phpcs complains with Closing parenthesis of array declaration.
 Issue #2459669 by emcniece: Handle non-init'd jQuery Update module settings.
