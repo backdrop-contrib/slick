@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Hooks and preprocess functions for the Slick Views module.
@@ -125,7 +124,7 @@ function template_preprocess_slick_views(&$variables) {
         $settings['asnavfor_target'] = '#' . $thumbnail_id . '-slider';
       }
       elseif ($settings['asnavfor_main']) {
-        $settings['asnavfor_target'] = check_plain($settings['asnavfor_main']);
+        $settings['asnavfor_target'] = $settings['asnavfor_main'];
       }
     }
 
@@ -185,7 +184,7 @@ function template_preprocess_slick_views(&$variables) {
         $settings['asnavfor_target'] = '#' . $id . '-slider';
       }
       elseif ($settings['asnavfor_thumbnail']) {
-        $settings['asnavfor_target'] = check_plain($settings['asnavfor_thumbnail']);
+        $settings['asnavfor_target'] = $settings['asnavfor_thumbnail'];
       }
 
       $element[1] = array(

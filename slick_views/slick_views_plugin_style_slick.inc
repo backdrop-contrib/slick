@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Slick style plugin for the Views module.

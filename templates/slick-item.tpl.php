@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Default theme implementation for the individual Slick item/slide template.

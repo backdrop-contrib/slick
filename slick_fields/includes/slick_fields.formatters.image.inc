@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Fields formatter for Slick and core Image field integration.

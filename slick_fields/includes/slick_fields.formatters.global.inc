@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Global functions for Slick fields formatter display.

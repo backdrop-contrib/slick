@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Export interface plugin.

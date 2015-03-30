@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Fields formatter for the Slick and Field collection integration.

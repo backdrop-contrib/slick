@@ -1,18 +1,23 @@
 <?php
-
 /**
  * @file
  * Hooks and preprocess functions for the Slick module.
  */
 
 /**
- * Implements hook_preprocess_slick().
+ * Prepares variables for slick templates.
  *
- * Elements:
- * - #settings is set via sub-modules and serves various purposes, and not
- *   related to JS settings, mostly slide layouts or attaching assets.
- * - #options is set programmatically, or hand-crafted, and only accepts direct
- *   key|value pairs related to JS settings, or at least optionset name.
+ * Default template: slick.tpl.php.
+ *
+ * @variables array:
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #items, #settings, #options, #attached.
+ *     - #settings is set via sub-modules and serves various purposes, and not
+ *       related to JS settings, mostly slide layouts or attaching assets.
+ *     - #options is set programmatically, or hand-crafted, and only accepts
+ *       direct key|value pairs related to JS settings, or at least an optionset
+ *       name.
  */
 function template_preprocess_slick(&$variables) {
   $element = $variables['element'];
@@ -173,7 +178,7 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = 'slick--display--' . $settings['current_display'];
 
     // The asnavfor_target can be main or thumbnail display accordingly.
-    $js['asNavFor'] = $settings['asnavfor_target'];
+    $js['asNavFor'] = check_plain(trim($settings['asnavfor_target']));
   }
   // Prevents non-empty, but not-used, asNavFor from breaking the slide.
   else {
@@ -461,10 +466,6 @@ function template_process_slick_item(&$variables) {
 
 /**
  * Implements hook_preprocess_slick_grid().
- *
- * Tips:
- *   - Avoid variableWidth and adaptiveHeight, unless using Masonry.
- *   - Use slidesToSHow > 1 to build more complex grids.
  */
 function template_preprocess_slick_grid(&$variables) {
   $element = $variables['element'];

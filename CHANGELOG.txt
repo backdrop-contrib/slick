@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2015-3-31
+----------------------------
+Moved sanitization for asnavfor_target to template_preprocess_slick().
+Fixed trivial edge cases with extra white spaces for asnavfor targets.
+Fixed line breaks after php tags.
+
 Slick 7.x-2.0-dev, 2015-3-30
 ----------------------------
 Fixed both phpcs and coder false positive with list() skipped value.

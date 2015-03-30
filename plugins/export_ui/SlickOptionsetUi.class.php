@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains the CTools Export UI integration code.

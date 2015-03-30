@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Default skins for the Slick carousel.

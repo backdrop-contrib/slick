@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Adds fields integration with Slick carousel.
@@ -1005,7 +1004,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         $settings['asnavfor_target'] = '#' . $thumbnail_id . '-slider';
       }
       elseif ($settings['asnavfor_main']) {
-        $settings['asnavfor_target'] = check_plain($settings['asnavfor_main']);
+        $settings['asnavfor_target'] = $settings['asnavfor_main'];
       }
     }
 
@@ -1076,7 +1075,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         $settings['asnavfor_target'] = '#' . $item_id . '-slider';
       }
       elseif ($settings['asnavfor_thumbnail']) {
-        $settings['asnavfor_target'] = check_plain($settings['asnavfor_thumbnail']);
+        $settings['asnavfor_target'] = $settings['asnavfor_thumbnail'];
       }
 
       $slick[1] = array(

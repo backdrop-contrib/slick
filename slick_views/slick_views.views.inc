@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains core functions for the Views module support.

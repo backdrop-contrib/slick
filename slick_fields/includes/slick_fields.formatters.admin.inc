@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Misc functions for Slick fields admin.
