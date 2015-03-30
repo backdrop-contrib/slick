@@ -3,7 +3,7 @@
  * Provides Slick loader.
  */
 
-(function($, Drupal, window) {
+(function($, Drupal) {
 
   "use strict";
 
@@ -80,7 +80,7 @@
         });
       }
 
-      t.trigger('afterSlick', [this, slick, slick.currentSlide]);
+      t.trigger('afterSlick', [_, slick, slick.currentSlide]);
     },
 
     /**
@@ -106,7 +106,7 @@
     },
 
     /**
-     * Fixed won't fix arrows issue when total <= slidesToShow, and not updated.
+     * Fixed known arrows issue when total <= slidesToShow, and not updated.
      */
     arrows: function(a, slick) {
       var _ = this,
@@ -119,7 +119,7 @@
     /**
      * Returns the current slide class.
      *
-     * Without centerMode, .slick-active can be as many as visible slides.
+     * Without centerMode, .slick-active can be as many as visible slides, hence
      * added a specific class. Also fix total <= slidesToShow with centerMode.
      * Given different situations, as of v1.5 Master, still can't interact with
      * internal selectors consistently, e.g.: slick.$slides.eq(curr).
@@ -154,4 +154,4 @@
     }
   };
 
-})(jQuery, Drupal, this);
+})(jQuery, Drupal);

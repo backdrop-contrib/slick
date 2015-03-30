@@ -139,7 +139,7 @@ function slick_get_overridable_options() {
 function slick_get_element_default_settings($count = 0) {
   $settings = array(
     'count' => $count,
-    'optionset' => '',
+    'optionset' => 'default',
     'optionset_thumbnail' => '',
     'asnavfor_target' => '',
     'skin' => '',
@@ -477,7 +477,7 @@ function _slick_gettype($value) {
 }
 
 /**
- * Gets supported Slick skins, and additional ones.
+ * Returns supported Slick skins, and additional ones.
  *
  * @return array
  *   An array of available skins.
@@ -608,7 +608,7 @@ function slick_optionset_create($values = array()) {
 }
 
 /**
- * Fetches all option sets from the database.
+ * Fetches all option sets from the storage.
  *
  * @param bool $reset
  *   If TRUE, the static cache of all objects will be flushed prior to

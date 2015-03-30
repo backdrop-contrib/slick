@@ -5,7 +5,7 @@
  * Slick carousel integration, the last carousel you'll ever need.
  */
 
-define('SLICK_VERSION', '1.4');
+define('SLICK_VERSION', '1.x');
 
 /**
  * Implements hook_help().
@@ -356,8 +356,6 @@ function slick_libraries_info() {
 function slick_attach(array $attach) {
   $path   = drupal_get_path('module', 'slick');
   $skins  = slick_skins();
-  $arrows = slick_arrows();
-  $dots   = slick_dots();
   $load   = array();
   $defaults = array(
     'attach_default'        => TRUE,
@@ -451,12 +449,14 @@ function slick_attach(array $attach) {
   }
 
   if ($skin_arrows = $attach['attach_skin_arrows']) {
+    $arrows = slick_arrows();
     if (isset($arrows[$skin_arrows]['css']) && is_array($arrows[$skin_arrows]['css'])) {
       $load['css'] += $arrows[$skin_arrows]['css'];
     }
   }
 
   if ($skin_dots = $attach['attach_skin_dots']) {
+    $dots = slick_dots();
     if (isset($dots[$skin_dots]['css']) && is_array($dots[$skin_dots]['css'])) {
       $load['css'] += $dots[$skin_dots]['css'];
     }

@@ -1,4 +1,9 @@
 
+Slick 7.x-2.0-dev, 2015-3-30
+----------------------------
+Updated SLICK_VERSION from 1.4 to 1.x to avoid chasing minor releases.
+Changed slick_attach() to move slick_arrows() and slick_dots() invocation till
+  requested.
 
 Slick 7.x-2.0-dev, 2015-3-21
 ----------------------------

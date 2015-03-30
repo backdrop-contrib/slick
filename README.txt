@@ -112,7 +112,7 @@ Supported multi-value fields for nested slicks: Image, Media, Atom reference.
 
 Usage example:
 - A home slideshow containing multiple videos per slide for quick overview.
-- A large product slideshow containing a grid of slides.
+- A large product/ portfolio slideshow containing a grid of slides.
 - A news slideshow containing latest related news items per slide.
 
 
@@ -322,7 +322,7 @@ KNOWN ISSUES
   to avoid interfering/ covering admin pages.
 - The following is not module related, but worth a note:
   * lazyLoad ondemand has issue with dummy image excessive height. See above for
-    the recommended fixes.
+    the recommended fixes. Added fixes to suppress it via CSS.
   * If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
 

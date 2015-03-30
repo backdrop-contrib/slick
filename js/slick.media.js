@@ -7,8 +7,6 @@
 
   "use strict";
 
-  Drupal.slick = Drupal.slick || {};
-
   Drupal.behaviors.slickMedia = {
     attach: function (context, settings) {
 
