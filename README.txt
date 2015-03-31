@@ -309,8 +309,8 @@ NICE TO HAVE
 --------------------------------------------------------------------------------
 These should not block the proper release, but nice to have before then.
 - Multi resolution fullscreen background image sizes.
-  FIXED - 2015-3-31, added slick_inline_css_output_info_alter() to modify the
-  inline CSS outputs at your own edge-case leasure.
+  FIXED - 2015-3-31, added slick_fields_inline_css_output_info_alter() to modify
+  the inline CSS outputs at your own edge-case leasure.
 - Photobox integration.
   FIXED - 2015-3-9.
 

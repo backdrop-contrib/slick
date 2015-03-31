@@ -373,10 +373,13 @@ function template_preprocess_slick_item(&$variables) {
   $variables['slide_pattern'] = '';
 
   // Title, caption and overlay, or nested media.
+  // Most sanitizations here must be handled by implementors since they may be
+  // renderable array.
   $stage = array();
 
   if ($settings['current_item'] == 'thumbnail') {
     // Thumbnail caption.
+    // Implementor is responsible to sanitize the output.
     if (isset($captions['data']) && !empty($captions['data'])) {
       $stage['data'] = $captions['data'];
     }
@@ -394,27 +397,32 @@ function template_preprocess_slick_item(&$variables) {
     }
 
     // Title.
+    // Implementor is responsible to sanitize the output.
     if (!empty($captions['title'])) {
       $stage['title'] = $captions['title'];
     }
 
     // Core image alt as description.
+    // Implementor is responsible to sanitize the output.
     if (!empty($captions['alt'])) {
       $stage['alt'] = $captions['alt'];
     }
 
     // Captions, can be multiple fields, useful for custom markups, or nested
     // slick if possible at all.
+    // Implementor is responsible to sanitize the output.
     if (!empty($captions['data'])) {
       $stage['data'] = $captions['data'];
     }
 
     // Link/ buttons.
+    // Implementor is responsible to sanitize the output.
     if (!empty($captions['link'])) {
       $stage['link'] = $captions['link'];
     }
 
-    // Editor links, implementors should do the access check properly, e.g.:
+    // Editor links.
+    // Implementors should do the access check properly, e.g.:
     // Translate file @title, Edit file @title.
     // @see _slick_fields_format_media()
     if (isset($captions['editor']) && !empty($captions['editor'])) {
@@ -759,7 +767,7 @@ function theme_slick_image_formatter_lazy(array $variables) {
   );
 
   if (isset($item['alt'])) {
-    $image['alt'] = $item['alt'];
+    $image['alt'] = check_plain($item['alt']);
   }
 
   if (isset($item['attributes'])) {
@@ -768,7 +776,7 @@ function theme_slick_image_formatter_lazy(array $variables) {
 
   // Do not output an empty 'title' attribute.
   if (isset($item['title']) && drupal_strlen($item['title']) > 0) {
-    $image['title'] = $item['title'];
+    $image['title'] = check_plain($item['title']);
   }
 
   if ($variables['image_style']) {

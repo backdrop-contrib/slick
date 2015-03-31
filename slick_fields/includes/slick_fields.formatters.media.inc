@@ -98,6 +98,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
           // Link field.
           elseif (isset($field_title[0]['url'])) {
             // The $item paramater expected here is $field_title[0].
+            // Sanitization is handled by theme_link_formatter_link_default().
             $title = field_view_value('file', $file, $slide_title, $field_title[0], $view_mode);
           }
 

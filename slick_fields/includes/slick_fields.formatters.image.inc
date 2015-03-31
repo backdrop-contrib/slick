@@ -78,6 +78,7 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
       // Thumbnail captions.
       if ($settings['thumbnail_caption']) {
         $thumbnail_caption = '';
+        // Sanitize once below.
         if ($settings['thumbnail_caption'] == 'title_field' && $image['title']) {
           $thumbnail_caption = $image['title'];
         }

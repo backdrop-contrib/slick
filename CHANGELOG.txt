@@ -1,6 +1,9 @@
 
 Slick 7.x-2.0-dev, 2015-3-31
 ----------------------------
+Added relevant info on sanitization at slick.theme.inc which should be handled
+  by implementors since most are renderable array.
+Added sanitization on Slick Views slide captions.
 Updated slick_devel_preprocess_slick() to drop data-slick test to reflect its
   removal at Slick 1.5, see:
   https://github.com/kenwheeler/slick/issues/1058

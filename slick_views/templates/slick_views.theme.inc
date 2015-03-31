@@ -66,7 +66,7 @@ function template_preprocess_slick_views(&$variables) {
 
         // Link, if so configured.
         if (isset($row->link) && !empty($row->link)) {
-          $item['caption']['link'] = $row->link;
+          $item['caption']['link'] = filter_xss_admin($row->link);
         }
 
         // Layout, if so configured.

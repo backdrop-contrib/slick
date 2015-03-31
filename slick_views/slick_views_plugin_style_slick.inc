@@ -546,7 +546,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
                 continue;
               }
               if (in_array($slide_caption, array_values($keys))) {
-                $caption_items[$key]['#markup'] = $slide_caption_rendered;
+                $caption_items[$key]['#markup'] = filter_xss_admin($slide_caption_rendered);
               }
             }
             if ($caption_items) {
