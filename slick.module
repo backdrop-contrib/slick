@@ -474,6 +474,7 @@ function slick_attach(array $attach) {
   // Attach default JS settings to allow responsive options have a lookup and
   // avoid dup options in the markups. This is the only JS head injection we
   // have since responsives got no inheritance, and no context without, pity.
+  // Only responsive instance settings need this, not the main one.
   if ($attach['attach_default']) {
     $defaults = _slick_optionset_defaults('settings');
 
@@ -511,8 +512,9 @@ function slick_attach(array $attach) {
  * The slick_add() will be ignored if element #attached is provided to
  * theme_slick, useful for more fine-grained control over libraries to load.
  *
- * Notes: This is not used since the sub modules implements #attached property
+ * Notes: This is not used since the sub-modules implements #attached property
  * instead. It is here to load library for custom works as needed, or fallback.
+ * This is dropped at D8 using the #attached at template_preprocess_slick().
  *
  * @see slick_attach()
  */

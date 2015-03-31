@@ -107,10 +107,10 @@ function slick_get_responsive_options($count = 0) {
 }
 
 /**
- * Returns overridable options to re-use one optionset.
+ * Returns overridable options to re-use one optionset, only accepts boolean.
  *
  * @return array
- *   An array of overridable options.
+ *   An array of overridable boolean options.
  */
 function slick_get_overridable_options() {
   $overridables = array(

@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-3-31
 ----------------------------
+\o/ at last .... happy for a great Alpha release ;)
+Added various relevant useful info somewhere to clarify the intention.
 Added relevant info on sanitization at slick.theme.inc which should be handled
   by implementors since most are renderable array.
 Added sanitization on Slick Views slide captions.

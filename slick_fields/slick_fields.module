@@ -297,7 +297,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
         'select[name*="[thumbnail_style]"]' => array('value' => ''),
       ),
     ),
-    '#description' => t('Dependent on dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
+    '#description' => t('Dependent on a skin, dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
     '#attributes' => $is_tooltip,
   );
 

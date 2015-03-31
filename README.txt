@@ -337,7 +337,7 @@ KNOWN ISSUES
 UNKNOWN ISSUES
 --------------------------------------------------------------------------------
 - Anything I am not aware of.
-  Please report if you find one. Your report and help is any module QA.
+  Please report if you find one. Your report and help is any module QA. Thanks.
 
 
 
@@ -363,7 +363,9 @@ AUTHOR/MAINTAINER/CREDITS
 Slick 7.x-2.x-dev by gausarts, inspired by Flexslider with CTools integration.
 Slick 7.x-1.x-dev by arshadcn, the original author.
 
-With the help from the community: https://www.drupal.org/node/2232779/committers
+With the help from the community:
+- https://www.drupal.org/node/2232779/committers
+- CHANGELOG.txt for helpful souls with their suggestions and reports.
 
 
 READ MORE
