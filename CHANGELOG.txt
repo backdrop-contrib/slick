@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-3-31
 ----------------------------
+Fixed wrong name slick_inline_css_output_info() to use the actual module name
+  slick_fields_inline_css_output_info().
 Added slick_inline_css_output_info_alter() to modify the inline CSS outputs.
 Issue #2461693 by rfnbnkr: asNavFor stopped working with AJAX loaded slicks.
 Moved sanitization for asnavfor_target to template_preprocess_slick().

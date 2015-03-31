@@ -1046,7 +1046,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     if ($settings['inline_css']) {
       $css = implode("\n", $settings['inline_css']);
       // Allows inline css output information to be altered.
-      drupal_alter('slick_inline_css_output_info', $css, $items, $settings);
+      drupal_alter('slick_fields_inline_css_output_info', $css, $items, $settings);
       $attach['attach_inline_css'] = $css;
     }
 
