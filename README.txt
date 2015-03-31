@@ -12,9 +12,11 @@ See http://kenwheeler.github.io/slick.
 * Autoplay, pagers, arrows, etc...
 * Exportable via CTools.
 * Works with Views, core and contrib fields: Image, Media or Field collection.
-* Optional skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth, Grid, Split.
+* Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
+  Grid, Split. Nothing loaded unless required.
 * Nested slicks, slide overlays or multiple slicks within a single Slick using
   Field collection, or Views.
+* Some useful hooks and drupal_alters for advanced works.
 
 
 
@@ -23,8 +25,9 @@ VERSIONS:
 7.x-2.x supports exportable optionsets via CTools.
 Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x to allow creating
 database table to store/ manage option sets.
-With Bulk exporter or Features, optionsets may be stored in codes to avoid
-database lookup, it is analog to Drupal 8 CMI.
+Any module that provides settings in the UI needs to store them in a table.
+With Bulk exporter, or Features, optionsets may be stored in codes to avoid
+database lookup. It is analog to Drupal 8 CMI.
 
 
 
@@ -306,7 +309,10 @@ NICE TO HAVE
 --------------------------------------------------------------------------------
 These should not block the proper release, but nice to have before then.
 - Multi resolution fullscreen background image sizes.
-- Photobox integration (FIXED - Slick 7.x-2.0-dev, 2015-3-9).
+  FIXED - 2015-3-31, added slick_inline_css_output_info_alter() to modify the
+  inline CSS outputs at your own edge-case leasure.
+- Photobox integration.
+  FIXED - 2015-3-9.
 
 
 

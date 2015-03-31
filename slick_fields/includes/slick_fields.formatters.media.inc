@@ -198,7 +198,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       $slide['slide']['#media'] = $media;
     }
 
-    // @todo map from picture, or refine for mobile.
+    // Use slick_inline_css_output_info_alter() to modify the outputs.
     $inline_css_skins = slick_inline_css_skins();
     if (in_array($settings['skin'], $inline_css_skins)) {
       $slide['slide'] = array();
