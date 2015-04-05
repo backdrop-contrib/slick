@@ -44,6 +44,8 @@ function slick_get_options() {
       'lazyLoad'          => 'ondemand',
       'respondTo'         => 'window',
       'rtl'               => FALSE,
+      'rows'              => 1,
+      'slidesPerRow'      => 1,
       'slide'             => '',
       'slidesToShow'      => 1,
       'slidesToScroll'    => 1,
@@ -60,7 +62,7 @@ function slick_get_options() {
       'easing'            => 'linear',
       'variableWidth'     => FALSE,
       'vertical'          => FALSE,
-      'verticalScrolling' => FALSE,
+      'verticalSwiping'   => FALSE,
       'waitForAnimate'    => TRUE,
     );
 
@@ -334,7 +336,7 @@ function _slick_remove_default_optionset_options($optionset, $customs = array(),
       unset($config['swipeToSlide']);
     }
     if (empty($config['vertical'])) {
-      unset($config['verticalScrolling']);
+      unset($config['verticalSwiping']);
     }
     if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
       $config['cssEase'] = $config['cssEaseBezier'];
@@ -382,7 +384,7 @@ function _slick_remove_default_optionset_options($optionset, $customs = array(),
             unset($cleaned[$key]['settings']['dotsClass'], $cleaned[$key]['settings']['appendDots']);
           }
           if (empty($cleaned[$key]['settings']['vertical'])) {
-            unset($cleaned[$key]['settings']['verticalScrolling']);
+            unset($cleaned[$key]['settings']['verticalSwiping']);
           }
           if (isset($cleaned[$key]['settings']['cssEaseBezier']) && $cleaned[$key]['settings']['cssEaseBezier']) {
             $cleaned[$key]['settings']['cssEase'] = $cleaned[$key]['settings']['cssEaseBezier'];

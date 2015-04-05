@@ -1,4 +1,14 @@
 
+Slick 7.x-2.0-dev, 2015-4-6
+---------------------------
+Added info to Slick Views about the difference between Module grid and the
+  library grid. The module Grid feature has been around before the Slick library
+  officiallly supported it at Slick 1.5.
+Added options for builtin Grid system: rows and slidesPerRow.
+Updated the verticalScrolling option to verticalSwiping. Be sure to re-save it
+  to pick-up the newly renamed option.
+Updated to Slick 1.5.
+
 Slick 7.x-2.0-dev, 2015-3-31
 ----------------------------
 \o/ at last .... happy for a great Alpha release ;)

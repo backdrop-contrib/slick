@@ -343,7 +343,7 @@ class SlickOptionsetUi extends ctools_export_ui {
                       $states = array('visible' => array(':input[name*="[' . $i . '][settings][useCSS]"]' => array('checked' => TRUE)));
                       break;
 
-                    case 'verticalScrolling':
+                    case 'verticalSwiping':
                       $states = array('visible' => array(':input[name*="[' . $i . '][settings][vertical]"]' => array('checked' => TRUE)));
                       break;
                   }
@@ -596,6 +596,18 @@ class SlickOptionsetUi extends ctools_export_ui {
         'type' => 'checkbox',
       );
 
+      $elements['rows'] = array(
+        'title' => t('Rows'),
+        'description' => t("Setting this to more than 1 initializes grid mode. Use slidesPerRow to set how many slides should be in each row."),
+        'type' => 'textfield',
+      );
+
+      $elements['slidesPerRow'] = array(
+        'title' => t('Slides per row'),
+        'description' => t("With grid mode intialized via the rows option, this sets how many slides are in each grid row."),
+        'type' => 'textfield',
+      );
+
       $elements['slide'] = array(
         'title' => t('Slide element'),
         'description' => t("Element query to use as slide. Slick will use any direct children as slides, without having to specify which tag or selector to target."),
@@ -699,9 +711,9 @@ class SlickOptionsetUi extends ctools_export_ui {
         'type' => 'checkbox',
       );
 
-      $elements['verticalScrolling'] = array(
-        'title' => t('Vertical scrolling'),
-        'description' => t('Vertical slide scrolling/ dragging.'),
+      $elements['verticalSwiping'] = array(
+        'title' => t('Vertical swiping'),
+        'description' => t('Changes swipe direction to vertical.'),
         'type' => 'checkbox',
         'states' => array('visible' => array(':input[name*="options[settings][vertical]"]' => array('checked' => TRUE))),
       );

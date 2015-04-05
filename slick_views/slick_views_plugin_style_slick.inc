@@ -175,7 +175,7 @@ class SlickViewsPluginStyleSlick extends views_plugin_style {
       '#options' => $grid_options,
       '#empty_option' => t('- None -'),
       '#default_value' => $settings['grid'],
-      '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. Use skin Grid for starter, and plays with slidesToShow to have more grid combination.'),
+      '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. Use skin Grid for starter. This module feature has been around before the Slick library officiallly supported it. Leave empty to use the library grid system instead.'),
       '#attributes' => $is_tooltip,
     );
 
