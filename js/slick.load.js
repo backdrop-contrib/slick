@@ -127,7 +127,7 @@
     setCurrent: function(t, curr) {
       // Must take care for both asNavFor instances, with/without slick-wrapper.
       var w = t.parent('.slick').parent();
-      $('.slide', w).removeClass('slide--current');
+      $('.slick-slide', w).removeClass('slide--current');
       $('[data-slick-index="' + curr + '"]', w).addClass('slide--current');
     },
 

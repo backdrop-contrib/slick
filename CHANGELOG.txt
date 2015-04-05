@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-4-6
 ---------------------------
+Updated slick.load.min.js slide--current class to reflect the new grid option.
 Added info to Slick Views about the difference between Module grid and the
   library grid. The module Grid feature has been around before the Slick library
   officiallly supported it at Slick 1.5.
