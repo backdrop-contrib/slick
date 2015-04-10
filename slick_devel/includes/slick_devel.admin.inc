@@ -33,7 +33,7 @@ function slick_devel_form_settings() {
   $form['library']['slick_devel_disable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Disable module slick.load.min.js'),
-    '#description' => t('Slick will run at its basic setup using data-slick attributes.'),
+    '#description' => t('Slick will not run unless you initiliaze it yourself.'),
     '#default_value' => variable_get('slick_devel_disable', FALSE),
     '#states' => array(
       'invisible' => array(

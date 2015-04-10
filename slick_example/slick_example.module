@@ -24,7 +24,7 @@ function slick_example_ctools_plugin_api($module, $api) {
  */
 function slick_example_views_api($module, $api) {
   if ($module == 'views' && $api == 'views_default') {
-    return array('version' => 2);
+    return array('api' => 3);
   }
 }
 
@@ -34,7 +34,7 @@ function slick_example_views_api($module, $api) {
  * This function may live in module file, or my_module.slick.inc if you have
  * many skins.
  */
-/* -- Delete this line if you want to use this function
+/* -- Delete this line if you want to use this function.
 function slick_example_slick_skins_info() {
 // $module_path = drupal_get_path('module', 'slick_example');
 // return array(
@@ -61,7 +61,7 @@ function slick_example_slick_skins_info() {
  *
  * @see hook_slick_skins_info()
  */
-/* -- Delete this line if you want to use this function
+/* -- Delete this line if you want to use this function.
 function slick_example_slick_skins_info_alter(array &$skins) {
 // The samples are adjusted to not exceed 80 characters.
 // $module_path = drupal_get_path('module', 'slick_example');
@@ -108,12 +108,12 @@ function slick_example_slick_skins_info_alter(array &$skins) {
  *
  * @see slick_attach()
  */
-/* -- Delete this line if you want to use this function
+/* -- Delete this line if you want to use this function.
 function slick_example_slick_attach_info_alter(array &$attach) {
 // Disable core Slick CSS: sites/../libraries/slick/slick/slick-theme.css
 // $attach['attach_slick_element'] = FALSE;
 
-// Disable module JS: slick.load.js to use your own slick JS.
+// Disable module JS: slick.load.min.js to use your own slick JS.
 // $attach['attach_module'] = FALSE;
 
 // Disable module CSS: slick/css/theme/slick.theme.css
@@ -122,7 +122,7 @@ function slick_example_slick_attach_info_alter(array &$attach) {
 // Disabled inline CSS after copying the output to theme at final stage.
 // $attach['attach_inline_css'] = NULL;
 
-// Disable its depencencies, otherwise slick.load.js is still loaded.
+// Disable its depencencies, otherwise slick.load.min.js is still loaded.
 // $attach['attach_media'] = FALSE;
 // $attach['attach_colorbox'] = FALSE;
 }

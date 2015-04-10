@@ -13,7 +13,7 @@ See http://kenwheeler.github.io/slick.
 * Exportable via CTools.
 * Works with Views, core and contrib fields: Image, Media or Field collection.
 * Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
-  Grid, Split. Nothing loaded unless required.
+  Grid, Split. Nothing loaded unless configured so.
 * Nested slicks, slide overlays or multiple slicks within a single Slick using
   Field collection, or Views.
 * Some useful hooks and drupal_alters for advanced works.
@@ -28,7 +28,22 @@ database table to store/ manage option sets.
 Any module that provides settings in the UI needs to store them in a table.
 With Bulk exporter, or Features, optionsets may be stored in codes to avoid
 database lookup. It is analog to Drupal 8 CMI.
+See slick_example.slick_default_preset.inc for the stored-in-code sample.
 
+
+INSTALLATION:
+--------------------------------------------------------------------------------
+Install the module as usual, more info can be found on:
+http://drupal.org/documentation/install/modules-themes/modules-7
+
+The Slick module contain several sub-modules:
+- slick_devel, if you want to help testing and developing the Slick.
+- slick_example, if you want to get up and running quickly.
+- slick_fields, supports Image, Media file, and Field collection fields.
+- slick_views, for more customized works with the Slick.
+
+See the requirements below for all required dependencies.
+See README.txt on each sub-module for their relevant information.
 
 
 REQUIREMENTS:
@@ -210,7 +225,8 @@ only if trouble to see the new options, or when options don't apply properly.
 This is most likely true when the library adds/changes options, or the module
 does something new.
 
-Always clear the cache when updating the module to ensure things are picked up:
+Always clear the cache, and re-generate JS (if aggregation is on) when updating
+the module to ensure things are picked up:
 - admin/config/development/performance
 
 If having JS error with jQuery v1.7, you may need to upgrade it to v1.8.
@@ -294,11 +310,11 @@ At both cases, asNavFor should target slick-initialized class/ID attributes.
 RECOMMENDED MODULES
 --------------------------------------------------------------------------------
 The following modules are supported, but optional.
-- Colorbox, to have small grids/slides that open up images/videos in overlay.
+- Colorbox, to have grids/slides that open up image/video/audio in overlay.
 - Photobox, idem ditto.
 - Media, to have fairly variant slides: image, video, audio.
-- Field collection, to have more complex layout with Media.
-- Color field, to colorize slide background individually.
+- Field collection, to have more complex layout along with Media file.
+- Color field, to colorize slide background individually via Field collection.
 - Block reference to have more complex slide content for Fullscreen/width skins.
 - Entity translation, to have translated file and translate links with Media.
 - Field formatter settings, to modify field formatter settings and summaries.
@@ -310,7 +326,7 @@ NICE TO HAVE
 These should not block the proper release, but nice to have before then.
 - Multi resolution fullscreen background image sizes.
   FIXED - 2015-3-31, added slick_fields_inline_css_output_info_alter() to modify
-  the inline CSS outputs at your own edge-case leasure.
+  the inline CSS outputs at your own edge-case leisure.
 - Photobox integration.
   FIXED - 2015-3-9.
 

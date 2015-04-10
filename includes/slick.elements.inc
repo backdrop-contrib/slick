@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Slick elements.
+ * Slick options.
  *
  * This file is called by admin and several frontend functions.
  */
@@ -207,6 +207,21 @@ function slick_clean_options(array $options) {
 }
 
 /**
+ * Applies a very permissive XSS/HTML filter for admin-only use.
+ *
+ * Allows all tags that can be used inside an HTML body, save for scripts and
+ * styles, copied from filter_xss_admin() to allow extending it.
+ *
+ * @see filter_xss_admin()
+ */
+function slick_filter_xss_admin($string) {
+  $default_tags = array('a', 'abbr', 'acronym', 'address', 'article', 'aside', 'b', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'button', 'canvas', 'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'map', 'mark', 'menu', 'meter', 'nav', 'ol', 'output', 'p', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'small', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'tt', 'u', 'ul', 'var', 'wbr');
+  $allowed_tags = variable_get('slick_allowed_tags', $default_tags);
+
+  return filter_xss($string, $allowed_tags);
+}
+
+/**
  * Default settings for a newly created option set.
  *
  * @param string $set
@@ -304,7 +319,7 @@ function slick_optionset_get_setting($id, $setting_name, $group = 'settings') {
  *   The context to check for before doing alteration, such as module settings.
  *
  * @return array
- *   An array of reduced duplicated Option set options performance wise.
+ *   An array of reduced duplicated Optionset options performance wise.
  */
 function _slick_remove_default_optionset_options($optionset, $customs = array(), $context = array()) {
   $config = array();
@@ -317,32 +332,8 @@ function _slick_remove_default_optionset_options($optionset, $customs = array(),
   $settings = $customs ? $customs : $options['settings'];
   $config = array_diff_assoc($settings, $defaults);
 
-  // Must be empty if all is default optionset.
-  if ($config) {
-    // Remove wasted dependent options if disabled, empty or not.
-    if (empty($config['autoplay'])) {
-      unset($config['pauseOnHover'], $config['pauseOnDotsHover'], $config['autoplaySpeed']);
-    }
-    if (empty($config['centerMode'])) {
-      unset($config['centerPadding']);
-    }
-    if (isset($config['arrows']) && !$config['arrows']) {
-      unset($config['prevArrow'], $config['nextArrow'], $config['appendArrows']);
-    }
-    if (empty($config['dots'])) {
-      unset($config['dotsClass'], $config['appendDots']);
-    }
-    if (empty($config['swipe'])) {
-      unset($config['swipeToSlide']);
-    }
-    if (empty($config['vertical'])) {
-      unset($config['verticalSwiping']);
-    }
-    if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
-      $config['cssEase'] = $config['cssEaseBezier'];
-      unset($config['cssEaseOverride'], $config['cssEaseBezier']);
-    }
-  }
+  // Remove wasted dependent options if disabled, empty or not.
+  slick_remove_wasted_dependent_options($config);
 
   // Clean up responsive options if similar to main defaults. JS takes care of
   // the copy based on defaults, so we can avoid dup options in the markups.
@@ -371,25 +362,7 @@ function _slick_remove_default_optionset_options($optionset, $customs = array(),
           $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults);
 
           // Remove wasted dependent options if disabled, empty or not.
-          if (empty($cleaned[$key]['settings']['autoplay'])) {
-            unset($cleaned[$key]['settings']['pauseOnHover'], $cleaned[$key]['settings']['pauseOnDotsHover'], $cleaned[$key]['settings']['autoplaySpeed']);
-          }
-          if (empty($cleaned[$key]['settings']['centerMode'])) {
-            unset($cleaned[$key]['settings']['centerPadding']);
-          }
-          if (empty($cleaned[$key]['settings']['swipe'])) {
-            unset($cleaned[$key]['settings']['swipeToSlide']);
-          }
-          if (empty($cleaned[$key]['settings']['dots'])) {
-            unset($cleaned[$key]['settings']['dotsClass'], $cleaned[$key]['settings']['appendDots']);
-          }
-          if (empty($cleaned[$key]['settings']['vertical'])) {
-            unset($cleaned[$key]['settings']['verticalSwiping']);
-          }
-          if (isset($cleaned[$key]['settings']['cssEaseBezier']) && $cleaned[$key]['settings']['cssEaseBezier']) {
-            $cleaned[$key]['settings']['cssEase'] = $cleaned[$key]['settings']['cssEaseBezier'];
-            unset($cleaned[$key]['settings']['cssEaseOverride'], $cleaned[$key]['settings']['cssEaseBezier']);
-          }
+          slick_remove_wasted_dependent_options($cleaned[$key]['settings']);
         }
       }
 
@@ -402,6 +375,37 @@ function _slick_remove_default_optionset_options($optionset, $customs = array(),
   drupal_alter('slick_remove_options_info', $config, $customs, $options, $context);
 
   return $config;
+}
+
+/**
+ * Removes wasted dependent options, even if not empty.
+ *
+ * @param array $config
+ *   An array of Optionset options.
+ */
+function slick_remove_wasted_dependent_options(array &$config) {
+  if (isset($config['autoplay']) && !$config['autoplay']) {
+    unset($config['pauseOnHover'], $config['pauseOnDotsHover'], $config['autoplaySpeed']);
+  }
+  if (isset($config['centerMode']) && !$config['centerMode']) {
+    unset($config['centerPadding']);
+  }
+  if (isset($config['arrows']) && !$config['arrows']) {
+    unset($config['prevArrow'], $config['nextArrow'], $config['appendArrows']);
+  }
+  if (isset($config['dots']) && !$config['dots']) {
+    unset($config['dotsClass'], $config['appendDots']);
+  }
+  if (isset($config['swipe']) && !$config['swipe']) {
+    unset($config['swipeToSlide']);
+  }
+  if (isset($config['vertical']) && !$config['vertical']) {
+    unset($config['verticalSwiping']);
+  }
+  if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
+    $config['cssEase'] = $config['cssEaseBezier'];
+    unset($config['cssEaseOverride'], $config['cssEaseBezier']);
+  }
 }
 
 /**
