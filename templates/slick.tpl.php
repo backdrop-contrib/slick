@@ -7,11 +7,12 @@
  * - $items: The array of items containing main image/video/audio, and optional
  *     image/video/audio overlay and captions.
  * - $settings: A cherry-picked settings that mostly defines the slide HTML or
- *     layout, and none of JS settings/options which are defined at data-config.
- * - $attributes: The array of attributes to hold classes, id and optional
- *     data-config containing JSON object aka JS settings the Slick expects to
+ *     layout, and none of JS settings/options which are defined at data-slick.
+ * - $attributes: The array of attributes to hold the container classes, and id.
+ * - $content_attributes: The array of attributes to hold the slick-slider and
+ *     data-slick containing JSON object aka JS settings the Slick expects to
  *     override default options. We don't store these JS settings in the normal
- *     <head>, but inline within data-config attribute instead.
+ *     <head>, but inline within data-slick attribute instead.
  */
 ?>
 <div<?php print $attributes; ?>>

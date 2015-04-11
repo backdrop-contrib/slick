@@ -9,41 +9,39 @@
 
   Drupal.behaviors.slick = {
     attach: function(context, settings) {
-
       $('.slick', context).once('slick', function() {
-        var t = $('> .slick__slider', this),
-          a = $('~ .slick__arrow', t),
-          configs = t.data('config') || {},
-          merged = $.extend({}, settings.slick, configs),
-          globals = Drupal.slick.globals(t, a, merged);
-
-        // Populate defaults + globals into each breakpoint.
-        if (typeof configs.responsive !== 'undefined') {
-          $.map(configs.responsive, function(v, i) {
-            if (typeof configs.responsive !== 'undefined' && typeof configs.responsive[i].settings !== 'undefined' && configs.responsive[i].settings !== 'unslick') {
-              configs.responsive[i].settings = $.extend({}, settings.slick, globals, configs.responsive[i].settings);
-            }
-          });
-        }
+        var _ = Drupal.slick,
+          t = $('> .slick__slider', this),
+          a = $('> .slick__arrow', this);
 
         // Build the Slick.
-        Drupal.slick.beforeSlick(t, a);
-        t.slick($.extend(globals, configs));
-        Drupal.slick.afterSlick(t);
+        _.beforeSlick(t, a);
+        t.slick(_.globals(t, a));
+        _.afterSlick(t);
       });
     }
   };
 
   Drupal.slick = {
-
     /**
      * The event must be bound prior to slick being called.
      */
     beforeSlick: function(t, a) {
-      var _ = this;
+      var _ = this,
+        breakpoint;
       _.randomize(t);
 
       t.on('init', function(e, slick) {
+        // Populate defaults + globals into each breakpoint.
+        var sets = slick.options.responsive || null;
+        if (sets && sets.length > -1) {
+          for (breakpoint in sets) {
+            if (sets.hasOwnProperty(breakpoint) && sets[breakpoint].settings !== 'unslick') {
+              slick.breakpointSettings[sets[breakpoint].breakpoint] = $.extend({}, Drupal.settings.slick, _.globals(t, a), sets[breakpoint].settings);
+            }
+          }
+        }
+
         // Update arrows with possible nested slick.
         if (t.attr('id') === slick.$slider.attr('id')) {
           _.arrows(a, slick);
@@ -67,9 +65,9 @@
       // Arrow down jumper.
       t.parent().on('click', '.jump-scroll[data-target]', function(e) {
         e.preventDefault();
-        var a = $(this);
+        var b = $(this);
         $('html, body').stop().animate({
-          scrollTop: $(a.data('target')).offset().top - (a.data('offset') || 0)
+          scrollTop: $(b.data('target')).offset().top - (b.data('offset') || 0)
         }, 800, opt.easing || 'swing');
       });
 
@@ -117,12 +115,10 @@
     },
 
     /**
-     * Returns the current slide class.
+     * Sets the current slide class.
      *
      * Without centerMode, .slick-active can be as many as visible slides, hence
      * added a specific class. Also fix total <= slidesToShow with centerMode.
-     * Given different situations, as of v1.5 Master, still can't interact with
-     * internal selectors consistently, e.g.: slick.$slides.eq(curr).
      */
     setCurrent: function(t, curr) {
       // Must take care for both asNavFor instances, with/without slick-wrapper.
@@ -132,9 +128,10 @@
     },
 
     /**
-     * Declare global options explicitly to copy into responsives.
+     * Declare global options explicitly to copy into responsive settings.
      */
-    globals: function(t, a, merged) {
+    globals: function(t, a) {
+      var merged = $.extend({}, Drupal.settings.slick, t.data('slick'));
       return {
         slide: merged.slide,
         lazyLoad: merged.lazyLoad,

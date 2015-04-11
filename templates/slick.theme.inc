@@ -232,9 +232,9 @@ function template_preprocess_slick(&$variables) {
   // data attributes. This is much more efficient than regular JS settings loop
   // which stuffs horrible bunch of JS settings for slide instances into the
   // <head>. This prevents possible collision and ID leak with multiple slicks.
-  if ($count > 1 && !isset($content_attributes['data-config'])) {
+  if ($count > 1 && !isset($content_attributes['data-slick'])) {
     // Use hook_slick_remove_options_info_alter() to manipulate the values prior
-    // to being printed into data-config attributes.
+    // to being printed into data-slick attributes.
     $js_data = _slick_remove_default_optionset_options($optionset, $js, $settings);
 
     // Remove empty lazyLoad, or left to default ondemand, to avoid JS error.
@@ -244,7 +244,7 @@ function template_preprocess_slick(&$variables) {
 
     // Do not pass arrows HTML to JSON object, as we process separately above.
     unset($js_data['prevArrow'], $js_data['nextArrow']);
-    $content_attributes['data-config'] = drupal_json_encode($js_data);
+    $content_attributes['data-slick'] = drupal_json_encode($js_data);
   }
 
   // Process individual item.

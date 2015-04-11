@@ -2,6 +2,8 @@
 
 Slick 7.x-2.0-dev, 2015-4-11
 ----------------------------
+Issue #2466073 by gausarts: Use data-slick to store options.
+  Be sure to clear cache, or re-generate JS if aggregation is on.
 Issue #2466327 by rHOnDO: Allow alterable caption HTML tags.
 Added slick_filter_xss_admin() to ease up extending allowed tags restrictively
   which can be set using variable_set('slick_allowed_tags', $allowed_tags).
