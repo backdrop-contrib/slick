@@ -361,7 +361,7 @@ function template_preprocess_slick_item(&$variables) {
     $variables['content_tag'] = 'ul';
   }
 
-  // Main image/background. Media module has type: image, audio, video, etc.
+  // Main image/background. Media module has type: image, audio, video.
   // as opposed to field_type.
   if ($settings['type']) {
     $attributes['class'][] = drupal_clean_css_identifier('slide--' . $settings['type']);

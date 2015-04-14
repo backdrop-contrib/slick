@@ -351,7 +351,7 @@ function slick_libraries_info() {
  *   An array of conditions to load the relevant assets, or libraries.
  *
  * @return array
- *   Array formatted for the '#attached' property.
+ *   The array formatted for the '#attached' property.
  */
 function slick_attach(array $attach) {
   $path   = drupal_get_path('module', 'slick');
@@ -504,6 +504,53 @@ function slick_attach(array $attach) {
   drupal_alter('slick_attach_load_info', $load, $attach, $skins);
 
   return $load;
+}
+
+/**
+ * Returns a renderable array of a simple slick instance.
+ *
+ * Use render($slick) to print it, or do further processing as needed.
+ *
+ * @param array $slides
+ *   An array of slick contents: text, image or media.
+ * @param array $options
+ *   An array of key:value pairs of JS options.
+ * @param array $settings
+ *   An array of key:value pairs of HTML/layout related settings.
+ * @param array $attach
+ *   An optional array of assets to load. Passing an empty array will do basic.
+ * @param string $id
+ *   An optional ID for the instance.
+ *
+ * @return array
+ *   The renderable array of a slick instance, or empty array.
+ *
+ * @see slick_get_options()
+ * @see slick_get_element_default_settings()
+ * @see slick_attach()
+ * @see slick.api.php
+ */
+function slick_build($slides = array(), $options = array(), $settings = array(), $attach = array(), $id = NULL) {
+  $slick = array();
+  if ($slides) {
+    if ($id && !isset($settings['attributes'])) {
+      $settings += array('attributes' => array('id' => $id));
+    }
+
+    $items = array();
+    foreach ($slides as $slide) {
+      $items[] = isset($slide['slide']) ? $slide : array('slide' => $slide);
+    }
+
+    $slick[] = array(
+      '#theme' => 'slick',
+      '#items' => $items,
+      '#settings' => $settings,
+      '#options' => $options,
+      '#attached' => slick_attach($attach),
+    );
+  }
+  return $slick;
 }
 
 /**

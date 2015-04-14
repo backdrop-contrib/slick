@@ -16,8 +16,9 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
   // Must be similar for the colorbox rel gallery for image/video/audio.
   $id = isset($settings['lightbox_id']) ? $settings['lightbox_id'] : $settings['attributes']['id'];
 
-  // We are safe to load picture, without relying on function_exists.
-  if ($settings['picture_ready'] && $settings['picture'] && $settings['picture_style']) {
+  // Ensures disabling Picture while being used doesn't screw up.
+  $is_picture = function_exists('picture_mapping_load') && $settings['picture_ready'];
+  if ($is_picture && $settings['picture'] && $settings['picture_style']) {
     $picture_path     = drupal_get_path('module', 'picture');
     $picture_fallback = $settings['picture_fallback'];
     $mappings         = picture_mapping_load($settings['picture_style']);
@@ -155,10 +156,17 @@ function _slick_fields_get_media_thumbnail(&$settings, $uri, $image_style = NULL
   $settings['soundcloud'] = FALSE;
   $scheme = $settings['scheme'];
   $scheme_supported = array('vimeo', 'youtube', 'soundcloud');
+  $is_media = in_array($settings['type'], array('video', 'audio')) && in_array($scheme, $scheme_supported);
 
-  if (in_array($settings['type'], array('video', 'audio'))) {
-    if (in_array($scheme, $scheme_supported)) {
+  if ($is_media) {
+    // Ensures disabling Media sub-modules while being used doesn't screw up.
+    try {
       $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
+
+      if (!is_object($wrapper)) {
+        throw new Exception('Unable to find matching wrapper');
+      }
+
       $parts = $wrapper->get_parameters();
 
       switch ($scheme) {
@@ -168,11 +176,9 @@ function _slick_fields_get_media_thumbnail(&$settings, $uri, $image_style = NULL
           break;
 
         case 'soundcloud':
-          // Prevent fatal error for no internet connection.
           if ($wrapper->interpolateUrl()) {
             $settings['soundcloud'] = TRUE;
           }
-
           $media_id = $parts['u'];
           break;
       }
@@ -186,6 +192,10 @@ function _slick_fields_get_media_thumbnail(&$settings, $uri, $image_style = NULL
       }
 
       $settings['media_id'] = $media_id;
+    }
+    catch (Exception $e) {
+      watchdog('slick', 'Unable to render media from %uri. Error: %error', array('%uri' => $uri, '%error' => $e->getMessage()));
+      return '';
     }
   }
 

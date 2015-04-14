@@ -1,10 +1,99 @@
 <?php
 /**
  * @file
- * Hooks provided by the Slick module.
+ * Hooks and APi provided by the Slick module.
  *
  * Modules may implement any of the available hooks to interact with Slick.
  */
+
+/**
+ * Slick may be configured using the web interface via sub-modules.
+ *
+ * However if you want to code it, use slick_build(), or build it from the
+ * available data for more advanced slick such as asNavFor, see slick_fields.
+ *
+ * The example is showing a customized views-view-unformatted--ticker.tpl.php.
+ * Practically any content-related .tpl.php file where you have data to print.
+ * Do preprocess, or here a direct .tpl.php manipulation for quick illustration.
+ *
+ * The goal is to create a vertical newsticker, or tweets, with pure text only.
+ * First, create an unformatted Views block, says 'Ticker' containing ~ 10
+ * titles, or any data for the contents -- using EFQ, or static array will do.
+ */
+// 1.
+// Provides HTML settings with optionset name and ID, none of JS related.
+// See slick_get_element_default_settings() for more supported keys.
+// To add JS key:value pairs, use #options at theme_slick() below instead.
+$id = 'slick-ticker';
+$settings = array(
+// Optional optionset name, otherwise fallback to default.
+// 'optionset' => 'default',
+// Optional skin name fetched from hook_slick_skins_info(), otherwise none.
+// 'skin' => 'default',
+// Note we add attributes to the settings, not as theme key here, to allow
+// various scenario before being passed to the actual #attributes property.
+  'attributes' => array(
+    'id' => $id,
+  ),
+);
+
+// 3.
+// Prepare $items contents, note 'slide' key is to hold the actual slide
+//  which can be pure and simple text, or any image/media file. Meaning
+//  $rows can be text only, or image/audio/video, or a combination of both.
+//  To add caption/overlay, use 'caption' key with the supported sub-keys:
+//  title, alt, link, layout, overlay, editor, or data for complex content.
+//  You must sanitize each sub-key yourself accordingly.
+//  See template_preprocess_slick_item() for more info.
+$items = array();
+foreach ($rows as $row) {
+  $items[] = array(
+    'slide' => $row,
+    // If the slide is image, to add text caption, use:
+    // 'caption' => 'some-caption data',
+  );
+}
+
+// 4.
+// Optional JS and CSS assets loader, see slick_attach(). An empty array
+// should suffice for the most basic slick with no skin at all.
+$attach = array();
+
+// 5.
+// Optional specific Slick JS options, if no optionset provided above.
+// Play with speed and options to achieve desired result.
+// @see slick_get_options()
+$options = array(
+  'arrows' => FALSE,
+  'autoplay' => TRUE,
+  'vertical' => TRUE,
+  'draggable' => FALSE,
+);
+
+// 6.A.
+// Build the slick, note key 0 so to mark the thumbnail asNavFor with key 1.
+$slick[0] = array(
+  '#theme' => 'slick',
+  '#items' => $items,
+  '#settings' => $settings,
+  '#options' => $options,
+  // Attach the Slick library, see slick_attach() for more options.
+  // At D8, #attached is obligatory to avoid issue with caching.
+  '#attached' => slick_attach($attach),
+);
+
+// Optionally build an asNavFor with $slick[1], and both should be passed
+// to theme_slick_wrapper(), otherwise a single theme_slick() will do.
+// See slick_fields, or slick_views sub-modules for asNavFor samples.
+// All is set, render the Slick.
+print render($slick);
+
+// 6.B.
+// Or alternatively, use slick_build() where the parameters are as described
+// above:
+$slick = slick_build($items, $options, $settings, $attach, $id);
+// All is set, render the Slick.
+print render($slick);
 
 /**
  * Registers Slick skins.
@@ -49,9 +138,33 @@ function hook_slick_skins_info() {
 }
 
 /**
+ * Registers Slick dot skins.
+ *
+ * The provided dot skins will be available at sub-module interfaces.
+ * A skin dot named 'hop' will have a class 'slick-dots--hop' for the UL.
+ *
+ * The array is similar to the hook_slick_skins_info().
+ */
+function hook_slick_dots_info() {
+  // Create an array of dot skins.
+}
+
+/**
+ * Registers Slick arrow skins.
+ *
+ * The provided arrow skins will be available at sub-module interfaces.
+ * A skin arrow named 'slit' will have a class 'slick-arrow__slit' for the NAV.
+ *
+ * The array is similar to the hook_slick_skins_info().
+ */
+function hook_slick_arrows_info() {
+  // Create an array of arrow skins.
+}
+
+/**
  * Alter Slick skins.
  *
- * This function lives in module file, not my_module.slick.inc.
+ * This function lives in a module file, not my_module.slick.inc.
  * Overriding skin CSS can be done via theme.info, hook_css_alter(), or below.
  *
  * @param array $skins
@@ -89,7 +202,7 @@ function hook_slick_skins_info_alter(array &$skins) {
 /**
  * Alter Slick attach information before they are called.
  *
- * This function lives in module file, not my_module.slick.inc.
+ * This function lives in a module file, not my_module.slick.inc.
  *
  * @param array $attach
  *   The associative array of attach information from slick_attach().

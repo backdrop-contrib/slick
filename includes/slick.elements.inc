@@ -99,7 +99,7 @@ function slick_get_responsive_options($count = 0) {
       'settings' => array(),
     );
 
-    // Duplicate main relevant settings.
+    // Duplicate relevant main settings.
     foreach ($slick_options as $name => $value) {
       $options[$key]['settings'][$name] = $value;
     }
@@ -122,7 +122,7 @@ function slick_get_overridable_options() {
     'draggable' => t('Draggable'),
   );
 
-  // Allows default settings information to be altered.
+  // Allows overridable options information to be altered.
   drupal_alter('slick_overridable_options_info', $overridables);
 
   return $overridables;

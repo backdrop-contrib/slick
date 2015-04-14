@@ -17,6 +17,8 @@ See http://kenwheeler.github.io/slick.
 * Nested slicks, slide overlays or multiple slicks within a single Slick using
   Field collection, or Views.
 * Some useful hooks and drupal_alters for advanced works.
+* Modular integration with various contribs via optional sub-modules. You can
+  build slicks without sub-modules by simply passing markups to theme_slick().
 
 
 
@@ -29,6 +31,8 @@ Any module that provides settings in the UI needs to store them in a table.
 With Bulk exporter, or Features, optionsets may be stored in codes to avoid
 database lookup. It is analog to Drupal 8 CMI.
 See slick_example.slick_default_preset.inc for the stored-in-code sample.
+
+7.x-2.x supports Slick 1.5 above, and dropped Slick 1.4.x and below.
 
 
 INSTALLATION:
@@ -49,7 +53,7 @@ See README.txt on each sub-module for their relevant information.
 REQUIREMENTS:
 --------------------------------------------------------------------------------
 - Slick library:
-  * Download Slick archive >= 1.4 from https://github.com/kenwheeler/slick/,
+  * Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/,
   * Extract it as is, so the needed assets available at:
     sites/../libraries/slick/slick/slick.css
     sites/../libraries/slick/slick/slick-theme.css (optional if a skin chosen)
@@ -115,8 +119,7 @@ See README.txt on slick_views.module for more info on Views integration.
 
 PROGRAMATICALLY:
 --------------------------------------------------------------------------------
-Use renderable arrays, see slick_fields.module.
-
+See slick_fields.module for advanced sample, or slick.api.php for a simple one.
 
 
 NESTED SLICKS
@@ -340,9 +343,8 @@ documentation.
 
 KNOWN ISSUES
 --------------------------------------------------------------------------------
-- It currently supports Slick 1.4 above (< 1.5), and dropped Slick 1.3 below.
-- Fullscreen admin preview with Views is not working, and intentionally disabled
-  to avoid interfering/ covering admin pages.
+- Fullscreen admin preview with Views is intentionally disabled to avoid
+  interfering/ covering admin pages.
 - The following is not module related, but worth a note:
   * lazyLoad ondemand has issue with dummy image excessive height. See above for
     the recommended fixes. Added fixes to suppress it via CSS.
@@ -359,16 +361,14 @@ UNKNOWN ISSUES
 
 CURRENT DEVELOPMENT STATUS
 --------------------------------------------------------------------------------
-It is currently feature complete, I think. I only have few left TODOs related to
-the above nice to have, but that should not stop the proper release.
-A proper release should be reasonable after proper feedbacks from the community,
+A full release should be reasonable after proper feedbacks from the community,
 some code cleanup, and optimization where needed. Patches are very much welcome.
 
 
 
 ROADMAP
 --------------------------------------------------------------------------------
-- Bug fixes, code cleanup, optimization, and proper release.
+- Bug fixes, code cleanup, optimization, and full release.
 - Drupal 8 port, see if you can help/ provide suggestion:
   https://www.drupal.org/node/2432711
 
