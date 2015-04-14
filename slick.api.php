@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Hooks and APi provided by the Slick module.
+ * Hooks and API provided by the Slick module.
  *
  * Modules may implement any of the available hooks to interact with Slick.
  */
@@ -153,7 +153,7 @@ function hook_slick_dots_info() {
  * Registers Slick arrow skins.
  *
  * The provided arrow skins will be available at sub-module interfaces.
- * A skin arrow named 'slit' will have a class 'slick-arrow__slit' for the NAV.
+ * A skin arrow named 'slit' will have a class 'slick__arrow--slit' for the NAV.
  *
  * The array is similar to the hook_slick_skins_info().
  */

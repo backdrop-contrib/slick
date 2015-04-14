@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-4-14
 ----------------------------
+Fixed typo at slick.api.php.
 Fixed edge cases Media Youtube, Vimeo, Soundcloud disabled while being used.
 Fixed edge case Picture module disabled while being used by Slick.
 Added a simple coded slick example to slick.api.php.
