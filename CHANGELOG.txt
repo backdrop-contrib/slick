@@ -1,4 +1,15 @@
 
+Slick 7.x-2.0-dev, 2015-4-25
+----------------------------
+Issue #2477507 by sashken2: Original image for Colorbox display is ignored.
+
+Slick 7.x-2.0-dev, 2015-4-24
+----------------------------
+Issue #2477065: jQuery.easing requirements
+  Added more information at README.txt to rename jquery.easing.1.3.js to
+  jquery.easing.min.js.
+Fixed trivial spaces at slick.api.php.
+
 Slick 7.x-2.0-dev, 2015-4-14
 ----------------------------
 Fixed typo at slick.api.php.

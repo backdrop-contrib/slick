@@ -31,7 +31,7 @@ $settings = array(
 // Optional skin name fetched from hook_slick_skins_info(), otherwise none.
 // 'skin' => 'default',
 // Note we add attributes to the settings, not as theme key here, to allow
-// various scenario before being passed to the actual #attributes property.
+// various scenarios before being passed to the actual #attributes property.
   'attributes' => array(
     'id' => $id,
   ),
@@ -39,12 +39,12 @@ $settings = array(
 
 // 3.
 // Prepare $items contents, note 'slide' key is to hold the actual slide
-//  which can be pure and simple text, or any image/media file. Meaning
-//  $rows can be text only, or image/audio/video, or a combination of both.
-//  To add caption/overlay, use 'caption' key with the supported sub-keys:
-//  title, alt, link, layout, overlay, editor, or data for complex content.
-//  You must sanitize each sub-key yourself accordingly.
-//  See template_preprocess_slick_item() for more info.
+// which can be pure and simple text, or any image/media file. Meaning $rows can
+// be text only, or image/audio/video, or a combination of both.
+// To add caption/overlay, use 'caption' key with the supported sub-keys:
+// title, alt, link, layout, overlay, editor, or data for complex content.
+// You must sanitize each sub-key yourself accordingly.
+// See template_preprocess_slick_item() for more info.
 $items = array();
 foreach ($rows as $row) {
   $items[] = array(
@@ -55,8 +55,8 @@ foreach ($rows as $row) {
 }
 
 // 4.
-// Optional JS and CSS assets loader, see slick_attach(). An empty array
-// should suffice for the most basic slick with no skin at all.
+// Optional JS and CSS assets loader, see slick_attach(). An empty array should
+// suffice for the most basic slick with no skin at all.
 $attach = array();
 
 // 5.
@@ -82,8 +82,8 @@ $slick[0] = array(
   '#attached' => slick_attach($attach),
 );
 
-// Optionally build an asNavFor with $slick[1], and both should be passed
-// to theme_slick_wrapper(), otherwise a single theme_slick() will do.
+// Optionally build an asNavFor with $slick[1], and both should be passed to
+// theme_slick_wrapper(), otherwise a single theme_slick() will do.
 // See slick_fields, or slick_views sub-modules for asNavFor samples.
 // All is set, render the Slick.
 print render($slick);

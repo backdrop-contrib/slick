@@ -66,7 +66,8 @@ REQUIREMENTS:
   D8: dropped.
 - jquery_update with jQuery > 1.7, perhaps 1.8 if trouble with the latest Slick.
   D8: dropped.
-- jqeasing from http://gsgd.co.uk/sandbox/jquery/easing, so available at:
+- jqeasing from http://gsgd.co.uk/sandbox/jquery/easing, rename the file named
+  jquery.easing.1.3.js to jquery.easing.min.js, so available at:
   sites/../libraries/easing/jquery.easing.min.js
   This is a fallback for non-supporting browsers.
 

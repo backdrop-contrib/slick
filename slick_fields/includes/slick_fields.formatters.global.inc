@@ -83,7 +83,7 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
 
     // Provide relevant link path if it is a lightbox: media audio/video should
     // provide URL to the actual audio/video URL, image to colorbox image URL.
-    if ($settings['is_lightbox'] && $settings['lightbox_ready'] && $settings['colorbox_style']) {
+    if ($settings['is_lightbox'] && $settings['lightbox_ready']) {
       $data_media = array('type' => $settings['type']);
       if (isset($settings['scheme'])) {
         $data_media['scheme'] = $settings['scheme'];
@@ -102,7 +102,12 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
         }
       }
       else {
-        $url = image_style_url($settings['colorbox_style'], $image['uri']);
+        if ($settings['colorbox_style']) {
+          $url = image_style_url($settings['colorbox_style'], $image['uri']);
+        }
+        else {
+          $url = file_create_url($image['uri']);
+        }
       }
 
       $image_variables['path']['path'] = $url;
