@@ -1,4 +1,9 @@
 
+Slick 7.x-2.0-dev, 2015-4-29
+----------------------------
+Issue #2479117 by fragtom: Fade option is not compatible with slidesToShow > 1.
+  Added meaningful info to the Fade option to avoid issue with multiple items.
+
 Slick 7.x-2.0-dev, 2015-4-25
 ----------------------------
 Issue #2477507 by sashken2: Original image for Colorbox display is ignored.

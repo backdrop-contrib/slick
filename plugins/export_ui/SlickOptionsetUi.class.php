@@ -553,7 +553,7 @@ class SlickOptionsetUi extends ctools_export_ui {
 
       $elements['fade'] = array(
         'title' => t('Fade'),
-        'description' => t('Enable fade'),
+        'description' => t('Enable fade. Warning! This wants slidesToShow 1. Larger than 1, and Slick may be screwed up.'),
         'type' => 'checkbox',
       );
 
