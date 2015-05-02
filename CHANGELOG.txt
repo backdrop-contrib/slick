@@ -1,4 +1,9 @@
 
+Slick 7.x-2.0-dev, 2015-5-2
+---------------------------
+Fixed skin fullwidth with .slide__constrained being overriden with relative
+  position.
+
 Slick 7.x-2.0-dev, 2015-4-29
 ----------------------------
 Issue #2479117 by fragtom: Fade option is not compatible with slidesToShow > 1.

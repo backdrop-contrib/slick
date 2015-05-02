@@ -86,7 +86,7 @@
      */
     options: function(slick) {
       var breakpoint = slick.activeBreakpoint || null;
-      return breakpoint && (slick.windowWidth < breakpoint) ? slick.breakpointSettings[breakpoint] : slick.options;
+      return breakpoint && (slick.windowWidth <= breakpoint) ? slick.breakpointSettings[breakpoint] : slick.options;
     },
 
     /**

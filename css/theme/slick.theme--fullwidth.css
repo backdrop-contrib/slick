@@ -50,10 +50,6 @@
   clear: both;
 }
 
-.slick--skin--fullwidth .slide__constrained .slide__caption {
-  position: relative;
-}
-
 @media (min-width: 65em) {
   .slick--skin--fullwidth .slide__constrained {
     left: 50%;

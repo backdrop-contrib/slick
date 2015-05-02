@@ -51,10 +51,6 @@
     @include pie-clearfix;
     min-height: 210px;
 
-    .slide__caption {
-      position: relative;
-    }
-
     @include breakpoint($desk) {
       @include max-container-absolute(98%, 15%);
     }
