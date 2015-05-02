@@ -344,6 +344,8 @@ documentation.
 
 KNOWN ISSUES
 --------------------------------------------------------------------------------
+- The Slick lazyLoad is not supported with picture-enabled images. Slick only
+  falicitates Picture to get in. The image formatting is taken over by Picture.
 - Fullscreen admin preview with Views is intentionally disabled to avoid
   interfering/ covering admin pages.
 - The following is not module related, but worth a note:

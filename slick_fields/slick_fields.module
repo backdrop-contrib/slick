@@ -687,7 +687,7 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
     $elements['picture'] = array(
       '#type' => 'checkbox',
       '#title' => t('Picture mapping'),
-      '#description' => t('Picture mapping is only reasonable for large images.'),
+      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick lazyLoad is not supported with picture-enabled images. Slick only falicitates Picture to get in, and the image formatting is taken over by Picture.'),
       '#default_value' => $settings['picture'],
       '#field_suffix' => '',
       '#title_display' => 'before',

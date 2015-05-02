@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-5-2
 ---------------------------
+Issue #2481577 by fragtom: Lazy load is not supported with Picture enabled
+  images
 Fixed skin fullwidth with .slide__constrained being overriden with relative
   position.
 
