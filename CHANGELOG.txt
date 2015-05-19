@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-5-13
+----------------------------
+Fixed for slick_remove_wasted_dependent_options() not removing dependents.
+
 Slick 7.x-2.0-dev, 2015-5-2
 ---------------------------
 Issue #2481577 by fragtom: Lazy load is not supported with Picture enabled

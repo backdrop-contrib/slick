@@ -330,10 +330,10 @@ function _slick_remove_default_optionset_options($optionset, $customs = array(),
 
   // Clean up the main options.
   $settings = $customs ? $customs : $options['settings'];
-  $config = array_diff_assoc($settings, $defaults);
 
   // Remove wasted dependent options if disabled, empty or not.
-  slick_remove_wasted_dependent_options($config);
+  slick_remove_wasted_dependent_options($settings);
+  $config = array_diff_assoc($settings, $defaults);
 
   // Clean up responsive options if similar to main defaults. JS takes care of
   // the copy based on defaults, so we can avoid dup options in the markups.
@@ -359,10 +359,10 @@ function _slick_remove_default_optionset_options($optionset, $customs = array(),
           unset($cleaned_responsives[$key]['unslick']);
         }
         else {
-          $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults);
-
           // Remove wasted dependent options if disabled, empty or not.
-          slick_remove_wasted_dependent_options($cleaned[$key]['settings']);
+          slick_remove_wasted_dependent_options($cleaned_responsives[$key]['settings']);
+
+          $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults);
         }
       }
 
