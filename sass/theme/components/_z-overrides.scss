@@ -18,7 +18,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 
 .slick__slide {
   // Prevent collapsing with nested slick.
-  width: 100%;
+  // width: 100%;
   // With bug total <= slidesToShow, slick-center is screwed up.
   &.slick-center {
     z-index: 1;

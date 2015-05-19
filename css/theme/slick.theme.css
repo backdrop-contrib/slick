@@ -226,10 +226,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   position: relative;
 }
 
-.slick__slide {
-  width: 100%;
-}
-
 .slick__slide.slick-center {
   z-index: 1;
 }
@@ -440,7 +436,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 
 .slick__image {
   margin: 0 auto;
-  width: 100%;
 }
 
 /**

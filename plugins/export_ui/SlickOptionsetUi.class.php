@@ -454,7 +454,7 @@ class SlickOptionsetUi extends ctools_export_ui {
 
       $elements['adaptiveHeight'] = array(
         'title' => t('Adaptive height'),
-        'description' => t('Enables adaptive height for single slide horizontal carousels.'),
+        'description' => t('Enables adaptive height for single slide horizontal carousels. This is useless with variableWidth.'),
         'type' => 'checkbox',
       );
 
@@ -616,7 +616,7 @@ class SlickOptionsetUi extends ctools_export_ui {
 
       $elements['slidesToShow'] = array(
         'title' => t('Slides to show'),
-        'description' => t('Number of slides to show at a time. If 1, it will behave like slideshow, more than 1 a carousel. Provide more if it is a thumbnail navigation with asNavFor. Only works with odd number slidesToShow counts when using centerMode.'),
+        'description' => t('Number of slides to show at a time. If 1, it will behave like slideshow, more than 1 a carousel. Provide more if it is a thumbnail navigation with asNavFor. Only works with odd number slidesToShow counts when using centerMode (e.g.: 3, 5, 7, etc.). Not-compatible with variableWidth.'),
         'type' => 'textfield',
       );
 
@@ -701,7 +701,7 @@ class SlickOptionsetUi extends ctools_export_ui {
 
       $elements['variableWidth'] = array(
         'title' => t('variableWidth'),
-        'description' => t('Disables automatic slide width calculation.'),
+        'description' => t('Disables automatic slide width calculation. Best with uniform image heights, use scale height image effect. Useless with adaptiveHeight, and non-uniform image heights. Useless with slidesToShow > 1 if the container is smaller than the amount of visible slides. Troubled with lazyLoad ondemand.'),
         'type' => 'checkbox',
       );
 

@@ -1,4 +1,20 @@
 
+Slick 7.x-2.0-dev, 2015-5-19
+----------------------------
+Issue #2490528 by fragtom: Variable with doesn't display right.
+Notes:
+- variableWidth is not compatible with slidesToShow > 1 if the container is
+  smaller than the amount of visible slide widths.
+  Best with uniform image heights to avoid jumpy empty space. Use scale height
+  image effect, and keep width empty/dynamic.
+  Useless with adaptiveHeight, and non-uniform image heights.
+  Useless with slidesToShow > 1 if the container is smaller than the amount of
+  visible slides.
+  Troubled with lazyLoad ondemand. Use progressive or none instead.
+- adaptiveHeight wants single visible slide (slidesToShow 1).
+  Useless with variableWidth.
+
+
 Slick 7.x-2.0-dev, 2015-5-13
 ----------------------------
 Fixed for slick_remove_wasted_dependent_options() not removing dependents.
