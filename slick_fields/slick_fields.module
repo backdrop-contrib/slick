@@ -1086,13 +1086,16 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         '#settings' => $settings,
         '#attached' => array(),
       );
-    }
 
-    $element = array(
-      '#theme' => 'slick_wrapper',
-      '#items' => $slick,
-      '#settings' => $settings,
-    );
+      $element = array(
+        '#theme' => 'slick_wrapper',
+        '#items' => $slick,
+        '#settings' => $settings,
+      );
+    }
+    else {
+      $element = $slick[0];
+    }
   }
 
   return $element;

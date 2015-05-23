@@ -8,8 +8,14 @@
  * - $options: Array of available settings via Views UI.
  */
 ?>
-<div<?php print $attributes; ?>>
+<?php if (count($rows) > 1): ?>
+  <div<?php print $attributes; ?>>
+    <?php foreach ($rows as $id => $row): ?>
+      <?php print render($row); ?>
+    <?php endforeach; ?>
+  </div>
+<?php else: ?>
   <?php foreach ($rows as $id => $row): ?>
     <?php print render($row); ?>
   <?php endforeach; ?>
-</div>
+<?php endif; ?>

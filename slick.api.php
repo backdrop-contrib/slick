@@ -43,7 +43,7 @@ $settings = array(
 // be text only, or image/audio/video, or a combination of both.
 // To add caption/overlay, use 'caption' key with the supported sub-keys:
 // title, alt, link, layout, overlay, editor, or data for complex content.
-// You must sanitize each sub-key yourself accordingly.
+// You must sanitize each sub-key content yourself accordingly.
 // See template_preprocess_slick_item() for more info.
 $items = array();
 foreach ($rows as $row) {
@@ -71,7 +71,7 @@ $options = array(
 );
 
 // 6.A.
-// Build the slick, note key 0 so to mark the thumbnail asNavFor with key 1.
+// Build the slick, note key 0 just to mark the thumbnail asNavFor with key 1.
 $slick[0] = array(
   '#theme' => 'slick',
   '#items' => $items,
@@ -132,6 +132,9 @@ function hook_slick_skins_info() {
         // Full path to a JS file to include with the skin.
         $theme_path . '/js/my-theme.slick.theme--slider.js',
         $theme_path . '/js/my-theme.slick.theme--carousel.js',
+        // If you want to act on afterSlick event, or any other slick events, 
+        // put a lighter weight before slick.load.min.js (0).
+        $theme_path . '/js/slick.skin.menu.min.js' => array('weight' => -2),
       ),
     ),
   );
@@ -143,7 +146,7 @@ function hook_slick_skins_info() {
  * The provided dot skins will be available at sub-module interfaces.
  * A skin dot named 'hop' will have a class 'slick-dots--hop' for the UL.
  *
- * The array is similar to the hook_slick_skins_info().
+ * The array is similar to the hook_slick_skins_info(), excluding JS.
  */
 function hook_slick_dots_info() {
   // Create an array of dot skins.
@@ -155,7 +158,7 @@ function hook_slick_dots_info() {
  * The provided arrow skins will be available at sub-module interfaces.
  * A skin arrow named 'slit' will have a class 'slick__arrow--slit' for the NAV.
  *
- * The array is similar to the hook_slick_skins_info().
+ * The array is similar to the hook_slick_skins_info(), excluding JS.
  */
 function hook_slick_arrows_info() {
   // Create an array of arrow skins.
@@ -212,12 +215,16 @@ function hook_slick_skins_info_alter(array &$skins) {
  */
 function hook_slick_attach_info_alter(array &$attach) {
   // Disable inline CSS after copying the output to theme at final stage.
+  // Inline CSS are only used for 2 cases: Fullscreen and Field collection
+  // individual slide color. Use slick_inline_css_skins_info_alter() to add skin
+  // that may need inline CSS rather than inline images.
+  // @see slick_inline_css_skins()
   $attach['attach_inline_css'] = NULL;
 
-  // Disable module JS: slick.load.js to use your own slick JS.
+  // Disable module JS: slick.load.min.js to use your own slick JS.
   $attach['attach_module'] = FALSE;
 
-  // Also disable its depencencies, otherwise slick.load.js is still loaded.
+  // Also disable its dependencies, otherwise slick.load.min.js is still loaded.
   $attach['attach_media'] = FALSE;
   $attach['attach_colorbox'] = FALSE;
 }
