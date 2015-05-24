@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-5-24
+----------------------------
+Fixed for skin fullscreen after slick-wrapper removal.
+
 Slick 7.x-2.0-dev, 2015-5-23
 ----------------------------
 Issue #2479199 by gausarts: Drop wasted slick-wrapper when no asNavFor in use.

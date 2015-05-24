@@ -27,9 +27,10 @@ body {
   }
 }
 
-.slick-wrapper--fullscreen {
+.slick--skin--fullscreen {
   height: 100%;
   left: 0;
+  min-height: 100%;
   position: fixed;
   top: 0;
   width: 100%;
@@ -38,10 +39,10 @@ body {
 
   // Prevent fullscreen slick preview from interfering the Views admin.
   .page-admin & {
+    min-height: 120px;
     position: relative;
   }
 
-  .slick--skin--fullscreen,
   .slick__slider {
     height: 100%;
     min-height: 100%;
@@ -51,67 +52,46 @@ body {
     }
   }
 
-  .slick--skin--fullscreen {
-    .slick-list,
-    .slick-track,
-    .slick__slide,
-    .slide__content,
-    .media,
-    .slide__media {
-      height: 100% !important; // vertical issue!
-      min-height: 320px; // provide views preview.
-    }
+  .slick-list,
+  .slick-track,
+  .slick__slide,
+  .slide__content,
+  .media,
+  .slide__media {
+    height: 100% !important; // vertical issue!
+    min-height: 320px; // provide views preview.
+  }
 
-    .slick-track {
-      margin: 0;
-      padding: 0;
-    }
+  .slick-track {
+    margin: 0;
+    padding: 0;
+  }
 
-    .slick__slide {
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
-    }
+  .slick__slide {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
 
-    .slide__media {
-      // Temp fix, if not using inline CSS, such as Views.
-      img {
-        height: auto;
-        left: 0;
-        margin: 0 auto;
-        min-height: 100%;
-        min-width: 100%;
-        position: absolute;
-        top: 0;
-        width: 100%;
-      }
-    }
-
-    .slide__constrained {
-      @include max-container-absolute(98%, 10%, absolute);
-      min-height: 210px;
-
-      .slide__caption {
-        position: relative;
-      }
-
-      @include breakpoint($desk) {
-        @include max-container-absolute(98%, 20%);
-      }
-
-      @include breakpoint($desk-large) {
-        @include max-container-absolute($max-container-large);
-      }
+  .slide__media {
+    // Temp fix, if not using inline CSS, such as Views.
+    img {
+      height: auto;
+      left: 0;
+      margin: 0 auto;
+      min-height: 100%;
+      min-width: 100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
     }
   }
-}
-
-.slick--skin--fullscreen {
 
   .slide__caption {
     @include font-size(22px);
     color: $white;
   }
+
   .slide__title {
     color: $white;
     @include font-size(48px);
@@ -135,8 +115,25 @@ body {
       }
     }
   }
-  
+
   .slick-dots {
     bottom: 20px;
+  }
+
+  .slide__constrained {
+    @include max-container-absolute(98%, 10%, absolute);
+    min-height: 210px;
+
+    .slide__caption {
+      position: relative;
+    }
+
+    @include breakpoint($desk) {
+      @include max-container-absolute(98%, 20%);
+    }
+
+    @include breakpoint($desk-large) {
+      @include max-container-absolute($max-container-large);
+    }
   }
 }
