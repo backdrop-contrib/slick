@@ -30,7 +30,9 @@ Displaying multiple (rendered) entities for the slides.
   View mode.
 
 Themeing is related to their own entity display outside the Views UI.
-Example use case: Blogs, teams, testimonials, case studies sliders, etc.
+
+Example use case:
+- Blogs, teams, testimonials, case studies sliders, etc.
 
 Usage #2
 --------
@@ -43,7 +45,8 @@ Displaying multiple entities using selective fields for the slides.
 
 Themeing is all yours inside the Views UI.
 
-Example use case: similar as above.
+Example use case:
+- similar as above.
 
 Usage #3
 --------
@@ -60,8 +63,20 @@ slides. Use it either with contextual filter by NID, or filter criteria by NID.
 Themeing is mostly taken care of by slick_fields.module in terms of layout, with
 the goodness of Views to provide better markups manually.
 
-Example use case: front or inner individual slideshow based on the entity ID, or
-individual user slideshow.
+Example use case:
+- front or inner individual slideshow based on the entity ID, or individual user
+  slideshow.
+
+
+Usage #4
+--------
+A combination of (#1 or #2) and #3 to build nested slicks.
+
+Example use case:
+- A home slideshow containing multiple videos per slide for quick overview.
+- A large product/ portfolio slideshow containing a grid of slides.
+- A news slideshow containing latest related news items per slide.
+
 
 GOTCHAS:
 --------------------------------------------------------------------------------
@@ -72,6 +87,6 @@ make sure to:
 - Choose "Slick carousel" for the actual field when configuring the field.
 - Check "Use field template" under "Style Settings"so that the Slick field
   themeing is picked-up.
-  
+
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.

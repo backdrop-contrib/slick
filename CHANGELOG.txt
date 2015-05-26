@@ -1,4 +1,11 @@
 
+Slick 7.x-2.0-dev, 2015-5-26
+----------------------------
+Added key "inline css" at slick_slick_skins_info() to ease up registering a skin
+  expecting inline CSS, not images, see fullscreen skin. Previously using
+  a cumbersome hook_slick_inline_css_skins_info_alter().
+Issue #2494421 by gausarts: Decouple export UI from the main module.
+
 Slick 7.x-2.0-dev, 2015-5-25
 ----------------------------
 Removed over paranoid slick_filter_xss_admin() since Views UI has a more
@@ -108,7 +115,7 @@ Updated slick_devel_preprocess_slick() to drop data-slick test to reflect its
   https://github.com/kenwheeler/slick/issues/1058
 Fixed wrong name slick_inline_css_output_info() to use the actual module name
   slick_fields_inline_css_output_info().
-Added slick_inline_css_output_info_alter() to modify the inline CSS outputs.
+Added slick_fields_inline_css_output_info_alter() to modify the inline CSS outputs.
 Issue #2461693 by rfnbnkr: asNavFor stopped working with AJAX loaded slicks.
 Moved sanitization for asnavfor_target to template_preprocess_slick().
 Fixed trivial edge cases with extra white spaces for asnavfor targets.

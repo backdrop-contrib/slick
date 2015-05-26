@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * Contains the CTools Export UI integration code.
+ * Contains the CTools export UI integration code.
  */
 
 /**
- * CTools Export UI class handler for Slick Optionset UI.
+ * CTools Export UI class handler for Slick UI.
  */
-class SlickOptionsetUi extends ctools_export_ui {
+class SlickUi extends ctools_export_ui {
 
   /**
    * Overrides the actual editing form.
@@ -56,7 +56,7 @@ class SlickOptionsetUi extends ctools_export_ui {
       '#default_value' => isset($form_state['values']['breakpoints']) ? $form_state['values']['breakpoints'] : $optionset->breakpoints,
       '#suffix' => '</div>',
       '#ajax' => array(
-        'callback' => 'slick_add_breakpoints_ajax_callback',
+        'callback' => 'slick_ui_add_breakpoints',
         'wrapper' => 'breakpoints-ajax-wrapper',
         'event' => 'blur',
       ),
@@ -847,7 +847,7 @@ class SlickOptionsetUi extends ctools_export_ui {
  *
  * Selects and returns the responsive options.
  */
-function slick_add_breakpoints_ajax_callback($form, $form_state) {
+function slick_ui_add_breakpoints($form, $form_state) {
   if ($form_state['values']['breakpoints'] && $form_state['values']['breakpoints'] >= 8) {
     drupal_set_message(t('You are trying to load too many Breakpoints. Try reducing it to reasonable numbers say, between 1 to 5.'));
   }

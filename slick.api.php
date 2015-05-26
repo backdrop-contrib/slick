@@ -132,7 +132,7 @@ function hook_slick_skins_info() {
         // Full path to a JS file to include with the skin.
         $theme_path . '/js/my-theme.slick.theme--slider.js',
         $theme_path . '/js/my-theme.slick.theme--carousel.js',
-        // If you want to act on afterSlick event, or any other slick events, 
+        // If you want to act on afterSlick event, or any other slick events,
         // put a lighter weight before slick.load.min.js (0).
         $theme_path . '/js/slick.skin.menu.min.js' => array('weight' => -2),
       ),
@@ -216,9 +216,12 @@ function hook_slick_skins_info_alter(array &$skins) {
 function hook_slick_attach_info_alter(array &$attach) {
   // Disable inline CSS after copying the output to theme at final stage.
   // Inline CSS are only used for 2 cases: Fullscreen and Field collection
-  // individual slide color. Use slick_inline_css_skins_info_alter() to add skin
-  // that may need inline CSS rather than inline images.
+  // individual slide color, only if your clients don't change mind much.
+  // Use key 'inline css' to register skin that wants inline CSS rather than
+  // images when declaring the skins, see fullscreen skin.
+  // Use hook_slick_fields_inline_css_output_info_alter() to modify the output.
   // @see slick_inline_css_skins()
+  // @see slick_slick_skins_info()
   $attach['attach_inline_css'] = NULL;
 
   // Disable module JS: slick.load.min.js to use your own slick JS.

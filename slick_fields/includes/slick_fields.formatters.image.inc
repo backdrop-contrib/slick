@@ -99,11 +99,10 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
       '#asnavfor' => $asnavfor,
     );
 
-    // Use slick_inline_css_output_info_alter() to modify the outputs.
-    $inline_css_skins = slick_inline_css_skins();
-    if (in_array($settings['skin'], $inline_css_skins)) {
+    // Use slick_fields_inline_css_output_info_alter() to modify the output.
+    if (slick_inline_css_skins($settings['skin'])) {
       $slide['slide'] = array();
-      $fullscreen_image_url = image_style_url($settings['image_style'], $image['uri']);
+      $fullscreen_image_url = $settings['image_style'] ? image_style_url($settings['image_style'], $image['uri']) : file_create_url($image['uri']);
       $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$fullscreen_image_url}')}";
     }
 

@@ -82,15 +82,6 @@ function slick_ctools_plugin_api($owner, $api) {
 }
 
 /**
- * Implements hook_ctools_plugin_directory().
- */
-function slick_ctools_plugin_directory($module, $plugin) {
-  if ($plugin == 'export_ui') {
-    return 'plugins/' . $plugin;
-  }
-}
-
-/**
  * Implements hook_hook_info().
  */
 function slick_hook_info() {
@@ -779,16 +770,19 @@ function slick_dots() {
 }
 
 /**
- * Returns Slick skins expecting inline CSS background, not images.
+ * Checks whether a skin expecting inline CSS background, not images.
  *
- * @return array
- *   An array of available skins expecting inline CSS background.
+ * @param string $skin
+ *   The skin name.
+ *
+ * @return bool
+ *   If the skin registers 'inline css' explicitly returns TRUE.
  */
-function slick_inline_css_skins() {
+function slick_inline_css_skins($skin = NULL) {
   $inline_css = &drupal_static(__FUNCTION__, NULL);
   if (!isset($inline_css)) {
-    $inline_css = array('fullscreen', 'parallax');
-    drupal_alter('slick_inline_css_skins_info', $inline_css);
+    $skins = slick_skins();
+    $inline_css = empty($skin) ? FALSE : isset($skins[$skin]['inline css']) && $skins[$skin]['inline css'];
   }
   return $inline_css;
 }

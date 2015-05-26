@@ -1,0 +1,6 @@
+name = Slick UI
+description = "Provides the Slick carousel export UI."
+core = 7.x
+package = Slick
+
+dependencies[] = slick

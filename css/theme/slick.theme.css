@@ -4,11 +4,13 @@
  * Detailed stylings are all yours, get yourself dirty.
  */
 
-.slick-wrapper *,
-.slick *::before,
-.slick *::after {
+.slick-wrapper,
+.slick,
+.slick * {
+  -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   -o-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -238,6 +240,115 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   max-width: 100%;
 }
 
+.draggable {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+.draggable:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.draggable:active a,
+.draggable:active .slide__caption {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.media,
+.slide__media {
+  overflow: hidden;
+  position: relative;
+}
+
+.slick__image {
+  margin: 0 auto;
+}
+
+/**
+ * Skins.
+ */
+.slide__content {
+  *zoom: 1;
+}
+
+.slide__content::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.slide__title {
+  margin: 10px 0 5px;
+  line-height: 1.2;
+}
+
+.slick--carousel .slide__title {
+  font-size: 22px;
+  font-size: 1.375rem;
+}
+
+.slide__link {
+  margin: 30px auto;
+  text-transform: uppercase;
+}
+
+.slide__link .field-item {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.slide__link .field-item a {
+  display: block;
+  padding: 5px 10px;
+}
+
+.slide__pattern {
+  display: block;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.slick--has-pattern .slide__pattern {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADAQMAAABs5if8AAAAA3NCSVQICAjb4U/gAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP/AOW3MEoAAAAJcEhZcwAACusAAArrAYKLDVoAAAAWdEVYdENyZWF0aW9uIFRpbWUAMjUvMDQvMTHvvlk6AAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M1cbXjNgAAAA5JREFUCJljSGB4wPAAAAVmAiGdUf+vAAAAAElFTkSuQmCC") repeat 0 0;
+}
+
+/**
+ * Bullets.
+ */
+/* Overrides too tiny bullets from core slick.css */
+.slick-dots li button::before {
+  font-size: 12px;
+  font-size: 0.75rem;
+}
+
+/* Overrides .slick-slider to make caption text selectable. */
+.slide__caption {
+  cursor: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  -o-user-select: text;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Fix excessive height with ondemand lazyLoad prior to being visible */
+.slick--ondemand .slick__slide:not(.slick-active) img[data-lazy] {
+  width: 40px;
+  height: 40px;
+}
+
 /**
  * Complex layout needs custom refinement for mobile, hence it is reasonable
  * to apply for Desktop up. You have to adjust mobile version by your design.
@@ -410,112 +521,4 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     padding-left: 20px;
     padding-right: 20px;
   }
-}
-
-.draggable {
-  cursor: grab;
-  cursor: -webkit-grab;
-}
-
-.draggable:active {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
-}
-
-.draggable:active .slide__caption {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.media,
-.slide__media {
-  overflow: hidden;
-  position: relative;
-}
-
-.slick__image {
-  margin: 0 auto;
-}
-
-/**
- * Skins.
- */
-.slide__content {
-  *zoom: 1;
-}
-
-.slide__content::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.slide__title {
-  margin: 10px 0 5px;
-  line-height: 1.2;
-}
-
-.slick--carousel .slide__title {
-  font-size: 22px;
-  font-size: 1.375rem;
-}
-
-.slide__link {
-  margin: 30px auto;
-  text-transform: uppercase;
-}
-
-.slide__link .field-item {
-  display: inline-block;
-  vertical-align: top;
-}
-
-.slide__link .field-item a {
-  display: block;
-  padding: 5px 10px;
-}
-
-.slide__pattern {
-  display: block;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.slick--has-pattern .slide__pattern {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADAQMAAABs5if8AAAAA3NCSVQICAjb4U/gAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP/AOW3MEoAAAAJcEhZcwAACusAAArrAYKLDVoAAAAWdEVYdENyZWF0aW9uIFRpbWUAMjUvMDQvMTHvvlk6AAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M1cbXjNgAAAA5JREFUCJljSGB4wPAAAAVmAiGdUf+vAAAAAElFTkSuQmCC") repeat 0 0;
-}
-
-/**
- * Bullets.
- */
-/* Overrides too tiny bullets from core slick.css */
-.slick-dots li button::before {
-  font-size: 12px;
-  font-size: 0.75rem;
-}
-
-/* Overrides .slick-slider to make caption text selectable. */
-.slide__caption {
-  cursor: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  -o-user-select: text;
-  -webkit-user-select: text;
-  user-select: text;
-}
-
-/* Fix excessive height with ondemand lazyLoad prior to being visible */
-.slick--ondemand .slick__slide:not(.slick-active) img[data-lazy] {
-  width: 40px;
-  height: 40px;
 }

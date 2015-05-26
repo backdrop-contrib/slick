@@ -27,7 +27,7 @@ $plugin = array(
 
   // Define our handler.
   'handler' => array(
-    'class' => 'SlickOptionsetUi',
+    'class' => 'SlickUi',
     'parent' => 'ctools_export_ui',
   ),
 );

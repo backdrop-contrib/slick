@@ -153,6 +153,7 @@ It is not the module job to match your design requirements.
 Optional skins:
 --------------
 - None
+  It is all about DIY.
   Doesn't load any extra CSS other than the basic styles required by slick.
   Skins defined by sub-modules fallback to those defined at the optionset.
   Re-save existing Optionset to disable the skin at all.
@@ -206,6 +207,11 @@ Optional skins:
   with a small caption below to make it nice. Use slidesToShow option > 2.
   Expecting square images.
 
+If you want attach extra 3rd libraries such as image reflection, image zoomer,
+more advanced 3d carousels, etc, simply put them into js array of the target
+skin. Be sure to add proper weight, if you are acting on existing slick events,
+normally < 0 (slick.load.min.js) is the one.
+
 See slick.slick.inc for more info on skins.
 
 Tips:
@@ -248,7 +254,7 @@ Possible fixes without compromising security:
 lazyLoad ondemand also has issue with dummy image excessive height, so use it
 with care. It is never encouraged to use by the Slick author due to bad UX.
 It may be useful to cycle a large number of slides randomly like ads though.
-Dummy image is for valid HTML5. Added fix for this via CSS.
+Dummy image is for valid HTML5. Added fix for this via CSS instead.
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
@@ -268,6 +274,7 @@ Added direct child container within .slick to hold the slides, i.e.:
 Since 1.4, Slick is initialized at this .slick__slider, not .slick, to allow
 placing arrows within the .slick container, otherwise arrows are part of the
 slides. Previous workaround by specifiying specific class (.slick__slide) no go.
+The author said "slide" option will be deprecated, and seems useless as of 1.5.
 
 Slick 1.4 will break existing asNavFor, so be sure to update the asNavFor
 selectors accordingly at Field formatter and Views pages, e.g.:
@@ -353,6 +360,7 @@ KNOWN ISSUES
     the recommended fixes. Added fixes to suppress it via CSS.
   * If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
+  * Fade option with multiple slideToShow will screw up.
 
 
 UNKNOWN ISSUES
