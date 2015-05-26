@@ -85,7 +85,8 @@ function template_preprocess_slick_views(&$variables) {
 
       // Allows text-only thumbnail navigation, like regular tabs.
       if (isset($row->thumbnail_caption) && !empty($row->thumbnail_caption)) {
-        $thumb['caption']['data']['#markup'] = slick_filter_xss_admin($row->thumbnail_caption);
+        // Use Views UI "Rewrite results" to sanitize the caption.
+        $thumb['caption']['data']['#markup'] = $row->thumbnail_caption;
         if (!isset($thumb['slide'])) {
           $thumb['slide'] = array();
         }

@@ -133,6 +133,19 @@ function slick_example_slick_attach_info_alter(array &$attach) {
 function slick_example_image_default_styles() {
   $styles = array();
 
+  $styles['slick'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 1380,
+          'height' => 420,
+        ),
+        'weight' => 0,
+      ),
+    ),
+  );
+
   $styles['slick_140x80'] = array(
     'effects' => array(
       array(

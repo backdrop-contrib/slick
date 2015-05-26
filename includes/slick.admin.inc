@@ -1,8 +1,6 @@
 <?php
 /**
  * @file
- * Slick admin.
- *
  * Contains optional functions called only if needed by admin pages.
  */
 
@@ -136,6 +134,29 @@ function slick_optionset_is_overridden($optionset) {
 }
 
 /**
+ * Fetches all option sets from the storage.
+ *
+ * @param bool $reset
+ *   If TRUE, the static cache of all objects will be flushed prior to
+ *   loading all. This can be important on listing pages where items
+ *   might have changed on the page load.
+ *
+ * @return array
+ *   The associative array of all optionsets.
+ */
+function slick_optionset_load_all($reset = FALSE) {
+  ctools_include('export');
+  $optionsets = ctools_export_crud_load_all('slick_optionset', $reset);
+  foreach ($optionsets as $optionset) {
+    // Ensure the optionset is typecast after being loaded from storage.
+    $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
+    _slick_typecast_optionset($optionset->options, $breakpoints);
+  }
+
+  return $optionsets;
+}
+
+/**
  * Saves the given option set to the database.
  *
  * Set the $new flag if this set has not been written before.
@@ -169,7 +190,7 @@ function slick_optionset_save($optionset, $new = FALSE) {
     $breakpoints = $optionset->breakpoints;
   }
 
-  $optionset_defaults = _slick_optionset_defaults(NULL, $breakpoints);
+  $optionset_defaults = _slick_optionset_defaults();
   $optionset->options = $optionset->options + $optionset_defaults;
   _slick_typecast_optionset($optionset->options, $breakpoints);
 
@@ -345,4 +366,41 @@ function _slick_css_easing_options($all = FALSE) {
   }
 
   return $css_easings;
+}
+
+/**
+ * Returns the current optionset setting under group 'settings'.
+ *
+ * @param string $id
+ *   The optionset ID.
+ * @param string $setting_name
+ *   The name of setting.
+ * @param string $group
+ *   The optionset group: general, settings, responsives.
+ *
+ * @return mixed|FALSE
+ *   The current setting value, or FALSE if none matching.
+ *
+ * @todo drop this before full release, and save some lines.
+ */
+function slick_get_setting($id, $setting_name, $group = 'settings') {
+  $optionset = slick_optionset_load($id);
+  $options = $optionset->options[$group];
+  return isset($options[$setting_name]) ? $options[$setting_name] : FALSE;
+}
+
+/**
+ * Returns the Slick default value by $property.
+ *
+ * @param string $property
+ *   The name of property, e.g.: prevArrow, nexArrow.
+ *
+ * @return mixed|FALSE
+ *   Returns the default value of the property, otherwise FALSE.
+ *
+ * @todo drop this before full release, and save some lines.
+ */
+function slick_get_default_value($property) {
+  $defaults = slick_get_options();
+  return isset($defaults[$property]) ? $defaults[$property] : FALSE;
 }

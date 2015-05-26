@@ -11,7 +11,7 @@ function slick_slick_default_presets() {
   $presets = array();
 
   $preset = slick_optionset_create();
-  $preset->disabled = FALSE; /* Edit this to true to make a default preset disabled initially */
+  $preset->disabled = FALSE;
   $preset->api_version = 1;
   $preset->name = 'default';
   $preset->label = 'Default';

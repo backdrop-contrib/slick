@@ -35,9 +35,14 @@ function slick_devel_menu() {
 function slick_devel_library_alter(&$libraries, $module) {
   $path = drupal_get_path('module', 'slick_devel');
   $slick_path = drupal_get_path('module', 'slick');
+
+  if ($module != 'slick') {
+    return;
+  }
+
   if (SLICK_DEVEL) {
     // Switch to the un-minified version of the library.
-    if ($module == 'slick' && isset($libraries['slick'])) {
+    if (isset($libraries['slick'])) {
       $libraries['slick']['js'] = array(
         libraries_get_path('slick') . '/slick/slick.js' => array('group' => JS_LIBRARY, 'weight' => -4),
       );
@@ -45,16 +50,16 @@ function slick_devel_library_alter(&$libraries, $module) {
   }
 
   if (SLICK_DEVEL_DEBUG) {
-    // Switch to the development version of the slick.load.js.
-    if ($module == 'slick' && isset($libraries['drupal.slick'])) {
+    // Switch to the non-minified version of the slick.load.min.js.
+    if (isset($libraries['drupal.slick'])) {
       $libraries['drupal.slick']['js'] = array(
         $slick_path . '/js/slick.load.js' => array('group' => JS_DEFAULT, 'weight' => 0),
       );
     }
   }
 
-  // Switch to the development version of the slick.load.js.
-  if (SLICK_DEVEL_REPLACE && $module == 'slick' && isset($libraries['drupal.slick'])) {
+  // Switch to the development version of the slick.load.min.js.
+  if (SLICK_DEVEL_REPLACE && isset($libraries['drupal.slick'])) {
     $libraries['drupal.slick']['js'] = array(
       $path . '/js/slick.load.devel.js' => array('group' => JS_DEFAULT, 'weight' => 0),
     );
@@ -62,7 +67,7 @@ function slick_devel_library_alter(&$libraries, $module) {
 
   if (SLICK_DEVEL_DISABLE) {
     // Disable the slick.load.min.js.
-    if ($module == 'slick' && isset($libraries['drupal.slick'])) {
+    if (isset($libraries['drupal.slick'])) {
       unset($libraries['drupal.slick']['js']);
     }
   }
@@ -79,16 +84,5 @@ function slick_devel_libraries_info_alter(&$libraries) {
         'slick/slick.js',
       );
     }
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function slick_devel_preprocess_slick(&$variables) {
-  if ((SLICK_DEVEL_DISABLE || SLICK_DEVEL_REPLACE) && isset($variables['content_attributes_array']['data-config'])) {
-    $variables['content_attributes_array']['data-slick'] = $variables['content_attributes_array']['data-config'];
-    unset($variables['content_attributes_array']['data-config']);
-    // kpr($variables);
   }
 }

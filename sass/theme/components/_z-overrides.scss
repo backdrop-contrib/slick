@@ -27,4 +27,9 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   &.slide--current {
     z-index: 4;
   }
+
+  // Fixed excessive width with nested slicks.
+  .slick__slide {
+    max-width: 100%;
+  }
 }

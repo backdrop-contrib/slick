@@ -1,4 +1,20 @@
 
+Slick 7.x-2.0-dev, 2015-5-25
+----------------------------
+Removed over paranoid slick_filter_xss_admin() since Views UI has a more
+  flexible "Rewrite results" option with selective tags stripping.
+Deprecated slick_get_default_value(), used slick_get_options() instead.
+  The function is temporarily moved to slick.admin.inc for future deletion.
+Moved unused slick_optionset_load_all() into slick.admin.inc.
+Removed slick_add(), recommended to start using #attached with slick_attach()
+  instead. This is never used and will be dropped at D8 anyway.
+Removed unused slick_image_default_styles(), including default slick image
+  style, and moved it to slick_example.module instead.
+Removed useless _slick_gettype().
+
+Issue #2494579 by gausarts: Merge slick.elements.inc contents into the module,
+  and clean out unused functions.
+
 Slick 7.x-2.0-dev, 2015-5-24
 ----------------------------
 Fixed for skin fullscreen after slick-wrapper removal.

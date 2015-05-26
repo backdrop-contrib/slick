@@ -197,8 +197,9 @@ function template_preprocess_slick(&$variables) {
   $is_prev = isset($js['prevArrow']) && $js['prevArrow'];
   $is_next = isset($js['nextArrow']) && $js['nextArrow'];
 
-  $default_prev = slick_get_default_value('prevArrow');
-  $default_next = slick_get_default_value('nextArrow');
+  $default_options = slick_get_options();
+  $default_prev = $default_options['prevArrow'];
+  $default_next = $default_options['nextArrow'];
 
   $settings['prev_arrow'] = $is_prev ? filter_xss($js['prevArrow'], $allowed_tags) : $default_prev;
   $settings['next_arrow'] = $is_next ? filter_xss($js['nextArrow'], $allowed_tags) : $default_next;
@@ -244,7 +245,9 @@ function template_preprocess_slick(&$variables) {
 
     // Do not pass arrows HTML to JSON object, as we process separately above.
     unset($js_data['prevArrow'], $js_data['nextArrow']);
-    $content_attributes['data-slick'] = drupal_json_encode($js_data);
+    if ($js_data) {
+      $content_attributes['data-slick'] = drupal_json_encode($js_data);
+    }
   }
 
   // Process individual item.
@@ -270,11 +273,6 @@ function template_preprocess_slick(&$variables) {
 
   // Populate classes_array expected by Omega 3.
   $variables['classes_array'] = $variables['attributes_array']['class'];
-
-  // Add the basic library if no sub-modules, nor #attached in use.
-  if ($count > 1 && !isset($element['#attached']) && ($settings['current_display'] == 'main')) {
-    slick_add();
-  }
 }
 
 /**
@@ -282,7 +280,6 @@ function template_preprocess_slick(&$variables) {
  */
 function template_process_slick(&$variables) {
   $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
-  $variables['content_attributes'] = empty($variables['content_attributes_array']) ? '' : drupal_attributes($variables['content_attributes_array']);
   $variables['arrow_attributes'] = empty($variables['arrow_attributes_array']) ? '' : drupal_attributes($variables['arrow_attributes_array']);
 }
 
@@ -641,7 +638,7 @@ function template_process_slick_wrapper(&$variables) {
 }
 
 /**
- * Returns HTML for a slick_wrapper.
+ * Returns HTML for a slick_wrapper when asNavFor in use.
  *
  * @param array $variables
  *   An associative array containing:
@@ -669,38 +666,33 @@ function theme_slick_wrapper(array $variables) {
 }
 
 /**
- * Overrides theme_image with lazy loading.
+ * Overrides theme_image with Slick lazy loading.
  *
- * Notes:
- * The issue here is no longer valid with the latest Slick. However if the issue
- * persists at your end, please try two possible fixes below.
- *
- * v1.3.7 allows dummy/ placeholder image:
- * https://github.com/kenwheeler/slick/pull/223
- * However lazyLoad ondemand has issue failing to generate _newly created image
- * derivatives, causing 403. It has no issue if derivatives are in place
- * already. Only _new images fail. lazyLoad progressive has no issue with it.
- *
- * May relate to itok: https://www.drupal.org/drupal-7.20-release-notes
- * Possible fixes without compromising security:
- *   - https://www.drupal.org/project/imageinfo_cache, to have derivatives
- *     in place earlier.
- *   - Or use lazyLoad "progressive" instead.
- *
- * ondemand also has issue with dummy image excessive height, so use it
- * with care. Dummy image is for valid HTML5.
+ * @param array $variables
+ *   An associative array containing:
+ *   - style_name: The name of the style to be used to alter the original image.
+ *   - path: The path of the image file relative to the Drupal files directory.
+ *     This function does not work with images outside the files directory nor
+ *     with remotely hosted images. This should be in a format such as
+ *     'images/image.jpg', or using a stream wrapper such as
+ *     'public://images/image.jpg'.
+ *   - width: The width of the source image (if known).
+ *   - height: The height of the source image (if known).
+ *   - alt: The alternative text for text-based browsers.
+ *   - title: The title text is displayed when the image is hovered.
+ *   - attributes: Associative array of attributes to be placed in the img tag.
+ *   - lazy: A flag whether to use the lazyload, or not.
+ *   - options: An array of options.
  *
  * @ingroup themeable
  */
-function theme_slick_image_lazy($variables) {
+function theme_slick_image_lazy(array $variables) {
   $build = '';
-
-  $path = $variables['path'];
-  $variables['attributes']['class'][] = 'slick__image';
+  $attributes = $variables['attributes'];
+  $attributes['class'][] = 'slick__image';
 
   // Be sure to avoid images with breakpoints and without image style.
   if (!isset($variables['breakpoints']) && isset($variables['style_name'])) {
-    $attributes = $variables['attributes'];
     foreach (array('width', 'height', 'alt', 'title') as $key) {
       if (isset($variables[$key])) {
         // Backported https://www.drupal.org/node/999338.
@@ -713,13 +705,13 @@ function theme_slick_image_lazy($variables) {
       }
     }
 
-    $variables['path'] = image_style_url($variables['style_name'], $path);
-    $count = $variables['count'];
-    $path = file_create_url($variables['path']);
+    $variables['path'] = image_style_url($variables['style_name'], $variables['path']);
+    $image_url = file_create_url($variables['path']);
 
     // Provide SRC attribute if a single image, or lazyLoad disabled.
+    $count = $variables['count'];
     if ($count == 1 || !$variables['lazy']) {
-      $attributes['src'] = $path;
+      $attributes['src'] = $image_url;
     }
     else {
       $attributes['class'][] = 'lazy';
@@ -729,14 +721,23 @@ function theme_slick_image_lazy($variables) {
       // theme_slick_image_formatter_lazy() instead, or vice versa.
       // @see https://www.drupal.org/node/1342504
       $attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-      $attributes['data-lazy'] = $path;
+
+      // Allows advanced lazyload without full theme overrides.
+      // Slick supports 'ondemand' and 'progressive', use 'advanced' to DIY.
+      if ($variables['lazy'] != 'advanced') {
+        $attributes['data-lazy'] = $image_url;
+      }
+
+      // Only provide noscript to the first image, since the rest of the slides
+      // always want JS with all this lazyLoad.
+      if ($variables['delta'] == 0) {
+        $noscript = TRUE;
+      }
     }
 
     $build .= '<img ' . drupal_attributes($attributes) . ' />';
-
-    // Only provide noscript to the first image, since the rest of the slides
-    // always want JS with all this lazyLoad.
-    if ($count > 1 && $variables['delta'] == 0) {
+    if (isset($noscript)) {
+      $variables['attributes'] = array();
       $build .= '<noscript>' . theme('image', $variables) . '</noscript>';
     }
   }
@@ -807,8 +808,7 @@ function theme_slick_image_formatter_lazy(array $variables) {
   // The link path and link options are both optional, but for the options to be
   // processed, the link path must at least be an empty string.
   if (isset($variables['path']['path'])) {
-    if (isset($variables['options']['lightbox']) && $variables['options']['lightbox']) {
-      $switcher = $variables['options']['lightbox'];
+    if (isset($variables['options']['lightbox']) && $switcher = $variables['options']['lightbox']) {
       $output .= '<i class="media-icon media-icon--lightbox media-icon--' . $switcher . '"></i>';
       if ($variables['options']['has_pattern']) {
         $output .= '<div class="slide__pattern"></div>';

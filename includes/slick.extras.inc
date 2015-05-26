@@ -1,8 +1,6 @@
 <?php
 /**
  * @file
- * Slick extras.
- *
  * Contains optional functions called only if needed.
  */
 

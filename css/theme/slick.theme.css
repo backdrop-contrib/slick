@@ -234,6 +234,10 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   z-index: 4;
 }
 
+.slick__slide .slick__slide {
+  max-width: 100%;
+}
+
 /**
  * Complex layout needs custom refinement for mobile, hence it is reasonable
  * to apply for Desktop up. You have to adjust mobile version by your design.

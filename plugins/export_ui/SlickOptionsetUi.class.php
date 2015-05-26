@@ -21,6 +21,8 @@ class SlickOptionsetUi extends ctools_export_ui {
     $optionset = $form_state['item'];
 
     $options = $optionset->options;
+    $slick_options = slick_get_options();
+
     $form['#attached']['library'][] = array('slick', 'slick.admin');
     $form['#attached']['css'][] = $module_path . '/css/admin/slick.admin--vertical-tabs.css';
 
@@ -162,6 +164,11 @@ class SlickOptionsetUi extends ctools_export_ui {
 
     foreach ($slick_elements as $name => $element) {
       $default_value = isset($options['settings'][$name]) ? $options['settings'][$name] : $element['default'];
+      // Allows to reset string values by emptying it, such as changing arrows.
+      if (is_string($default_value) && empty($default_value)) {
+        $default_value = $element['default'];
+      }
+
       $form['options']['settings'][$name] = array(
         '#title' => isset($element['title']) ? $element['title'] : '',
         '#description' => isset($element['description']) ? $element['description'] : '',
