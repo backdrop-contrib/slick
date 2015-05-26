@@ -110,8 +110,17 @@ print render($slick);
  *
  * A skin can specify some CSS and JS files to include when Slick is displayed.
  *
+ * Each skin supports 5 keys:
+ * - name: The human readable name of the skin.
+ * - description: The description about the skin, for help and manage pages.
+ * - css: An array of CSS files to attach.
+ * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
+ * - inline css: An optional flag to determine whether the image is turned into
+ *   CSS background rather than image with SRC, see fullscreen skin. 
+ *
  * @see hook_hook_info()
  * @see slick_example.module
+ * @see slick.slick.inc
  */
 function hook_slick_skins_info() {
   // The source can be theme or module.

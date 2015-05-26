@@ -9,6 +9,9 @@
  */
 function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $view_mode, $thumb_nav = FALSE) {
   module_load_include('inc', 'slick', 'includes/slick.extras');
+  $settings['has_media']      = TRUE;
+  $settings['lightbox_ready'] = TRUE;
+  $settings['picture_ready']  = TRUE;
 
   $build = array();
   $css = array();
@@ -33,7 +36,6 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
     $image['alt']    = $slide['item']['alt'];
     $image['title']  = $slide['item']['title'];
 
-    $settings['has_media']    = TRUE;
     $settings['is_media']     = FALSE;
     $settings['media_height'] = $image['height'];
     $settings['media_width']  = $image['width'];
@@ -186,7 +188,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       }
     }
 
-    // Pass it over theme_slick_media.
+    // Pass it over to theme_slick_media.
     $slide['slide'] = array(
       '#theme' => 'slick_media',
       '#item' => $image_slide,

@@ -1,4 +1,12 @@
 
+Slick 7.x-2.0-dev, 2015-5-27
+----------------------------
+Moved aka off-loaded Slick fields admin settings into separate existing file
+  slick_fields.formatters.admin.inc to reduce clutters at the module file.
+Removed mousewheel and slick.easing libraries registrations since the only one
+  using them -- slick_add() -- was already removed, and slicks is just fine to
+  continue using the ones registered via core hook_library().
+
 Slick 7.x-2.0-dev, 2015-5-26
 ----------------------------
 Added key "inline css" at slick_slick_skins_info() to ease up registering a skin

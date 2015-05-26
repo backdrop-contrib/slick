@@ -8,6 +8,9 @@
  * Format core image data.
  */
 function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FALSE) {
+  $settings['lightbox_ready'] = TRUE;
+  $settings['picture_ready']  = TRUE;
+
   $build = array();
   $css = array();
 

@@ -20,7 +20,7 @@
  * - name: The human readable name of the skin.
  * - description: The description about the skin, for help and manage pages.
  * - css: An array of CSS files to attach.
- * - js: An array of JS files to attach.
+ * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
  * - inline css: An optional flag to determine whether the image is turned into
  *   CSS background rather than image with SRC, see fullscreen skin.
  *

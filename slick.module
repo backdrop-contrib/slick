@@ -222,36 +222,6 @@ function slick_libraries_info() {
     ),
   );
 
-  $libraries['slick.easing'] = array(
-    'name' => 'jQuery Easing',
-    'vendor url' => 'https://github.com/gdsmith/jquery.easing',
-    'download url' => 'https://github.com/gdsmith/jquery.easing/archive/master.zip',
-    'version arguments' => array(
-      'file' => 'jquery.easing.js',
-      'pattern' => '/jQuery\s+Easing\s+v?([0-9\.]+)/',
-    ),
-    'files' => array(
-      'js' => array(
-        'jquery.easing.min.js',
-      ),
-    ),
-  );
-
-  $libraries['mousewheel'] = array(
-    'name' => 'jQuery Mousewheel',
-    'vendor url' => 'https://github.com/brandonaaron/jquery-mousewheel',
-    'download url' => 'https://github.com/brandonaaron/jquery-mousewheel/archive/master.zip',
-    'version arguments' => array(
-      'file' => 'jquery.mousewheel.js',
-      'pattern' => '/Version: (\d+\.\d+\.\d+)/',
-    ),
-    'files' => array(
-      'js' => array(
-        'jquery.mousewheel.min.js',
-      ),
-    ),
-  );
-
   return $libraries;
 }
 
@@ -725,7 +695,7 @@ function _slick_typecast_optionset(&$options = array(), $breakpoints = 0) {
 }
 
 /**
- * Returns Slick skins created programatically.
+ * Returns Slick skins registered via hook_slick_skins_info().
  *
  * @return array
  *   The associative array of available skins.
@@ -740,10 +710,10 @@ function slick_skins() {
 }
 
 /**
- * Returns Slick arrow skins created programatically.
+ * Returns Slick arrow skins registered via hook_slick_arrows_info().
  *
  * @return array
- *   The associative array of available skin arrows.
+ *   The associative array of available arrow skins.
  */
 function slick_arrows() {
   $arrows = &drupal_static(__FUNCTION__, NULL);
@@ -755,10 +725,10 @@ function slick_arrows() {
 }
 
 /**
- * Returns Slick dot skins created programatically.
+ * Returns Slick dot skins registered via hook_slick_dots_info().
  *
  * @return array
- *   The associative array of available skin dots.
+ *   The associative array of available dot skins.
  */
 function slick_dots() {
   $dots = &drupal_static(__FUNCTION__, NULL);
