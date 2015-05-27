@@ -343,7 +343,19 @@ function slick_attach(array $attach) {
   }
 
   // Attach default JS settings to allow responsive displays have a lookup.
-  $defaults = _slick_optionset_defaults(TRUE);
+  $defaults = _slick_optionset_defaults('settings');
+  // Prevents main settings from screwing up responsive settings.
+  unset(
+    $defaults['mobileFirst'],
+    $defaults['appendDots'],
+    $defaults['appendArrows'],
+    $defaults['asNavFor'],
+    $defaults['prevArrow'],
+    $defaults['nextArrow'],
+    $defaults['cssEaseBezier'],
+    $defaults['cssEaseOverride']
+  );
+
   $load['js'][] = array(
     'data' => array(
       'slick' => $defaults,
@@ -482,19 +494,19 @@ function slick_clean_options(array $options) {
 /**
  * Default settings for a newly created optionset.
  *
- * @param bool $clean
- *   A flag to exclude problematic options within responsive display clone.
+ * @param string $set
+ *   Gets a specific group of values [optional]: settings, general.
  *
  * @return array
  *   An array of default optionset.
  */
-function _slick_optionset_defaults($clean = FALSE) {
+function _slick_optionset_defaults($set = NULL) {
   $defaults = array();
   foreach (slick_get_options() as $name => $value) {
     $defaults['settings'][$name] = $value;
   }
   $defaults['general'] = array('goodies' => array());
-  return $clean ? slick_clean_options($defaults['settings']) : $defaults;
+  return $set ? $defaults[$set] : $defaults;
 }
 
 /**

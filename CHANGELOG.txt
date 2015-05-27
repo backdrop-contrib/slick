@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-5-28
+----------------------------
+Fixed dotsClass JS error with asNavFor due to previous ignorant removal.
+
 Slick 7.x-2.0-dev, 2015-5-27
 ----------------------------
 Moved aka off-loaded Slick fields admin settings into separate existing file
