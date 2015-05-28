@@ -1,6 +1,12 @@
 
+Slick 7.x-2.0-dev, 2015-5-29
+----------------------------
+Issue #2496005 by gausarts: Refactor slick_image_lazy to merge
+  slick_image_formatter_lazy with it.
+
 Slick 7.x-2.0-dev, 2015-5-28
 ----------------------------
+Fixed double loading of optionsets when using fields. Now only loaded once.
 Fixed edge case with media player positioning when not using the required aspect
   ratio.
 Fixed dotsClass JS error with asNavFor due to previous ignorant removal.

@@ -67,17 +67,18 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
     $build = render($image_slide);
   }
   else {
-    $image_variables = array(
-      'delta' => $key,
-      'item' => $image,
-      'path' => NULL,
-      'image_style' => $settings['image_style'],
-      'count' => $settings['count'],
-      'options' => array(
+    $build = array(
+      '#theme' => 'slick_image_lazy',
+      '#item' => $image,
+      '#image_style' => $settings['image_style'],
+      '#lazy' => $settings['lazy'],
+      '#options' => array(
         'lightbox' => '',
         'type' => $settings['type'],
-        'lazy' => $settings['lazy'],
         'has_pattern' => $settings['has_pattern'],
+        'count' => $settings['count'],
+        'delta' => $key,
+        'url' => array(),
       ),
     );
 
@@ -110,7 +111,7 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
         }
       }
 
-      $image_variables['path']['path'] = $url;
+      $build['#url'] = $url;
 
       if ($settings['media_switch'] == 'colorbox-switch') {
         $box_classes = array('slick__colorbox', 'slick__capture');
@@ -121,33 +122,30 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
       elseif ($settings['media_switch'] == 'photobox-switch') {
         $box_classes = array('slick__photobox', 'slick__capture');
         if ($media_url) {
-          $image_variables['path']['options']['attributes']['rel'] = 'video';
+          $build['#options']['url']['attributes']['rel'] = 'video';
         }
         if ($settings['thumbnail_style']) {
           $thumbnail_url = image_style_url($settings['thumbnail_style'], $image['uri']);
-          $image_variables['item']['attributes']['data-src'] = $thumbnail_url;
+          $build['#item']['attributes']['data-src'] = $thumbnail_url;
         }
       }
 
-      $image_variables['path']['options']['attributes']['class'] = $box_classes;
+      $build['#options']['url']['attributes']['class'] = $box_classes;
 
       // Video/audio has special attributes for JS interaction.
       if ($settings['type'] != 'image') {
         $data_media['player'] = TRUE;
         $data_media['height'] = $settings['media_height'];
         $data_media['width'] = $settings['media_width'];
-        $image_variables['path']['options']['external'] = TRUE;
+        $build['#options']['url']['external'] = TRUE;
       }
 
-      $image_variables['path']['options']['attributes']['data-media'] = drupal_json_encode($data_media);
+      $build['#options']['url']['attributes']['data-media'] = drupal_json_encode($data_media);
 
       // Re-use a generic flag for both lightboxes: Colorbox and Photobox.
       $switcher = str_replace('-switch', '', $settings['media_switch']);
-      $image_variables['options']['lightbox'] = $switcher;
+      $build['#options']['lightbox'] = $switcher;
     }
-
-    // Render the configured slide using lazyLoad.
-    $build = theme('slick_image_formatter_lazy', $image_variables);
   }
 
   return $build;

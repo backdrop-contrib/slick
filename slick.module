@@ -35,25 +35,12 @@ function slick_theme($existing, $type, $theme, $path) {
       'render element' => 'element',
       'template' => 'slick-media',
     ),
-    'slick_image_formatter_lazy' => $base + array(
-      'variables' => array(
-        'item' => NULL,
-        'path' => NULL,
-        'image_style' => NULL,
-        'delta' => 0,
-        'count' => NULL,
-        'options' => array(),
-      ),
-    ),
     'slick_image_lazy' => $base + array(
       'variables' => array(
-        'style_name' => NULL,
-        'path' => NULL,
-        'height' => NULL,
-        'width' => NULL,
-        'alt' => '',
-        'title' => NULL,
+        'item' => NULL,
         'lazy' => FALSE,
+        'image_style' => NULL,
+        'url' => NULL,
         'attributes' => array(),
         'options' => array(),
       ),
@@ -758,7 +745,7 @@ function slick_dots() {
  *   The skin name.
  *
  * @return bool
- *   If the skin registers 'inline css' explicitly returns TRUE.
+ *   If the skin registers 'inline css' explicitly, returns TRUE.
  */
 function slick_inline_css_skins($skin = NULL) {
   $inline_css = &drupal_static(__FUNCTION__, NULL);

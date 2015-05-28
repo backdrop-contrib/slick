@@ -18,6 +18,7 @@
  *     - #options is set programmatically, or hand-crafted, and only accepts
  *       direct key|value pairs related to JS settings, or at least an optionset
  *       name.
+ *     - #optionset, if supplied, this will ensure loading the optionset once.
  */
 function template_preprocess_slick(&$variables) {
   $element = $variables['element'];
@@ -32,8 +33,8 @@ function template_preprocess_slick(&$variables) {
   // Optionset may be defined via custom code, CTools UI, or sub-modules.
   $optionset_name = isset($customs['optionset']) ? check_plain($customs['optionset']) : $settings['optionset'];
 
-  // Load the selected optionset, or fallback to default.
-  $optionset = slick_optionset_load($optionset_name);
+  // Load the selected optionset once, if supplied, or fallback to default.
+  $optionset = isset($element['#optionset']) ? $element['#optionset'] : slick_optionset_load($optionset_name);
   $options   = $optionset->options;
   $general   = $options['general'];
   $goodies   = $general['goodies'];
@@ -251,11 +252,11 @@ function template_preprocess_slick(&$variables) {
   }
 
   // Process individual item.
-  $build = array();
+  $variables['items'] = array();
   foreach ($items as $delta => $item) {
     $settings['current_item'] = $settings['current_display'];
 
-    $build[$delta] = array(
+    $variables['items'][$delta] = array(
       '#theme' => 'slick_item',
       '#item' => isset($item['slide']) ? $item['slide'] : $item,
       '#delta' => $delta,
@@ -268,7 +269,6 @@ function template_preprocess_slick(&$variables) {
   $variables['attributes_array'] = $attributes;
   $variables['content_attributes_array'] = $content_attributes;
   $variables['arrow_attributes_array'] = $arrow_attributes;
-  $variables['items'] = $build;
   $variables['settings'] = $settings;
 
   // Populate classes_array expected by Omega 3.
@@ -476,13 +476,12 @@ function template_preprocess_slick_grid(&$variables) {
   $element = $variables['element'];
   $settings = $element['#settings'];
 
-  $build = array();
-
   // Implementors should be responsible to pass proper grid chunks.
+  $variables['items'] = array();
   foreach ($element['#items'] as $delta => $item) {
     $settings['current_item'] = 'grid';
 
-    $build[$delta] = array(
+    $variables['items'][$delta] = array(
       '#theme' => 'slick_item',
       '#item' => isset($item['slide']) ? $item['slide'] : '',
       '#delta' => $delta,
@@ -490,8 +489,6 @@ function template_preprocess_slick_grid(&$variables) {
       '#caption' => isset($item['caption']) ? $item['caption'] : array(),
     );
   }
-
-  $variables['items'] = $build;
 }
 
 /**
@@ -506,16 +503,14 @@ function template_preprocess_slick_media(&$variables) {
 
   $type = isset($settings['type']) ? $settings['type'] : 'image';
 
-  $variables['item_prefix'] = array();
-  $variables['item_suffix'] = array();
+  $variables['item_prefix'] = $variables['item_suffix'] = array();
 
   // Configure attributes for containing elements.
   $attributes = $variables['attributes_array'];
   $attributes['class'] = $variables['classes_array'];
   $attributes['class'][] = 'media';
 
-  $variables['url'] = '';
-  $variables['alternative_content'] = '';
+  $variables['url'] = $variables['alternative_content'] = '';
   $variables['is_lightbox'] = FALSE;
 
   // Only reasonable for the main or grid display, not thumbnail navigation.
@@ -670,157 +665,109 @@ function theme_slick_wrapper(array $variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - style_name: The name of the style to be used to alter the original image.
- *   - path: The path of the image file relative to the Drupal files directory.
- *     This function does not work with images outside the files directory nor
- *     with remotely hosted images. This should be in a format such as
- *     'images/image.jpg', or using a stream wrapper such as
- *     'public://images/image.jpg'.
- *   - width: The width of the source image (if known).
- *   - height: The height of the source image (if known).
- *   - alt: The alternative text for text-based browsers.
- *   - title: The title text is displayed when the image is hovered.
- *   - attributes: Associative array of attributes to be placed in the img tag.
+ *   - item: Associative array of image data, which may include "uri", "alt",
+ *     "width", "height", "title" and "attributes".
  *   - lazy: A flag whether to use the lazyload, or not.
- *   - options: An array of options.
+ *   - image_style: The name of the style to alter the original image.
+ *   - url: A string containing the link 'url'.
+ *   - attributes: Associative array of attributes to be placed in the img tag.
+ *   - options: An array of options, including the 'url' options.
  *
  * @ingroup themeable
  */
 function theme_slick_image_lazy(array $variables) {
   $build = '';
-  $attributes = $variables['attributes'];
+  $image = &$variables['item'];
+  $options = $variables['options'];
+  $attributes = &$variables['attributes'];
+
+  if (isset($image['attributes']) && is_array($image['attributes'])) {
+    $attributes += $image['attributes'];
+  }
+
   $attributes['class'][] = 'slick__image';
 
-  // Be sure to avoid images with breakpoints and without image style.
-  if (!isset($variables['breakpoints']) && isset($variables['style_name'])) {
+  $image['path'] = $image['uri'];
+  $image_url = file_create_url($image['path']);
+
+  if ($variables['image_style']) {
+    $dimensions = array(
+      'width' => $image['width'],
+      'height' => $image['height'],
+    );
+
+    image_style_transform_dimensions($variables['image_style'], $dimensions);
+
+    $image['width'] = $dimensions['width'];
+    $image['height'] = $dimensions['height'];
+    $image_url = image_style_url($variables['image_style'], $image['uri']);
+    $image['path'] = $image_url;
+  }
+
+  $image_rendered = theme('image', $image);
+
+  // Be sure to avoid images with breakpoints, taken over by picture.module.
+  if (!isset($variables['breakpoints']) && $options['count'] > 1 && $variables['lazy']) {
     foreach (array('width', 'height', 'alt', 'title') as $key) {
-      if (isset($variables[$key])) {
+      if (isset($image[$key])) {
         // Backported https://www.drupal.org/node/999338.
         // If the property has already been defined in the attributes,
         // do not override, including NULL.
         if (array_key_exists($key, $attributes)) {
           continue;
         }
-        $attributes[$key] = $variables[$key];
+        $attributes[$key] = $image[$key];
       }
     }
 
-    $variables['path'] = image_style_url($variables['style_name'], $variables['path']);
-    $image_url = file_create_url($variables['path']);
+    $attributes['class'][] = 'lazy';
 
-    // Provide SRC attribute if a single image, or lazyLoad disabled.
-    $count = $variables['count'];
-    if ($count == 1 || !$variables['lazy']) {
-      $attributes['src'] = $image_url;
-    }
-    else {
-      $attributes['class'][] = 'lazy';
+    // The placeholder/dummy data URI image.
+    $attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-      // This is why we have this function, D7 core theme_image() only expects
-      // a file, not inline image. Dropped at D8 that supports it, and merged to
-      // theme_slick_image_formatter_lazy() instead, or vice versa.
-      // @see https://www.drupal.org/node/1342504
-      $attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-
-      // Allows advanced lazyload without full theme overrides.
-      // Slick supports 'ondemand' and 'progressive', use 'advanced' to DIY.
-      if ($variables['lazy'] != 'advanced') {
-        $attributes['data-lazy'] = $image_url;
-      }
-
-      // Only provide noscript to the first image, since the rest of the slides
-      // always want JS with all this lazyLoad.
-      if ($variables['delta'] == 0) {
-        $noscript = TRUE;
-      }
+    // Allows advanced lazyload without full theme overrides.
+    // Slick supports 'ondemand' and 'progressive', use 'advanced' to DIY.
+    if ($variables['lazy'] != 'advanced') {
+      $attributes['data-lazy'] = $image_url;
     }
 
-    $build .= '<img ' . drupal_attributes($attributes) . ' />';
-    if (isset($noscript)) {
-      $variables['attributes'] = array();
-      $build .= '<noscript>' . theme('image', $variables) . '</noscript>';
+    // Sanitize attribute values once.
+    $build .= '<img' . drupal_attributes($attributes) . ' />';
+
+    // Only provide noscript to the first image, since the rest of the slides
+    // always want JS with all this lazyLoad.
+    if ($options['delta'] == 0) {
+      $build .= theme('html_tag', array(
+        'element' => array(
+          '#tag' => 'noscript',
+          '#value' => $image_rendered,
+        ),
+      ));
     }
   }
   else {
-    $build = theme('image', $variables);
+    $build = $image_rendered;
   }
 
-  return $build;
-}
-
-/**
- * Returns HTML for an image field formatter using lazyLoad technique.
- *
- * @param array $variables
- *   An associative array containing:
- *   - item: Associative array of image data, which may include "uri", "alt",
- *     "width", "height", "title" and "attributes".
- *   - image_style: An optional image style.
- *   - path: An array containing the link 'path' and link 'options'.
- *
- * @ingroup themeable
- */
-function theme_slick_image_formatter_lazy(array $variables) {
-  $item = $variables['item'];
-  $output = '';
-  $image = array(
-    'path' => $item['uri'],
-  );
-
-  if (isset($item['alt'])) {
-    $image['alt'] = check_plain($item['alt']);
-  }
-
-  if (isset($item['attributes'])) {
-    $image['attributes'] = $item['attributes'];
-  }
-
-  // Do not output an empty 'title' attribute.
-  if (isset($item['title']) && drupal_strlen($item['title']) > 0) {
-    $image['title'] = check_plain($item['title']);
-  }
-
-  if ($variables['image_style']) {
-    $image['style_name'] = $variables['image_style'];
-    $dimensions = array(
-      'width' => $item['width'],
-      'height' => $item['height'],
-    );
-
-    image_style_transform_dimensions($image['style_name'], $dimensions);
-
-    $image['width'] = $dimensions['width'];
-    $image['height'] = $dimensions['height'];
-  }
-
-  $image['delta'] = $variables['delta'];
-  $image['count'] = isset($variables['count']) ? $variables['count'] : 0;
-
-  // Optional lazyLoad only reasonable if we do have slides.
-  $image['lazy'] = FALSE;
-  if ($image['count'] > 1) {
-    $image['lazy'] = $variables['options']['lazy'];
-  }
-  $image['options']['type'] = $variables['options']['type'];
-
-  $output = theme('slick_image_lazy', $image);
-
-  // The link path and link options are both optional, but for the options to be
-  // processed, the link path must at least be an empty string.
-  if (isset($variables['path']['path'])) {
-    if (isset($variables['options']['lightbox']) && $switcher = $variables['options']['lightbox']) {
-      $output .= '<i class="media-icon media-icon--lightbox media-icon--' . $switcher . '"></i>';
-      if ($variables['options']['has_pattern']) {
-        $output .= '<div class="slide__pattern"></div>';
+  // The link url and link options are both optional, but for the options to be
+  // processed, the link url must at least be an empty string.
+  // Use url, not path, for the link to not get confused with image path above.
+  // D8 url = D7 link path, may be changed to avoid confusion.
+  // D8 uri = D7 image path, can not be changed.
+  if (isset($variables['url'])) {
+    if (isset($options['lightbox']) && $switcher = $options['lightbox']) {
+      $build .= '<i class="media-icon media-icon--lightbox media-icon--' . $switcher . '"></i>';
+      if (isset($options['has_pattern']) && $options['has_pattern']) {
+        $build .= '<div class="slide__pattern"></div>';
       }
     }
 
-    $path = $variables['path']['path'];
-    $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();
+    $url = $variables['url'];
+    $options = isset($variables['options']['url']) ? (array) $variables['options']['url'] : array();
     // When displaying an image inside a link, the html option must be TRUE.
     $options['html'] = TRUE;
-    $output = l($output, $path, $options);
+    $build = l($build, $url, $options);
   }
 
-  return $output;
+  return $build;
 }

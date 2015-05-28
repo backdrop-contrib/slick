@@ -136,6 +136,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       '#theme' => 'slick',
       '#items' => $build,
       '#settings' => $settings,
+      '#optionset' => $optionset,
       '#attached' => slick_attach($attach),
     );
 
@@ -166,6 +167,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
         '#theme' => 'slick',
         '#items' => $thumb,
         '#settings' => $settings,
+        '#optionset' => $optionset_thumbnail,
         '#attached' => array(),
       );
 
@@ -199,9 +201,8 @@ function slick_fields_field_formatter_settings_form($field, $instance, $view_mod
  */
 function slick_fields_field_formatter_settings_summary($field, $instance, $view_mode) {
   module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.admin');
-  $summary = _slick_fields_field_formatter_settings_summary($field, $instance, $view_mode);
 
-  // Build settings summary.
+  $summary = _slick_fields_field_formatter_settings_summary($field, $instance, $view_mode);
   return implode('<br />', $summary);
 }
 
