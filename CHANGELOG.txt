@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-5-29
 ----------------------------
+Removed Sass for good. Thanks, and farewell, Sass!
 Issue #2496005 by gausarts: Refactor slick_image_lazy to merge
   slick_image_formatter_lazy with it.
 

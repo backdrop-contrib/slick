@@ -1,8 +1,0 @@
-name = Slick test
-description = "Slick carousel tests."
-core = 7.x
-package = Testing
-hidden = TRUE
-
-dependencies[] = simpletest
-dependencies[] = slick

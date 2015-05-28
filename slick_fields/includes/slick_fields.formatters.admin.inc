@@ -532,7 +532,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
     if ($is_photobox) {
       $elements['media_switch']['#options']['photobox-switch'] = t('Image to photobox switcher');
-      $elements['media_switch']['#description'] .= t('<br />Photobox switcher: image to photobox switch. Be sure to select Thumbnail style for the overlay thumbnails.');
+      $elements['media_switch']['#description'] .= t('<br />Photobox switcher: image to photobox switch. Be sure to select Thumbnail style for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.');
       $elements['colorbox_style']['#title'] = t('Photobox image style');
     }
   }

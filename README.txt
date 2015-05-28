@@ -67,8 +67,8 @@ REQUIREMENTS:
   D8: dropped.
 - jquery_update with jQuery > 1.7, perhaps 1.8 if trouble with the latest Slick.
   D8: dropped.
-- jqeasing from http://gsgd.co.uk/sandbox/jquery/easing, rename the file named
-  jquery.easing.1.3.js to jquery.easing.min.js, so available at:
+- jqeasing from http://gsgd.co.uk/sandbox/jquery/easing,
+  Rename jquery.easing.1.3.js to jquery.easing.min.js, so available at:
   sites/../libraries/easing/jquery.easing.min.js
   This is a fallback for non-supporting browsers.
 
@@ -92,10 +92,6 @@ Slick supports enhancements and more complex layouts.
   so it is available at:
   sites/.../libraries/mousewheel/jquery.mousewheel.min.js
 
-See README.txt on slick_fields.module for more info on slide layouts and fields
-integration.
-
-
 
 OPTIONSETS:
 --------------------------------------------------------------------------------
@@ -104,7 +100,7 @@ To create your optionsets, go to:
 These will be available at Manage display field format, and Views UI.
 
 To store optionsets in code for versioning and performance, use CTools Bulk
-exporter or Features. And revert it via UI to Default to avoid database lookup.
+exporter, or Features. And revert it via UI to Default to avoid database lookup.
 
 
 
@@ -114,8 +110,6 @@ Slick works with Views and as field display formatters.
 Slick Views is available as a style plugin included at slick_views.module.
 Slick Fields is available as a display formatter included at slick_fields.module
 which supports core and contrib fields: Image, Media, Field collection.
-
-See README.txt on slick_views.module for more info on Views integration.
 
 
 
@@ -132,12 +126,6 @@ a single video over the large background image, only with nested slicks it can
 be many videos displayed as a slideshow.
 Use Field collection, or Views to build one.
 Supported multi-value fields for nested slicks: Image, Media, Atom reference.
-
-Usage example:
-- A home slideshow containing multiple videos per slide for quick overview.
-- A large product/ portfolio slideshow containing a grid of slides.
-- A news slideshow containing latest related news items per slide.
-
 
 
 SKINS:
@@ -158,8 +146,7 @@ Optional skins:
   Doesn't load any extra CSS other than the basic styles required by slick.
   Skins defined by sub-modules fallback to those defined at the optionset.
   Re-save existing Optionset to disable the skin at all.
-  If you are using individual slide layout, you may have to do the layouts
-  yourself.
+  If you are using individual slide layout, do the layouts yourself.
 
 - 3d back
   Adds 3d view with focal point at back, works best with 3 slidesToShow,
@@ -208,22 +195,12 @@ Optional skins:
   with a small caption below to make it nice. Use slidesToShow option > 2.
   Expecting square images.
 
-If you want attach extra 3rd libraries such as image reflection, image zoomer,
+If you want to attach extra 3rd libraries, e.g.: image reflection, image zoomer,
 more advanced 3d carousels, etc, simply put them into js array of the target
 skin. Be sure to add proper weight, if you are acting on existing slick events,
 normally < 0 (slick.load.min.js) is the one.
 
 See slick.slick.inc for more info on skins.
-
-Tips:
-----
-- Use the Slick API hook_slick_skins_info() to add your own skins.
-- Use the provided Wrapper class option at Optionset manager to have a unique
-  context as needed, useful to build asNavFor aka thumbnail navigation.
-- For nested slicks, set the parent slick to non-draggable, the child slick is,
-  or vice versa, to allow proper dragging with the child slicks, otherwise both
-  are dragged.
-
 
 
 TROUBLESHOOTING:
@@ -240,60 +217,8 @@ Always clear the cache, and re-generate JS (if aggregation is on) when updating
 the module to ensure things are picked up:
 - admin/config/development/performance
 
-If having JS error with jQuery v1.7, you may need to upgrade it to v1.8.
-
-Dropped workaround for "on demand" lazyLoad. The issue is no longer valid.
-However if the issue persists at your end, please try two possible fixes below.
-Related old info:
-Default lazyLoad "ondemand" may have issue to generate newly created images,
-causing 403.
-Maybe related to itok: https://www.drupal.org/drupal-7.20-release-notes
-Possible fixes without compromising security:
-- https://www.drupal.org/project/imageinfo_cache, to have derivatives in place.
-- Use lazyLoad "progressive" instead.
-
-lazyLoad ondemand also has issue with dummy image excessive height, so use it
-with care. It is never encouraged to use by the Slick author due to bad UX.
-It may be useful to cycle a large number of slides randomly like ads though.
-Dummy image is for valid HTML5. Added fix for this via CSS instead.
-
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
-
-
-
-SLICK > 1.4:
---------------------------------------------------------------------------------
-If you just start using Slick, or never override templates, you may ignore this.
-See breaking changes for more info at:
-- https://github.com/kenwheeler/slick/releases/tag/1.4.0
-- CHANGELOG.txt dated 2015-1-30.
-
-Added direct child container within .slick to hold the slides, i.e.:
-  .slick__slider. Previously slides are direct children of .slick container.
-
-Since 1.4, Slick is initialized at this .slick__slider, not .slick, to allow
-placing arrows within the .slick container, otherwise arrows are part of the
-slides. Previous workaround by specifiying specific class (.slick__slide) no go.
-The author said "slide" option will be deprecated, and seems useless as of 1.5.
-
-Slick 1.4 will break existing asNavFor, so be sure to update the asNavFor
-selectors accordingly at Field formatter and Views pages, e.g.:
-
-  Before: #slick-nodes targetting .slick container.
-  After: #slick-nodes-slider (note "-slider") targetting .slick__slider.
-
-  Or adding " .slick__slider" to your current selector should resolve, e.g.:
-  Before: #slick-nodes
-  After: #slick-nodes .slick__slider
-  Apply it to both asNavFor Main and asNavFor Thumbnail.
-
-  Or if you are using sub-modules, and unsure, simply check the new option:
-  "asNavFor auto selector" at:
-  - admin/structure/types/manage/CONTENT_TYPE/display
-  - admin/structure/views/view/VIEW
-  This will auto generate the proper asNavFor selectors accordingly instead.
-
 
 
 HTML structure:
@@ -332,18 +257,6 @@ The following modules are supported, but optional.
 - Field formatter settings, to modify field formatter settings and summaries.
 
 
-
-NICE TO HAVE
---------------------------------------------------------------------------------
-These should not block the proper release, but nice to have before then.
-- Multi resolution fullscreen background image sizes.
-  FIXED - 2015-3-31, added slick_fields_inline_css_output_info_alter() to modify
-  the inline CSS outputs at your own edge-case leisure.
-- Photobox integration.
-  FIXED - 2015-3-9.
-
-
-
 HOW CAN YOU HELP?
 --------------------------------------------------------------------------------
 Please consider helping in the issue queue, provide improvement, or helping with
@@ -353,12 +266,17 @@ documentation.
 KNOWN ISSUES
 --------------------------------------------------------------------------------
 - The Slick lazyLoad is not supported with picture-enabled images. Slick only
-  falicitates Picture to get in. The image formatting is taken over by Picture.
-- Fullscreen admin preview with Views is intentionally disabled to avoid
-  interfering/ covering admin pages.
+  facilitates Picture to get in. The image formatting is taken over by Picture.
+- Photobox is not compatible with infinite true + slidesToShow > 1, since slicks
+  will have clones which are filtered out by Photobox loader, otherwise dup
+  thumbnails. It works best for:
+  - infinite true + slidesToShow 1
+  - infinite false + slidesToShow N
+  If "infinite true + slidesToShow > 1" is a must, simply override the JS to
+  remove ":not(.slick-cloned)", and disable 'thumbs' option.
 - The following is not module related, but worth a note:
-  o lazyLoad ondemand has issue with dummy image excessive height. See above for
-    the recommended fixes. Added fixes to suppress it via CSS.
+  o lazyLoad ondemand has issue with dummy image excessive height.
+    Added fixes to suppress it via CSS.
   o If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
   o Fade option with multiple slideToShow will screw up.
@@ -393,7 +311,7 @@ Slick 7.x-1.x-dev by arshadcn, the original author.
 
 With the help from the community:
 - https://www.drupal.org/node/2232779/committers
-- CHANGELOG.txt for helpful souls with their suggestions and reports.
+- CHANGELOG.txt for helpful souls with their patches, suggestions and reports.
 
 
 READ MORE

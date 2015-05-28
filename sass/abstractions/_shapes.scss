@@ -1,9 +1,0 @@
-
-@mixin line($color: $color-1, $size: $line-size) {
-  display: inline-block;
-  width: $size;
-  height: $size/7;
-  background: $color;
-  border-radius: $size/14; 
-  transition: $transition;
-}
