@@ -211,6 +211,7 @@
 .is-playing:hover .media-icon--play,
 .slick--ratio .is-playing .slick__image {
   opacity: 0;
+  position: absolute;
   visibility: hidden;
   z-index: -1;
 }

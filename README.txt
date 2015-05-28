@@ -4,20 +4,20 @@ Slick Carousel Module
 Drupal module for Ken Wheeler's Slick carousel.
 See http://kenwheeler.github.io/slick.
 
-* Fully responsive. Scales with its container.
-* Uses CSS3 when available. Fully functional when not.
-* Swipe enabled. Or disabled, if you prefer.
-* Desktop mouse dragging.
-* Fully accessible with arrow key navigation.
-* Autoplay, pagers, arrows, etc...
-* Exportable via CTools.
-* Works with Views, core and contrib fields: Image, Media or Field collection.
-* Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
+o Fully responsive. Scales with its container.
+o Uses CSS3 when available. Fully functional when not.
+o Swipe enabled. Or disabled, if you prefer.
+o Desktop mouse dragging.
+o Fully accessible with arrow key navigation.
+o Autoplay, pagers, arrows, etc...
+o Exportable via CTools.
+o Works with Views, core and contrib fields: Image, Media or Field collection.
+o Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
   Grid, Split. Nothing loaded unless configured so.
-* Nested slicks, slide overlays or multiple slicks within a single Slick using
+o Nested slicks, slide overlays or multiple slicks within a single Slick using
   Field collection, or Views.
-* Some useful hooks and drupal_alters for advanced works.
-* Modular integration with various contribs via optional sub-modules. You can
+o Some useful hooks and drupal_alters for advanced works.
+o Modular integration with various contribs via optional sub-modules. You can
   build slicks without sub-modules by simply passing markups to theme_slick().
 
 
@@ -41,6 +41,7 @@ Install the module as usual, more info can be found on:
 http://drupal.org/documentation/install/modules-themes/modules-7
 
 The Slick module contain several sub-modules:
+- slick_ui, to manage optionsets, can be uninstalled at production.
 - slick_devel, if you want to help testing and developing the Slick.
 - slick_example, if you want to get up and running quickly.
 - slick_fields, supports Image, Media file, and Field collection fields.
@@ -53,8 +54,8 @@ See README.txt on each sub-module for their relevant information.
 REQUIREMENTS:
 --------------------------------------------------------------------------------
 - Slick library:
-  * Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/,
-  * Extract it as is, so the needed assets available at:
+  o Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/,
+  o Extract it as is, so the needed assets available at:
     sites/../libraries/slick/slick/slick.css
     sites/../libraries/slick/slick/slick-theme.css (optional if a skin chosen)
     sites/../libraries/slick/slick/slick.min.js
@@ -356,11 +357,11 @@ KNOWN ISSUES
 - Fullscreen admin preview with Views is intentionally disabled to avoid
   interfering/ covering admin pages.
 - The following is not module related, but worth a note:
-  * lazyLoad ondemand has issue with dummy image excessive height. See above for
+  o lazyLoad ondemand has issue with dummy image excessive height. See above for
     the recommended fixes. Added fixes to suppress it via CSS.
-  * If the total < slidesToShow, Slick behaves. Previously added a workaround to
+  o If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
-  * Fade option with multiple slideToShow will screw up.
+  o Fade option with multiple slideToShow will screw up.
 
 
 UNKNOWN ISSUES
@@ -380,8 +381,8 @@ some code cleanup, and optimization where needed. Patches are very much welcome.
 ROADMAP
 --------------------------------------------------------------------------------
 - Bug fixes, code cleanup, optimization, and full release.
-- Drupal 8 port, see if you can help/ provide suggestion:
-  https://www.drupal.org/node/2432711
+- Get 1.x out of dev.
+- Drupal 8 port.
 
 
 
