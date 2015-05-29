@@ -48,25 +48,29 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         switch ($field_type) {
           case 'file':
             // Large background video is not supported, any taker?
-            $file            = $slide_image[0]['file'];
-            $fallback        = $slide_image['#items'][0];
-            $image_style     = isset($file['#style_name']) ? $file['#style_name'] : (isset($file['#image_style']) ? $file['#image_style'] : $image_style);
-            $image['uri']    = isset($file['#path']) && $file['#path'] ? $file['#path'] : $fallback['uri'];
-            $image['width']  = isset($file['#width']) ? $file['#width'] : NULL;
-            $image['height'] = isset($file['#height']) ? $file['#height'] : NULL;
-            $image['alt']    = isset($file['#alt']) ? $file['#alt'] : $fallback['alt'];
-            $image['title']  = isset($file['#title']) ? $file['#title'] : $fallback['title'];
+            if (isset($slide_image[0]['file'])) {
+              $file = $slide_image[0]['file'];
+              $fallback = $slide_image['#items'][0];
+              $image_style = isset($file['#style_name']) ? $file['#style_name'] : (isset($file['#image_style']) ? $file['#image_style'] : $image_style);
+              $image['uri'] = isset($file['#path']) && $file['#path'] ? $file['#path'] : $fallback['uri'];
+              $image['width'] = isset($file['#width']) ? $file['#width'] : NULL;
+              $image['height'] = isset($file['#height']) ? $file['#height'] : NULL;
+              $image['alt'] = isset($file['#alt']) ? $file['#alt'] : $fallback['alt'];
+              $image['title'] = isset($file['#title']) ? $file['#title'] : $fallback['title'];
+            }
 
             break;
 
           case 'image':
-            $file            = $slide_image[0]['#item'];
-            $image_style     = isset($file['#image_style']) ? $file['#image_style'] : $image_style;
-            $image['uri']    = $file['uri'];
-            $image['width']  = $file['width'];
-            $image['height'] = $file['height'];
-            $image['alt']    = $file['alt'];
-            $image['title']  = $file['title'];
+            if (isset($slide_image[0]['#item'])) {
+              $file = $slide_image[0]['#item'];
+              $image_style = isset($file['#image_style']) ? $file['#image_style'] : $image_style;
+              $image['uri'] = $file['uri'];
+              $image['width'] = $file['width'];
+              $image['height'] = $file['height'];
+              $image['alt'] = $file['alt'];
+              $image['title'] = $file['title'];
+            }
 
             break;
 
@@ -91,10 +95,10 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         }
 
         if (!$thumb_nav) {
-          $settings['type']         = $field_type;
+          $settings['type'] = $field_type;
           $settings['media_height'] = $image['height'];
-          $settings['media_width']  = $image['width'];
-          $settings['image_style']  = $image_style;
+          $settings['media_width'] = $image['width'];
+          $settings['image_style'] = $image_style;
           $settings['current_item'] = 'main';
           // Image with picture and colorbox supports.
           $slide['slide'] = _slick_fields_get_picture($settings, $image, $key);
@@ -125,10 +129,10 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
         if ($settings['slide_overlay'] && isset($fc_fields[$settings['slide_overlay']])) {
           $slide_overlay = $fc_fields[$settings['slide_overlay']];
 
-          $settings['has_overlay']    = TRUE;
-          $settings['is_media']       = FALSE;
+          $settings['has_overlay'] = TRUE;
+          $settings['is_media'] = FALSE;
           $settings['lightbox_ready'] = TRUE;
-          $settings['picture_ready']  = FALSE;
+          $settings['picture_ready'] = FALSE;
           $optionset = $settings['nested_optionset'];
           $optionset = slick_optionset_load($optionset);
 
@@ -153,15 +157,15 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
 
           switch ($field_type) {
             case 'image':
-              if (in_array($formatter, array('image', 'file_rendered'))) {
+              if (isset($slide_overlay['#items']) && in_array($formatter, array('image', 'file_rendered'))) {
                 $overset = array();
                 foreach ($slide_overlay['#items'] as $i => $sub_overlay) {
-                  $rendered          = $slide_overlay[$i];
-                  $overlay['uri']    = $sub_overlay['uri'];
-                  $overlay['width']  = $sub_overlay['width'];
+                  $rendered = $slide_overlay[$i];
+                  $overlay['uri'] = $sub_overlay['uri'];
+                  $overlay['width'] = $sub_overlay['width'];
                   $overlay['height'] = $sub_overlay['height'];
-                  $overlay['alt']    = $sub_overlay['alt'];
-                  $overlay['title']  = $sub_overlay['title'];
+                  $overlay['alt'] = $sub_overlay['alt'];
+                  $overlay['title'] = $sub_overlay['title'];
 
                   if (!isset($overlay_style)) {
                     $overlay_style = isset($rendered['#image_style']) ? $rendered['#image_style'] : $image_style;
@@ -181,7 +185,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               break;
 
             case 'file':
-              if (in_array($formatter, array('image', 'file_rendered'))) {
+              if (isset($slide_overlay['#items']) && in_array($formatter, array('image', 'file_rendered'))) {
                 $overset = array();
                 foreach ($slide_overlay['#items'] as $f => $sub_overlay) {
                   $file = (object) $sub_overlay;
@@ -197,26 +201,26 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                     $overlay_style = isset($file_style['#style_name']) ? $file_style['#style_name'] : $image_style;
                   }
 
-                  $overlay['uri']    = $uri;
-                  $overlay['width']  = isset($file_style['#width']) ? $file_style['#width'] : NULL;
+                  $overlay['uri'] = $uri;
+                  $overlay['width'] = isset($file_style['#width']) ? $file_style['#width'] : NULL;
                   $overlay['height'] = isset($file_style['#height']) ? $file_style['#height'] : NULL;
-                  $overlay['alt']    = $file->alt;
-                  $overlay['title']  = $file->title;
+                  $overlay['alt'] = $file->alt;
+                  $overlay['title'] = $file->title;
 
                   // If a file has invalid type, allow file_view_file() to work.
                   if (!file_type_is_enabled($file->type)) {
                     $file->type = file_get_type($file);
                   }
 
-                  $overset['type']         = $overlay['type'] = $file->type;
-                  $overset['scheme']       = file_uri_scheme($uri);
-                  $overset['has_media']    = TRUE;
-                  $overset['media_uri']    = $uri;
-                  $overset['media_fid']    = $file->fid;
+                  $overset['type'] = $overlay['type'] = $file->type;
+                  $overset['scheme'] = file_uri_scheme($uri);
+                  $overset['has_media'] = TRUE;
+                  $overset['media_uri'] = $uri;
+                  $overset['media_fid'] = $file->fid;
                   $overset['media_height'] = $overlay['height'];
-                  $overset['media_width']  = $overlay['width'];
-                  $overset['image_style']  = $overlay_style;
-                  $overset['filename']     = $file->filename;
+                  $overset['media_width'] = $overlay['width'];
+                  $overset['image_style'] = $overlay_style;
+                  $overset['filename'] = $file->filename;
 
                   // Get audio/video thumbnail uri.
                   if ($media_image_uri = _slick_fields_get_media_thumbnail($overset, $uri, $overlay_style)) {
@@ -230,7 +234,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                     $overset['is_media'] = TRUE;
                     if (isset($media['#options'])) {
                       $overset['media_height'] = $media['#options']['height'] ? $media['#options']['height'] : 640;
-                      $overset['media_width']  = $media['#options']['width'] ? $media['#options']['width'] : 360;
+                      $overset['media_width'] = $media['#options']['width'] ? $media['#options']['width'] : 360;
                     }
 
                     $rendered_media = render($media);
@@ -254,115 +258,116 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               break;
 
             case 'atom_reference':
-              $overset = array();
-              foreach ($slide_overlay['#items'] as $a => $atom_item) {
-                $sid = $atom_item['sid'];
-                $atom = scald_atom_load($sid);
-                $config = scald_context_config_load($formatter);
-                $base_id = $atom->base_id;
-                $langcode = isset($atom->language) ? $atom->language : $langcode;
+              if (isset($slide_overlay['#items'])) {
+                $overset = array();
+                foreach ($slide_overlay['#items'] as $a => $atom_item) {
+                  $sid = $atom_item['sid'];
+                  $atom = scald_atom_load($sid);
+                  $config = scald_context_config_load($formatter);
+                  $base_id = $atom->base_id;
+                  $langcode = isset($atom->language) ? $atom->language : $langcode;
 
-                if (!isset($overlay_style) && ($transcoder = $config->transcoder[$atom->type]['*']) !== NULL) {
-                  if ($transcoder != 'passthrough') {
-                    if (preg_match('/^style-(.*)$/', $transcoder, $match)) {
-                      $overlay_style = $match[1];
+                  if (!isset($overlay_style) && ($transcoder = $config->transcoder[$atom->type]['*']) !== NULL) {
+                    if ($transcoder != 'passthrough') {
+                      if (preg_match('/^style-(.*)$/', $transcoder, $match)) {
+                        $overlay_style = $match[1];
+                      }
                     }
                   }
-                }
 
-                $overset['scheme'] = $atom->provider;
-                $overset['media_id'] = $base_id;
+                  $overset['scheme'] = $atom->provider;
+                  $overset['media_id'] = $base_id;
 
-                $providers = array(
-                  'scald_youtube',
-                  'scald_vimeo',
-                  'scald_dailymotion',
-                  'video',
-                );
-                if (in_array($atom->provider, $providers)) {
-                  $overset['has_media'] = TRUE;
-                  $overset['is_media'] = TRUE;
-                  // We do have iframe, set it to TRUE.
-                  $media = TRUE;
-                  if (strpos($atom->provider, 'scald_') !== FALSE) {
-                    $overset['scheme'] = substr($atom->provider, -6);
+                  $providers = array(
+                    'scald_youtube',
+                    'scald_vimeo',
+                    'scald_dailymotion',
+                    'video',
+                  );
+                  if (in_array($atom->provider, $providers)) {
+                    $overset['has_media'] = TRUE;
+                    $overset['is_media'] = TRUE;
+                    // We do have iframe, set it to TRUE.
+                    $media = TRUE;
+                    if (strpos($atom->provider, 'scald_') !== FALSE) {
+                      $overset['scheme'] = substr($atom->provider, -6);
+                    }
                   }
+
+                  $overset['url'] = '';
+                  switch ($atom->provider) {
+                    case 'scald_youtube':
+                      $overset['url'] = '//www.youtube.com/embed/' . $base_id;
+                      break;
+
+                    case 'scald_vimeo':
+                      $overset['url'] = '//player.vimeo.com/video/' . $base_id;
+                      break;
+
+                    case 'scald_dailymotion':
+                      $overset['url'] = '//www.dailymotion.com/embed/video/' . $base_id;
+                      break;
+
+                    case 'video':
+                      $overset['url'] = $atom->file_source;
+                      break;
+
+                    default:
+                      break;
+                  }
+
+                  $overlay['uri'] = $atom->file_source;
+                  $overlay['url'] = $overset['url'];
+
+                  // Alternate content.
+                  $overset['filename'] = check_plain($atom->title);
+                  $overset['media_fid'] = $sid;
+
+                  $overlay_height = '';
+                  $overlay_width = '';
+
+                  // Only care for the first item now.
+                  if (isset($atom->scald_thumbnail[$langcode][0]['height'])) {
+                    $overlay_height = $atom->scald_thumbnail[$langcode][0]['height'];
+                  }
+                  elseif (isset($atom->data['video_height'])) {
+                    $overlay_height = $atom->data['video_height'];
+                  }
+
+                  if (isset($atom->scald_thumbnail[$langcode][0]['width'])) {
+                    $overlay_width = $atom->scald_thumbnail[$langcode][0]['width'];
+                  }
+                  elseif (isset($atom->data['video_width'])) {
+                    $overlay_width = $atom->data['video_width'];
+                  }
+
+                  if (isset($atom->scald_thumbnail[$langcode][0]['alt'])) {
+                    $overlay['alt'] = $atom->scald_thumbnail[$langcode][0]['alt'];
+                  }
+                  if (isset($atom->scald_thumbnail[$langcode][0]['title'])) {
+                    $overlay['title'] = $atom->scald_thumbnail[$langcode][0]['title'];
+                  }
+
+                  $dimensions = array(
+                    'width' => $overlay_width,
+                    'height' => $overlay_height,
+                  );
+
+                  image_style_transform_dimensions($overlay_style, $dimensions);
+
+                  $overlay['height'] = $overset['media_height'] = $dimensions['height'];
+                  $overlay['width'] = $overset['media_width'] = $dimensions['width'];
+
+                  $overset['type'] = $overlay['type'] = $atom->type == 'slick' ? 'image' : $atom->type;
+                  $overset['image_style'] = $overlay_style;
+
+                  $overlays[$a] = $overlay;
+                  $oversets[$a] = $overset;
                 }
 
-                $overset['url'] = '';
-                switch ($atom->provider) {
-                  case 'scald_youtube':
-                    $overset['url'] = '//www.youtube.com/embed/' . $base_id;
-                    break;
-
-                  case 'scald_vimeo':
-                    $overset['url'] = '//player.vimeo.com/video/' . $base_id;
-                    break;
-
-                  case 'scald_dailymotion':
-                    $overset['url'] = '//www.dailymotion.com/embed/video/' . $base_id;
-                    break;
-
-                  case 'video':
-                    $overset['url'] = $atom->file_source;
-                    break;
-
-                  default:
-                    break;
-                }
-
-                $overlay['uri'] = $atom->file_source;
-                $overlay['url'] = $overset['url'];
-
-                // Alternate content.
-                $overset['filename'] = check_plain($atom->title);
-                $overset['media_fid'] = $sid;
-
-                $overlay_height = '';
-                $overlay_width = '';
-
-                // Only care for the first item now.
-                if (isset($atom->scald_thumbnail[$langcode][0]['height'])) {
-                  $overlay_height = $atom->scald_thumbnail[$langcode][0]['height'];
-                }
-                elseif (isset($atom->data['video_height'])) {
-                  $overlay_height = $atom->data['video_height'];
-                }
-
-                if (isset($atom->scald_thumbnail[$langcode][0]['width'])) {
-                  $overlay_width = $atom->scald_thumbnail[$langcode][0]['width'];
-                }
-                elseif (isset($atom->data['video_width'])) {
-                  $overlay_width = $atom->data['video_width'];
-                }
-
-                if (isset($atom->scald_thumbnail[$langcode][0]['alt'])) {
-                  $overlay['alt'] = $atom->scald_thumbnail[$langcode][0]['alt'];
-                }
-                if (isset($atom->scald_thumbnail[$langcode][0]['title'])) {
-                  $overlay['title'] = $atom->scald_thumbnail[$langcode][0]['title'];
-                }
-
-                $dimensions = array(
-                  'width' => $overlay_width,
-                  'height' => $overlay_height,
-                );
-
-                image_style_transform_dimensions($overlay_style, $dimensions);
-
-                $overlay['height'] = $overset['media_height'] = $dimensions['height'];
-                $overlay['width']  = $overset['media_width'] = $dimensions['width'];
-
-                $overset['type'] = $overlay['type'] = $atom->type == 'slick' ? 'image' : $atom->type;
-                $overset['image_style'] = $overlay_style;
-
-                $overlays[$a] = $overlay;
-                $oversets[$a] = $overset;
+                $overlay_items[$key] = $overlays;
+                $overlay_settings[$key] = $oversets;
               }
-
-              $overlay_items[$key] = $overlays;
-              $overlay_settings[$key] = $oversets;
-
               break;
 
             default:
@@ -381,14 +386,14 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               // Image with picture supports, but disabled for small overlay,
               // since we don't provide UI to manage small pictures, and
               // picture is only reasonable for large images.
-              $overlay_settings[$key][$idx]['count']          = $overlay_count;
+              $overlay_settings[$key][$idx]['count'] = $overlay_count;
               $overlay_settings[$key][$idx]['lightbox_ready'] = $settings['media_switch'] == 'colorbox-switch';
               $overlay_settings[$key][$idx]['colorbox_style'] = $settings['colorbox_style'];
-              $overlay_settings[$key][$idx]['picture_ready']  = FALSE;
-              $overlay_settings[$key][$idx]['media_switch']   = $settings['media_switch'];
-              $overlay_settings[$key][$idx]['picture']        = FALSE;
-              $overlay_settings[$key][$idx]['lazy']           = $settings['lazy'];
-              $overlay_settings[$key][$idx]['attributes']     = $settings['attributes'];
+              $overlay_settings[$key][$idx]['picture_ready'] = FALSE;
+              $overlay_settings[$key][$idx]['media_switch'] = $settings['media_switch'];
+              $overlay_settings[$key][$idx]['picture'] = FALSE;
+              $overlay_settings[$key][$idx]['lazy'] = $settings['lazy'];
+              $overlay_settings[$key][$idx]['attributes'] = $settings['attributes'];
 
               // Must be similar across all slide items within a particular
               // Slick for the colorbox gallery ID - GID to work.

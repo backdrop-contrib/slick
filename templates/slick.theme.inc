@@ -565,39 +565,6 @@ function template_process_slick_media(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_slick_wrapper().
- */
-function template_preprocess_slick_wrapper(&$variables) {
-  $element = $variables['element'];
-  $settings = $element['#settings'] ? $element['#settings'] : array();
-  $variables['items'] = array();
-  foreach ($element['#items'] as $delta => $item) {
-    if (!empty($item)) {
-      $variables['items'][$delta] = $item;
-    }
-  }
-
-  $variables['attributes_array'] = array('class' => array('slick-wrapper'));
-  if (isset($settings['skin']) && $settings['skin'] && $settings['skin'] != 'asnavfor') {
-    $variables['attributes_array']['class'][] = drupal_clean_css_identifier('slick-wrapper--' . $settings['skin']);
-  }
-
-  if (isset($settings['asnavfor_thumbnail']) && $settings['asnavfor_thumbnail']) {
-    $variables['attributes_array']['class'][] = 'slick-wrapper--asnavfor';
-  }
-
-  // Populate classes_array expected by Omega 3.
-  $variables['classes_array'] = $variables['attributes_array']['class'];
-}
-
-/**
- * Implements hook_process_slick_wrapper().
- */
-function template_process_slick_wrapper(&$variables) {
-  $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
-}
-
-/**
  * Returns HTML for a slick_wrapper when asNavFor in use.
  *
  * @param array $variables
@@ -606,18 +573,27 @@ function template_process_slick_wrapper(&$variables) {
  *   - classes: A string containing the classes for the wrapping div.
  *   - attributes: A string containing the attributes for the wrapping div.
  *
- * @see template_preprocess_slick_wrapper()
- * @see template_process_slick_wrapper()
- *
  * @ingroup themeable
  */
 function theme_slick_wrapper(array $variables) {
+  $element = $variables['element'];
+  $settings = $element['#settings'] ? $element['#settings'] : array();
+
   $build = '';
-  foreach ($variables['items'] as $item) {
+  foreach ($element['#items'] as $item) {
     $build .= drupal_render($item);
   }
 
-  $build = '<div' . $variables['attributes'] . '>' . $build . '</div>';
+  $attributes = array('class' => array('slick-wrapper'));
+  if (isset($settings['skin']) && $settings['skin'] && $settings['skin'] != 'asnavfor') {
+    $attributes['class'][] = drupal_clean_css_identifier('slick-wrapper--' . $settings['skin']);
+  }
+
+  if (isset($settings['asnavfor_thumbnail']) && $settings['asnavfor_thumbnail']) {
+    $attributes['class'][] = 'slick-wrapper--asnavfor';
+  }
+
+  $build = '<div' . drupal_attributes($attributes) . '>' . $build . '</div>';
   return $build;
 }
 

@@ -126,14 +126,6 @@ function slick_optionset_exists($optionset_name) {
 }
 
 /**
- * Determine if an optionset is overridden.
- */
-function slick_optionset_is_overridden($optionset) {
-  $status = EXPORT_IN_CODE + EXPORT_IN_DATABASE;
-  return ($optionset->export_type == $status) ? TRUE : FALSE;
-}
-
-/**
  * Fetches all option sets from the storage.
  *
  * @param bool $reset
@@ -366,41 +358,4 @@ function _slick_css_easing_options($all = FALSE) {
   }
 
   return $css_easings;
-}
-
-/**
- * Returns the current optionset setting under group 'settings'.
- *
- * @param string $id
- *   The optionset ID.
- * @param string $setting_name
- *   The name of setting.
- * @param string $group
- *   The optionset group: general, settings, responsives.
- *
- * @return mixed|FALSE
- *   The current setting value, or FALSE if none matching.
- *
- * @todo drop this before full release, and save some lines.
- */
-function slick_get_setting($id, $setting_name, $group = 'settings') {
-  $optionset = slick_optionset_load($id);
-  $options = $optionset->options[$group];
-  return isset($options[$setting_name]) ? $options[$setting_name] : FALSE;
-}
-
-/**
- * Returns the Slick default value by $property.
- *
- * @param string $property
- *   The name of property, e.g.: prevArrow, nexArrow.
- *
- * @return mixed|FALSE
- *   Returns the default value of the property, otherwise FALSE.
- *
- * @todo drop this before full release, and save some lines.
- */
-function slick_get_default_value($property) {
-  $defaults = slick_get_options();
-  return isset($defaults[$property]) ? $defaults[$property] : FALSE;
 }

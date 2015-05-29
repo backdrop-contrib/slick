@@ -1,6 +1,10 @@
 
 Slick 7.x-2.0-dev, 2015-5-29
 ----------------------------
+Removed preprocess for theme_slick_wraper().
+Removed unused slick_get_setting() and slick_get_default_value() from
+  slick.admin.inc.
+Fixed Field collection complication with view modes.
 Removed Sass for good. Thanks, and farewell, Sass!
 Issue #2496005 by gausarts: Refactor slick_image_lazy to merge
   slick_image_formatter_lazy with it.
