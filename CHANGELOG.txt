@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-5-29
 ----------------------------
+Remove slick_views, and moved it into http://dgo.to/slick_views
+Issue #2497079: Move some sub-modules into separate projects
 Removed preprocess for theme_slick_wraper().
 Removed unused slick_get_setting() and slick_get_default_value() from
   slick.admin.inc.
