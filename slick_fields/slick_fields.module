@@ -6,9 +6,6 @@
 
 /**
  * Implements hook_field_formatter_info().
- *
- * Adds the slick format option within the manage display form of the following
- * supported fields: Image, Field collection and Media.
  */
 function slick_fields_field_formatter_info() {
   $formatters['slick'] = array(
@@ -32,13 +29,13 @@ function slick_fields_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function slick_fields_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = $build = $thumb = array();
+  $element = array();
 
   if (count($items) > 0) {
+    $build = $thumb = array();
     module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.global');
     list($entity_id, , $bundle) = entity_extract_ids($entity_type, $entity);
     $field_name   = $field['field_name'];
-    $field_type   = $field['type'];
     $slick_id     = &drupal_static('slick_id', 0);
     $item_id      = drupal_clean_css_identifier("slick-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}-" . ++$slick_id);
     $thumbnail_id = $item_id . '-thumbnail';
@@ -47,7 +44,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $settings = slick_fields_get_default_settings();
     $settings += array(
       'count'              => count($items),
-      'field_type'         => $field_type,
+      'field_type'         => $field['type'],
       'field_name'         => $field_name,
       'entity_id'          => $entity_id,
       'has_overlay'        => FALSE,
@@ -63,7 +60,6 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $settings         = array_merge($settings, $display['settings']);
     $view_mode        = $settings['view_mode'] ? $settings['view_mode'] : 'full';
     $is_asnavfor      = $settings['optionset_thumbnail'];
-    $is_asnavfor_auto = $settings['asnavfor_auto'];
 
     // Load the optionset to check for lazyLoad, and other settings.
     $optionset                 = slick_optionset_load($settings['optionset']);
@@ -87,15 +83,10 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     if ($is_asnavfor) {
       $optionset_thumbnail = slick_optionset_load($settings['optionset_thumbnail']);
       $settings['dots_thumbnail'] = $optionset_thumbnail->options['settings']['dots'];
-      if ($is_asnavfor_auto) {
-        $settings['asnavfor_target'] = '#' . $thumbnail_id . '-slider';
-      }
-      elseif ($settings['asnavfor_main']) {
-        $settings['asnavfor_target'] = $settings['asnavfor_main'];
-      }
+      $settings['asnavfor_target'] = $settings['asnavfor_auto'] ? '#' . $thumbnail_id . '-slider' : $settings['asnavfor_main'];
     }
 
-    switch ($field_type) {
+    switch ($field['type']) {
       case 'image':
         $attach['attach_media'] = FALSE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.image');
@@ -127,7 +118,6 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     // Inline CSS is to colorize individual slide, or for fullscreen skin.
     if ($settings['inline_css']) {
       $css = implode("\n", $settings['inline_css']);
-      // Allows inline css output information to be altered.
       drupal_alter('slick_fields_inline_css_output_info', $css, $items, $settings);
       $attach['attach_inline_css'] = $css;
     }
@@ -140,10 +130,9 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       '#attached' => slick_attach($attach),
     );
 
-    // Overrides common options to re-use an optionset.
+    // Overrides common options to re-use a single optionset.
     if ($settings['override']) {
       $overridables = array();
-      // Respect empty values, meaning FALSE.
       foreach ($settings['overridables'] as $key => $override) {
         $overridables[$key] = empty($override) ? FALSE : TRUE;
       }
@@ -155,13 +144,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       $settings['content_attributes']['id'] = $thumbnail_id . '-slider';
       $settings['optionset'] = $settings['optionset_thumbnail'];
       $settings['current_display'] = 'thumbnail';
-
-      if ($is_asnavfor_auto) {
-        $settings['asnavfor_target'] = '#' . $item_id . '-slider';
-      }
-      elseif ($settings['asnavfor_thumbnail']) {
-        $settings['asnavfor_target'] = $settings['asnavfor_thumbnail'];
-      }
+      $settings['asnavfor_target'] = $settings['asnavfor_auto'] ? '#' . $item_id . '-slider' : $settings['asnavfor_thumbnail'];
 
       $slick[1] = array(
         '#theme' => 'slick',
@@ -189,7 +172,6 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
  * Implements hook_field_formatter_settings_form().
  */
 function slick_fields_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
-  form_load_include($form_state, 'inc', 'slick', 'includes/slick.admin');
   form_load_include($form_state, 'inc', 'slick_fields', 'includes/slick_fields.formatters.admin');
 
   $elements = _slick_fields_field_formatter_settings_form($field, $instance, $view_mode, $form, $form_state);
@@ -207,12 +189,7 @@ function slick_fields_field_formatter_settings_summary($field, $instance, $view_
 }
 
 /**
- * Gets default field formatter settings.
- *
- * Field default settings are only available once they are saved, so provide
- * them beforehand to avoid notices, and extra checks when a feature is added/
- * unavailable conditionally. The settings form will store relevant settings by
- * the current supported field type.
+ * Defines default field formatter settings to avoid notices.
  *
  * @return array
  *   An alterable array of all supported field formatter settings.
@@ -239,8 +216,6 @@ function slick_fields_get_default_settings() {
     'mousewheel' => FALSE,
     'override' => FALSE,
     'overridables' => array(),
-
-    // Declare all conditional settings to avoid extra checks.
     'slide_classes' => '',
     'color_field' => '',
     'nested_slick' => FALSE,
@@ -259,7 +234,6 @@ function slick_fields_get_default_settings() {
     'is_lightbox' => FALSE,
   );
 
-  // Allows settings information to be altered.
   drupal_alter('slick_fields_default_settings_info', $settings);
   return $settings;
 }
@@ -270,21 +244,11 @@ function slick_fields_get_default_settings() {
 function slick_fields_entity_info_alter(&$entity_info) {
   $view_mode = 'slick_carousel';
   foreach ($entity_info as $key => $entity) {
-    switch ($key) {
-      case 'file':
-      case 'field_collection_item':
-        if (!isset($entity_info[$key]['view modes'][$view_mode])) {
-          $entity_info[$key]['view modes'][$view_mode] = array(
-            'label' => t('@label', array(
-              '@label' => ucwords(str_replace("_", " ", $view_mode)),
-            )),
-            'custom settings' => FALSE,
-          );
-        }
-        break;
-
-      default:
-        break;
+    if (in_array($key, array('file', 'field_collection_item')) && !isset($entity_info[$key]['view modes'][$view_mode])) {
+      $entity_info[$key]['view modes'][$view_mode] = array(
+        'label' => t('Slick carousel'),
+        'custom settings' => FALSE,
+      );
     }
   }
 }

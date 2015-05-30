@@ -48,29 +48,6 @@ function slick_devel_library_alter(&$libraries, $module) {
       );
     }
   }
-
-  if (SLICK_DEVEL_DEBUG) {
-    // Switch to the non-minified version of the slick.load.min.js.
-    if (isset($libraries['drupal.slick'])) {
-      $libraries['drupal.slick']['js'] = array(
-        $slick_path . '/js/slick.load.js' => array('group' => JS_DEFAULT, 'weight' => 0),
-      );
-    }
-  }
-
-  // Switch to the development version of the slick.load.min.js.
-  if (SLICK_DEVEL_REPLACE && isset($libraries['drupal.slick'])) {
-    $libraries['drupal.slick']['js'] = array(
-      $path . '/js/slick.load.devel.js' => array('group' => JS_DEFAULT, 'weight' => 0),
-    );
-  }
-
-  if (SLICK_DEVEL_DISABLE) {
-    // Disable the slick.load.min.js.
-    if (isset($libraries['drupal.slick'])) {
-      unset($libraries['drupal.slick']['js']);
-    }
-  }
 }
 
 /**
@@ -83,6 +60,42 @@ function slick_devel_libraries_info_alter(&$libraries) {
       $libraries['slick']['files']['js'] = array(
         'slick/slick.js',
       );
+    }
+  }
+}
+
+/**
+ * Implements hook_slick_attach_load_info_alter().
+ *
+ * @see slick_attach()
+ */
+function slick_devel_slick_attach_load_info_alter(&$load, $attach, $skins) {
+  $slick_path = drupal_get_path('module', 'slick');
+  $slick_devel = drupal_get_path('module', 'slick_devel');
+  $min = $slick_path . '/js/slick.load.min.js';
+  $dev = $slick_path . '/js/slick.load.js';
+
+  if (SLICK_DEVEL_DEBUG) {
+    // Switch to the non-minified version of the slick.load.min.js.
+    $load['js'] += array(
+      $dev => array('group' => JS_DEFAULT, 'weight' => 0),
+    );
+    if (isset($load['js'][$min])) {
+      unset($load['js'][$min]);
+    }
+  }
+
+  if (isset($load['js'][$min]) || isset($load['js'][$dev])) {
+    if (SLICK_DEVEL_REPLACE && !SLICK_DEVEL_DISABLE) {
+      // Switch to slick.load.devel.js.
+      $load['js'] += array(
+        $slick_devel . '/js/slick.load.devel.js' => array('group' => JS_DEFAULT, 'weight' => 0),
+      );
+      unset($load['js'][$min], $load['js'][$dev]);
+    }
+    elseif (SLICK_DEVEL_DISABLE) {
+      // Disable the slick.load.min.js or slick.load.js.
+      unset($load['js'][$min], $load['js'][$dev]);
     }
   }
 }

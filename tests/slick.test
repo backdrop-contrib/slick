@@ -39,7 +39,7 @@ class SlickTestCase extends DrupalWebTestCase {
    * Overrides DrupalWebTestCase::setUp.
    */
   public function setUp() {
-    parent::setUp('libraries', 'ctools', 'jquery_update', 'slick');
+    parent::setUp('libraries', 'ctools', 'jquery_update', 'slick', 'slick_ui');
 
     // Create users.
     $this->adminUser = $this->drupalCreateUser(array('administer slick'));

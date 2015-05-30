@@ -1,4 +1,12 @@
 
+Slick 7.x-2.0-dev, 2015-5-30
+----------------------------
+Added slick_update_7006() for a beta2 to avoid WSOD with slick_views removal.
+Removed libraries slick.easing, mousewheel, drupal.slick, and used one line JS
+  array instead.
+Renamed libraries previously prefixed with "drupal" to be prefixed with "slick",
+  e.g.: "drupal.slick.colorbox" to "slick.colorbox".
+
 Slick 7.x-2.0-dev, 2015-5-29
 ----------------------------
 Remove slick_views, and moved it into http://dgo.to/slick_views

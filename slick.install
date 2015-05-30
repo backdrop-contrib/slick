@@ -161,3 +161,12 @@ function slick_update_7005() {
     db_create_table('slick_optionset', $schema['slick_optionset']);
   }
 }
+
+/**
+ * Rebuild the registry to remove old Slick views class registry.
+ *
+ * The slick_views is now a contrib. Be sure to download it separately.
+ */
+function slick_update_7006() {
+  registry_rebuild();
+}

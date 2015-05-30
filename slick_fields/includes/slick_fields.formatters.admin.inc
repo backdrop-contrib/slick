@@ -8,6 +8,7 @@
  * Off-loaded hook_field_formatter_settings_form().
  */
 function _slick_fields_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  form_load_include($form_state, 'inc', 'slick', 'includes/slick.admin');
   $path = drupal_get_path('module', 'slick_fields');
   $slick_module_path = drupal_get_path('module', 'slick');
   $display  = $instance['display'][$view_mode];

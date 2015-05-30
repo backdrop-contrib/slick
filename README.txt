@@ -45,7 +45,8 @@ The Slick module contain several sub-modules:
 - slick_devel, if you want to help testing and developing the Slick.
 - slick_example, if you want to get up and running quickly.
 - slick_fields, supports Image, Media file, and Field collection fields.
-- slick_views, for more customized works with the Slick.
+- slick_views, a separate project as of 2015-5-29, > beta1.
+  http://dgo.to/slick_views
 
 See the requirements below for all required dependencies.
 See README.txt on each sub-module for their relevant information.
