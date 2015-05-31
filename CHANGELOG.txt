@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-5-31
 ----------------------------
+Issue #2497079: Move some sub-modules into separate projects
 Removed slick_devel and slick_example to go to: http://dgo.to/slick_extras
 Moved _slick_fields_get_media_thumbnail() to slick.extras.inc.
 
