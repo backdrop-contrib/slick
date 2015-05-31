@@ -228,6 +228,57 @@ function slick_optionset_delete($optionset) {
 }
 
 /**
+ * Returns the typecast values, so that JSON object has the right values.
+ *
+ * @param array $options
+ *   An array of Optionset options.
+ * @param int $breakpoints
+ *   The number of breakpoints if specified.
+ */
+function _slick_typecast_optionset(&$options = array(), $breakpoints = 0) {
+  if (empty($options)) {
+    return;
+  }
+
+  $slick_options = slick_get_options();
+  foreach ($slick_options as $name => $value) {
+    if (isset($options['settings'][$name])) {
+      $cast = gettype($slick_options[$name]);
+      settype($options['settings'][$name], $cast);
+    }
+  }
+
+  if (isset($options['responsives']['responsive']) && $breakpoints) {
+    $slick_responsive_options = slick_get_responsive_options($breakpoints);
+    foreach ($slick_responsive_options as $i => $items) {
+      foreach ($items as $name => $item) {
+        switch ($name) {
+          case 'breakpoint':
+            settype($options['responsives']['responsive'][$i][$name], 'int');
+            break;
+
+          case 'unslick':
+            settype($options['responsives']['responsive'][$i][$name], 'bool');
+            break;
+
+          case 'settings':
+            foreach ($item as $key => $setting) {
+              if (isset($options['responsives']['responsive'][$i][$name][$key])) {
+                $cast = gettype($item[$key]);
+                settype($options['responsives']['responsive'][$i][$name][$key], $cast);
+              }
+            }
+            break;
+
+          default:
+            break;
+        }
+      }
+    }
+  }
+}
+
+/**
  * List of all easing methods available from jQuery Easing v1.3.
  *
  * @return array

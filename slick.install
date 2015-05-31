@@ -176,3 +176,19 @@ function slick_update_7006() {
   // Remove old Slick views class registry.
   registry_rebuild();
 }
+
+/**
+ * Typecast old optionset values (pre-alpha -- 2015-03-31).
+ *
+ * For alpha users forwards, please ignore, and just continue the update.
+ * For pre-alpha users, please re-export codes after this update 2015-5-31.
+ * Please see TROUBLESHOOTING at README.txt for more info.
+ */
+function slick_update_7007() {
+  module_load_include('inc', 'slick', 'includes/slick.admin');
+
+  $optionsets = slick_optionset_load_all();
+  foreach ($optionsets as $optionset) {
+    slick_optionset_save($optionset);
+  }
+}

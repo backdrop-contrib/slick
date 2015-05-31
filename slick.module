@@ -601,59 +601,6 @@ function slick_remove_wasted_dependent_options(array &$config) {
 }
 
 /**
- * Returns the typecast values, so that JSON object has the right values.
- *
- * @param array $options
- *   An array of Optionset options.
- * @param int $breakpoints
- *   The number of breakpoints if specified.
- */
-function _slick_typecast_optionset(&$options = array(), $breakpoints = 0) {
-  if (empty($options)) {
-    return;
-  }
-
-  $slick_options = slick_get_options();
-  foreach ($slick_options as $name => $value) {
-    if (isset($options['settings'][$name])) {
-      $cast = gettype($slick_options[$name]);
-      settype($options['settings'][$name], $cast);
-    }
-  }
-
-  if (isset($options['responsives']['responsive']) && $breakpoints) {
-    $slick_responsive_options = slick_get_responsive_options($breakpoints);
-    foreach ($slick_responsive_options as $i => $items) {
-      foreach ($items as $name => $item) {
-        switch ($name) {
-          case 'breakpoint':
-            settype($options['responsives']['responsive'][$i][$name], 'int');
-            break;
-
-          case 'unslick':
-            settype($options['responsives']['responsive'][$i][$name], 'bool');
-            break;
-
-          case 'settings':
-            foreach ($item as $key => $setting) {
-              if (isset($options['responsives']['responsive'][$i][$name][$key])) {
-                $cast = gettype($item[$key]);
-                settype($options['responsives']['responsive'][$i][$name][$key], $cast);
-              }
-            }
-            break;
-
-          default:
-            break;
-        }
-      }
-    }
-  }
-
-  drupal_alter('slick_typecast_optionset_info', $options, $breakpoints);
-}
-
-/**
  * Returns Slick skins registered via hook_slick_skins_info().
  *
  * @return array
@@ -734,10 +681,6 @@ function slick_optionset_load($id) {
     $optionset = ctools_export_crud_load('slick_optionset', 'default');
     watchdog('slick', 'Fallback to default optionset.', array(), WATCHDOG_WARNING);
   }
-
-  // Ensure the optionset is typecast after being loaded from the storage.
-  $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : 0;
-  _slick_typecast_optionset($optionset->options, $breakpoints);
 
   return $optionset;
 }

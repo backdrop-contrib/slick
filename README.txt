@@ -224,6 +224,16 @@ TROUBLESHOOTING:
   updating the module to ensure things are picked up:
   o admin/config/development/performance
 
+- Frontend type juggling is removed from frontend:
+  - Please re-save and re-export optionsets if you are a pre-alpha user who
+    stored optionsets in codes before alpha release on 2015-3-31, or precisely
+    before 2015-3-2 commit:
+    http://cgit.drupalcode.org/slick/commit/?id=f08c3b4
+
+  - Please ignore if you:
+    o are a (pre-)alpha user who stored optionsets in codes after alpha.
+    o never stored/exported optionsets in codes.
+
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
 
