@@ -163,10 +163,16 @@ function slick_update_7005() {
 }
 
 /**
- * Rebuild the registry to remove old Slick views class registry.
+ * Rebuild the registry and theme registry.
  *
  * The slick_views is now a contrib. Be sure to download it separately.
  */
 function slick_update_7006() {
+  // Attempts to make it sufficient without drupal_flush_all_caches().
+  // "Clear all caches" is more than enough, it is for careless beta2 update.
+  // Update the theme registry with the new theme_slick_image_lazy().
+  drupal_theme_rebuild();
+
+  // Remove old Slick views class registry.
   registry_rebuild();
 }

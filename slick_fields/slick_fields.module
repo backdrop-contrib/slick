@@ -57,9 +57,9 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'content_attributes' => array('id' => $item_id . '-slider'),
     );
 
-    $settings         = array_merge($settings, $display['settings']);
-    $view_mode        = $settings['view_mode'] ? $settings['view_mode'] : 'full';
-    $is_asnavfor      = $settings['optionset_thumbnail'];
+    $settings    = array_merge($settings, $display['settings']);
+    $view_mode   = $settings['view_mode'] ? $settings['view_mode'] : 'full';
+    $is_asnavfor = $settings['optionset_thumbnail'];
 
     // Load the optionset to check for lazyLoad, and other settings.
     $optionset                 = slick_optionset_load($settings['optionset']);
@@ -78,6 +78,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'attach_photobox'       => $settings['media_switch'] == 'photobox-switch',
       'attach_mousewheel'     => $settings['mousewheel'],
       'attach_dots_thumbnail' => $settings['thumbnail_hover'],
+      'attach_media'          => $field['type'] == 'image' ? FALSE : TRUE,
     );
 
     if ($is_asnavfor) {
@@ -88,30 +89,21 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
 
     switch ($field['type']) {
       case 'image':
-        $attach['attach_media'] = FALSE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.image');
         $build = _slick_fields_format_image($settings, $items, $field);
-        if ($is_asnavfor) {
-          $thumb = _slick_fields_format_image($settings, $items, $field, TRUE);
-        }
+        $thumb = $is_asnavfor ? _slick_fields_format_image($settings, $items, $field, TRUE) : '';
         break;
 
       case 'file':
-        $attach['attach_media'] = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.media');
         $build = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode);
-        if ($is_asnavfor) {
-          $thumb = _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode, TRUE);
-        }
+        $thumb = $is_asnavfor ? _slick_fields_format_media($settings, $items, $entity_type, $field, $view_mode, TRUE) : '';
         break;
 
       case 'field_collection':
-        $attach['attach_media'] = TRUE;
         module_load_include('inc', 'slick_fields', 'includes/slick_fields.formatters.field_collection');
         $build = _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode);
-        if ($is_asnavfor) {
-          $thumb = _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode, TRUE);
-        }
+        $thumb = $is_asnavfor ? _slick_fields_format_field_collection($settings, $items, $field, $view_mode, $langcode, TRUE) : '';
         break;
     }
 

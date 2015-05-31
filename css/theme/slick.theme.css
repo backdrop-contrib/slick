@@ -393,8 +393,16 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 }
 
 @media (min-width: 64em) {
+  .unslick.slick--float::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
   .slick--float .slick__slide {
     float: left;
+    /* Prevents overflowing width within smaller container */
+    max-width: 100%;
   }
 
   /* Fixed FireFox draggable issue, avoid asNavFor thumbnails. */

@@ -30,7 +30,7 @@ function slick_get_media_url($rendered_media) {
 }
 
 /**
- * Format image/media file data.
+ * Format image/media file data, called by Media file and Field collection.
  */
 function _slick_fields_get_media_thumbnail(&$settings, $uri, $image_style = NULL) {
   $image_uri = '';

@@ -32,7 +32,7 @@ With Bulk exporter, or Features, optionsets may be stored in codes to avoid
 database lookup. It is analog to Drupal 8 CMI.
 See slick_example.slick_default_preset.inc for the stored-in-code sample.
 
-7.x-2.x supports Slick 1.5 above, and dropped Slick 1.4.x and below.
+7.x-2.x supports Slick 1.5 above, and dropped supporting Slick 1.4.x and below.
 
 
 INSTALLATION:
@@ -40,13 +40,15 @@ INSTALLATION:
 Install the module as usual, more info can be found on:
 http://drupal.org/documentation/install/modules-themes/modules-7
 
-The Slick module contain several sub-modules:
+The Slick module has several sub-modules:
 - slick_ui, to manage optionsets, can be uninstalled at production.
-- slick_devel, if you want to help testing and developing the Slick.
-- slick_example, if you want to get up and running quickly.
 - slick_fields, supports Image, Media file, and Field collection fields.
 - slick_views, a separate project as of 2015-5-29, > beta1.
   http://dgo.to/slick_views
+- slick_devel, if you want to help testing and developing the Slick.
+- slick_example, if you want to get up and running quickly.
+  The last two are separate projects as of 2015-5-31, > beta1.
+  http://dgo.to/slick_extras
 
 See the requirements below for all required dependencies.
 See README.txt on each sub-module for their relevant information.
@@ -55,8 +57,9 @@ See README.txt on each sub-module for their relevant information.
 REQUIREMENTS:
 --------------------------------------------------------------------------------
 - Slick library:
-  o Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/,
-  o Extract it as is, so the needed assets available at:
+  o Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/
+  o Extract it as is, rename "slick-master" to "slick", so the needed assets are
+    available at:
     sites/../libraries/slick/slick/slick.css
     sites/../libraries/slick/slick/slick-theme.css (optional if a skin chosen)
     sites/../libraries/slick/slick/slick.min.js
@@ -64,11 +67,14 @@ REQUIREMENTS:
 - CTools, for exportable optionsets -- only the main "Chaos tools" is needed.
   If you have Views installed, CTools is already enabled.
   D8 in core: CMI.
+
 - libraries (>=2.x)
   D8: dropped.
+
 - jquery_update with jQuery > 1.7, perhaps 1.8 if trouble with the latest Slick.
   D8: dropped.
-- jqeasing from http://gsgd.co.uk/sandbox/jquery/easing,
+
+- Download jqeasing from http://gsgd.co.uk/sandbox/jquery/easing
   Rename jquery.easing.1.3.js to jquery.easing.min.js, so available at:
   sites/../libraries/easing/jquery.easing.min.js
   This is a fallback for non-supporting browsers.
@@ -206,17 +212,17 @@ See slick.slick.inc for more info on skins.
 
 TROUBLESHOOTING:
 --------------------------------------------------------------------------------
-When upgrading from Slick v1.3.6 to later version, try to resave options at:
-- admin/config/media/slick
-- admin/structure/types/manage/CONTENT_TYPE/display
-- admin/structure/views/view/VIEW
-only if trouble to see the new options, or when options don't apply properly.
-This is most likely true when the library adds/changes options, or the module
-does something new.
+- When upgrading from Slick v1.3.6 to later version, try to resave options at:
+  o admin/config/media/slick
+  o admin/structure/types/manage/CONTENT_TYPE/display
+  o admin/structure/views/view/VIEW
+  only if trouble to see the new options, or when options don't apply properly.
+  This is most likely true when the library adds/changes options, or the module
+  does something new.
 
-Always clear the cache, and re-generate JS (if aggregation is on) when updating
-the module to ensure things are picked up:
-- admin/config/development/performance
+- Always clear the cache, and re-generate JS (if aggregation is on) when
+  updating the module to ensure things are picked up:
+  o admin/config/development/performance
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
@@ -280,7 +286,7 @@ KNOWN ISSUES
     Added fixes to suppress it via CSS.
   o If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
-  o Fade option with multiple slideToShow will screw up.
+  o Fade option with slideToShow > 1 will screw up.
 
 
 UNKNOWN ISSUES
