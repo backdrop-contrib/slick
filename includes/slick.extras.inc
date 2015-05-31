@@ -30,6 +30,60 @@ function slick_get_media_url($rendered_media) {
 }
 
 /**
+ * Format image/media file data.
+ */
+function _slick_fields_get_media_thumbnail(&$settings, $uri, $image_style = NULL) {
+  $image_uri = '';
+  $settings['soundcloud'] = FALSE;
+  $scheme = $settings['scheme'];
+  $scheme_supported = array('vimeo', 'youtube', 'soundcloud');
+  $is_media = in_array($settings['type'], array('video', 'audio')) && in_array($scheme, $scheme_supported);
+
+  if ($is_media) {
+    // Ensures disabling Media sub-modules while being used doesn't screw up.
+    try {
+      $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
+
+      if (!is_object($wrapper)) {
+        throw new Exception('Unable to find matching wrapper');
+      }
+
+      $parts = $wrapper->get_parameters();
+
+      switch ($scheme) {
+        case 'vimeo':
+        case 'youtube':
+          $media_id = $parts['v'];
+          break;
+
+        case 'soundcloud':
+          if ($wrapper->interpolateUrl()) {
+            $settings['soundcloud'] = TRUE;
+          }
+          $media_id = $parts['u'];
+          break;
+      }
+
+      $valid_image_styles = image_style_options(FALSE);
+      if (empty($image_style) || !isset($valid_image_styles[$image_style])) {
+        $image_uri = $wrapper->getOriginalThumbnailPath();
+      }
+      else {
+        $image_uri = $wrapper->getLocalThumbnailPath();
+      }
+
+      $settings['media_id'] = $media_id;
+    }
+    catch (Exception $e) {
+      watchdog('slick', 'Unable to render media from %uri. Error: %error', array('%uri' => $uri, '%error' => $e->getMessage()));
+      return '';
+    }
+  }
+
+  return $image_uri;
+}
+
+/**
  * Adjusts colors by step/number (0-255).
  *
  * @param string $hex

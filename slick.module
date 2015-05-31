@@ -166,12 +166,8 @@ function slick_libraries_info() {
       'pattern' => '/Version: (\d+\.\d+\.\d+)/',
     ),
     'files' => array(
-      'js' => array(
-        'slick/slick.min.js',
-      ),
-      'css' => array(
-        'slick/slick.css',
-      ),
+      'js' => array('slick/slick.min.js'),
+      'css' => array('slick/slick.css'),
     ),
   );
 
@@ -417,9 +413,8 @@ function slick_get_responsive_options($count = 0) {
 /**
  * Removes problematic options for the responsive Slick.
  *
- * The problematic options are those that should exist once for a given Slick
- *   instance, or no easy way to deal with, or doesn't make sense in the
- *   responsive context. JS takes care of the relevant copy instead.
+ * They should exist once for a given Slick, or not easy to deal with, or make
+ *   no sense in the responsive context. JS takes care of their relevant copy.
  *
  * @param array $options
  *   An array of all available options, can be form elements, or basic ones.
@@ -606,9 +601,7 @@ function slick_remove_wasted_dependent_options(array &$config) {
 }
 
 /**
- * Returns the typecast values.
- *
- * With this, the generated JSON object has the right values.
+ * Returns the typecast values, so that JSON object has the right values.
  *
  * @param array $options
  *   An array of Optionset options.

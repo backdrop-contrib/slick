@@ -1,6 +1,0 @@
-name = Slick development
-description = "Provides Slick development, the last carousel development."
-core = 7.x
-package = Slick
-
-dependencies[] = slick

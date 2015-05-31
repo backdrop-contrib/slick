@@ -1,5 +1,5 @@
 name = Slick
-description = "Slick carousel for Drupal"
+description = "Slick carousel, the last carousel you'll ever need."
 core = 7.x
 package = Slick
 

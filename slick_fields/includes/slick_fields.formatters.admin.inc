@@ -72,7 +72,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#options' => $optionsets,
     '#empty_option' => t('- None -'),
     '#default_value' => $settings['optionset_thumbnail'],
-    '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Provide each optionset a unique asNavFor class at <a href="@url" target="_blank">Slick carousel admin page</a>. Leave empty to not use thumbnail navigation.', array('@url' => url('admin/config/media/slick'))),
+    '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Provide each optionset a unique asNavFor class at <a href="@url" target="_blank">Slick carousel admin page</a>. Or check asnavfor auto reduce headaches. Leave empty to not use thumbnail navigation.', array('@url' => url('admin/config/media/slick'))),
     '#attributes' => $is_tooltip,
   );
 
@@ -122,7 +122,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#type' => 'textfield',
     '#title' => t('asNavFor main'),
     '#default_value' => $settings['asnavfor_main'],
-    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the main display, e.g.: #slick-node-page-field-images-1-thumbnail-slider, or .slick--nav. This should address the thumbnail display class or ID attributes.'),
+    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the main display, e.g.: #slick-node-page-field-images-1-thumbnail-slider, or .slick--nav .slick-slider. This should address the thumbnail display class or ID attributes.'),
     '#attributes' => array('class' => array('is-tooltip', 'js-expandable')),
     '#states' => array(
       'invisible' => array(
@@ -136,7 +136,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#type' => 'textfield',
     '#title' => t('asNavFor thumbnail'),
     '#default_value' => $settings['asnavfor_thumbnail'],
-    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the thumbnail display, e.g.: #slick-node-page-field-images-1-slider, or .slick--for. This should address the main display class or ID attributes.'),
+    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the thumbnail display, e.g.: #slick-node-page-field-images-1-slider, or .slick--for .slick-slider. This should address the main display class or ID attributes.'),
     '#attributes' => array('class' => array('is-tooltip', 'js-expandable')),
     '#states' => array(
       'invisible' => array(
@@ -649,7 +649,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $elements['mousewheel'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable mousewheel'),
-    '#description' => t('Make sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
+    '#description' => t('Be sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
     '#default_value' => $settings['mousewheel'],
     '#field_suffix' => '',
     '#title_display' => 'before',

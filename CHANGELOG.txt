@@ -1,4 +1,9 @@
 
+Slick 7.x-2.0-dev, 2015-5-31
+----------------------------
+Removed slick_devel and slick_example to go to: http://dgo.to/slick_extras
+Moved _slick_fields_get_media_thumbnail() to slick.extras.inc.
+
 Slick 7.x-2.0-dev, 2015-5-30
 ----------------------------
 Added slick_update_7006() for a beta2 to avoid WSOD with slick_views removal.
@@ -9,7 +14,7 @@ Renamed libraries previously prefixed with "drupal" to be prefixed with "slick",
 
 Slick 7.x-2.0-dev, 2015-5-29
 ----------------------------
-Remove slick_views, and moved it into http://dgo.to/slick_views
+Removed slick_views, and moved it into http://dgo.to/slick_views
 Issue #2497079: Move some sub-modules into separate projects
 Removed preprocess for theme_slick_wraper().
 Removed unused slick_get_setting() and slick_get_default_value() from

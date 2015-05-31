@@ -1,7 +1,0 @@
-name = Slick example
-description = "Provides Slick examples, the last carousel examples."
-package = Slick
-core = 7.x
-
-dependencies[] = slick_fields
-dependencies[] = slick_views

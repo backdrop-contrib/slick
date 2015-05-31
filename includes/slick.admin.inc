@@ -68,6 +68,7 @@ function slick_dots_options() {
       $dots[$key] = $properties['name'];
     }
   }
+
   return $dots;
 }
 
@@ -86,6 +87,7 @@ function slick_arrows_options() {
       $arrows[$key] = $properties['name'];
     }
   }
+
   return $arrows;
 }
 
