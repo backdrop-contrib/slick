@@ -59,7 +59,7 @@ function slick_clean_options(array $options) {
     'rtl',
   ));
 
-  drupal_alter('slick_clean_options_info', $cleaned_options);
+  drupal_alter('slick_clean_options_info', $excludes);
   return array_diff_key($options, $excludes);
 }
 
