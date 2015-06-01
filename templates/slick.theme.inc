@@ -275,9 +275,9 @@ function template_process_slick(&$variables) {
  * Implements hook_preprocess_slick_item().
  */
 function template_preprocess_slick_item(&$variables) {
-  $element  = $variables['element'];
-  $item     = $element['#item'];
-  $count    = count($element['#settings']['count']);
+  $element = $variables['element'];
+  $item    = $element['#item'];
+  $count   = count($element['#settings']['count']);
 
   // Re-merge defaults since #settings may be inherited from main, or grid.
   $defaults = slick_get_element_default_settings($count);

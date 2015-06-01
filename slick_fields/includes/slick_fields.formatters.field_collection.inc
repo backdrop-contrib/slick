@@ -53,10 +53,9 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               $fallback = $slide_image['#items'][0];
               $image_style = isset($file['#style_name']) ? $file['#style_name'] : (isset($file['#image_style']) ? $file['#image_style'] : $image_style);
               $image['uri'] = isset($file['#path']) && $file['#path'] ? $file['#path'] : $fallback['uri'];
-              $image['width'] = isset($file['#width']) ? $file['#width'] : NULL;
-              $image['height'] = isset($file['#height']) ? $file['#height'] : NULL;
-              $image['alt'] = isset($file['#alt']) ? $file['#alt'] : $fallback['alt'];
-              $image['title'] = isset($file['#title']) ? $file['#title'] : $fallback['title'];
+              foreach (array('width', 'height', 'alt', 'title') as $value) {
+                $image[$value] = isset($file["#$value"]) ? $file["#$value"] : (isset($fallback[$value]) ? $fallback[$value] : NULL);
+              }
             }
 
             break;
@@ -64,12 +63,10 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           case 'image':
             if (isset($slide_image[0]['#item'])) {
               $file = $slide_image[0]['#item'];
-              $image_style = isset($file['#image_style']) ? $file['#image_style'] : $image_style;
-              $image['uri'] = $file['uri'];
-              $image['width'] = $file['width'];
-              $image['height'] = $file['height'];
-              $image['alt'] = $file['alt'];
-              $image['title'] = $file['title'];
+              $image_style = isset($slide_image[0]['#image_style']) ? $slide_image[0]['#image_style'] : $image_style;
+              foreach (array('uri', 'width', 'height', 'alt', 'title') as $value) {
+                $image[$value] = isset($file[$value]) ? $file[$value] : NULL;
+              }
             }
 
             break;
@@ -161,11 +158,9 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                 $overset = array();
                 foreach ($slide_overlay['#items'] as $i => $sub_overlay) {
                   $rendered = $slide_overlay[$i];
-                  $overlay['uri'] = $sub_overlay['uri'];
-                  $overlay['width'] = $sub_overlay['width'];
-                  $overlay['height'] = $sub_overlay['height'];
-                  $overlay['alt'] = $sub_overlay['alt'];
-                  $overlay['title'] = $sub_overlay['title'];
+                  foreach (array('uri', 'width', 'height', 'alt', 'title') as $value) {
+                    $overlay[$value] = isset($sub_overlay[$value]) ? $sub_overlay[$value] : NULL;
+                  }
 
                   if (!isset($overlay_style)) {
                     $overlay_style = isset($rendered['#image_style']) ? $rendered['#image_style'] : $image_style;

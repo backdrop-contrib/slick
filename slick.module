@@ -21,8 +21,10 @@ function slick_theme($existing, $type, $theme, $path) {
     $key = $item == 'slick' ? $item : "slick_$item";
     $themes[$key] = $base + array(
       'render element' => 'element',
-      'template' => $item == 'wrapper' ? '' : strtr($key, '_', '-'),
     );
+    if ($item != 'wrapper') {
+      $themes[$key]['template'] = strtr($key, '_', '-');
+    }
   }
 
   $themes['slick_image_lazy'] = $base + array(

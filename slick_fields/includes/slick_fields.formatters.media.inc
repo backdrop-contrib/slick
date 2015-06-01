@@ -13,8 +13,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
   $settings['lightbox_ready'] = TRUE;
   $settings['picture_ready']  = TRUE;
 
-  $build = array();
-  $css = array();
+  $build = $css = array();
 
   $slick_id = $settings['attributes']['id'];
   $asnavfor = 'main';
@@ -26,19 +25,20 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       'caption' => array(),
     );
 
-    $slide_type = isset($slide['item']['type']) ? $slide['item']['type'] : $field['type'];
+    // Setup the variables.
+    foreach (array('uri', 'alt', 'title') as $value) {
+      $image[$value] = isset($item[$value]) ? $item[$value] : NULL;
+    }
+    foreach (array('width', 'height') as $value) {
+      $image[$value] = isset($item['metadata'][$value]) ? $item['metadata'][$value] : NULL;
+    }
 
     // Setup the variables for the image.
-    $image_style     = $settings['image_style'];
-    $image['uri']    = $slide['item']['uri'];
-    $image['width']  = isset($slide['item']['metadata']['width']) ? $slide['item']['metadata']['width'] : NULL;
-    $image['height'] = isset($slide['item']['metadata']['height']) ? $slide['item']['metadata']['height'] : NULL;
-    $image['alt']    = $slide['item']['alt'];
-    $image['title']  = $slide['item']['title'];
-
-    $settings['is_media']     = FALSE;
+    $image_style = $settings['image_style'];
+    $settings['type'] = isset($item['type']) ? $item['type'] : $field['type'];
+    $settings['is_media'] = FALSE;
     $settings['media_height'] = $image['height'];
-    $settings['media_width']  = $image['width'];
+    $settings['media_width'] = $image['width'];
 
     $file = (object) $slide['item'];
     $uri = $file->uri;
@@ -65,7 +65,6 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
 
     $settings['image_style'] = $image_style;
     $settings['scheme']      = $scheme;
-    $settings['type']        = $slide_type;
 
     // Get audio/video thumbnail uri.
     if ($media_image_uri = _slick_fields_get_media_thumbnail($settings, $uri, $image_style)) {

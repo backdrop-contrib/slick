@@ -11,9 +11,7 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
   $settings['lightbox_ready'] = TRUE;
   $settings['picture_ready']  = TRUE;
 
-  $build = array();
-  $css = array();
-
+  $build = $css = array();
   $asnavfor = 'main';
   $slick_id = $settings['attributes']['id'];
 
@@ -25,15 +23,12 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
     );
 
     // Once media.module enabled, it populates type.
-    $slide_type = isset($slide['item']['type']) ? $slide['item']['type'] : $field['type'];
-    $settings['type'] = $slide_type;
+    $settings['type'] = isset($item['type']) ? $item['type'] : $field['type'];
 
     // Setup the variables.
-    $image['uri']    = $slide['item']['uri'];
-    $image['width']  = isset($slide['item']['width']) ? $slide['item']['width'] : NULL;
-    $image['height'] = isset($slide['item']['height']) ? $slide['item']['height'] : NULL;
-    $image['alt']    = $slide['item']['alt'];
-    $image['title']  = $slide['item']['title'];
+    foreach (array('uri', 'width', 'height', 'alt', 'title') as $value) {
+      $image[$value] = isset($item[$value]) ? $item[$value] : NULL;
+    }
 
     $settings['media_height'] = $image['height'];
     $settings['media_width']  = $image['width'];
