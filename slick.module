@@ -15,37 +15,28 @@ function slick_theme($existing, $type, $theme, $path) {
     'path' => $path . '/templates',
   );
 
-  return array(
-    'slick' => $base + array(
+  $themes = array();
+  $items = array('slick', 'item', 'grid', 'media', 'wrapper');
+  foreach ($items as $item) {
+    $key = $item == 'slick' ? $item : "slick_$item";
+    $themes[$key] = $base + array(
       'render element' => 'element',
-      'template' => 'slick',
-    ),
-    'slick_wrapper' => $base + array(
-      'render element' => 'element',
-    ),
-    'slick_item' => $base + array(
-      'render element' => 'element',
-      'template' => 'slick-item',
-    ),
-    'slick_grid' => $base + array(
-      'render element' => 'element',
-      'template' => 'slick-grid',
-    ),
-    'slick_media' => $base + array(
-      'render element' => 'element',
-      'template' => 'slick-media',
-    ),
-    'slick_image_lazy' => $base + array(
-      'variables' => array(
-        'item' => NULL,
-        'lazy' => FALSE,
-        'image_style' => NULL,
-        'url' => NULL,
-        'attributes' => array(),
-        'options' => array(),
-      ),
+      'template' => $item == 'wrapper' ? '' : strtr($key, '_', '-'),
+    );
+  }
+
+  $themes['slick_image_lazy'] = $base + array(
+    'variables' => array(
+      'item' => NULL,
+      'lazy' => FALSE,
+      'image_style' => NULL,
+      'url' => NULL,
+      'attributes' => array(),
+      'options' => array(),
     ),
   );
+
+  return $themes;
 }
 
 /**
@@ -239,12 +230,12 @@ function slick_attach(array $attach) {
     }
   }
 
-  $extras = array('thumbnail', 'arrows', 'dots');
-  foreach ($extras as $extra) {
-    $skins = $extra == 'arrows' ? slick_arrows() : ($extra == 'dots' ? slick_dots() : $skins);
-    if (isset($attach['attach_skin_' . $extra]) && $skin = $attach['attach_skin_' . $extra]) {
-      if (isset($skins[$skin]['css']) && is_array($skins[$skin]['css'])) {
-        $load['css'] += $skins[$skin]['css'];
+  $navs = array('thumbnail', 'arrows', 'dots');
+  foreach ($navs as $nav) {
+    $nav_skins = $nav == 'arrows' ? slick_arrows() : ($nav == 'dots' ? slick_dots() : $skins);
+    if (isset($attach['attach_skin_' . $nav]) && $skin = $attach['attach_skin_' . $nav]) {
+      if (isset($nav_skins[$skin]['css']) && is_array($nav_skins[$skin]['css'])) {
+        $load['css'] += $nav_skins[$skin]['css'];
       }
     }
   }
@@ -259,9 +250,8 @@ function slick_attach(array $attach) {
   }
 
   // Attach default JS settings to allow responsive displays have a lookup.
-  $settings = _slick_optionset_defaults('settings', TRUE);
   $load['js'][] = array(
-    'data' => array('slick' => $settings),
+    'data' => array('slick' => _slick_optionset_defaults('settings', TRUE)),
     'type' => 'setting',
   );
 

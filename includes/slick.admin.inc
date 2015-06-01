@@ -353,6 +353,8 @@ function _slick_typecast_optionset(&$options = array(), $breakpoints = 0) {
       }
     }
   }
+
+  drupal_alter('slick_typecast_optionset_info', $options, $breakpoints);
 }
 
 /**

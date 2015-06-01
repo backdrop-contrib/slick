@@ -14,6 +14,7 @@ o Exportable via CTools.
 o Works with Views, core and contrib fields: Image, Media or Field collection.
 o Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
   Grid, Split. Nothing loaded unless configured so.
+o Various slide layouts are built with pure CSS goodness.
 o Nested slicks, slide overlays or multiple slicks within a single Slick using
   Field collection, or Views.
 o Some useful hooks and drupal_alters for advanced works.
@@ -224,7 +225,7 @@ TROUBLESHOOTING:
   updating the module to ensure things are picked up:
   o admin/config/development/performance
 
-- Frontend type juggling is removed from frontend:
+- Frontend type juggling is removed:
   - Please re-save and re-export optionsets if you are a pre-alpha user who
     stored optionsets in codes before alpha release on 2015-3-31, or precisely
     before 2015-3-2 commit:
