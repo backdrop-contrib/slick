@@ -105,10 +105,11 @@ print render($slick);
  * available when configuring the Optionset, Field formatter, or Views style.
  *
  * Slick skins get a unique CSS class to use for styling, e.g.:
- * If you skin name is "my_module_slick_carousel_rounded", the class is:
+ * If your skin name is "my_module_slick_carousel_rounded", the class is:
  * slick--skin--my-module-slick-carousel-rounded
  *
- * A skin can specify some CSS and JS files to include when Slick is displayed.
+ * A skin can specify some CSS and JS files to include when Slick is displayed,
+ * except for a thumbnail skin which accepts CSS only.
  *
  * Each skin supports 5 keys:
  * - name: The human readable name of the skin.
@@ -116,7 +117,7 @@ print render($slick);
  * - css: An array of CSS files to attach.
  * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
  * - inline css: An optional flag to determine whether the image is turned into
- *   CSS background rather than image with SRC, see fullscreen skin. 
+ *   CSS background rather than image with SRC, see fullscreen skin.
  *
  * @see hook_hook_info()
  * @see slick_example.module
@@ -217,7 +218,7 @@ function hook_slick_skins_info_alter(array &$skins) {
  * This function lives in a module file, not my_module.slick.inc.
  *
  * @param array $attach
- *   The associative array of attach information from slick_attach().
+ *   The modified array of $attach information from slick_attach().
  *
  * @see slick_attach()
  * @see slick_example.module
@@ -236,7 +237,39 @@ function hook_slick_attach_info_alter(array &$attach) {
   // Disable module JS: slick.load.min.js to use your own slick JS.
   $attach['attach_module'] = FALSE;
 
-  // Also disable its dependencies, otherwise slick.load.min.js is still loaded.
+  // Also disable its dependents, otherwise slick.load.min.js is still loaded.
   $attach['attach_media'] = FALSE;
   $attach['attach_colorbox'] = FALSE;
+}
+
+/**
+ * Alter Slick load information before they are called.
+ *
+ * This function lives in a module file, not my_module.slick.inc.
+ *
+ * @param array $load
+ *   The modified array of $load information.
+ * @param array $attach
+ *   The contextual array of $attach information.
+ * @param array $skins
+ *   The contextual array of $skins information.
+ *
+ * @see slick_attach()
+ * @see slick_example.module
+ * @see slick_devel.module
+ */
+function hook_slick_attach_load_info_alter(&$load, $attach, $skins) {
+  $slick_path = drupal_get_path('module', 'slick');
+  $min = $slick_path . '/js/slick.load.min.js';
+  $dev = $slick_path . '/js/slick.load.js';
+
+  if (HOOK_DEBUG) {
+    // Switch to the non-minified version of the slick.load.min.js.
+    $load['js'] += array(
+      $dev => array('group' => JS_DEFAULT, 'weight' => 0),
+    );
+    if (isset($load['js'][$min])) {
+      unset($load['js'][$min]);
+    }
+  }
 }

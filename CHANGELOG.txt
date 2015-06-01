@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-6-1
 ---------------------------
+- Fixed typo at slick.api.php, and added a hook_slick_attach_load_info_alter().
 - Moved slick_inline_css_skins() to slick_fields_inline_css_skins(), since it is
   only specific to fields, not views.
 - Revived the "slick" class when it is "unslick" (a slideshow with a single
