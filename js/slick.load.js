@@ -9,7 +9,7 @@
 
   Drupal.behaviors.slick = {
     attach: function(context, settings) {
-      $('.slick', context).once('slick', function() {
+      $('.slick:not(.unslick)', context).once('slick', function() {
         var _ = Drupal.slick,
           t = $('> .slick__slider', this),
           a = $('> .slick__arrow', this);

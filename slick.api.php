@@ -229,7 +229,7 @@ function hook_slick_attach_info_alter(array &$attach) {
   // Use key 'inline css' to register skin that wants inline CSS rather than
   // images when declaring the skins, see fullscreen skin.
   // Use hook_slick_fields_inline_css_output_info_alter() to modify the output.
-  // @see slick_inline_css_skins()
+  // @see slick_fields_inline_css_skins()
   // @see slick_slick_skins_info()
   $attach['attach_inline_css'] = NULL;
 

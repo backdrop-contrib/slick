@@ -150,3 +150,21 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
 
   return $build;
 }
+
+/**
+ * Checks whether a skin expecting inline CSS background, not images.
+ *
+ * @param string $skin
+ *   The skin name.
+ *
+ * @return bool
+ *   If the skin registers 'inline css' explicitly, returns TRUE.
+ */
+function slick_fields_inline_css_skins($skin = NULL) {
+  $inline_css = &drupal_static(__FUNCTION__, NULL);
+  if (!isset($inline_css)) {
+    $skins = slick_skins();
+    $inline_css = empty($skin) ? FALSE : isset($skins[$skin]['inline css']) && $skins[$skin]['inline css'];
+  }
+  return $inline_css;
+}

@@ -100,7 +100,7 @@ function slick_library() {
       $library_path . '/slick/slick.min.js' => array('group' => JS_LIBRARY),
     ),
     'css' => array(
-      $library_path . '/slick/slick.css',
+      $library_path . '/slick/slick.css' => array(),
     ),
   );
 
@@ -110,8 +110,8 @@ function slick_library() {
       $path . '/js/slick.colorbox.min.js' => array('group' => JS_DEFAULT, 'weight' => 1),
     ),
     'css' => array(
-      $path . '/css/components/slick.colorbox.css',
-      $path . '/css/components/slick.lightbox.css',
+      $path . '/css/components/slick.colorbox.css' => array(),
+      $path . '/css/components/slick.lightbox.css' => array(),
     ),
   );
 
@@ -121,7 +121,7 @@ function slick_library() {
       $path . '/js/slick.photobox.min.js' => array('group' => JS_DEFAULT, 'weight' => 1),
     ),
     'css' => array(
-      $path . '/css/components/slick.lightbox.css',
+      $path . '/css/components/slick.lightbox.css' => array(),
     ),
     'dependencies' => array(
       array('photobox', 'photobox'),
@@ -134,7 +134,7 @@ function slick_library() {
       $path . '/js/slick.media.min.js' => array('group' => JS_DEFAULT, 'weight' => 2),
     ),
     'css' => array(
-      $path . '/css/components/slick.media.css',
+      $path . '/css/components/slick.media.css' => array(),
     ),
   );
 
@@ -189,19 +189,9 @@ function slick_attach(array $attach) {
   $load  = array();
   $load['css'] = $load['js'] = array();
   $defaults = array(
-    'attach_mousewheel'     => FALSE,
-    'attach_slick_element'  => TRUE,
-    'attach_module'         => TRUE,
-    'attach_module_css'     => TRUE,
-    'attach_media'          => FALSE,
-    'attach_colorbox'       => FALSE,
-    'attach_photobox'       => FALSE,
-    'attach_skin'           => FALSE,
-    'attach_skin_thumbnail' => FALSE,
-    'attach_skin_arrows'    => FALSE,
-    'attach_skin_dots'      => FALSE,
-    'attach_dots_thumbnail' => FALSE,
-    'attach_inline_css'     => FALSE,
+    'attach_slick_element' => TRUE,
+    'attach_module'        => TRUE,
+    'attach_module_css'    => TRUE,
   );
   $attach = array_merge($defaults, $attach);
 
@@ -211,46 +201,35 @@ function slick_attach(array $attach) {
   $easing = libraries_get_path('easing') . '/jquery.easing.min.js';
   $load['js'] += array($easing => array('group' => JS_LIBRARY, 'weight' => -6));
 
-  if ($attach['attach_mousewheel']) {
+  if (isset($attach['attach_mousewheel']) && $attach['attach_mousewheel']) {
     $mousewheel = libraries_get_path('mousewheel') . '/jquery.mousewheel.min.js';
     $load['js'] += array($mousewheel => array('group' => JS_LIBRARY, 'weight' => -5));
   }
 
   $load['library'][] = array('slick', 'slick');
 
-  if ($attach['attach_colorbox']) {
-    $load['library'][] = array('slick', 'slick.colorbox');
-  }
-
-  if ($attach['attach_photobox']) {
-    $load['library'][] = array('photobox', 'photobox');
-    $load['library'][] = array('slick', 'slick.photobox');
-  }
-
   if ($attach['attach_module']) {
     $load['js'] += array($path . '/js/slick.load.min.js' => array('group' => JS_DEFAULT, 'weight' => 0));
   }
 
-  if ($attach['attach_media']) {
-    $load['library'][] = array('slick', 'slick.media');
+  $components = array('colorbox', 'photobox', 'media');
+  foreach ($components as $component) {
+    if (isset($attach['attach_' . $component]) && $attach['attach_' . $component]) {
+      $load['library'][] = array('slick', 'slick.' . $component);
+    }
   }
 
-  // Skin assets.
-  if ($skin = $attach['attach_skin']) {
+  if (isset($attach['attach_skin']) && $skin = $attach['attach_skin']) {
     if (isset($skins[$skin]['css'])) {
-      // If we do have a defined skin, load the Slick element and module theme.
       if ($attach['attach_slick_element']) {
         $load['css'] += array(libraries_get_path('slick') . '/slick/slick-theme.css' => array('weight' => -100));
       }
-
       if ($attach['attach_module_css']) {
         $load['css'] += array($path . '/css/theme/slick.theme.css' => array('weight' => -99));
       }
-
-      if ($attach['attach_dots_thumbnail']) {
+      if (isset($attach['attach_dots_thumbnail']) && $attach['attach_dots_thumbnail']) {
         $load['css'] += array($path . '/css/components/slick.dots--thumbnail.css' => array('weight' => -98));
       }
-
       if (is_array($skins[$skin]['css'])) {
         $load['css'] += $skins[$skin]['css'];
       }
@@ -260,31 +239,18 @@ function slick_attach(array $attach) {
     }
   }
 
-  if ($skin_thumbnail = $attach['attach_skin_thumbnail']) {
-    if (isset($skins[$skin_thumbnail]['css']) && is_array($skins[$skin_thumbnail]['css'])) {
-      $load['css'] += $skins[$skin_thumbnail]['css'];
-    }
-    if (isset($skins[$skin_thumbnail]['js']) && is_array($skins[$skin_thumbnail]['js'])) {
-      $load['js'] += $skins[$skin_thumbnail]['js'];
-    }
-  }
-
-  if ($skin_arrows = $attach['attach_skin_arrows']) {
-    $arrows = slick_arrows();
-    if (isset($arrows[$skin_arrows]['css']) && is_array($arrows[$skin_arrows]['css'])) {
-      $load['css'] += $arrows[$skin_arrows]['css'];
-    }
-  }
-
-  if ($skin_dots = $attach['attach_skin_dots']) {
-    $dots = slick_dots();
-    if (isset($dots[$skin_dots]['css']) && is_array($dots[$skin_dots]['css'])) {
-      $load['css'] += $dots[$skin_dots]['css'];
+  $extras = array('thumbnail', 'arrows', 'dots');
+  foreach ($extras as $extra) {
+    $skins = $extra == 'arrows' ? slick_arrows() : ($extra == 'dots' ? slick_dots() : $skins);
+    if (isset($attach['attach_skin_' . $extra]) && $skin = $attach['attach_skin_' . $extra]) {
+      if (isset($skins[$skin]['css']) && is_array($skins[$skin]['css'])) {
+        $load['css'] += $skins[$skin]['css'];
+      }
     }
   }
 
   // Inline CSS for individual FC slide color, or fullscreen skin.
-  if ($inline_css = $attach['attach_inline_css']) {
+  if (isset($attach['attach_inline_css']) && $inline_css = $attach['attach_inline_css']) {
     $load['css'][] = array(
       'data' => $inline_css,
       'type' => 'inline',
@@ -293,23 +259,9 @@ function slick_attach(array $attach) {
   }
 
   // Attach default JS settings to allow responsive displays have a lookup.
-  $defaults = _slick_optionset_defaults('settings');
-  // Prevents main settings from screwing up responsive settings.
-  unset(
-    $defaults['mobileFirst'],
-    $defaults['appendDots'],
-    $defaults['appendArrows'],
-    $defaults['asNavFor'],
-    $defaults['prevArrow'],
-    $defaults['nextArrow'],
-    $defaults['cssEaseBezier'],
-    $defaults['cssEaseOverride']
-  );
-
+  $settings = _slick_optionset_defaults('settings', TRUE);
   $load['js'][] = array(
-    'data' => array(
-      'slick' => $defaults,
-    ),
+    'data' => array('slick' => $settings),
     'type' => 'setting',
   );
 
@@ -382,222 +334,39 @@ function slick_get_options() {
 }
 
 /**
- * Defines a list of options available for the responsive Slick.
- *
- * @param int $count
- *   The number of breakpoints.
- *
- * @return array
- *   A copy of the main options with the removal of duplicated options.
- */
-function slick_get_responsive_options($count = 0) {
-  $options = array();
-  $breakpoints = drupal_map_assoc(range(0, ($count - 1)));
-  $defaults = slick_get_options();
-
-  foreach ($breakpoints as $key => $breakpoint) {
-    $options[$key] = array(
-      'breakpoint' => 0,
-      'unslick' => FALSE,
-      'settings' => array(),
-    );
-
-    foreach (slick_clean_options($defaults) as $name => $value) {
-      $options[$key]['settings'][$name] = $value;
-    }
-  }
-
-  return $options;
-}
-
-/**
- * Removes problematic options for the responsive Slick.
- *
- * They should exist once for a given Slick, or not easy to deal with, or make
- *   no sense in the responsive context. JS takes care of their relevant copy.
- *
- * @param array $options
- *   An array of all available options, can be form elements, or basic ones.
- *
- * @return array
- *   An array of cleaned out options for the responsive displays.
- */
-function slick_clean_options(array $options) {
-  $cleaned_options = array(
-    'mobileFirst' => FALSE,
-    'asNavFor' => FALSE,
-    'slide' => FALSE,
-    'lazyLoad' => FALSE,
-    'prevArrow' => FALSE,
-    'nextArrow' => FALSE,
-    'appendArrows' => FALSE,
-    'dotsClass' => FALSE,
-    'appendDots' => FALSE,
-    'rtl' => FALSE,
-  );
-
-  drupal_alter('slick_clean_options_info', $cleaned_options);
-  return array_diff_key($options, $cleaned_options);
-}
-
-/**
  * Default settings for a newly created optionset.
  *
  * @param string $set
  *   Gets a specific group of values [optional]: settings, general.
+ * @param bool $exclude
+ *   Whether to exclude some trouble options, e.g.: PHP string vs JS object.
  *
  * @return array
  *   An array of default optionset.
  */
-function _slick_optionset_defaults($set = NULL) {
+function _slick_optionset_defaults($set = NULL, $exclude = FALSE) {
   $defaults = array();
   foreach (slick_get_options() as $name => $value) {
     $defaults['settings'][$name] = $value;
   }
   $defaults['general'] = array('goodies' => array());
+
+  // Prevents main settings from screwing up responsive settings.
+  if ($exclude) {
+    $excludes = drupal_map_assoc(array(
+      'mobileFirst',
+      'appendDots',
+      'appendArrows',
+      'asNavFor',
+      'prevArrow',
+      'nextArrow',
+      'cssEaseBezier',
+      'cssEaseOverride',
+    ));
+    $defaults['settings'] = array_diff_key($defaults['settings'], $excludes);
+  }
+
   return $set ? $defaults[$set] : $defaults;
-}
-
-/**
- * Returns overridable options to re-use one optionset, only accepts boolean.
- *
- * @return array
- *   An array of overridable boolean options.
- */
-function slick_get_overridable_options() {
-  $overridables = array(
-    'arrows' => t('Arrows'),
-    'autoplay' => t('Autoplay'),
-    'dots' => t('Dots'),
-    'draggable' => t('Draggable'),
-  );
-
-  drupal_alter('slick_overridable_options_info', $overridables);
-  return $overridables;
-}
-
-/**
- * Returns HTML or layout related settings, none of JS, except mousewheel.
- *
- * @param int $count
- *   The number of available Slick items.
- *
- * @return array
- *   An array of alterable default settings.
- */
-function slick_get_element_default_settings($count = 0) {
-  $settings = array(
-    'count' => $count,
-    'optionset' => 'default',
-    'optionset_thumbnail' => '',
-    'asnavfor_target' => '',
-    'skin' => '',
-    'skin_thumbnail' => '',
-    'skin_arrows' => '',
-    'skin_dots' => '',
-    'thumbnail_hover' => '',
-    'thumbnail_style' => '',
-    'grid' => '',
-    'field_type' => '',
-    'type' => '',
-    'media_switch' => FALSE,
-    'is_carousel' => FALSE,
-    'has_pattern' => FALSE,
-    'has_arrow_down' => FALSE,
-    'mousewheel' => FALSE,
-    'aspect_ratio_overlay' => FALSE,
-    'current_display' => 'main',
-  );
-
-  drupal_alter('slick_element_default_settings_info', $settings);
-  return $settings;
-}
-
-/**
- * Strip out options similar to default values from the optionset options.
- *
- * @param object $optionset
- *   The Optionset object.
- * @param array $customs
- *   An array of handed-over JS options defined using #options property or those
- *   manipulated at theme_slick() dependent on various options.
- * @param array $context
- *   The context to check for before doing alteration, such as module settings.
- *
- * @return array
- *   An array of reduced duplicated Optionset options performance wise.
- */
-function _slick_remove_default_optionset_options($optionset, $customs = array(), $context = array()) {
-  $config   = array();
-  $options  = $optionset->options;
-  $defaults = slick_get_options();
-  $settings = $customs ? $customs : $options['settings'];
-
-  // Remove wasted dependent options if disabled, empty or not.
-  slick_remove_wasted_dependent_options($settings);
-  $config = array_diff_assoc($settings, $defaults);
-
-  // Clean up responsive options if similar to the main defaults.
-  $cleaned_responsives = array();
-  if (isset($options['responsives']['responsive'])) {
-    $responsives = $options['responsives'];
-    foreach ($responsives['responsive'] as $key => $responsive) {
-      if (empty($responsives['responsive'][$key]['breakpoint'])) {
-        unset($responsives['responsive'][$key]);
-      }
-      if (isset($responsives['responsive'][$key])) {
-        $cleaned_responsives[$key] = $responsive;
-      }
-    }
-    if ($cleaned_responsives) {
-      $cleaned = array();
-      foreach ($cleaned_responsives as $key => $responsive) {
-        $cleaned[$key]['breakpoint'] = $cleaned_responsives[$key]['breakpoint'];
-        if (isset($cleaned_responsives[$key]['unslick']) && $cleaned_responsives[$key]['unslick']) {
-          $cleaned[$key]['settings'] = 'unslick';
-          unset($cleaned_responsives[$key]['unslick']);
-        }
-        else {
-          slick_remove_wasted_dependent_options($cleaned_responsives[$key]['settings']);
-          $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults);
-        }
-      }
-      $config['responsive'] = $cleaned;
-    }
-  }
-
-  drupal_alter('slick_remove_options_info', $config, $customs, $options, $context);
-  return $config;
-}
-
-/**
- * Removes wasted dependent options, even if not empty.
- *
- * @param array $config
- *   An array of Optionset options.
- */
-function slick_remove_wasted_dependent_options(array &$config) {
-  $options = array(
-    'autoplay' => array('pauseOnHover', 'pauseOnDotsHover', 'autoplaySpeed'),
-    'centerMode' => array('centerPadding'),
-    'arrows' => array('prevArrow', 'nextArrow', 'appendArrows'),
-    'dots' => array('dotsClass', 'appendDots'),
-    'swipe' => array('swipeToSlide'),
-    'vertical' => array('verticalSwiping'),
-  );
-
-  foreach ($options as $key => $option) {
-    if (isset($config[$key]) && empty($config[$key])) {
-      foreach ($option as $dependent) {
-        unset($config[$dependent]);
-      }
-    }
-  }
-
-  if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
-    $config['cssEase'] = $config['cssEaseBezier'];
-    unset($config['cssEaseOverride'], $config['cssEaseBezier']);
-  }
 }
 
 /**
@@ -643,24 +412,6 @@ function slick_dots() {
     drupal_alter('slick_dots_info', $dots);
   }
   return $dots;
-}
-
-/**
- * Checks whether a skin expecting inline CSS background, not images.
- *
- * @param string $skin
- *   The skin name.
- *
- * @return bool
- *   If the skin registers 'inline css' explicitly, returns TRUE.
- */
-function slick_inline_css_skins($skin = NULL) {
-  $inline_css = &drupal_static(__FUNCTION__, NULL);
-  if (!isset($inline_css)) {
-    $skins = slick_skins();
-    $inline_css = empty($skin) ? FALSE : isset($skins[$skin]['inline css']) && $skins[$skin]['inline css'];
-  }
-  return $inline_css;
 }
 
 /**

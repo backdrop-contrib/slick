@@ -5,6 +5,83 @@
  */
 
 /**
+ * Defines a list of options available for the responsive Slick.
+ *
+ * @param int $count
+ *   The number of breakpoints.
+ *
+ * @return array
+ *   A copy of the main options with the removal of duplicated options.
+ */
+function slick_get_responsive_options($count = 0) {
+  $options = array();
+  $breakpoints = drupal_map_assoc(range(0, ($count - 1)));
+  $defaults = slick_get_options();
+
+  foreach ($breakpoints as $key => $breakpoint) {
+    $options[$key] = array(
+      'breakpoint' => 0,
+      'unslick' => FALSE,
+      'settings' => array(),
+    );
+
+    foreach (slick_clean_options($defaults) as $name => $value) {
+      $options[$key]['settings'][$name] = $value;
+    }
+  }
+
+  return $options;
+}
+
+/**
+ * Removes problematic options for the responsive Slick.
+ *
+ * They should exist once for a given Slick, or not easy to deal with, or make
+ *   no sense in the responsive context. JS takes care of their relevant copy.
+ *
+ * @param array $options
+ *   An array of all available options, can be form elements, or basic ones.
+ *
+ * @return array
+ *   An array of cleaned out options for the responsive displays.
+ */
+function slick_clean_options(array $options) {
+  $excludes = drupal_map_assoc(array(
+    'mobileFirst',
+    'asNavFor',
+    'slide',
+    'lazyLoad',
+    'prevArrow',
+    'nextArrow',
+    'appendArrows',
+    'dotsClass',
+    'appendDots',
+    'rtl',
+  ));
+
+  drupal_alter('slick_clean_options_info', $excludes);
+  return array_diff_key($options, $excludes);
+}
+
+/**
+ * Returns overridable options to re-use one optionset, only accepts boolean.
+ *
+ * @return array
+ *   An array of overridable boolean options.
+ */
+function slick_get_overridable_options() {
+  $overridables = array(
+    'arrows' => t('Arrows'),
+    'autoplay' => t('Autoplay'),
+    'dots' => t('Dots'),
+    'draggable' => t('Draggable'),
+  );
+
+  drupal_alter('slick_overridable_options_info', $overridables);
+  return $overridables;
+}
+
+/**
  * Gets default layout options for the core Image, or Views.
  *
  * @return array

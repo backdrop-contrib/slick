@@ -202,7 +202,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
     }
 
     // Use slick_fields_inline_css_output_info_alter() to modify the output.
-    if (slick_inline_css_skins($settings['skin'])) {
+    if (slick_fields_inline_css_skins($settings['skin'])) {
       $slide['slide'] = array();
       $fullscreen_image_url = $settings['image_style'] ? image_style_url($settings['image_style'], $image['uri']) : file_create_url($image['uri']);
       $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$fullscreen_image_url}')}";

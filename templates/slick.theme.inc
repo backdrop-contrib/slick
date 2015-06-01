@@ -68,8 +68,6 @@ function template_preprocess_slick(&$variables) {
     $attributes['id'] = $id;
   }
 
-  $settings['id'] = $id;
-
   // Since 1.4, Slick is moved to content attributes to allow placing arrows
   // within the slick container, otherwise custom arrows are slides.
   if (!isset($content_attributes['id'])) {
@@ -82,7 +80,6 @@ function template_preprocess_slick(&$variables) {
     // Prevent JS errors when only one item given, e.g.: when content editors
     // provide a single image rather than multiple items at their blog.
     $attributes['class'][] = 'unslick';
-    $attributes['class'] = array_diff($attributes['class'], array('slick'));
   }
   else {
     // Use this flag to animate the appearance of each slide sequentially using
@@ -140,12 +137,10 @@ function template_preprocess_slick(&$variables) {
       $settings['arrow_down_offset'] = $general['arrow_down_offset'] ? $general['arrow_down_offset'] : 125;
     }
 
-    if ($settings['media_switch'] == 'iframe-switch') {
-      if ($settings['aspect_ratio']) {
-        $attributes['class'][] = $settings['aspect_ratio_overlay'] ? 'slick--ratio-overlay' : 'slick--ratio';
-        $attributes['class'][] = drupal_clean_css_identifier('slick--ratio--' . $settings['aspect_ratio']);
-        $attributes['class'][] = drupal_clean_css_identifier('slick--ratio--' . $settings['field_type']);
-      }
+    if ($settings['media_switch'] == 'iframe-switch' && $settings['aspect_ratio']) {
+      $attributes['class'][] = $settings['aspect_ratio_overlay'] ? 'slick--ratio-overlay' : 'slick--ratio';
+      $attributes['class'][] = drupal_clean_css_identifier('slick--ratio--' . $settings['aspect_ratio']);
+      $attributes['class'][] = drupal_clean_css_identifier('slick--ratio--' . $settings['field_type']);
     }
   }
 
@@ -163,8 +158,8 @@ function template_preprocess_slick(&$variables) {
   $js['slide'] = !$js['slide'] && $js['focusOnSelect'] ? '.slick__slide' : '';
 
   // Only add asNavFor if we do have thumbnail optionset.
-  // Implementor is now responsible to pass the proper asnavfor targets which is
-  // defined for both main and thumbnail display accordingly.
+  // Implementor is responsible to pass the proper asnavfor targets which are
+  // defined for both main and thumbnail display respectively.
   if ($settings['optionset_thumbnail'] && $settings['asnavfor_target']) {
     // Enforce clickable thumbnail, and solves old lingering "div".
     if ($settings['current_display'] == 'thumbnail') {
@@ -662,6 +657,7 @@ function theme_slick_image_lazy(array $variables) {
 
     // Allows advanced lazyload without full theme overrides.
     // Slick supports 'ondemand' and 'progressive', use 'advanced' to DIY.
+    // Lotsa advanced options: blazy, responsimg, lazysizes, etc.
     if ($variables['lazy'] != 'advanced') {
       $attributes['data-lazy'] = $image_url;
     }
@@ -704,4 +700,128 @@ function theme_slick_image_lazy(array $variables) {
   }
 
   return $build;
+}
+
+/**
+ * Returns HTML or layout related settings, none of JS, except mousewheel.
+ *
+ * @param int $count
+ *   The number of available Slick items.
+ *
+ * @return array
+ *   An array of alterable default settings.
+ */
+function slick_get_element_default_settings($count = 0) {
+  $settings = array(
+    'count' => $count,
+    'optionset' => 'default',
+    'optionset_thumbnail' => '',
+    'asnavfor_target' => '',
+    'skin' => '',
+    'skin_thumbnail' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'thumbnail_hover' => '',
+    'thumbnail_style' => '',
+    'grid' => '',
+    'field_type' => '',
+    'type' => '',
+    'media_switch' => FALSE,
+    'is_carousel' => FALSE,
+    'has_pattern' => FALSE,
+    'has_arrow_down' => FALSE,
+    'mousewheel' => FALSE,
+    'aspect_ratio_overlay' => FALSE,
+    'current_display' => 'main',
+  );
+
+  drupal_alter('slick_element_default_settings_info', $settings);
+  return $settings;
+}
+
+/**
+ * Strip out options similar to default values from the optionset options.
+ *
+ * @param object $optionset
+ *   The Optionset object.
+ * @param array $customs
+ *   An array of handed-over JS options defined using #options property or those
+ *   manipulated at theme_slick() dependent on various options.
+ * @param array $context
+ *   The context to check for before doing alteration, such as module settings.
+ *
+ * @return array
+ *   An array of reduced duplicated Optionset options performance wise.
+ */
+function _slick_remove_default_optionset_options($optionset, $customs = array(), $context = array()) {
+  $config   = array();
+  $options  = $optionset->options;
+  $defaults = slick_get_options();
+  $settings = $customs ? $customs : $options['settings'];
+
+  // Remove wasted dependent options if disabled, empty or not.
+  slick_remove_wasted_dependent_options($settings);
+  $config = array_diff_assoc($settings, $defaults);
+
+  // Clean up responsive options if similar to the main defaults.
+  $cleaned_responsives = array();
+  if (isset($options['responsives']['responsive'])) {
+    $responsives = $options['responsives'];
+    foreach ($responsives['responsive'] as $key => $responsive) {
+      if (empty($responsives['responsive'][$key]['breakpoint'])) {
+        unset($responsives['responsive'][$key]);
+      }
+      if (isset($responsives['responsive'][$key])) {
+        $cleaned_responsives[$key] = $responsive;
+      }
+    }
+    if ($cleaned_responsives) {
+      $cleaned = array();
+      foreach ($cleaned_responsives as $key => $responsive) {
+        $cleaned[$key]['breakpoint'] = $cleaned_responsives[$key]['breakpoint'];
+        if (isset($cleaned_responsives[$key]['unslick']) && $cleaned_responsives[$key]['unslick']) {
+          $cleaned[$key]['settings'] = 'unslick';
+          unset($cleaned_responsives[$key]['unslick']);
+        }
+        else {
+          slick_remove_wasted_dependent_options($cleaned_responsives[$key]['settings']);
+          $cleaned[$key]['settings'] = array_diff_assoc($cleaned_responsives[$key]['settings'], $defaults);
+        }
+      }
+      $config['responsive'] = $cleaned;
+    }
+  }
+
+  drupal_alter('slick_remove_options_info', $config, $customs, $options, $context);
+  return $config;
+}
+
+/**
+ * Removes wasted dependent options, even if not empty.
+ *
+ * @param array $config
+ *   An array of Optionset options.
+ */
+function slick_remove_wasted_dependent_options(array &$config) {
+  $options = array(
+    'autoplay' => array('pauseOnHover', 'pauseOnDotsHover', 'autoplaySpeed'),
+    'centerMode' => array('centerPadding'),
+    'arrows' => array('prevArrow', 'nextArrow', 'appendArrows'),
+    'dots' => array('dotsClass', 'appendDots'),
+    'swipe' => array('swipeToSlide'),
+    'vertical' => array('verticalSwiping'),
+  );
+
+  foreach ($options as $key => $option) {
+    if (isset($config[$key]) && empty($config[$key])) {
+      foreach ($option as $dependent) {
+        unset($config[$dependent]);
+      }
+    }
+  }
+
+  if (isset($config['cssEaseBezier']) && $config['cssEaseBezier']) {
+    $config['cssEase'] = $config['cssEaseBezier'];
+    unset($config['cssEaseOverride'], $config['cssEaseBezier']);
+  }
 }

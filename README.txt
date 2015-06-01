@@ -43,11 +43,11 @@ http://drupal.org/documentation/install/modules-themes/modules-7
 The Slick module has several sub-modules:
 - slick_ui, to manage optionsets, can be uninstalled at production.
 - slick_fields, supports Image, Media file, and Field collection fields.
-- slick_views, a separate project as of 2015-5-29, > beta1.
+- slick_views, a separate project as of 2015-5-29, > beta1:
   http://dgo.to/slick_views
 - slick_devel, if you want to help testing and developing the Slick.
 - slick_example, if you want to get up and running quickly.
-  The last two are separate projects as of 2015-5-31, > beta1.
+  The last two are separate projects as of 2015-5-31, > beta1:
   http://dgo.to/slick_extras
 
 See the requirements below for all required dependencies.

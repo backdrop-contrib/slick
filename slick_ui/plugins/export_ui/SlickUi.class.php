@@ -384,7 +384,7 @@ class SlickUi extends ctools_export_ui {
 
     // Allows form elements information to be altered without a class.
     // @see ctools_export_ui_edit_item_form
-    drupal_alter('slick_optionset_ui_form', $form, $form_state);
+    drupal_alter('slick_ui_optionset_form', $form, $form_state);
   }
 
   /**

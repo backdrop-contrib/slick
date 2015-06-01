@@ -1,6 +1,17 @@
 
 Slick 7.x-2.0-dev, 2015-6-1
 ---------------------------
+- Moved slick_inline_css_skins() to slick_fields_inline_css_skins(), since it is
+  only specific to fields, not views.
+- Revived the "slick" class when it is "unslick" (a slideshow with a single
+  slide/image -- i.e. when a content editor can not meet design specs), to get
+  consistent CSS global styling. JS filters out the unslick instead.
+- Moved specific backend-related functions to slick.admin.inc:
+  o slick_get_responsive_options()
+  o slick_clean_options()
+  o slick_get_overridable_options()
+- Moved specific theme-related functions to slick.theme.inc.
+
 - #2497945 by gausarts: Move type juggling to backend only
   A slick_update_7007() is provided, but not effective for stored codes.
 
@@ -11,7 +22,7 @@ Slick 7.x-2.0-dev, 2015-6-1
   Please ignore if you:
   o are a (pre-)alpha user who stored optionsets in codes after alpha.
   o never stored/exported optionsets in codes.
-Fixed single slide (unslick), and slick--float non-center slider, and a couple
+  Fixed single slide (unslick), and slick--float non-center slider, and a couple
   of cleanup.
 
 Slick 7.x-2.0-dev, 2015-5-31
