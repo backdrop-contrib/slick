@@ -38,7 +38,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
   $is_views_ui = '';
   if ($instance['entity_type'] == 'ctools') {
-    $is_views_ui = '<h3 class="form--slick__title">' . t('Make sure to check "Use field template" under "Style settings" below, if using multiple-value field for the slides. Views preview works with jQuery > 1.7.') . '</h3>';
+    $is_views_ui = '<h3 class="form--slick__title">' . t('Be sure to check "Use field template" under "Style settings" below, if using multiple-value field for the slides. Views preview works with jQuery > 1.7.') . '</h3>';
   }
 
   $elements['opening'] = array(
@@ -380,7 +380,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       '#type' => 'checkboxes',
       '#default_value' => $settings['slide_caption'],
       '#options' => $caption_options,
-      '#description' => t('Enable any of the following fields as slide caption. These fields are treated and wrapped as captions. Make sure to make them visible at their relevant Manage display.'),
+      '#description' => t('Enable any of the following fields as slide caption. These fields are treated and wrapped as captions. Be sure to make them visible at their relevant Manage display.'),
       '#attributes' => $is_tooltip,
     );
 

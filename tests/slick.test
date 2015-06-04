@@ -261,7 +261,7 @@ class SlickTestCase extends DrupalWebTestCase {
    */
   public function getOptions() {
     // Valid optionset data.
-    $defaults = _slick_optionset_defaults('settings');
+    $defaults = slick_get_options();
     $valid = array(
       'set1' => $defaults,
       'set2' => array(

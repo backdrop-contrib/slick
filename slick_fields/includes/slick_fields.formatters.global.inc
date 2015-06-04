@@ -43,7 +43,7 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
     );
 
     // Only Colorbox is supported by Picture.
-    if ($settings['media_switch'] == 'colorbox-switch' && $settings['colorbox_style']) {
+    if ($settings['media_switch'] == 'colorbox-switch') {
       $image_slide = array(
         '#theme'       => 'picture_formatter_colorbox',
         '#item'        => $image,

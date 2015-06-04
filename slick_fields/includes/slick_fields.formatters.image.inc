@@ -42,7 +42,7 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
       // Provides hidden static thumbnail revealed on dots hover, or custom
       // advanced work with thumbnail arrows.
       $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
-      $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
+      // $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
       $image['attributes']['data-thumb'] = $thumbnail_url;
 
       $thumbnail = theme('image_style', $thumbnail_variables);

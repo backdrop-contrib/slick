@@ -243,6 +243,7 @@ function template_preprocess_slick(&$variables) {
   $variables['items'] = array();
   foreach ($items as $delta => $item) {
     $settings['current_item'] = $settings['current_display'];
+    $settings['type'] = isset($item['type']) ? $item['type'] : $settings['type'];
 
     $variables['items'][$delta] = array(
       '#theme' => 'slick_item',
@@ -565,14 +566,13 @@ function template_process_slick_media(&$variables) {
  * @param array $variables
  *   An associative array containing:
  *   - items: An array of slick instances: main and thumbnail slicks.
- *   - classes: A string containing the classes for the wrapping div.
- *   - attributes: A string containing the attributes for the wrapping div.
+ *   - settings: HTML related settings.
  *
  * @ingroup themeable
  */
 function theme_slick_wrapper(array $variables) {
   $element = $variables['element'];
-  $settings = $element['#settings'] ? $element['#settings'] : array();
+  $settings = isset($element['#settings']) ? $element['#settings'] : array();
 
   $build = '';
   foreach ($element['#items'] as $item) {

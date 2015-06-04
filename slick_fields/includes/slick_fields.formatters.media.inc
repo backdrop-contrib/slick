@@ -60,11 +60,11 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       $settings['media_fid'] = $file->fid;
       $settings['filename']  = $file->filename;
     }
-    $scheme = file_uri_scheme($uri);
+
     $image_style = isset($media['#style_name']) ? $media['#style_name'] : $image_style;
 
     $settings['image_style'] = $image_style;
-    $settings['scheme']      = $scheme;
+    $settings['scheme'] = file_uri_scheme($uri);
 
     // Get audio/video thumbnail uri.
     if ($media_image_uri = _slick_fields_get_media_thumbnail($settings, $uri, $image_style)) {
@@ -81,7 +81,7 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       // Provides hidden static thumbnail revealed on dots hover, or custom
       // advanced work with thumbnail arrows.
       $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
-      $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
+      // $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
       $image['attributes']['data-thumb'] = $thumbnail_url;
 
       $thumbnail = theme('image_style', $thumbnail_variables);
@@ -203,8 +203,8 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
     // Use slick_fields_inline_css_output_info_alter() to modify the output.
     if (slick_fields_inline_css_skins($settings['skin'])) {
       $slide['slide'] = array();
-      $fullscreen_image_url = $settings['image_style'] ? image_style_url($settings['image_style'], $image['uri']) : file_create_url($image['uri']);
-      $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$fullscreen_image_url}')}";
+      $image_url = $settings['image_style'] ? image_style_url($settings['image_style'], $image['uri']) : file_create_url($image['uri']);
+      $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$image_url}')}";
     }
 
     $build[$key] = $slide;

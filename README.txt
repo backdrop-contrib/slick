@@ -51,6 +51,8 @@ The Slick module has several sub-modules:
   The last two are separate projects as of 2015-5-31, > beta1:
   http://dgo.to/slick_extras
 
+Be sure to read to project home page for more info on the latest updates.
+
 See the requirements below for all required dependencies.
 See README.txt on each sub-module for their relevant information.
 
@@ -139,7 +141,7 @@ Supported multi-value fields for nested slicks: Image, Media, Atom reference.
 SKINS:
 --------------------------------------------------------------------------------
 Skins allow swappable layouts like next/prev links, split image or caption, etc.
-Make sure to enable slick_fields.module and provide a dedicated slide layout
+Be sure to enable slick_fields.module and provide a dedicated slide layout
 per field to get more control over caption placements. However a combination of
 skins and options may lead to unpredictable layouts, get dirty yourself.
 
@@ -153,7 +155,7 @@ Optional skins:
   It is all about DIY.
   Doesn't load any extra CSS other than the basic styles required by slick.
   Skins defined by sub-modules fallback to those defined at the optionset.
-  Re-save existing Optionset to disable the skin at all.
+  Be sure to empty the Optionset skin to disable the skin at all.
   If you are using individual slide layout, do the layouts yourself.
 
 - 3d back
@@ -211,34 +213,6 @@ normally < 0 (slick.load.min.js) is the one.
 See slick.slick.inc for more info on skins.
 
 
-TROUBLESHOOTING:
---------------------------------------------------------------------------------
-- When upgrading from Slick v1.3.6 to later version, try to resave options at:
-  o admin/config/media/slick
-  o admin/structure/types/manage/CONTENT_TYPE/display
-  o admin/structure/views/view/VIEW
-  only if trouble to see the new options, or when options don't apply properly.
-  This is most likely true when the library adds/changes options, or the module
-  does something new.
-
-- Always clear the cache, and re-generate JS (if aggregation is on) when
-  updating the module to ensure things are picked up:
-  o admin/config/development/performance
-
-- Frontend type juggling is removed:
-  - Please re-save and re-export optionsets if you are a pre-alpha user who
-    stored optionsets in codes before alpha release on 2015-3-31, or precisely
-    before 2015-3-2 commit:
-    http://cgit.drupalcode.org/slick/commit/?id=f08c3b4
-
-  - Please ignore if you:
-    o are a (pre-)alpha user who stored optionsets in codes after alpha.
-    o never stored/exported optionsets in codes.
-
-More info relevant to each option is available at their form display by hovering
-over them, and click a dark question mark.
-
-
 HTML structure:
 --------------------------------------------------------------------------------
 Note, non-BEM classes are added by JS.
@@ -281,10 +255,44 @@ Please consider helping in the issue queue, provide improvement, or helping with
 documentation.
 
 
+TROUBLESHOOTING:
+--------------------------------------------------------------------------------
+- When upgrading from Slick v1.3.6 to later version, try to resave options at:
+  o admin/config/media/slick
+  o admin/structure/types/manage/CONTENT_TYPE/display
+  o admin/structure/views/view/VIEW
+  only if trouble to see the new options, or when options don't apply properly.
+  This is most likely true when the library adds/changes options, or the module
+  does something new.
+
+- Always clear the cache, and re-generate JS (if aggregation is on) when
+  updating the module to ensure things are picked up:
+  o admin/config/development/performance
+
+- Frontend type juggling is removed [#2497945]:
+  - Please re-save and re-export optionsets if you are a pre-alpha user who
+    stored optionsets in codes before alpha release on 2015-3-31, or precisely
+    before 2015-3-2 commit:
+    http://cgit.drupalcode.org/slick/commit/?id=f08c3b4
+
+  - Please ignore if you:
+    o are a (pre-)alpha user who stored optionsets in codes after alpha.
+    o never stored/exported optionsets in codes.
+
+- If switching from beta1 to the latest via Drush fails, try the good old UI.
+  Be sure to run /update.php and clear cache if WSOD, or broken slick.
+
+More info relevant to each option is available at their form display by hovering
+over them, and click a dark question mark.
+
+
 KNOWN ISSUES
 --------------------------------------------------------------------------------
 - The Slick lazyLoad is not supported with picture-enabled images. Slick only
   facilitates Picture to get in. The image formatting is taken over by Picture.
+  If you want advanced lazyload, but not willing to use Picture, do preprocess
+  with theme_image_lazy() and use lazy 'advanced' to override it and DIY.
+  Please see theme_image_lazy() for more info.
 - Photobox is not compatible with infinite true + slidesToShow > 1, since slicks
   will have clones which are filtered out by Photobox loader, otherwise dup
   thumbnails. It works best for:

@@ -85,7 +85,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
           // Provides hidden static thumbnail revealed on dots hover, or custom
           // advanced work with thumbnail arrows.
           $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
-          $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
+          // $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
           $image['attributes']['data-thumb'] = $thumbnail_url;
 
           $thumbnail = theme('image_style', $thumbnail_variables);
@@ -188,7 +188,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
                   $uri = $file->uri;
                   $file_style = $slide_overlay[$f]['file'];
 
-                  // Make sure view mode to enable image for the overlay, and
+                  // Be sure view mode to enable image for the overlay, and
                   // they should come first before actual video.
                   if (!isset($overlay_style)) {
                     // Video uses image_style: #style_name.

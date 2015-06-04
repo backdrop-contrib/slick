@@ -45,7 +45,7 @@ class SlickUi extends ctools_export_ui {
       '#options' => $skins,
       '#default_value' => $optionset->skin,
       '#empty_option' => t('- None -'),
-      '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. Make sure to provide a dedicated slide layout per field. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See main <a href="@skin">README</a> for details on Skins. Keep it simple for thumbnail navigation skin.', array('@skin' => url($module_path . '/README.txt'))),
+      '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. Be sure to provide a dedicated slide layout per field. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See main <a href="@skin">README</a> for details on Skins. Keep it simple for thumbnail navigation skin.', array('@skin' => url($module_path . '/README.txt'))),
       '#attributes' => array('class' => array('is-tooltip')),
     );
 
@@ -239,7 +239,7 @@ class SlickUi extends ctools_export_ui {
       $slick_responsive_elements = $this->getSlickResponsiveElements($form_state['breakpoints_count']);
 
       foreach ($slick_responsive_elements as $i => $responsives) {
-        // Invidual breakpoint fieldset.
+        // Individual breakpoint fieldset.
         $fieldset_class = drupal_clean_css_identifier(drupal_strtolower($responsives['title']));
         $form['options']['responsives']['responsive'][$i] = array(
           '#title' => $responsives['title'],
@@ -507,14 +507,14 @@ class SlickUi extends ctools_export_ui {
 
       $elements['prevArrow'] = array(
         'title' => t('Previous arrow'),
-        'description' => t("Customize the previous arrow markups. Make sure to keep the expected class."),
+        'description' => t("Customize the previous arrow markups. Be sure to keep the expected class."),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
       );
 
       $elements['nextArrow'] = array(
         'title' => t('Next arrow'),
-        'description' => t("Customize the next arrow markups. Make sure to keep the expected class."),
+        'description' => t("Customize the next arrow markups. Be sure to keep the expected class."),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
       );
@@ -738,7 +738,7 @@ class SlickUi extends ctools_export_ui {
       }
 
       // Allows form elements information to be altered.
-      drupal_alter('slick_elements_info', $elements);
+      drupal_alter('slick_ui_elements_info', $elements);
     }
     return $elements;
   }
@@ -787,7 +787,7 @@ class SlickUi extends ctools_export_ui {
       }
 
       // Allows form responsive elements information to be altered.
-      drupal_alter('slick_responsive_elements_info', $elements);
+      drupal_alter('slick_ui_responsive_elements_info', $elements);
     }
     return $elements;
   }

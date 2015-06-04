@@ -15,7 +15,6 @@ function slick_theme($existing, $type, $theme, $path) {
     'path' => $path . '/templates',
   );
 
-  $themes = array();
   $items = array('slick', 'item', 'grid', 'media', 'wrapper');
   foreach ($items as $item) {
     $key = $item == 'slick' ? $item : "slick_$item";
@@ -163,7 +162,6 @@ function slick_libraries_info() {
       'css' => array('slick/slick.css'),
     ),
   );
-
   return $libraries;
 }
 
@@ -251,9 +249,21 @@ function slick_attach(array $attach) {
     );
   }
 
-  // Attach default JS settings to allow responsive displays have a lookup.
+  // Attach default JS settings to allow responsive displays have a lookup,
+  // excluding trouble options, e.g.: PHP string vs JS object.
+  $defaults = slick_get_options();
+  $excludes = drupal_map_assoc(array(
+    'mobileFirst',
+    'appendArrows',
+    'appendDots',
+    'asNavFor',
+    'prevArrow',
+    'nextArrow',
+    'cssEaseBezier',
+    'cssEaseOverride',
+  ));
   $load['js'][] = array(
-    'data' => array('slick' => _slick_optionset_defaults('settings', TRUE)),
+    'data' => array('slick' => array_diff_key($defaults, $excludes)),
     'type' => 'setting',
   );
 
@@ -268,8 +278,7 @@ function slick_attach(array $attach) {
  *   All available Slick carousel options.
  */
 function slick_get_options() {
-  $options = &drupal_static(__FUNCTION__, NULL);
-
+  $options = &drupal_static(__FUNCTION__);
   if (!isset($options)) {
     $options = array(
       'mobileFirst'       => FALSE,
@@ -318,47 +327,9 @@ function slick_get_options() {
       'verticalSwiping'   => FALSE,
       'waitForAnimate'    => TRUE,
     );
-
     drupal_alter('slick_options_info', $options);
   }
-
   return $options;
-}
-
-/**
- * Default settings for a newly created optionset.
- *
- * @param string $set
- *   Gets a specific group of values [optional]: settings, general.
- * @param bool $exclude
- *   Whether to exclude some trouble options, e.g.: PHP string vs JS object.
- *
- * @return array
- *   An array of default optionset.
- */
-function _slick_optionset_defaults($set = NULL, $exclude = FALSE) {
-  $defaults = array();
-  foreach (slick_get_options() as $name => $value) {
-    $defaults['settings'][$name] = $value;
-  }
-  $defaults['general'] = array('goodies' => array());
-
-  // Prevents main settings from screwing up responsive settings.
-  if ($exclude) {
-    $excludes = drupal_map_assoc(array(
-      'mobileFirst',
-      'appendDots',
-      'appendArrows',
-      'asNavFor',
-      'prevArrow',
-      'nextArrow',
-      'cssEaseBezier',
-      'cssEaseOverride',
-    ));
-    $defaults['settings'] = array_diff_key($defaults['settings'], $excludes);
-  }
-
-  return $set ? $defaults[$set] : $defaults;
 }
 
 /**
@@ -424,7 +395,6 @@ function slick_optionset_load($id) {
     $optionset = ctools_export_crud_load('slick_optionset', 'default');
     watchdog('slick', 'Fallback to default optionset.', array(), WATCHDOG_WARNING);
   }
-
   return $optionset;
 }
 
@@ -453,9 +423,9 @@ function slick_optionset_create($values = array()) {
   }
 
   // Merge default settings with any given settings.
-  $optionset_defaults = _slick_optionset_defaults();
-  $optionset->options = $optionset->options + $optionset_defaults;
-
+  $defaults['general'] = array('goodies' => array());
+  $defaults['settings'] = slick_get_options();
+  $optionset->options = $optionset->options + $defaults;
   return $optionset;
 }
 
