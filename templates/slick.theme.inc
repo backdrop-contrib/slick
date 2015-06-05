@@ -97,7 +97,7 @@ function template_preprocess_slick(&$variables) {
   // Field or Views options override the optionset ones.
   // With asNavFor, skin maybe skin or skin_thumbnail.
   if ($settings['current_display'] == 'thumbnail') {
-    $skin = isset($settings['skin_thumbnail']) && $settings['skin_thumbnail'] ? $settings['skin_thumbnail'] : $skin;
+    $skin = $settings['skin_thumbnail'] ? $settings['skin_thumbnail'] : $skin;
   }
 
   if ($skin) {
@@ -110,7 +110,7 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = drupal_clean_css_identifier('slick--skin--' . $skin);
   }
 
-  $attributes['class'][] = isset($js['centerMode']) && $js['centerMode'] ? 'slick--center' : 'slick--float';
+  $attributes['class'][] = $js['centerMode'] ? 'slick--center' : 'slick--float';
 
   // This is needed by Slick media for the aspect ratio option.
   if ($settings['field_type']) {
@@ -155,13 +155,13 @@ function template_preprocess_slick(&$variables) {
 
   // focusOnSelect will not work with empty slide value, so add proper selector.
   // @see https://github.com/kenwheeler/slick/issues/789
-  $js['slide'] = !$js['slide'] && $js['focusOnSelect'] ? '.slick__slide' : '';
+  $js['slide'] = empty($js['slide']) && $js['focusOnSelect'] ? '.slick__slide' : '';
 
   // Only add asNavFor if we do have thumbnail optionset.
   // Implementor is responsible to pass the proper asnavfor targets which are
   // defined for both main and thumbnail display respectively.
   if ($settings['optionset_thumbnail'] && $settings['asnavfor_target']) {
-    // Enforce clickable thumbnail, and solves old lingering "div".
+    // Enforce clickable thumbnail, otherwise no joy.
     if ($settings['current_display'] == 'thumbnail') {
       $js['slide'] = '.slick__slide';
       $js['focusOnSelect'] = TRUE;
@@ -186,12 +186,9 @@ function template_preprocess_slick(&$variables) {
   // Limit sanitization with button, and a few reasonable tags.
   $settings['arrows'] = $js['arrows'];
   $allowed_tags = array('a', 'em', 'strong', 'button', 'p', 'div', 'i', 'span');
-  $is_prev = isset($js['prevArrow']) && $js['prevArrow'];
-  $is_next = isset($js['nextArrow']) && $js['nextArrow'];
-
   $default_options = slick_get_options();
-  $settings['prev_arrow'] = $is_prev ? filter_xss($js['prevArrow'], $allowed_tags) : $default_options['prevArrow'];
-  $settings['next_arrow'] = $is_next ? filter_xss($js['nextArrow'], $allowed_tags) : $default_options['nextArrow'];
+  $settings['prev_arrow'] = $js['prevArrow'] ? filter_xss($js['prevArrow'], $allowed_tags) : $default_options['prevArrow'];
+  $settings['next_arrow'] = $js['nextArrow'] ? filter_xss($js['nextArrow'], $allowed_tags) : $default_options['nextArrow'];
 
   // Provide skins classes for arrows and dots, if so configured.
   // The skin options may be provided using hook_slick_arrows_info() and
@@ -744,20 +741,18 @@ function slick_get_element_default_settings($count = 0) {
  *
  * @param object $optionset
  *   The Optionset object.
- * @param array $customs
- *   An array of handed-over JS options defined using #options property or those
- *   manipulated at theme_slick() dependent on various options.
+ * @param array $settings
+ *   An array of handed-over JS options manipulated at theme_slick().
  * @param array $context
  *   The context to check for before doing alteration, such as module settings.
  *
  * @return array
  *   An array of reduced duplicated Optionset options performance wise.
  */
-function _slick_remove_default_optionset_options($optionset, $customs = array(), $context = array()) {
+function _slick_remove_default_optionset_options($optionset, $settings = array(), $context = array()) {
   $config   = array();
   $options  = $optionset->options;
   $defaults = slick_get_options();
-  $settings = $customs ? $customs : $options['settings'];
 
   // Remove wasted dependent options if disabled, empty or not.
   slick_remove_wasted_dependent_options($settings);
@@ -792,7 +787,7 @@ function _slick_remove_default_optionset_options($optionset, $customs = array(),
     }
   }
 
-  drupal_alter('slick_remove_options_info', $config, $customs, $options, $context);
+  drupal_alter('slick_remove_options_info', $config, $settings, $options, $context);
   return $config;
 }
 
@@ -806,7 +801,6 @@ function slick_remove_wasted_dependent_options(array &$config) {
   $options = array(
     'autoplay' => array('pauseOnHover', 'pauseOnDotsHover', 'autoplaySpeed'),
     'centerMode' => array('centerPadding'),
-    'arrows' => array('prevArrow', 'nextArrow', 'appendArrows'),
     'dots' => array('dotsClass', 'appendDots'),
     'swipe' => array('swipeToSlide'),
     'vertical' => array('verticalSwiping'),

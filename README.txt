@@ -34,6 +34,7 @@ database lookup. It is analog to Drupal 8 CMI.
 See slick_example.slick_default_preset.inc for the stored-in-code sample.
 
 7.x-2.x supports Slick 1.5 above, and dropped supporting Slick 1.4.x and below.
+Be sure to read to project home page for more info before updating your module.
 
 
 INSTALLATION:
@@ -51,9 +52,6 @@ The Slick module has several sub-modules:
   The last two are separate projects as of 2015-5-31, > beta1:
   http://dgo.to/slick_extras
 
-Be sure to read to project home page for more info on the latest updates.
-
-See the requirements below for all required dependencies.
 See README.txt on each sub-module for their relevant information.
 
 
@@ -306,6 +304,8 @@ KNOWN ISSUES
   o If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
   o Fade option with slideToShow > 1 will screw up.
+  o variableWidth ignores slidesToShow.
+  o Too much centerPadding at small device affects slidesToShow.
 
 
 UNKNOWN ISSUES

@@ -11,7 +11,7 @@
  *   The number of breakpoints.
  *
  * @return array
- *   A copy of the main options with the removal of duplicated options.
+ *   A copy of the main options with the removal of problematic options.
  */
 function slick_get_responsive_options($count = 0) {
   $options = array();

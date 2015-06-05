@@ -28,7 +28,7 @@
     <?php endif; ?>
 
   <?php
-    // Main slide may be grid items, nested slicks, or a regular image/video.
+    // Main slide may be grid items, nested slicks, or regular text/image/video.
     else: ?>
 
     <<?php print $content_tag; ?><?php print $content_attributes; ?>>

@@ -1,4 +1,11 @@
 
+Slick 7.x-2.0-dev, 2015-6-5
+---------------------------
+- Fixed for interrupted update process, when the process is reversed:
+  running /update.php prior to clearing cache.
+  The safe recommended process: clearing cache/registry -> /update.php.
+  Temporarily put back the slick_optionset_ui.inc to avoid the issue till we
+  figure out better process.
 
 Slick 7.x-2.0-dev, 2015-6-4
 ---------------------------
@@ -33,7 +40,8 @@ Slick 7.x-2.0-dev, 2015-6-1
   Please ignore if you:
   o are a (pre-)alpha user who stored optionsets in codes after alpha.
   o never stored/exported optionsets in codes.
-  Fixed single slide (unslick), and slick--float non-center slider, and a couple
+
+- Fixed single slide (unslick), and slick--float non-center slider, and a couple
   of cleanup.
 
 Slick 7.x-2.0-dev, 2015-5-31
