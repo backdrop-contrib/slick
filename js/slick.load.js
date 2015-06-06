@@ -117,8 +117,18 @@
     /**
      * Sets the current slide class.
      *
-     * Without centerMode, .slick-active can be as many as visible slides, hence
-     * added a specific class. Also fix total <= slidesToShow with centerMode.
+     * With slidesToShow 1, .slick-active = .slide--current (ok)
+     * With slidesToShow > 1, .slick-active = all visible slides (bad)
+     * Only when it is centerMode, .slick-center = .slide--current (ok)
+     * Hence added a specific class: .slide--current for both cases.
+     * Also fixed total <= slidesToShow with centerMode.
+     * slick-current class is finally added 5/24/15, now is v1.5.5.
+     *
+     * @todo deprecate slide--current for slick-current from v1.5.6 when all
+     * scenarios above fixed.
+     *
+     * @see https://github.com/kenwheeler/slick/issues/1248
+     * @see https://github.com/kenwheeler/slick/commit/7eadb8adac811f573d69626ceac8efda047a7bb9
      */
     setCurrent: function(t, curr) {
       // Must take care for both asNavFor instances, with/without slick-wrapper.

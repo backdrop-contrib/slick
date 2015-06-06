@@ -30,9 +30,6 @@ function _slick_fields_format_image(&$settings, $items, $field, $thumb_nav = FAL
       $image[$value] = isset($item[$value]) ? $item[$value] : NULL;
     }
 
-    $settings['media_height'] = $image['height'];
-    $settings['media_width']  = $image['width'];
-
     $thumbnail = '';
     if ($thumbnail_style = $settings['thumbnail_style']) {
       $image['path'] = $image['uri'];

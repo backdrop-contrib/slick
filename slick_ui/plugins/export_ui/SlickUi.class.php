@@ -500,7 +500,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['appendArrows'] = array(
         'title' => t('Append arrows'),
-        'description' => t("Change where the navigation arrows are attached (Selector, htmlString, Array, Element, jQuery object). Leave it to default to wrap it within .slick__arrow container, otherwise change its markups accordingly."),
+        'description' => t("Change where the navigation arrows are attached (Selector, htmlString). Leave it to default to wrap it within .slick__arrow container, otherwise change its markups accordingly."),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
       );
@@ -547,7 +547,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['appendDots'] = array(
         'title' => t('Append dots'),
-        'description' => t('Change where the navigation dots are attached (Selector, htmlString, Array, Element, jQuery object). If you change this, make sure to provide its relevant markup.'),
+        'description' => t('Change where the navigation dots are attached (Selector, htmlString). If you change this, be sure to provide its relevant markup.'),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][dots]"]' => array('checked' => TRUE))),
       );

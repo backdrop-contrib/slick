@@ -34,7 +34,7 @@ database lookup. It is analog to Drupal 8 CMI.
 See slick_example.slick_default_preset.inc for the stored-in-code sample.
 
 7.x-2.x supports Slick 1.5 above, and dropped supporting Slick 1.4.x and below.
-Be sure to read to project home page for more info before updating your module.
+Be sure to read the project home page for more info before updating your module.
 
 
 INSTALLATION:
@@ -278,7 +278,7 @@ TROUBLESHOOTING:
     o never stored/exported optionsets in codes.
 
 - If switching from beta1 to the latest via Drush fails, try the good old UI.
-  Be sure to run /update.php and clear cache if WSOD, or broken slick.
+  Be sure to clear cache first, then run /update.php, if WSOD, or broken slick.
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
