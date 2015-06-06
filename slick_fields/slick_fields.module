@@ -78,7 +78,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'attach_photobox'       => $settings['media_switch'] == 'photobox-switch',
       'attach_mousewheel'     => $settings['mousewheel'],
       'attach_dots_thumbnail' => $settings['thumbnail_hover'],
-      'attach_media'          => $field['type'] == 'image' ? FALSE : TRUE,
+      'attach_media'          => $settings['media_switch'] == 'iframe-switch',
     );
 
     if ($is_asnavfor) {

@@ -428,7 +428,7 @@ function _slick_fields_format_field_collection(&$settings, $items, $field, $view
               if ($id) {
                 $overlay_settings[$key]['attributes']['id'] = $id;
               }
-              $attach['attach_media'] = TRUE;
+              $attach['attach_media'] = $settings['media_switch'] == 'iframe-switch' ? TRUE : FALSE;
               $overlay_elements[$key] = array(
                 '#theme' => 'slick',
                 '#items' => $overlay_element,

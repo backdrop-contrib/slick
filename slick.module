@@ -190,7 +190,9 @@ function slick_attach(array $attach) {
   drupal_alter('slick_attach_info', $attach);
 
   $easing = libraries_get_path('easing') . '/jquery.easing.min.js';
-  $load['js'] += array($easing => array('group' => JS_LIBRARY, 'weight' => -6));
+  if (is_file($easing)) {
+    $load['js'] += array($easing => array('group' => JS_LIBRARY, 'weight' => -6));
+  }
 
   if (isset($attach['attach_mousewheel']) && $attach['attach_mousewheel']) {
     $mousewheel = libraries_get_path('mousewheel') . '/jquery.mousewheel.min.js';
