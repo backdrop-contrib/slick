@@ -26,13 +26,7 @@
 
     <nav<?php print $arrow_attributes; ?>>
       <?php print $settings['prev_arrow']; ?>
-      <?php if ($settings['has_arrow_down']): ?>
-        <?php
-          $is_target = $settings['arrow_down_target'] ? ' data-target="#' . $settings['arrow_down_target'] . '"' : '';
-          $is_offset = $settings['arrow_down_offset'] ? ' data-offset="' . $settings['arrow_down_offset'] . '"' : '';
-        ?>
-        <button class="slick-down jump-scroll"<?php print $is_target . $is_offset; ?>></button>
-      <?php endif; ?>
+      <?php isset($arrow_down) && print $arrow_down; ?>
       <?php print $settings['next_arrow']; ?>
     </nav>
 

@@ -26,15 +26,17 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $is_colorbox = function_exists('_colorbox_doheader');
   $is_photobox = function_exists('photobox_library');
 
-  $layout_options  = array();
   $caption_options = array();
   $title_options   = array();
   $link_options    = array();
   $color_options   = array();
   $slide_classes   = array();
+  $layout_builtin  = slick_layouts();
+  $layout_options  = $layout_builtin;
   $thumbnail_caption_options = array();
   $optionsets = slick_optionset_options();
   $is_tooltip = array('class' => array('is-tooltip'));
+  $readme = url($slick_module_path . '/README.txt');
 
   $is_views_ui = '';
   if ($instance['entity_type'] == 'ctools') {
@@ -46,7 +48,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   );
 
   $elements['optionset'] = array(
-    '#title' => t('Option set main'),
+    '#title' => t('Optionset main'),
     '#type' => 'select',
     '#options' => $optionsets,
     '#default_value' => $settings['optionset'],
@@ -61,18 +63,18 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#options' => $skins,
     '#default_value' => $settings['skin'],
     '#empty_option' => t('- None -'),
-    '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to DIY, or use hook_slick_skins_info() to override one.', array('@url' => url($slick_module_path . '/README.txt'))),
+    '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See <a href="@url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY, or use hook_slick_skins_info() to override one.', array('@url' => $readme)),
     '#attributes' => $is_tooltip,
   );
 
   // Thumbnail navigation.
   $elements['optionset_thumbnail'] = array(
-    '#title' => t('Option set thumbnail'),
+    '#title' => t('Optionset thumbnail'),
     '#type' => 'select',
     '#options' => $optionsets,
     '#empty_option' => t('- None -'),
     '#default_value' => $settings['optionset_thumbnail'],
-    '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Provide each optionset a unique asNavFor class at <a href="@url" target="_blank">Slick carousel admin page</a>. Or check asnavfor auto reduce headaches. Leave empty to not use thumbnail navigation.', array('@url' => url('admin/config/media/slick'))),
+    '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Leave empty to not use thumbnail navigation.'),
     '#attributes' => $is_tooltip,
   );
 
@@ -82,7 +84,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#options' => $skins,
     '#default_value' => $settings['skin_thumbnail'],
     '#empty_option' => t('- None -'),
-    '#description' => t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', array('@url' => url($slick_module_path . '/README.txt'))),
+    '#description' => t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', array('@url' => $readme)),
     '#attributes' => $is_tooltip,
   );
 
@@ -122,7 +124,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#type' => 'textfield',
     '#title' => t('asNavFor main'),
     '#default_value' => $settings['asnavfor_main'],
-    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the main display, e.g.: #slick-node-page-field-images-1-thumbnail-slider, or .slick--nav .slick-slider. This should address the thumbnail display class or ID attributes.'),
+    '#description' => t('Valid CSS selector (with "." or "#") for the main display. Target the thumbnail display class or ID attributes. See <a href="@url" target="_blank">HTML structure section at README.txt</a> for details on asNavFor targets.', array('@url' => $readme)),
     '#attributes' => array('class' => array('is-tooltip', 'js-expandable')),
     '#states' => array(
       'invisible' => array(
@@ -136,7 +138,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#type' => 'textfield',
     '#title' => t('asNavFor thumbnail'),
     '#default_value' => $settings['asnavfor_thumbnail'],
-    '#description' => t('Valid CSS selector (with "." or "#") to override asNavFor target for the thumbnail display, e.g.: #slick-node-page-field-images-1-slider, or .slick--for .slick-slider. This should address the main display class or ID attributes.'),
+    '#description' => t('Valid CSS selector (with "." or "#") for the thumbnail display. Target the main display class or ID attributes.'),
     '#attributes' => array('class' => array('is-tooltip', 'js-expandable')),
     '#states' => array(
       'invisible' => array(
@@ -152,7 +154,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#default_value' => $settings['asnavfor_auto'],
     '#field_suffix' => '',
     '#title_display' => 'before',
-    '#description' => t('If checked, asNavFor selectors will be determined by the current field ID selectors automatically. Check if unsure with selectors.'),
+    '#description' => t('If checked, asNavFor selectors will be determined by the current field ID selectors automatically. Check if unsure with manual selectors.'),
     '#attributes' => $is_tooltip,
     '#states' => array(
       'invisible' => array(
@@ -167,7 +169,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#default_value' => $settings['thumbnail_caption'],
     '#options' => array(),
     '#empty_option' => t('- None -'),
-    '#description' => t('Thumbnail caption maybe just titles.'),
+    '#description' => t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
     '#attributes' => $is_tooltip,
     '#states' => array(
       'invisible' => array(
@@ -184,7 +186,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#default_value' => $settings['image_style'],
     '#empty_option' => t('None (original image)'),
     '#options' => $image_styles,
-    '#description' => t('This is to override, or fallback as needed. This allows more variant per View mode with a single optionset.'),
+    '#description' => t('The main image style. This allows more variant per View mode with a single optionset.'),
     '#attributes' => $is_tooltip,
   );
 
@@ -194,7 +196,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#default_value' => $settings['thumbnail_style'],
     '#empty_option' => t('- None -'),
     '#options' => $image_styles,
-    '#description' => t('If <em>Option set thumbnail</em> provided, it is for asNavFor thumbnail navigation. Otherwise displayed when hovering over dots if <em>Dots with thumbnail</em> selected. Or to build arrows with thumbnails via the provided data-thumb attributes with your custom work. Leave empty to not use thumbnails.'),
+    '#description' => t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>If <em>Dots with thumbnail</em> selected, displayed when hovering over dots.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.'),
     '#attributes' => $is_tooltip,
   );
 
@@ -215,33 +217,31 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
   $field_entity_type = $field_type;
   switch ($field_type) {
-    // Core image field.
-    case 'image':
-      $layout_options = slick_layouts();
-      break;
-
     // Media via file field.
     case 'file':
-      $caption_options = _slick_fields_get_media_fields($instance);
-      $layout_options  = _slick_fields_get_media_fields($instance, array('options_select'));
-      $slide_classes   = _slick_fields_get_media_fields($instance, array('options_select', 'text_textfield'));
-      $title_options   = _slick_fields_get_media_fields($instance, array(
+      $field_layouts   = slick_get_media_fields($instance, array('options_select'));
+      $layout_options  = $field_layouts ? $field_layouts : $layout_options;
+      $caption_options = slick_get_media_fields($instance);
+      $slide_classes   = slick_get_media_fields($instance, array('options_select', 'text_textfield'));
+      $title_options   = slick_get_media_fields($instance, array(
         'link_field',
         'text_textfield',
         'text_textarea',
       ));
-      $link_options = _slick_fields_get_media_fields($instance, array(
+      $link_options = slick_get_media_fields($instance, array(
         'text_textfield',
         'link_field',
         'url_external',
       ));
-      $thumbnail_caption_options = _slick_fields_get_media_fields($instance, array('text_textfield', 'text_textarea'));
+      $thumbnail_caption_options = slick_get_media_fields($instance, array('text_textfield', 'text_textarea'));
       break;
 
     // This should go as a separate module, but alas.
     case 'field_collection':
       $field_entity_type = 'field_collection_item';
-      $caption_options = _slick_fields_get_fc_fields($instance, array(
+      $field_layouts   = slick_get_fc_fields($instance, array('list_text'));
+      $layout_options  = $field_layouts ? $field_layouts : $layout_options;
+      $caption_options = slick_get_fc_fields($instance, array(
         'file',
         'image',
         'link_field',
@@ -252,25 +252,24 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
         'text',
       ));
 
-      $color_options   = _slick_fields_get_fc_fields($instance, array('text', 'color_field_rgb'));
-      $layout_options  = _slick_fields_get_fc_fields($instance, array('list_text'));
-      $image_options   = _slick_fields_get_fc_fields($instance, array('image', 'file'));
-      $overlay_options = _slick_fields_get_fc_fields($instance, array(
+      $color_options   = slick_get_fc_fields($instance, array('text', 'color_field_rgb'));
+      $image_options   = slick_get_fc_fields($instance, array('image', 'file'));
+      $overlay_options = slick_get_fc_fields($instance, array(
         'image',
         'file',
         'atom_reference',
       ));
-      $title_options = _slick_fields_get_fc_fields($instance, array(
+      $title_options = slick_get_fc_fields($instance, array(
         'link_field',
         'text',
         'text_long',
       ));
-      $link_options = _slick_fields_get_fc_fields($instance, array(
+      $link_options = slick_get_fc_fields($instance, array(
         'text',
         'link_field',
         'url',
       ));
-      $thumbnail_caption_options = _slick_fields_get_fc_fields($instance, array('text', 'text_long'));
+      $thumbnail_caption_options = slick_get_fc_fields($instance, array('text', 'text_long'));
       break;
 
     default:
@@ -282,7 +281,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#title' => t('Slide layout'),
     '#type' => 'select',
     '#default_value' => $settings['slide_layout'],
-    '#options' => $layout_options,
+    '#options' => $layout_options + $layout_builtin,
     '#empty_option' => t('- None -'),
     '#description' => t('This affects the entire slides. Split half requires any skin Split. Leave empty to DIY.'),
     '#attributes' => $is_tooltip,
@@ -310,7 +309,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
         '#options' => $overlay_options,
         '#empty_option' => t('- None -'),
         '#default_value' => $settings['slide_overlay'],
-        '#description' => t('If audio/video, be sure the display is not image display. You can manage its display at its own entity View mode display, or below for the supported formatters: Image and Rendered file. Nested Slick carousel is supported. Supported fields: Image, Media, Atom reference'),
+        '#description' => t('Overlays can be single image/auvio/video, or nested slicks. If audio/video, be sure the display is not image. Manage its display at its own entity View mode (there). Two ways to build nested slicks: <ol><li>Make this field use Slick formatter there, and leave <strong>Enable nested slick</strong> unchecked.</li><li>Or check <strong>Enable nested slick</strong> here and be sure to use Image or Rendered file formatter (not Slick) there for the supported fields: Image, Media, Atom reference.</li></ol>'),
         '#attributes' => $is_tooltip,
       );
 
@@ -413,13 +412,13 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     $elements['slide_layout']['#title'] = t('Slide layout field');
     $elements['slide_layout']['#description'] = t('Create a dedicated List (text - max number 1) field related to the caption placement with the following supported keys: top, right, bottom, left, center, center-top, etc. See <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Split half requires any skin Split. Leave empty to DIY.', array('@url' => url($path . '/README.txt')));
 
-    $view_mode_options = _slick_fields_view_modes($field_entity_type, TRUE);
+    $view_mode_options = slick_get_view_modes($field_entity_type, TRUE);
     $elements['view_mode'] = array(
       '#type' => 'select',
       '#title' => t('View mode'),
       '#options' => $view_mode_options,
       '#default_value' => $settings['view_mode'],
-      '#description' => t('The view mode is a specific display to contain the fieldable slides. Create more view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>.', array('@url' => '//drupal.org/project/entity_view_mode')),
+      '#description' => t('Be sure the View mode is enabled, and the enabled fields here are not hidden at this particular view mode. Adjust the video/audio dimensions accordingly at their display page if not using aspect ratio. Create more view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>.', array('@url' => '//drupal.org/project/entity_view_mode')),
       '#access' => count($view_mode_options) > 1,
       '#attributes' => $is_tooltip,
     );
@@ -448,18 +447,16 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       'iframe-switch' => t('Image to iframe switcher'),
     ),
     '#empty_option' => t('- None -'),
-    '#description' => t('Supports Colorbox/ Photobox and Media iframe switcher.'),
+    '#description' => t('Supports Colorbox/Photobox and Media iframe.<ol><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox: image to colorbox.</li><li>Photobox: image to photobox. Be sure to select Thumbnail style for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
     '#attributes' => $is_tooltip,
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
-    $elements['media_switch']['#description'] .= t('<br />Iframe switcher: audio/video iframe is hidden below image overlay until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.');
-
     $elements['aspect_ratio'] = array(
       '#type' => 'select',
       '#title' => t('Aspect ratio'),
       // http://en.wikipedia.org/wiki/List_of_common_resolutions
-      '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpedtedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc. Check "Aspect ratio overlay only" below to apply to Media or FC overlay field only.', array(
+      '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpedtedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc.', array(
         '@dimensions' => '//size43.com/jqueryVideoTool.html',
         '@follow' => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
         '@link' => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
@@ -478,23 +475,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     if ($field_entity_type == 'field_collection_item') {
       $elements['media_switch']['#title'] = t('Media overlay switcher');
       $elements['media_switch']['#description'] .= t('<br />Both applied to overlay only.');
-      $elements['aspect_ratio_overlay'] = array(
-        '#title' => t('Aspect ratio overlay only'),
-        '#type' => 'checkbox',
-        '#default_value' => $settings['aspect_ratio_overlay'],
-        '#field_suffix' => '',
-        '#title_display' => 'before',
-        '#states' => array(
-          'invisible' => array(
-            'select[name*="[aspect_ratio]"]' => array('value' => ''),
-          ),
-          'visible' => array(
-            'select[name*="[media_switch]"]' => array('value' => 'iframe-switch'),
-          ),
-        ),
-        '#description' => t('Apply aspect ratio to overlay media only, excluding main/background image.'),
-        '#attributes' => $is_tooltip,
-      );
 
       $elements['color_field'] = array(
         '#type' => 'select',
@@ -513,7 +493,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
     // Re-use the same image style for both boxes.
     $elements['colorbox_style'] = array(
-      '#title' => t('Colorbox image style'),
+      '#title' => t('Lightbox image style'),
       '#type' => 'select',
       '#default_value' => $settings['colorbox_style'],
       '#empty_option' => t('None (original)'),
@@ -528,13 +508,11 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
     if ($is_colorbox) {
       $elements['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox switcher');
-      $elements['media_switch']['#description'] .= t('<br />Colorbox switcher: image to colorbox switch.');
     }
 
     if ($is_photobox) {
       $elements['media_switch']['#options']['photobox-switch'] = t('Image to photobox switcher');
-      $elements['media_switch']['#description'] .= t('<br />Photobox switcher: image to photobox switch. Be sure to select Thumbnail style for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.');
-      $elements['colorbox_style']['#title'] = t('Photobox image style');
+      $elements['colorbox_style']['#title'] = t('Lightbox image style');
     }
   }
 
@@ -599,7 +577,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     $elements['picture'] = array(
       '#type' => 'checkbox',
       '#title' => t('Picture mapping'),
-      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick lazyLoad is not supported with picture-enabled images. Slick only falicitates Picture to get in, and the image formatting is taken over by Picture.'),
+      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick lazyLoad is not supported with picture-enabled images. Slick only accommodates Picture to get in. The image formatting is taken over by Picture.'),
       '#default_value' => $settings['picture'],
       '#field_suffix' => '',
       '#title_display' => 'before',
@@ -671,7 +649,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $elements['overridables'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Overridable options'),
-    '#description' => t("Override the main optionset to re-use one. Anything dictated here will override the current optionset. OFF means FALSE"),
+    '#description' => t("Override the main optionset to re-use one. Anything dictated here will override the current main optionset. OFF means FALSE"),
     '#options' => $overridable_options,
     '#default_value' => $overridable_values,
     '#attributes' => $is_tooltip,
@@ -693,7 +671,14 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   );
 
   if ($display['type'] == 'slick') {
-    $elements['#attached']['library'][] = array('slick', 'slick.admin');
+    if (module_exists('slick_ui')) {
+      $elements['#attached']['library'][] = array('slick_ui', 'slick.ui');
+    }
+    else {
+      $elements['#attached']['css'][] = $slick_module_path . '/css/admin/slick.admin--ui.css';
+      $elements['#attached']['css'][] = $slick_module_path . '/css/admin/slick.admin--ui--field.css';
+      $elements['#attached']['js'][] = $slick_module_path . '/js/slick.admin.ui.min.js';
+    }
   }
 
   return $elements;
@@ -807,8 +792,8 @@ function _slick_fields_field_formatter_settings_summary($field, $instance, $view
       $captions = $settings['slide_caption'];
       if (is_array($settings['slide_caption'])) {
         $captions = array_filter(array_values($settings['slide_caption']));
-        $captions = str_replace('_', ' ', $captions);
         $captions = implode(", ", $captions);
+        $captions = str_replace('_', ' ', $captions);
       }
       $summary[] = t('Caption: @captions', array('@captions' => $captions));
     }
@@ -843,96 +828,4 @@ function _slick_fields_field_formatter_settings_summary($field, $instance, $view
   }
 
   return $summary;
-}
-
-/**
- * A helper function to return view modes for a form.
- *
- * @param string $entity_type
- *   The entity type to use with entity_get_info($entity_type) or
- *   entity_get_info($field['settings']['target_type']).
- * @param bool $exclude
- *   If TRUE, then exclude some view modes, such as: 'rss', 'search_index',
- *   'search_result', 'print', 'token'.
- *
- * @return array
- *   An array of available view modes, excluding some.
- */
-function _slick_fields_view_modes($entity_type, $exclude = TRUE) {
-  $view_mode_options = &drupal_static(__FUNCTION__);
-
-  if (!isset($view_mode_options)) {
-    $view_mode_options = array('default' => t('Default'));
-    $view_mode_excludes = array(
-      'rss',
-      'search_index',
-      'search_result',
-      'print',
-      'token',
-      'preview',
-      'wysiwyg',
-    );
-
-    $entity_info = entity_get_info($entity_type);
-    if (!empty($entity_info['view modes'])) {
-      foreach ($entity_info['view modes'] as $view_mode => $view_mode_settings) {
-        if ($exclude && in_array($view_mode, $view_mode_excludes)) {
-          continue;
-        }
-        $view_mode_options[$view_mode] = $view_mode_settings['label'];
-      }
-    }
-  }
-
-  return $view_mode_options;
-}
-
-/**
- * Gets a list of fields in the Field Collection item.
- */
-function _slick_fields_get_fc_fields($instance, $field_types) {
-  $fc_options = array();
-  $fields = field_info_fields();
-  $bundle = 'field_collection_item';
-  $bundle_instance = $instance['field_name'];
-
-  foreach ($fields as $name => $field) {
-    $infos = field_info_instance($bundle, $name, $bundle_instance);
-    if ($field_types == '_all') {
-      $fc_options[$name] = $infos['label'];
-    }
-    else {
-      if (in_array($bundle, array_keys($field['bundles']))
-          && in_array($bundle_instance, $field['bundles'][$bundle])
-          && in_array($field['type'], $field_types)) {
-        $fc_options[$name] = $infos['label'];
-      }
-    }
-  }
-
-  return $fc_options;
-}
-
-/**
- * Gets a list of fields in the Media file field.
- */
-function _slick_fields_get_media_fields($instance, $widget_types = NULL) {
-  $media_options = array();
-  $types = drupal_map_assoc(array('audio', 'image', 'video'));
-
-  // Expose all media sub-fields, and merge them as available options.
-  foreach ($types as $media_type) {
-    $fields = field_info_instances('file', $media_type);
-    foreach ($fields as $key => $media_field) {
-      $type = $media_field['widget']['type'];
-      if ($widget_types && in_array($type, $widget_types)) {
-        $media_options[$key] = $media_field['label'];
-      }
-      else {
-        $media_options[$key] = $media_field['label'];
-      }
-    }
-  }
-
-  return $media_options;
 }

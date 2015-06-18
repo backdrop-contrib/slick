@@ -9,7 +9,7 @@ o Uses CSS3 when available. Fully functional when not.
 o Swipe enabled. Or disabled, if you prefer.
 o Desktop mouse dragging.
 o Fully accessible with arrow key navigation.
-o Autoplay, pagers, arrows, etc...
+o Autoplay, pagers, arrows, text+/thumbnail pagers etc...
 o Exportable via CTools.
 o Works with Views, core and contrib fields: Image, Media or Field collection.
 o Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
@@ -278,7 +278,9 @@ TROUBLESHOOTING:
     o never stored/exported optionsets in codes.
 
 - If switching from beta1 to the latest via Drush fails, try the good old UI.
-  Be sure to clear cache first, then run /update.php, if WSOD, or broken slick.
+  Be sure to clear cache first, then run /update.php, if broken slick.
+
+- If you are customizing templates or theme funtions be sure to re-check them.
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.

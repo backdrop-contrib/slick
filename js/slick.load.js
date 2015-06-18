@@ -46,11 +46,11 @@
         if (t.attr('id') === slick.$slider.attr('id')) {
           _.arrows(a, slick);
         }
-        _.setCurrent(t, slick.currentSlide);
+        _.setCurrent(t, slick.currentSlide, slick);
       });
 
       t.on('beforeChange', function(e, slick, currentSlide, animSlide) {
-        _.setCurrent(t, animSlide);
+        _.setCurrent(t, animSlide, slick);
       });
     },
 
@@ -120,7 +120,7 @@
      * With slidesToShow 1, .slick-active = .slide--current (ok)
      * With slidesToShow > 1, .slick-active = all visible slides (bad)
      * Only when it is centerMode, .slick-center = .slide--current (ok)
-     * Hence added a specific class: .slide--current for both cases.
+     * Hence added a specific class: .slide--current for all cases.
      * Also fixed total <= slidesToShow with centerMode.
      * slick-current class is finally added 5/24/15, now is v1.5.5.
      *
@@ -130,11 +130,15 @@
      * @see https://github.com/kenwheeler/slick/issues/1248
      * @see https://github.com/kenwheeler/slick/commit/7eadb8adac811f573d69626ceac8efda047a7bb9
      */
-    setCurrent: function(t, curr) {
+    setCurrent: function(t, curr, slick) {
       // Must take care for both asNavFor instances, with/without slick-wrapper.
       var w = t.parent('.slick').parent();
-      $('.slick-slide', w).removeClass('slide--current');
-      $('[data-slick-index="' + curr + '"]', w).addClass('slide--current');
+      // Be sure the most complex slicks are taken care of as well, e.g.:
+      // asNavFor with the main display containing nested slicks.
+      if (t.attr('id') === slick.$slider.attr('id')) {
+        $('.slick-slide', w).removeClass('slide--current');
+        $('[data-slick-index="' + curr + '"]', w).addClass('slide--current');
+      }
     },
 
     /**

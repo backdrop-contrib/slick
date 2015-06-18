@@ -12,15 +12,16 @@
  *  - $alternative_content: Text to display for browsers that don't support
  *      iframes.
  *  - $settings: An array containing cherry-picked settings.
+ *  - $display: The current item display: main, thumbnail, grid, overlay.
  */
 ?>
-<?php if ($asnavfor == 'thumbnail'): ?>
+<?php if ($display == 'thumbnail'): ?>
   <?php print render($item); ?>
 
 <?php
   // Main media, er, this silly line is to satisfy pareview.sh till the fix.
   else: ?>
-
+  <?php print render($item_prefix); ?>
   <div<?php print $attributes; ?>>
     <?php if (in_array($settings['type'], array('video', 'audio'))): ?>
       <?php if (!$is_lightbox): ?>
@@ -33,10 +34,8 @@
       <?php endif; ?>
     <?php endif; ?>
 
-    <?php if ($item): ?>
-      <?php print render($item_prefix); ?>
-      <?php print render($item); ?>
-      <?php print render($item_suffix); ?>
-    <?php endif; ?>
+    <?php print render($item); ?>
+
   </div>
+  <?php print render($item_suffix); ?>
 <?php endif; ?>

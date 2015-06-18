@@ -32,32 +32,53 @@ $settings = array(
 // 'skin' => 'default',
 // Note we add attributes to the settings, not as theme key here, to allow
 // various scenarios before being passed to the actual #attributes property.
+// Or ignore this, if the only attribute is just $id, and the $id is set.
+// @see README.txt for the HTML structure.
   'attributes' => array(
     'id' => $id,
+  ),
+  // content_attributes ID i for nested, or asNavFor slicks.
+  // Pass the proper ID to asnavfor_target, see slick_fields/slick_views.
+  'content_attributes' => array(
+    'id' => $id . '-slider',
   ),
 );
 
 // 3.
-// Prepare $items contents, note 'slide' key is to hold the actual slide
+// Prepare $items contents, note the 'slide' key is to hold the actual slide
 // which can be pure and simple text, or any image/media file. Meaning $rows can
 // be text only, or image/audio/video, or a combination of both.
 // To add caption/overlay, use 'caption' key with the supported sub-keys:
-// title, alt, link, layout, overlay, editor, or data for complex content.
-// You must sanitize each sub-key content yourself accordingly.
+// title, alt, link, overlay, editor, or data for complex content.
+// Sanitize each sub-key content accordingly.
 // See template_preprocess_slick_item() for more info.
 $items = array();
-foreach ($rows as $row) {
+foreach ($rows as $key => $row) {
   $items[] = array(
     'slide' => $row,
-    // If the slide is image, to add text caption, use:
+    // If the slide is an image, to add text caption, use:
     // 'caption' => 'some-caption data',
+    // Individual slide supports some useful settings like layout, classes, etc.
+    // Meaning each slide can have different layout, or classes.
+    // @see sub-modules implementation.
+    'settings' => array(
+      'layout' => 'bottom',
+      'classes' => 'slide--custom-class--' . $key,
+      'has_pattern' => TRUE,
+    ),
   );
 }
 
 // 4.
 // Optional JS and CSS assets loader, see slick_attach(). An empty array should
 // suffice for the most basic slick with no skin at all.
+// @see slick_fields/slick_views for the real world samples.
 $attach = array();
+// Add more assets using supported slick_attach() keys.
+$attachments = slick_attach($attach);
+// Add more attachments using regular library keys just as freely:
+$attachments['css'] += array(HOOK_PATH . '/css/zoom.css' => array('weight' => 9));
+$attachments['js'] += array(HOOK_PATH . '/css/zoom.min.js' => array('weight' => -5));
 
 // 5.
 // Optional specific Slick JS options, if no optionset provided above.
@@ -75,11 +96,11 @@ $options = array(
 $slick[0] = array(
   '#theme' => 'slick',
   '#items' => $items,
-  '#settings' => $settings,
   '#options' => $options,
+  '#settings' => $settings,
   // Attach the Slick library, see slick_attach() for more options.
   // At D8, #attached is obligatory to avoid issue with caching.
-  '#attached' => slick_attach($attach),
+  '#attached' => $attachments,
 );
 
 // Optionally build an asNavFor with $slick[1], and both should be passed to
@@ -91,7 +112,7 @@ print render($slick);
 // 6.B.
 // Or alternatively, use slick_build() where the parameters are as described
 // above:
-$slick = slick_build($items, $options, $settings, $attach, $id);
+$slick = slick_build($items, $options, $settings, $attachments, $id);
 // All is set, render the Slick.
 print render($slick);
 
@@ -235,11 +256,7 @@ function hook_slick_attach_info_alter(array &$attach) {
   $attach['attach_inline_css'] = NULL;
 
   // Disable module JS: slick.load.min.js to use your own slick JS.
-  $attach['attach_module'] = FALSE;
-
-  // Also disable its dependents, otherwise slick.load.min.js is still loaded.
-  $attach['attach_media'] = FALSE;
-  $attach['attach_colorbox'] = FALSE;
+  $attach['attach_module_js'] = FALSE;
 }
 
 /**
@@ -273,3 +290,37 @@ function hook_slick_attach_load_info_alter(&$load, $attach, $skins) {
     }
   }
 }
+
+/**
+ * Using slick_attach() to a custom theme or renderable array.
+ *
+ * slick_attach() is just an array as normally used with #attached property.
+ * This can be used to merge extra 3d party libraries along with the slick.
+ * Previously slick_add() was provided as a fallback. It was dropped since it
+ * was never actually used by slick. However you can add slick assets using a
+ * few alternatives: drupal_add_library(), drupal_add_js(), or the recommended
+ * #attached, the D8 way, just as easily. Hence slick_attach() acts as a
+ * shortcut to load the basic Slick assets.
+ *
+ * Passing an empty array will load 3 basic files:
+ *  - slick.min.js, slick.css, slick.load.min.js.
+ */
+// Empty array for the basic files, or optionallly pass a skin to have a proper
+// display where appropriate, see slick_fields/slick_views for more samples.
+$attach = array();
+$attachments = slick_attach($attach);
+
+// Add another custom library to the array.
+$transit = libraries_get_path('jquery.transit') . '/jquery.transit.min.js';
+$attachments['js'] += array($transit => array('group' => JS_LIBRARY, 'weight' => -5));
+
+// Add another asset.
+$my_module_path = drupal_get_path('module', 'my_module');
+$attachments['css'] += array($my_module_path . '/css/my_module.css' => array('weight' => 5));
+
+// Pass the $attachments to theme_slick(), or any theme with bigger scope.
+$my_module_theme = array(
+  '#theme' => 'my_module_theme',
+  // More properties...
+  '#attached' => $attachments,
+);

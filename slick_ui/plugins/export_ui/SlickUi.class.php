@@ -23,7 +23,7 @@ class SlickUi extends ctools_export_ui {
     $options = $optionset->options;
     $slick_options = slick_get_options();
 
-    $form['#attached']['library'][] = array('slick', 'slick.admin');
+    $form['#attached']['library'][] = array('slick_ui', 'slick.ui');
     $form['#attached']['css'][] = $module_path . '/css/admin/slick.admin--vertical-tabs.css';
 
     $form['#attributes']['class'][] = 'no-js';
@@ -102,7 +102,7 @@ class SlickUi extends ctools_export_ui {
     $form['options']['general']['template_class'] = array(
       '#type' => 'textfield',
       '#title' => t('Wrapper class'),
-      '#description' => t('Additional template wrapper classes separated by spaces. No need to prefix it with a dot (.). Use it in conjunction with asNavFor as needed, e.g.: <em>slick--for</em> for the main display, and <em>slick--nav</em> for thumbnail navigation.'),
+      '#description' => t('Additional template wrapper classes separated by spaces. No need to prefix it with a dot (.).'),
       '#default_value' => isset($options['general']['template_class']) ? $options['general']['template_class'] : '',
       '#attributes' => array('class' => array('is-tooltip')),
     );
@@ -498,13 +498,6 @@ class SlickUi extends ctools_export_ui {
         'type' => 'checkbox',
       );
 
-      $elements['appendArrows'] = array(
-        'title' => t('Append arrows'),
-        'description' => t("Change where the navigation arrows are attached (Selector, htmlString). Leave it to default to wrap it within .slick__arrow container, otherwise change its markups accordingly."),
-        'type' => 'textfield',
-        'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
-      );
-
       $elements['prevArrow'] = array(
         'title' => t('Previous arrow'),
         'description' => t("Customize the previous arrow markups. Be sure to keep the expected class."),
@@ -680,7 +673,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['cssEase'] = array(
         'title' => t('CSS ease'),
-        'description' => t('CSS3 animation easing. <a href="@ceaser">Learn</a> <a href="@bezier">more</a>.', array('@ceaser' => '//matthewlein.com/ceaser/', '@bezier' => '//cubic-bezier.com')),
+        'description' => t('CSS3 animation easing. <a href="@ceaser">Learn</a> <a href="@bezier">more</a>. Ignored if <strong>CSS ease override</strong> is provided.', array('@ceaser' => '//matthewlein.com/ceaser/', '@bezier' => '//cubic-bezier.com')),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][useCSS]"]' => array('checked' => TRUE))),
       );
@@ -700,7 +693,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['easing'] = array(
         'title' => t('jQuery easing'),
-        'description' => t('Add easing for jQuery animate as fallback. Use with <a href="@easing">easing</a> libraries or default easing methods. Optionally install <a href="@jqeasing">jqeasing module</a>. This will be ignored and replaced by CSS ease for supporting browsers, or effective if useCSS is disabled.', array('@jqeasing' => '//drupal.org/project/jqeasing', '@easing' => '//gsgd.co.uk/sandbox/jquery/easing/')),
+        'description' => t('Add easing for jQuery animate as fallback. Use with <a href="@easing">easing</a> libraries or default easing methods. This will be ignored and replaced by CSS ease for supporting browsers, or effective if useCSS is disabled.', array('@easing' => '//gsgd.co.uk/sandbox/jquery/easing/')),
         'type' => 'select',
         'options' => _slick_easing_options(),
         'empty_option' => t('- None -'),
@@ -731,10 +724,12 @@ class SlickUi extends ctools_export_ui {
         'type' => 'checkbox',
       );
 
-      // Clone the default values from slick.elements.inc.
+      // Clone the default values.
       $slick_options = slick_get_options();
       foreach ($slick_options as $name => $value) {
-        $elements[$name]['default'] = $value;
+        if (isset($elements[$name])) {
+          $elements[$name]['default'] = $value;
+        }
       }
 
       // Allows form elements information to be altered.

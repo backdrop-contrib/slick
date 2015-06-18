@@ -1,34 +1,40 @@
 /**
  * @file
- * Provides media integration.
- */
-/**
- * Pure CSS fluid video wrapper.
+ * Provides media integration with pure CSS fluid video wrapper.
  */
 .media__iframe,
-.slick__capture,
+.slick__litebox,
 .slick__slide picture {
   border: 0 none;
   display: block;
   max-width: 100%;
 }
 
-.media--switch--player .media__iframe {
+.media--ratio--on {
+  height: 0;
+}
+
+/* 4:3 ratio */
+.media--ratio--43 {
+  padding-bottom: 75%;
+}
+
+/* 16:9 ratio */
+.media--ratio--169 {
+  padding-bottom: 56.25%;
+}
+
+.media--ratio--on > iframe {
   background: rgba(0, 0, 0, 0.8);
   max-width: 100%;
   opacity: 0;
   visibility: hidden;
 }
 
-.slide__overlay .media--switch--player {
-  /* 16:9 ratio */
-  height: 0;
-  padding-bottom: 56.25%;
-}
-
-.slide__overlay .media--switch--player .media__iframe,
-.slide__overlay .media--switch--player .slick__image,
-.slide__overlay .media--switch--player picture {
+.media--ratio--on > iframe,
+.media--ratio--on > img,
+.media--ratio--on > picture,
+.media--ratio--on > .slick__litebox {
   border: 0 none;
   display: block;
   height: 100%;
@@ -39,70 +45,13 @@
   z-index: 0;
 }
 
-.slide__overlay .media--switch--player picture .slide__image {
-  height: auto;
-  position: relative;
-}
-
-/**
- * Aspect ratio applied to the main image, unless overriden to just overlay.
- */
-/* 16:9 ratio */
-.slick--ratio--file .media--player,
-.slick--ratio--field-collection .slide__media {
-  height: 0;
-  padding-bottom: 56.25%;
-}
-
-.slick--ratio--file .media--player picture,
-.slick--ratio--file .media--player .media__iframe,
-.slick--ratio--file .media--player .slick__image,
-.slick--ratio--field-collection .slide__media picture,
-.slick--ratio--field-collection .slide__media .media__iframe,
-.slick--ratio--field-collection .slide__media .slick__image {
-  border: 0 none;
-  display: block;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 0;
-}
-
-.slick--ratio--file .media--player picture .slide__image,
-.slick--ratio--field-collection .slide__media picture .slide__image {
-  height: auto;
-  position: relative;
-}
-
-/* 4:3 ratio */
-.slick--ratio--43.slick--ratio--field-collection .slide__media,
-.slick--ratio--43.slick--ratio--file .media--player {
-  padding-bottom: 75%;
-}
-
-/**
- * Aspect ratio applied to the overlay image/audio/video only.
- * Ratio overlay only applies to FC, default to .slide__overlay.
- */
-.slick--ratio-overlay.slick--ratio--field-collection .slide__media {
+.media--ratio--on > picture img,
+.media--ratio--on > .slick__litebox img {
   height: auto;
   padding-bottom: 0;
 }
 
-.slick--ratio-overlay.slick--ratio--field-collection .slide__media picture,
-.slick--ratio-overlay.slick--ratio--field-collection .slide__media .media__iframe,
-.slick--ratio-overlay.slick--ratio--field-collection .slide__media .slick__image {
-  height: auto;
-  position: relative;
-}
-
-.slick--ratio-overlay.slick--ratio--43 .slide__overlay .media--switch {
-  padding-bottom: 75%;
-}
-
-.media--switch .media__iframe,
+.media--ratio--on iframe,
 .media-icon {
   -webkit-transition: visibility 0s linear 0.5s, opacity 0.5s linear;
   transition: visibility 0s linear 0.5s, opacity 0.5s linear;
@@ -200,16 +149,15 @@
   visibility: visible;
 }
 
-.is-playing .media__iframe,
-.slick--ratio .is-playing .media__iframe {
+.is-playing .media__iframe {
   z-index: 3;
 }
 
+.is-playing .slick__image,
 .is-playing.media--switch + .slide__pattern,
 .is-playing.media--switch .slick__image,
 .is-playing .media-icon--play,
-.is-playing:hover .media-icon--play,
-.slick--ratio .is-playing .slick__image {
+.is-playing:hover .media-icon--play {
   opacity: 0;
   position: absolute;
   visibility: hidden;

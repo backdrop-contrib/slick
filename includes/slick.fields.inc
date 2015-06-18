@@ -1,25 +1,77 @@
 <?php
 /**
  * @file
- * Global functions for Slick fields formatter display.
+ * Global functions for field formatter.
  */
 
 /**
- * Gets the rendered image based on the Picture mapping, or Slick lazy.
+ * Defines default field formatter settings to avoid notices.
  *
- * It is reasonable to have picture for large images only, while medium to small
- * use lazyLoad instead.
+ * @return array
+ *   An alterable array of all supported field formatter settings.
  */
-function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
-  $build = '';
+function slick_get_fields_default_settings() {
+  $settings = array(
+    'optionset'            => 'default',
+    'optionset_thumbnail'  => '',
+    'asnavfor_main'        => '',
+    'asnavfor_thumbnail'   => '',
+    'asnavfor_auto'        => FALSE,
+    'skin'                 => '',
+    'skin_thumbnail'       => '',
+    'skin_arrows'          => '',
+    'skin_dots'            => '',
+    'slide_layout'         => '',
+    'image_style'          => '',
+    'thumbnail_style'      => '',
+    'thumbnail_hover'      => FALSE,
+    'thumbnail_caption'    => '',
+    'slide_image'          => '',
+    'slide_caption'        => array(),
+    'media_switch'         => '',
+    'mousewheel'           => FALSE,
+    'override'             => FALSE,
+    'overridables'         => array(),
+    'slide_classes'        => '',
+    'color_field'          => '',
+    'nested_slick'         => FALSE,
+    'nested_optionset'     => '',
+    'nested_style'         => '',
+    'slide_overlay'        => array(),
+    'slide_link'           => '',
+    'slide_title'          => '',
+    'view_mode'            => '',
+    'aspect_ratio'         => '',
+    'picture'              => FALSE,
+    'picture_style'        => '',
+    'picture_fallback'     => '',
+    'colorbox_style'       => '',
+    'type'                 => '',
+    'has_overlay'          => FALSE,
+    'has_media'            => FALSE,
+    'lightbox_ready'       => FALSE,
+    'picture_ready'        => FALSE,
+    'inline_css'           => '',
+    'current_display'      => 'main',
+  );
+
+  drupal_alter('slick_fields_default_settings_info', $settings);
+  return $settings;
+}
+
+/**
+ * Gets the rendered image based on the Picture mapping, or Slick image lazy.
+ */
+function slick_get_image($settings, $item_settings, $image, $key, $media_url = NULL) {
+  $build = array();
 
   // Must be similar for the colorbox rel gallery for image/video/audio.
   $id = isset($settings['lightbox_id']) ? $settings['lightbox_id'] : $settings['attributes']['id'];
+  $type = isset($item_settings['type']) ? $item_settings['type'] : $settings['type'];
 
   // Ensures disabling Picture while being used doesn't screw up.
   $is_picture = function_exists('picture_mapping_load') && $settings['picture_ready'];
   if ($is_picture && $settings['picture'] && $settings['picture_style']) {
-    $picture_path     = drupal_get_path('module', 'picture');
     $picture_fallback = $settings['picture_fallback'];
     $mappings         = picture_mapping_load($settings['picture_style']);
     $breakpoints      = picture_get_mapping_breakpoints($mappings, $picture_fallback);
@@ -32,38 +84,14 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
           array('picture', 'picture.ajax'),
         ),
       ),
-      '#uri'         => $image['uri'],
-      '#height'      => $image['height'],
-      '#width'       => $image['width'],
-      '#alt'         => $image['alt'],
-      '#title'       => $image['title'],
       '#style_name'  => $settings['picture_style'],
-      '#attributes'  => array(),
       '#breakpoints' => $breakpoints,
     );
 
-    // Only Colorbox is supported by Picture.
-    if ($settings['media_switch'] == 'colorbox-switch') {
-      $image_slide = array(
-        '#theme'       => 'picture_formatter_colorbox',
-        '#item'        => $image,
-        '#image_style' => $settings['picture_style'],
-        '#path'        => $image['uri'],
-        '#colorbox_image_style' => $settings['colorbox_style'],
-        '#colorbox'             => $breakpoints,
-        '#colorbox_group_id'    => $id,
-        '#attached' => array(
-          'css' => array(
-            $picture_path . '/picture_colorbox.css' => array('type' => 'file'),
-          ),
-          'js' => array(
-            $picture_path . '/picture_colorbox.js' => array('type' => 'file'),
-          ),
-        ),
-      ) + $image_slide;
+    foreach (array('uri', 'width', 'height', 'alt', 'title') as $value) {
+      $image_slide["#$value"] = isset($image[$value]) ? $image[$value] : NULL;
     }
 
-    // Render the configured slide.
     $build = render($image_slide);
   }
   else {
@@ -73,8 +101,7 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
       '#image_style' => $settings['image_style'],
       '#lazy' => $settings['lazy'],
       '#options' => array(
-        'lightbox' => '',
-        'type' => $settings['type'],
+        'type' => $type,
         'has_pattern' => $settings['has_pattern'],
         'count' => $settings['count'],
         'delta' => $key,
@@ -84,15 +111,15 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
 
     // Provide relevant link path if it is a lightbox: media audio/video should
     // provide URL to the actual audio/video URL, image to colorbox image URL.
-    if ($settings['is_lightbox'] && $settings['lightbox_ready']) {
-      $data_media = array('type' => $settings['type']);
-      if (isset($settings['scheme'])) {
-        $data_media['scheme'] = $settings['scheme'];
+    if (strpos($settings['media_switch'], 'box') !== FALSE && $settings['lightbox_ready']) {
+      $data_media = array('type' => $type);
+      if (isset($item_settings['scheme'])) {
+        $data_media['scheme'] = $item_settings['scheme'];
       }
 
       if ($media_url) {
         $url = $media_url;
-        // Force autoplay for media URL on lightboxes saving another click.
+        // Force autoplay for media URL on lightboxes, saving another click.
         if ($data_media['scheme'] == 'soundcloud') {
           if (strpos($url, 'auto_play') === FALSE || strpos($url, 'auto_play=false') !== FALSE) {
             $url = strpos($url, '?') === FALSE ? $url . '?auto_play=true' : $url . '&amp;auto_play=true';
@@ -103,48 +130,41 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
         }
       }
       else {
-        if ($settings['colorbox_style']) {
-          $url = image_style_url($settings['colorbox_style'], $image['uri']);
-        }
-        else {
-          $url = file_create_url($image['uri']);
-        }
+        $url = $settings['colorbox_style'] ? image_style_url($settings['colorbox_style'], $image['uri']) : file_create_url($image['uri']);
       }
 
       $build['#url'] = $url;
 
       if ($settings['media_switch'] == 'colorbox-switch') {
-        $box_classes = array('slick__colorbox', 'slick__capture');
+        $box_classes = array('slick__colorbox', 'slick__litebox');
         if ($settings['count'] > 1) {
           $data_media['rel'] = $id;
         }
       }
       elseif ($settings['media_switch'] == 'photobox-switch') {
-        $box_classes = array('slick__photobox', 'slick__capture');
+        $box_classes = array('slick__photobox', 'slick__litebox');
         if ($media_url) {
           $build['#options']['url']['attributes']['rel'] = 'video';
         }
         if ($settings['thumbnail_style']) {
-          $thumbnail_url = image_style_url($settings['thumbnail_style'], $image['uri']);
-          $build['#item']['attributes']['data-src'] = $thumbnail_url;
+          $build['#item']['attributes']['data-src'] = image_style_url($settings['thumbnail_style'], $image['uri']);
         }
       }
 
       $build['#options']['url']['attributes']['class'] = $box_classes;
 
       // Video/audio has special attributes for JS interaction.
-      if ($settings['type'] != 'image') {
+      if ($type != 'image') {
         $data_media['player'] = TRUE;
-        $data_media['height'] = $settings['media_height'];
-        $data_media['width'] = $settings['media_width'];
+        $data_media['height'] = $item_settings['height'];
+        $data_media['width'] = $item_settings['width'];
         $build['#options']['url']['external'] = TRUE;
       }
 
       $build['#options']['url']['attributes']['data-media'] = drupal_json_encode($data_media);
 
       // Re-use a generic flag for both lightboxes: Colorbox and Photobox.
-      $switcher = str_replace('-switch', '', $settings['media_switch']);
-      $build['#options']['lightbox'] = $switcher;
+      $build['#options']['lightbox'] = str_replace('-switch', '', $settings['media_switch']);
     }
   }
 
@@ -160,7 +180,7 @@ function _slick_fields_get_picture($settings, $image, $key, $media_url = NULL) {
  * @return bool
  *   If the skin registers 'inline css' explicitly, returns TRUE.
  */
-function slick_fields_inline_css_skins($skin = NULL) {
+function slick_get_inline_css_skins($skin = NULL) {
   $inline_css = &drupal_static(__FUNCTION__, NULL);
   if (!isset($inline_css)) {
     $skins = slick_skins();

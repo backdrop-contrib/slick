@@ -112,7 +112,7 @@ function slick_slick_skins_info() {
     ),
     'rounded' => array(
       'name' => t('Rounded'),
-      'description' => t('Rounds the .slide__image, great for 3-5 visible-slides carousel.'),
+      'description' => t('Rounds the .slide__media, great for 3-5 visible-slides carousel.'),
       'css' => array(
         $module_path . '/css/theme/slick.theme--rounded.css' => array('weight' => 13),
       ),

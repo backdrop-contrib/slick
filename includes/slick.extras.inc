@@ -1,14 +1,14 @@
 <?php
 /**
  * @file
- * Contains optional functions called only if needed.
+ * Contains optional functions called by frontend Media, or Field collection.
  */
 
 /**
  * Gets a media URL from the rendered iframe already containing all the params.
  *
  * This is quicker than rebuilding media params per media contrib module.
- * Basically, to merge all media audio/video templates into one.
+ * Basically, to merge all media audio/video templates into theme_slick_media().
  *
  * @param string $rendered_media
  *   The HTML markups of media output, mostly are iframes.
@@ -18,22 +18,21 @@
  */
 function slick_get_media_url($rendered_media) {
   $url = '';
-
   if (!empty($rendered_media) && strpos($rendered_media, 'src') !== FALSE) {
     $dom = new DOMDocument();
     libxml_use_internal_errors(TRUE);
     $dom->loadHTML($rendered_media);
     $url = $dom->getElementsByTagName('iframe')->item(0)->getAttribute('src');
   }
-
   return $url;
 }
 
 /**
  * Format image/media file data, called by Media file and Field collection.
  */
-function _slick_fields_get_media_thumbnail(&$settings, $uri, $image_style = NULL) {
+function slick_get_media_thumbnail(&$settings, $uri) {
   $image_uri = '';
+  $image_style = $settings['image_style'];
   $settings['soundcloud'] = FALSE;
   $scheme = $settings['scheme'];
   $scheme_supported = array('vimeo', 'youtube', 'soundcloud');

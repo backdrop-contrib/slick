@@ -5,106 +5,107 @@
  */
 
 /**
- * Format image/media file data.
+ * Formats image/media file data.
  */
-function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $view_mode, $thumb_nav = FALSE) {
-  module_load_include('inc', 'slick', 'includes/slick.extras');
-  $settings['has_media']      = TRUE;
-  $settings['lightbox_ready'] = TRUE;
-  $settings['picture_ready']  = TRUE;
+function _slick_fields_format_media(&$settings, $config, $thumb_nav = FALSE) {
+  $view_mode             = $settings['view_mode'] ? $settings['view_mode'] : 'full';
+  $settings['has_media'] = $settings['lightbox_ready'] = $settings['picture_ready'] = TRUE;
+  $slick_id              = $settings['attributes']['id'];
+  $current_display       = 'main';
 
   $build = $css = array();
-
-  $slick_id = $settings['attributes']['id'];
-  $asnavfor = 'main';
-
-  foreach ($items as $key => $item) {
-    $slide = array(
-      'item' => $item,
-      'slide' => array(),
-      'caption' => array(),
-    );
-
-    // Setup the variables.
-    foreach (array('uri', 'alt', 'title') as $value) {
-      $image[$value] = isset($item[$value]) ? $item[$value] : NULL;
-    }
-    foreach (array('width', 'height') as $value) {
-      $image[$value] = isset($item['metadata'][$value]) ? $item['metadata'][$value] : NULL;
-    }
-
-    // Setup the variables for the image.
-    $image_style = $settings['image_style'];
-    $settings['type'] = isset($item['type']) ? $item['type'] : $field['type'];
-    $settings['is_media'] = FALSE;
-    $settings['media_height'] = $image['height'];
-    $settings['media_width'] = $image['width'];
-
-    $file = (object) $slide['item'];
-    $uri = $file->uri;
+  foreach ($config['items'] as $key => $item) {
+    $file   = (object) $item;
+    $uri    = $file->uri;
+    $scheme = file_uri_scheme($uri);
 
     // If a file has an invalid type, allow file_view_file() to work.
     if (!file_type_is_enabled($file->type)) {
       $file->type = file_get_type($file);
     }
 
-    $media = file_view_file($file, $view_mode);
+    // Check for theme_media_youtube_video() et all to avoid extra logic.
+    $media    = file_view_file($file, $view_mode);
+    $is_media = $media && isset($media['#uri']);
 
-    if ($media && isset($media['#uri'])) {
-      $settings['is_media'] = TRUE;
-      if (isset($media['#options'])) {
-        $settings['media_height'] = $media['#options']['height'] ? $media['#options']['height'] : 640;
-        $settings['media_width'] = $media['#options']['width'] ? $media['#options']['width'] : 360;
-      }
-      $settings['media_uri'] = $media['#uri'];
-      $settings['media_fid'] = $file->fid;
-      $settings['filename']  = $file->filename;
+    // Setup the variables, uri can be image, video, or audio uri.
+    foreach ($config['data'] as $data) {
+      $image[$data] = isset($item[$data]) ? $item[$data] : NULL;
     }
 
-    $image_style = isset($media['#style_name']) ? $media['#style_name'] : $image_style;
+    // Image dimensions are not always available, such as for video and audio.
+    foreach (array('width', 'height') as $data) {
+      $image[$data] = isset($item['metadata'][$data]) ? $item['metadata'][$data] : (isset($item[$data]) ? $item[$data] : NULL);
+      if ($is_media && empty($image[$data])) {
+        // Supports non-aspect-ratio iframes to have proper dimensions.
+        $image[$data] = isset($media['#options'][$data]) ? $media['#options'][$data] : NULL;
+      }
+    }
 
-    $settings['image_style'] = $image_style;
-    $settings['scheme'] = file_uri_scheme($uri);
+    // Build settings for both theme_slick_item() and theme_slick_media().
+    $slide = array(
+      'item'     => $item,
+      'caption'  => array(),
+      'settings' => array(
+        'count'        => $settings['count'],
+        'image_style'  => $settings['image_style'],
+        'media_switch' => $settings['media_switch'],
+        'has_pattern'  => $settings['has_pattern'],
+        'scheme'       => $scheme,
+        'layout'       => $settings['slide_layout'],
+        'view_mode'    => $view_mode,
+        'ratio'        => $settings['media_switch'] && $settings['aspect_ratio'] ? $settings['aspect_ratio'] : FALSE,
+      ),
+    );
 
-    // Get audio/video thumbnail uri.
-    if ($media_image_uri = _slick_fields_get_media_thumbnail($settings, $uri, $image_style)) {
+    // Clone image info to individual theme_slick_media() settings.
+    foreach ($image as $i => $value) {
+      $slide['settings'][$i] = $image[$i];
+    }
+
+    if ($is_media) {
+      $slide['settings']['media_uri'] = $media['#uri'];
+      $slide['settings']['is_media']  = TRUE;
+    }
+
+    // Slide classes, if so configured.
+    if ($settings['slide_classes'] && $slide_classes = field_get_items('file', $file, $settings['slide_classes'])) {
+      $slide['settings']['classes'] = strip_tags($slide_classes[0]['value']);
+    }
+
+    // Get audio/video thumbnail uri as opposed to the actual (video) uri.
+    if ($media_image_uri = slick_get_media_thumbnail($slide['settings'], $uri)) {
       $image['uri'] = $media_image_uri;
+      if (!empty($slide['settings']['media_id'])) {
+        $media_id = drupal_html_id('media-' . $scheme . '-' . $slide['settings']['media_id']);
+        $slide['content_attributes']['id'] = $slide['settings']['api_id_attribute'] = $media_id;
+      }
     }
 
     // Provide thumbnail pagers if so configured.
     $thumbnail = '';
     if ($thumbnail_style = $settings['thumbnail_style']) {
-      $image['path'] = $image['uri'];
-      $image['style_name'] = $thumbnail_style;
-      $thumbnail_variables = $image;
+      $thumb               = $image;
+      $thumb['path']       = $image['uri'];
+      $thumb['style_name'] = $thumbnail_style;
 
-      // Provides hidden static thumbnail revealed on dots hover, or custom
-      // advanced work with thumbnail arrows.
-      $thumbnail_url = image_style_url($thumbnail_style, $image['uri']);
-      // $thumbnail_variables['attributes']['data-thumb'] = $thumbnail_url;
-      $image['attributes']['data-thumb'] = $thumbnail_url;
-
-      $thumbnail = theme('image_style', $thumbnail_variables);
+      // Provides hidden static thumbnail revealed on dots hover.
+      $image['attributes']['data-thumb'] = image_style_url($thumbnail_style, $image['uri']);
+      $thumbnail = theme('image_style', $thumb);
     }
 
     if (!$thumb_nav) {
-      // Title, if so configured.
+      // Title, can be plain text or link field.
       $title = '';
-      if ($slide_title = $settings['slide_title']) {
-        if ($field_title = field_get_items('file', $file, $slide_title)) {
-          // Plain text title.
-          if (isset($field_title[0]['safe_value'])) {
-            $title = $field_title[0]['safe_value'];
-          }
-          // Link field.
-          elseif (isset($field_title[0]['url'])) {
-            // The $item paramater expected here is $field_title[0].
-            // Sanitization is handled by theme_link_formatter_link_default().
-            $title = field_view_value('file', $file, $slide_title, $field_title[0], $view_mode);
-          }
-
-          $slide['caption']['title'] = $title;
+      if ($settings['slide_title'] && $field_title = field_get_items('file', $file, $settings['slide_title'])) {
+        if (isset($field_title[0]['safe_value'])) {
+          $title = $field_title[0]['safe_value'];
         }
+        elseif (isset($field_title[0]['url'])) {
+          // The $item paramater expected here is $field_title[0].
+          $title = field_view_value('file', $file, $settings['slide_title'], $field_title[0], $view_mode);
+        }
+        $slide['caption']['title'] = $title;
       }
 
       // Other caption fields, if so configured.
@@ -116,14 +117,16 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
             $caption_items[$i] = $caption;
           }
         }
-        $slide['caption']['data'] = $caption_items;
+        if ($caption_items) {
+          $slide['caption']['data'] = $caption_items;
+        }
       }
 
       // Editor links.
       if (file_entity_access('update', $file)) {
         // This is basically to trigger/ bring to translation tab as defined at
         // admin/config/regional/entity_translation/translatable/FIELD_NAME
-        if (($title || $caption_items) && field_is_translatable($entity_type, $field)) {
+        if (($title || $caption_items) && field_is_translatable($config['entity_type'], $config['field'])) {
           $slide['caption']['editor']['translate']['#markup'] = l(t('Translate'), 'file/' . $file->fid . '/translate', array(
             'query' => drupal_get_destination(),
             'attributes' => array(
@@ -143,68 +146,50 @@ function _slick_fields_format_media(&$settings, $items, $entity_type, $field, $v
       }
 
       // Link, if so configured.
-      if ($slide_link = $settings['slide_link']) {
-        if (field_get_items('file', $file, $slide_link)) {
-          $link = field_view_field('file', $file, $slide_link, $view_mode);
-          $slide['caption']['link'] = $link;
-        }
+      if ($settings['slide_link'] && field_get_items('file', $file, $settings['slide_link'])) {
+        $slide['caption']['link'] = field_view_field('file', $file, $settings['slide_link'], $view_mode);
       }
 
-      // Layout, if so configured.
-      if ($settings['slide_layout']) {
-        if ($field_layout = field_get_items('file', $file, $settings['slide_layout'])) {
-          $slide['caption']['layout'] = check_plain($field_layout[0]['value']);
-        }
+      // Layout field as opposed from builtin layout above if so configured.
+      if (strpos($settings['slide_layout'], 'field_') !== FALSE && $field_layout = field_get_items('file', $file, $settings['slide_layout'])) {
+        $slide['settings']['layout'] = check_plain($field_layout[0]['value']);
       }
 
       $media_url = '';
-      if ($settings['is_media']) {
-        $rendered_media = render($media);
-        $media_url = slick_get_media_url($rendered_media);
-        $settings['url'] = $media_url;
+      if ($is_media) {
+        $rendered_media           = render($media);
+        $media_url                = slick_get_media_url($rendered_media);
+        $slide['settings']['url'] = $media_url;
       }
 
       // Image with picture and colorbox supports.
-      $image_slide = _slick_fields_get_picture($settings, $image, $key, $media_url);
+      $image_slide = slick_get_image($settings, $slide['settings'], $image, $key, $media_url);
     }
     else {
-      $image_slide = $thumbnail;
-      $settings['type'] = 'image';
-      $asnavfor = 'thumbnail';
+      $image_slide               = $thumbnail;
+      $slide['settings']['type'] = 'image';
+      $current_display           = 'thumbnail';
 
       // Thumbnail captions.
-      if ($settings['thumbnail_caption']) {
-        if ($thumbnail_caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
-          $slide['caption']['data']['#markup'] = filter_xss($thumbnail_caption[0]['value']);
-        }
+      if ($settings['thumbnail_caption'] && $caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
+        $slide['caption']['data']['#markup'] = filter_xss($caption[0]['value']);
+        $slide['settings']['type'] = empty($thumbnail) ? 'text' : 'image';
       }
     }
 
-    // Slide classes, if so configured.
-    if ($settings['slide_classes']) {
-      if ($slide_classes = field_get_items('file', $file, $settings['slide_classes'])) {
-        $settings['classes'] = strip_tags($slide_classes[0]['value']);
-      }
-    }
-
-    // Pass it over to theme_slick_media.
+    // Pass it over to theme_slick_media().
     $slide['slide'] = array(
-      '#theme' => 'slick_media',
-      '#item' => $image_slide,
-      '#settings' => $settings,
-      '#asnavfor' => $asnavfor,
+      '#theme'    => 'slick_media',
+      '#item'     => $image_slide,
+      '#settings' => $slide['settings'],
+      '#display'  => $current_display,
     );
 
-    // If has Media fields.
-    if ($settings['is_media'] && !$thumb_nav) {
-      $slide['slide']['#media'] = $media;
-    }
-
-    // Use slick_fields_inline_css_output_info_alter() to modify the output.
-    if (slick_fields_inline_css_skins($settings['skin'])) {
+    // Fullscreen skin needs inline CSS if so configured.
+    if ($config['inline_css']) {
       $slide['slide'] = array();
-      $image_url = $settings['image_style'] ? image_style_url($settings['image_style'], $image['uri']) : file_create_url($image['uri']);
-      $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$image_url}')}";
+      $image_url      = $settings['image_style'] ? image_style_url($settings['image_style'], $image['uri']) : file_create_url($image['uri']);
+      $css[]          = "#{$slick_id} .slide--{$key} {background-image: url('{$image_url}')}";
     }
 
     $build[$key] = $slide;

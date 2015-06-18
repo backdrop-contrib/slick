@@ -47,24 +47,28 @@
       });
 
       $('.is-tooltip', $form).once('slick-tooltip', function () {
-        var t = $(this);
+        var t = $(this),
+          // Fix for jQuery < 1.5 with ajax.
+          $hint = $('<span class="hint">?</span>'),
+          $parent = t.closest('.form-item'),
+          $desc = $('.description', $parent);
         if (!t.closest('.form-item').find('> .hint').length) {
-          t.closest('.form-item').append('<span class="hint">?</span>');
+          t.closest('.form-item').append($hint);
         }
 
-        $('~ .hint', t).hover(function () {
+        $hint.hover(function () {
           $(this).closest('.form-item').addClass('hover');
         },
         function () {
           $(this).closest('.form-item').removeClass('hover');
         });
 
-        $('~ .hint', t).click(function () {
+        $hint.click(function () {
           $('.form--slick .form-item.selected').removeClass('selected');
           $(this).parent().toggleClass('selected');
         });
 
-        $('~ .description', t).click(function () {
+        $desc.click(function () {
           $(this).parent().removeClass('selected');
         });
       });

@@ -1,4 +1,114 @@
 
+Slick 7.x-2.0-dev, 2015-6-19
+----------------------------
+- Fixed for jQuery < 1.5 admin pages.
+- Changed hard-coded divities at slick-item.tpl.php to have leaner markups when
+  only one item given:
+  o Wrapper prefixes/suffixes can be DIV, or UL if grid.
+  o Content prefixes/suffixes can be DIV, or LI if grid.
+  This removes four useless HTML tags with a single item slick/unslick while
+  allowing more complex layout composition for more items.
+  These flexible wrappers are common to Views HTML list template.
+
+- Fixed for slick.photobox.min.js, the slick-photobox class leaking if there are
+  more than slicks even those without photobox.
+
+- Updated slick.media.tpl.php to move the item_prefix and item_suffix outside
+  the item. This allows proper display of a single item slick (unslick) given
+  proper divities.
+
+- Removed FC 'aspect_ratio_overlay' option, as it complicated things.
+  The two solidified options for the aspect ratio overlays/nested slicks are:
+  o Managed by the host entity (FC), requires 'Rendered file' formatter.
+    The File aspect ratio is manipulated from within the host directly.
+  o Managed by the File field itself outside FC, best with Slick formatter.
+    The File aspect ratio is manipulated within its own View mode outside FC.
+
+  This means FC:
+  o overlays/nested are enforced to be just on XOR off.
+  o field_type classes are dropped.
+  o is simple just like regular Media file without nested slicks.
+
+  Large background video is never implemented from the start as the doc comments
+  at slik_fields.formatters.field_colletion line 50:
+  // Large background video is not supported, any taker?
+  And no taker so far, hence why this 'aspect_ratio_overlay' is dropped.
+
+  The relevant classes are moved directly to the theme_slik_media() to reduce
+  redundant CSS, previously within theme_slick():
+    .slick--ratio--file
+    .slick--ratio--field-collection
+
+  The benefit is it solidifies layouts for a mix of image/audio/video files.
+  Please see slick.media.css for more detailed changes, only if you overrode it.
+  Although tested with several old overriden slick.media.css, and they display
+  fine, be sure to check this change as it removed lots of redundant CSS rules.
+
+- Refactored and simplified the slick aspect ratio handling.
+- Fixed for Field collection nested slicks managed by the host entity (FC).
+- Refactored and simplified Field collection part cutting down ~150 lines.
+
+- Fixed slide--current class for the most complex slicks, i.e.: asNavFor with
+  the main display containing nested slicks.
+
+- Renamed not-clear .slick__capture (based on icon) class to .slick__litebox.
+
+- Renamed 'attach_slick_element' to more meaningful 'attach_slick_css'.
+  Be sure to update it if you disable slick-theme.css.
+
+- Renamed 'attach_module' to 'attach_module_js' to be more meaningful like
+  'attach_module_css'. Prior to alpha, the CSS is part of 'attach_module'.
+- Renamed #asnavfor key to #display accordingly.
+  Changed theme_slick_media() variables 'asnavfor' to 'display' to reflect
+  the proper/meaningful displays. Displays can be:
+  o main (asnavfor)
+  o thumbnail (asnavfor)
+  o grid
+  o overlay
+  Be sure to update your variable if you already customize it.
+
+- Refactored arrow down to reduce clutters at slick.tpl.php.
+  If you customize it be sure to re-check it.
+- Moved 'layout' key one level up from within captions to the item.
+
+- Added media--ratio--on class to ease up managing ratio with the CSS, and
+  get consistent styling for the mix of image/video/audio files within a slick.
+  - Fixed collapsing slick overlay (nested slick) when only one item given.
+  This change should reduce headache with a mix of image/video/audio in a single
+  slick since they are now consistently styled with the same aspect ratio if so
+  configured.
+
+- Moved some contents of slick_fields.formatters.admin.inc to slick.admin.inc to
+  be reusable across fields formatter, non-existent slick_entityreference, and
+  the future slick_views, 3.x, without depending on slick_fields.
+  Renamed the following functions:
+  o _slick_fields_view_modes() to slick_get_view_modes()
+  o _slick_fields_get_fc_fields() to slick_get_fc_fields()
+  o _slick_fields_get_media_fields() to slick_get_media_fields()
+
+- Removed slick_fields.formatters.global.inc, and moved its contents to
+  core slick.fields.inc, and renamed the following functions:
+  o _slick_fields_get_picture() to slick_get_image() and decluttered settings.
+  o slick_fields_inline_css_skins() to slick_get_inline_css_skins().
+  o slick_fields_get_default_settings() to slick_get_fields_default_settings().
+
+  This change has two goals:
+  o Allows re-using them for future field based Views with lazyLoad which is
+    currently not supported, only Field formatter is.
+  o Compatibility with the slick_media sub-module to reuse the same codebase
+    for image to iframe switcher for field based Views for both 2.x. and 3.x.
+
+- Renamed _slick_fields_get_media_thumbnail() to slick_get_media_thumbnail()
+  since it is now in optional core file.
+- Removed appendArrows option, since the module can do nothing, but hardcoded it
+  which is already flexible enough to move around the arrows anywhere via CSS.
+- Moved mousewheel and inline css attachments to slick_fields.
+- Moved hook_permission() to the only module requiring it: slick_ui.module.
+- Moved hook_help() to slick_ui.module to de-clutter main module file.
+- Removed unused hook_libraries_info() since hook_library() suffices.
+  Use slick_attach(), drupal_add_library(), or drupal_add_js() to add relevant
+  assets with 3rd party integration. See the API, or slick_fields for samples.
+
 Slick 7.x-2.0-dev, 2015-6-6
 ---------------------------
 - #2501507 by gausarts, rei: detect media module and jquery easing libraries

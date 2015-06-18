@@ -20,7 +20,7 @@
  * @see template_preprocess_slick_item()
  */
 ?>
-<<?php print $tag; ?><?php print $attributes; ?>>
+<?php print render($wrapper_prefix); ?>
   <?php if ($settings['current_item'] == 'thumbnail'): ?>
     <?php print render($item); ?>
     <?php if ($caption): ?>
@@ -31,7 +31,7 @@
     // Main slide may be grid items, nested slicks, or regular text/image/video.
     else: ?>
 
-    <<?php print $content_tag; ?><?php print $content_attributes; ?>>
+    <?php print render($content_prefix); ?>
 
       <?php print render($item_prefix); ?>
       <?php print render($item); ?>
@@ -74,6 +74,6 @@
 
       <?php print render($editor); ?>
 
-    </<?php print $content_tag; ?>>
+    <?php print render($content_suffix); ?>
   <?php endif; ?>
-</<?php print $tag; ?>>
+<?php print render($wrapper_suffix); ?>
