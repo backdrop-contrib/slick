@@ -46,7 +46,7 @@
             <div class="slide__overlay"><?php print render($caption['overlay']); ?></div>
           <?php endif; ?>
 
-          <?php if (isset($caption['data']) || isset($caption['title'])): ?>
+          <?php if (isset($caption['data']) || isset($caption['title']) || isset($caption['alt'])): ?>
             <?php if (isset($caption['overlay'])): ?><div class="slide__data"><?php endif; ?>
 
               <?php if (!empty($caption['title'])): ?>

@@ -8,9 +8,9 @@
   "use strict";
 
   Drupal.behaviors.slickPhotobox = {
-    attach: function (context, settings) {
-      $('.slick--photobox', context).once('slick-photobox', function () {
-        $(this).photobox('.slick__slide:not(.slick-cloned) .slick__photobox');
+    attach: function (context) {
+      $(".slick--photobox", context).once("slick-photobox", function () {
+        $(this).photobox(".slick__slide:not(.slick-cloned) .slick__photobox");
       });
     }
   };

@@ -8,34 +8,25 @@
  * overlay, and only visible when toggled.
  *
  * Available variables:
- *  - $url: The full url including query options for the iframes.
  *  - $alternative_content: Text to display for browsers that don't support
  *      iframes.
  *  - $settings: An array containing cherry-picked settings.
- *  - $display: The current item display: main, thumbnail, grid, overlay.
  */
 ?>
-<?php if ($display == 'thumbnail'): ?>
+<?php print render($item_prefix); ?>
+<div<?php print $attributes; ?>>
+  <?php if ($settings['is_media']): ?>
+    <?php if (!$is_lightbox): ?>
+      <iframe<?php print $content_attributes; ?> allowfullscreen><?php print $alternative_content; ?></iframe>
+    <?php endif; ?>
+    <?php if ($settings['media_switch'] == 'iframe-switch'): ?>
+      <i class="media-icon media-icon--close"></i>
+      <i class="media-icon media-icon--play"></i>
+      <i class="media-icon media-icon--spinner"></i>
+    <?php endif; ?>
+  <?php endif; ?>
+
   <?php print render($item); ?>
 
-<?php
-  // Main media, er, this silly line is to satisfy pareview.sh till the fix.
-  else: ?>
-  <?php print render($item_prefix); ?>
-  <div<?php print $attributes; ?>>
-    <?php if (in_array($settings['type'], array('video', 'audio'))): ?>
-      <?php if (!$is_lightbox): ?>
-        <iframe<?php print $content_attributes; ?> allowfullscreen><?php print $alternative_content; ?></iframe>
-      <?php endif; ?>
-      <?php if ($settings['media_switch'] == 'iframe-switch'): ?>
-        <i class="media-icon media-icon--close"></i>
-        <i class="media-icon media-icon--play"></i>
-        <i class="media-icon media-icon--spinner"></i>
-      <?php endif; ?>
-    <?php endif; ?>
-
-    <?php print render($item); ?>
-
-  </div>
-  <?php print render($item_suffix); ?>
-<?php endif; ?>
+</div>
+<?php print render($item_suffix); ?>

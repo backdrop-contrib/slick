@@ -63,7 +63,7 @@ foreach ($rows as $key => $row) {
     // @see sub-modules implementation.
     'settings' => array(
       'layout' => 'bottom',
-      'classes' => 'slide--custom-class--' . $key,
+      'slide_classes' => 'slide--custom-class--' . $key,
       'has_pattern' => TRUE,
     ),
   );

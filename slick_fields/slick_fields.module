@@ -27,30 +27,26 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   }
 
   module_load_include('inc', 'slick', 'includes/slick.fields');
-  $slick_path = drupal_get_path('module', 'slick');
   $build = $thumb = $js = array();
   list($entity_id, , $bundle) = entity_extract_ids($entity_type, $entity);
+  $slick_path = drupal_get_path('module', 'slick');
   $field_name = $field['field_name'];
   $slick_id   = &drupal_static('slick_id', 0);
   $id         = drupal_clean_css_identifier("slick-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}-" . ++$slick_id);
   $thumb_id   = $id . '-thumbnail';
 
   // Prepare settings for conditional features.
-  $settings = slick_get_fields_default_settings();
-  $settings += array(
+  $settings = array(
     'count'      => count($items),
     'field_type' => $field['type'],
     'field_name' => $field_name,
     'entity_id'  => $entity_id,
     'attributes' => array('id' => $id),
   );
-  $settings = array_merge($settings, $display['settings']);
-  $asnavfor = $settings['optionset_thumbnail'];
-
-  // Load the optionset once to check for lazyLoad, and other settings.
-  $optionset                 = slick_optionset_load($settings['optionset']);
+  $settings  = array_merge($settings, $display['settings']);
+  $asnavfor  = $settings['optionset_thumbnail'];
+  $optionset = slick_optionset_load($settings['optionset']);
   $settings['lazy']          = $optionset->options['settings']['lazyLoad'];
-  $settings['dots_main']     = !empty($optionset->options['settings']['dots']);
   $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
   $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
 
@@ -66,19 +62,16 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $attachments = slick_attach($attach);
 
   if ($asnavfor) {
-    $optionset_thumbnail         = slick_optionset_load($asnavfor);
-    $settings['dots_thumbnail']  = $optionset_thumbnail->options['settings']['dots'];
-    $settings['asnavfor_target'] = $settings['asnavfor_auto'] ? "#{$thumb_id}-slider" : $settings['asnavfor_main'];
+    $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_main'] : "#{$thumb_id}-slider";
   }
 
   $config = array(
-    'items'       => $items,
-    'field'       => $field,
+    'items' => $items,
+    'field' => $field,
     'entity_type' => $entity_type,
-    'entity'      => $entity,
-    'langcode'    => $langcode,
-    'inline_css'  => slick_get_inline_css_skins($settings['skin']),
-    'data'        => array('fid', 'filename', 'alt', 'title', 'uri', 'type'),
+    'entity' => $entity,
+    'langcode' => $langcode,
+    'inline_css' => slick_get_inline_css_skins($settings['skin']),
   );
   switch ($field['type']) {
     case 'image':
@@ -103,12 +96,12 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   }
 
   // Inline CSS is to colorize FC individual slide, or fullscreen skin.
-  if ($settings['inline_css']) {
+  if (!empty($settings['inline_css'])) {
     $css = implode("\n", (array) $settings['inline_css']);
     drupal_alter('slick_fields_inline_css_output_info', $css, $items, $settings);
     $attachments['css'][] = array(
-      'data'  => $css,
-      'type'  => 'inline',
+      'data' => $css,
+      'type' => 'inline',
       'group' => CSS_THEME + 1,
     );
   }
@@ -135,24 +128,24 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $slick[0] = slick_build($build, $js, $settings, $attachments, NULL, $optionset);
 
   if ($asnavfor) {
+    $optionset = slick_optionset_load($asnavfor);
     $settings['attributes']['id'] = $thumb_id;
-    $settings['optionset']        = $asnavfor;
-    $settings['current_display']  = 'thumbnail';
-    $settings['asnavfor_target']  = $settings['asnavfor_auto'] ? "#{$id}-slider" : $settings['asnavfor_thumbnail'];
+    $settings['optionset'] = $asnavfor;
+    $settings['current_display'] = 'thumbnail';
+    $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_thumbnail'] : "#{$id}-slider";
 
     // Build the thumbnail/text navigation Slick.
-    $slick[1] = slick_build($thumb, array(), $settings, array(), NULL, $optionset_thumbnail);
+    $slick[1] = slick_build($thumb, array(), $settings, array(), NULL, $optionset);
 
     $element = array(
-      '#theme'    => 'slick_wrapper',
-      '#items'    => $slick,
+      '#theme' => 'slick_wrapper',
+      '#items' => $slick,
       '#settings' => $settings,
     );
   }
   else {
     $element = $slick[0];
   }
-
   return $element;
 }
 

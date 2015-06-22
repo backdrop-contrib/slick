@@ -5,24 +5,73 @@
  */
 
 /**
- * Gets a media URL from the rendered iframe already containing all the params.
- *
- * This is quicker than rebuilding media params per media contrib module.
- * Basically, to merge all media audio/video templates into theme_slick_media().
- *
- * @param string $rendered_media
- *   The HTML markups of media output, mostly are iframes.
- *
- * @return string
- *   A URL extracted from the iframe SRC attribute.
+ * Checks for the supported media sub-modules.
  */
-function slick_get_media_url($rendered_media) {
+function slick_is_media($scheme) {
+  if (in_array($scheme, array('vimeo', 'youtube', 'soundcloud'))) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Gets a media URL from the rendered iframe already containing all the params.
+ */
+function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
   $url = '';
+  if (!slick_is_media($media['scheme'])) {
+    return $url;
+  }
+
+  // If a file has an invalid type, allow file_view_file() to work.
+  if (!file_type_is_enabled($file->type)) {
+    $file->type = file_get_type($file);
+  }
+
+  if (empty($media['type'])) {
+    $media['type'] = $file->type;
+  }
+  if (empty($settings['view_mode'])) {
+    $settings['view_mode'] = 'full';
+  }
+  $renderables = file_view_file($file, $settings['view_mode']);
+
+  // Only do the hard work if we do have a misconfigured file view mode.
+  // This is a fallback for the failing expected output when all weights are 0,
+  // and the non-supported schemes may screw up file_view_file().
+  if (!isset($renderables['#uri'])) {
+    $formatter = 'media_' . $media['scheme'] . '_' . $media['type'];
+    $renderables = array(
+      '#theme' => $formatter,
+      '#uri' => $file->uri,
+      '#options' => slick_load_media_settings($media['type'], $settings['view_mode'], $formatter),
+    );
+  }
+
+  // Allows various iframe dimensions based on the given image_style, good
+  // to re-use a single file view mode for various file host entity view modes.
+  if (!empty($settings['image_style'])) {
+    $dimensions = array(
+      'width'  => empty($media['width']) ? NULL : $media['width'],
+      'height' => empty($media['height']) ? NULL : $media['height'],
+    );
+
+    image_style_transform_dimensions($settings['image_style'], $dimensions);
+
+    $media['width'] = $settings['content_attributes']['width'] = $dimensions['width'];
+    $media['height'] = $settings['content_attributes']['height'] = $dimensions['height'];
+    $media['dimensions'] = TRUE;
+  }
+
+  $rendered_media = drupal_render($renderables);
+
   if (!empty($rendered_media) && strpos($rendered_media, 'src') !== FALSE) {
     $dom = new DOMDocument();
     libxml_use_internal_errors(TRUE);
     $dom->loadHTML($rendered_media);
     $url = $dom->getElementsByTagName('iframe')->item(0)->getAttribute('src');
+    $media['url'] = $url;
+    $settings['is_media'] = TRUE;
   }
   return $url;
 }
@@ -30,56 +79,69 @@ function slick_get_media_url($rendered_media) {
 /**
  * Format image/media file data, called by Media file and Field collection.
  */
-function slick_get_media_thumbnail(&$settings, $uri) {
+function slick_get_media_thumbnail(array &$settings, array &$media) {
   $image_uri = '';
-  $image_style = $settings['image_style'];
-  $settings['soundcloud'] = FALSE;
-  $scheme = $settings['scheme'];
-  $scheme_supported = array('vimeo', 'youtube', 'soundcloud');
-  $is_media = in_array($settings['type'], array('video', 'audio')) && in_array($scheme, $scheme_supported);
-
-  if ($is_media) {
-    // Ensures disabling Media sub-modules while being used doesn't screw up.
-    try {
-      $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
-
-      if (!is_object($wrapper)) {
-        throw new Exception('Unable to find matching wrapper');
-      }
-
-      $parts = $wrapper->get_parameters();
-
-      switch ($scheme) {
-        case 'vimeo':
-        case 'youtube':
-          $media_id = $parts['v'];
-          break;
-
-        case 'soundcloud':
-          if ($wrapper->interpolateUrl()) {
-            $settings['soundcloud'] = TRUE;
-          }
-          $media_id = $parts['u'];
-          break;
-      }
-
-      $valid_image_styles = image_style_options(FALSE);
-      if (empty($image_style) || !isset($valid_image_styles[$image_style])) {
-        $image_uri = $wrapper->getOriginalThumbnailPath();
-      }
-      else {
-        $image_uri = $wrapper->getLocalThumbnailPath();
-      }
-
-      $settings['media_id'] = $media_id;
-    }
-    catch (Exception $e) {
-      watchdog('slick', 'Unable to render media from %uri. Error: %error', array('%uri' => $uri, '%error' => $e->getMessage()));
-      return '';
-    }
+  if (!slick_is_media($media['scheme'])) {
+    return $image_uri;
   }
 
+  $settings['soundcloud'] = FALSE;
+  // Ensures disabling Media sub-modules while being used doesn't screw up.
+  try {
+    $wrapper = file_stream_wrapper_get_instance_by_uri($media['media_uri']);
+
+    if (!is_object($wrapper)) {
+      throw new Exception('Unable to find matching wrapper');
+    }
+
+    $parts = $wrapper->get_parameters();
+    $media_id = '';
+    switch ($media['scheme']) {
+      case 'vimeo':
+      case 'youtube':
+        $media_id = $parts['v'];
+        break;
+
+      case 'soundcloud':
+        if ($wrapper->interpolateUrl()) {
+          $settings['soundcloud'] = TRUE;
+        }
+        $media_id = $parts['u'];
+        break;
+    }
+
+    $valid_image_styles = image_style_options(FALSE);
+    if (empty($settings['image_style']) || !isset($valid_image_styles[$settings['image_style']])) {
+      $image_uri = $wrapper->getOriginalThumbnailPath();
+    }
+    else {
+      $image_uri = $wrapper->getLocalThumbnailPath();
+    }
+
+    $settings['media_id'] = $media_id;
+    if ($media_id) {
+      $media_id = drupal_html_id('media-' . $media['scheme'] . '-' . $media_id);
+      $settings['content_attributes']['id'] = $media_id;
+    }
+  }
+  catch (Exception $e) {
+    watchdog('slick', 'Unable to render media from %uri. Error: %error', array('%uri' => $media['media_uri'], '%error' => $e->getMessage()));
+    return '';
+  }
   return $image_uri;
+}
+
+/**
+ * Returns an array of {file_display} settings for the file type and view mode.
+ *
+ * It is a clone of file_displays_load() to load only the known/supported ones.
+ */
+function slick_load_media_settings($type, $view_mode, $formatter) {
+  ctools_include('export');
+
+  $name = $type . '__' . $view_mode . '__' . $formatter;
+  $displays = ctools_export_load_object('file_display', 'names', array($name));
+  return $displays[$name]->settings;
 }
 
 /**
@@ -117,6 +179,5 @@ function slick_color_brightness($hex, $steps) {
   $r_hex = str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
   $g_hex = str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
   $b_hex = str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
-
   return '#' . $r_hex . $g_hex . $b_hex;
 }

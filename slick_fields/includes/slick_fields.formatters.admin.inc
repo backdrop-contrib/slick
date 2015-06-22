@@ -309,7 +309,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
         '#options' => $overlay_options,
         '#empty_option' => t('- None -'),
         '#default_value' => $settings['slide_overlay'],
-        '#description' => t('Overlays can be single image/auvio/video, or nested slicks. If audio/video, be sure the display is not image. Manage its display at its own entity View mode (there). Two ways to build nested slicks: <ol><li>Make this field use Slick formatter there, and leave <strong>Enable nested slick</strong> unchecked.</li><li>Or check <strong>Enable nested slick</strong> here and be sure to use Image or Rendered file formatter (not Slick) there for the supported fields: Image, Media, Atom reference.</li></ol>'),
+        '#description' => t('Overlays can be single image/auvio/video, or nested slicks. If audio/video, be sure the display is not image. Manage its display at its own entity View mode (there). Two ways to build nested slicks: <ol><li>Make this field use Slick formatter there, and leave <strong>Enable nested slicks</strong> unchecked.</li><li>Or check <strong>Enable nested slicks</strong> here and be sure to use Image or Rendered file formatter (not Slick) there for the supported fields: Image, Media, Atom reference.</li></ol>'),
         '#attributes' => $is_tooltip,
       );
 
@@ -390,7 +390,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     }
 
     if ($field_entity_type == 'field_collection_item') {
-      $elements['slide_caption']['#description'] .= t('And not choose the same field as main/ background image.');
+      $elements['slide_caption']['#description'] .= ' ' . t('And not choose the same field as main/ background image.');
     }
 
     if (empty($caption_options)) {

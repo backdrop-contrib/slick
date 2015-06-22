@@ -106,7 +106,7 @@ function slick_library() {
   $libraries['slick.media'] = $common + array(
     'title' => 'Slick media',
     'js' => array(
-      $path . '/js/slick.media.min.js' => array('group' => JS_DEFAULT, 'weight' => 2),
+      $path . '/js/slick.media.min.js' => array('group' => JS_DEFAULT, 'weight' => -1),
     ),
     'css' => array(
       $path . '/css/components/slick.media.css' => array(),
@@ -360,7 +360,7 @@ function slick_optionset_create($values = array()) {
  *   An array of assets to load using slick_attach($attach), or regular array.
  * @param string $id
  *   An optional ID for the instance.
- * @param string $optionset
+ * @param object $optionset
  *   The cached optionset object to avoid possible multiple invocations.
  *
  * @return array
