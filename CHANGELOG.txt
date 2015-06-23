@@ -1,4 +1,19 @@
 
+Slick 7.x-2.0-dev, 2015-6-23
+----------------------------
+- Fixed regression with Fullscreen CSS output for Media and FC fields.
+- Moved all skin Fullwidth and Fullscreen stuffs out of the main slick.theme.css
+  into its own CSS: slick.theme--full.css to reduce clutters at the main CSS and
+  also allows easy overrides at this particular skin CSS file.
+  This file is re-used for both Fullscreen and Fullwidth skins.
+  This also removes redundant selectors where '.slide__constrained' is used.
+  It should be safe, whether you override or not, as it is less specificity
+  which means your overrides will always win.
+- Fixed for text only slides without images, that is, only applies absolute
+  positioning when a slide layout is explicitly chosen.
+- #2510528 by swinglo: array_merge(): Argument #2 is not an array dans
+  template_preprocess_slick_item()
+
 Slick 7.x-2.0-dev, 2015-6-22
 ----------------------------
 - Fixed for most DRY with repetitive field tasks.

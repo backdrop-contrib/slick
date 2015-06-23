@@ -63,6 +63,7 @@ function slick_slick_skins_info() {
       'description' => t('Adds full screen display, works best with 1 slidesToShow.'),
       'css' => array(
         $module_path . '/css/theme/slick.theme--fullscreen.css' => array('weight' => 4),
+        $module_path . '/css/theme/slick.theme--full.css' => array('weight' => 5),
       ),
       'inline css' => TRUE,
     ),
@@ -71,6 +72,7 @@ function slick_slick_skins_info() {
       'description' => t('Adds .slide__constrained wrapper to hold caption overlay within the max-container (1170px for large monitor).'),
       'css' => array(
         $module_path . '/css/theme/slick.theme--fullwidth.css' => array('weight' => 5),
+        $module_path . '/css/theme/slick.theme--full.css' => array('weight' => 5),
       ),
     ),
     'boxed' => array(

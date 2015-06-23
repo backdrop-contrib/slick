@@ -201,11 +201,9 @@ function slick_get_inline_css_skins($skin = NULL) {
 /**
  * Gets the output of inline CSS background for Fullscreen skin.
  */
-function slick_get_inline_css(array $settings, array &$slide, $key = 0, $uri = NULL) {
-  $css = array();
+function slick_get_inline_css(array $settings, array &$slide, $key, $uri = NULL) {
   $slick_id = $settings['attributes']['id'];
   $slide['slide'] = array();
   $image_url = !empty($settings['image_style']) ? image_style_url($settings['image_style'], $uri) : file_create_url($uri);
-  $css[] = "#{$slick_id} .slide--{$key} {background-image: url('{$image_url}')}";
-  return $css;
+  return "#{$slick_id} .slide--{$key} {background-image: url('{$image_url}')}";
 }

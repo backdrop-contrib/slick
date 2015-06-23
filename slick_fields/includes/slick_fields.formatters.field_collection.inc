@@ -69,7 +69,7 @@ function _slick_fields_format_field_collection(&$settings, $config, $thumb_nav =
 
       // Fullscreen skin needs inline CSS if so configured.
       if ($config['inline_css']) {
-        $css = slick_get_inline_css($settings, $slide, $key, $media['uri']);
+        $css[] = slick_get_inline_css($settings, $slide, $key, $media['uri']);
       }
     }
 

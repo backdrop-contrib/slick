@@ -79,7 +79,7 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
 /**
  * Format image/media file data, called by Media file and Field collection.
  */
-function slick_get_media_thumbnail(array &$settings, array &$media) {
+function slick_get_media_thumbnail(array &$settings, $media = array()) {
   $image_uri = '';
   if (!slick_is_media($media['scheme'])) {
     return $image_uri;

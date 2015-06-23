@@ -2,10 +2,6 @@
  * @file
  * Detailed stylings are all yours, get yourself dirty.
  */
-.slick--skin--fullwidth {
-  text-shadow: none;
-}
-
 .slick--skin--fullwidth .slide__caption {
   font-size: 22px;
   font-size: 1.375rem;
@@ -50,7 +46,7 @@
   clear: both;
 }
 
-@media (min-width: 65em) {
+@media (min-width: 64em) {
   .slick--skin--fullwidth .slide__constrained {
     left: 50%;
     margin-left: -49%;
@@ -63,11 +59,7 @@
 
 @media (min-width: 90em) {
   .slick--skin--fullwidth .slide__constrained {
-    left: 50%;
     margin-left: -585px;
-    position: absolute;
-    top: 0;
     width: 1170px;
-    z-index: 2;
   }
 }

@@ -201,15 +201,14 @@ function template_preprocess_slick_item(&$variables) {
   $settings = $element['#settings'];
   $captions = $element['#caption'];
 
-  // Remove non-BEM default class.
+  // Prepare variables, and remove non-BEM default class.
   $variables['classes_array']  = array_diff($variables['classes_array'], array('slick-item'));
   $variables['wrapper_prefix'] = $variables['wrapper_suffix'] = array();
   $variables['content_prefix'] = $variables['content_suffix'] = array();
   $variables['item_prefix']    = $variables['item_suffix'] = array();
 
   // Configure attributes for containing elements.
-  $attributes          = array();
-  $content_attributes  = array();
+  $attributes          = $content_attributes = array();
   $attributes['class'] = $variables['classes_array'];
   $variables['tag']    = $variables['content_tag'] = 'div';
 
@@ -227,6 +226,8 @@ function template_preprocess_slick_item(&$variables) {
     $three            = 'slide--' . $element['#delta'];
     $variables['tag'] = 'div';
     $content_attributes['class'][] = 'slide__content';
+    // Thumbnail may not have settings as it just prints the image.
+    // $settings = isset($item['#settings']) && is_array($item['#settings']) ? array_merge($settings, $item['#settings']) : $settings;
     $settings = isset($item['#settings']) ? array_merge($settings, $item['#settings']) : $settings;
   }
 
@@ -296,7 +297,7 @@ function template_preprocess_slick_item(&$variables) {
 
   // Custom individual slide classes.
   if (!empty($settings['slide_classes'])) {
-    $attributes['class'][] = $settings['slide_classes'];
+    $attributes['class'][] = trim($settings['slide_classes']);
   }
 
   // Do not add divities for single slick/ unslick to have clean markups.
@@ -349,7 +350,7 @@ function template_preprocess_slick_media(&$variables) {
   // Views has no support for #asnavfor since it has no raw to work with yet.
   $variables['item_prefix'] = $variables['item_suffix'] = array();
   $variables['is_lightbox'] = $switcher && strpos($switcher, 'box') !== FALSE;
-  $settings['is_media']     = !isset($settings['is_media']) ? FALSE : $settings['is_media'];
+  $settings['is_media']     = isset($settings['is_media']) ? $settings['is_media'] : FALSE;
   $variables['alternative_content'] = '';
 
   // Configure attributes for containing elements.

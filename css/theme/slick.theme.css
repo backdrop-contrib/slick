@@ -267,6 +267,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   position: relative;
 }
 
+/* Center the image to reduce gap at RHS with smaller image, larger container */
 .slick__image {
   margin: 0 auto;
 }
@@ -274,10 +275,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 /**
  * Skins.
  */
-.slide__content {
-  *zoom: 1;
-}
-
 .slide__content::after {
   content: "";
   display: table;
@@ -333,11 +330,15 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 /* Overrides .slick-slider to make caption text selectable. */
 .slide__caption {
   cursor: text;
+  font-size: 16px;
+  font-size: 1rem;
+  position: relative;
   -moz-user-select: text;
   -ms-user-select: text;
   -o-user-select: text;
   -webkit-user-select: text;
   user-select: text;
+  width: 100%;
 }
 
 /* Fix excessive height with ondemand lazyLoad prior to being visible */
@@ -353,13 +354,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 /**
  * Slide layouts, adjust accordingly per actual container slide.
  */
-.slide__caption {
-  font-size: 16px;
-  font-size: 1rem;
-  position: relative;
-  width: 100%;
-}
-
 .slick--display--main .slide__caption {
   min-height: 32%;
   padding: 20px 0;
@@ -376,20 +370,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   pointer-events: auto;
 }
 
-.slick .slick-wrapper {
-  margin: 0 auto;
-}
-
-.slick .slick .slick__slide {
-  display: none;
-}
-
-.slick .slick .slick__slide:first-child,
-.slick .slick .slick__slide.slick-slide {
-  display: block;
-}
-
-/* Prevents collapsing slick when unslick like one time. */
+/* Prevents collapsing slick when unslick like one item. */
 .unslick .slide {
   width: 100%;
 }
@@ -418,17 +399,70 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     transform: scale(1.08);
   }
 
-  /* Here comes the price for nested slicks: over-specificity + Sass line bug */
-  .slide__content > .slide__constrained > .slide__caption,
-  .slide__content > .slide__caption {
+  .slide__caption {
     left: 0;
     padding: 20px;
-    position: absolute;
     top: 10%;
+  }
+
+  .slide--caption--center .slide__caption,
+  .slide--caption--center-top .slide__caption,
+  .slide--caption--right  .slide__caption {
     width: 42%;
   }
 
-  .slide--caption--below > .slide__content > .slide__constrained > .slide__caption,
+  /* Here comes the price for nested slicks: over-specificity! */  
+  .slide--caption--center > .slide__content > .slide__caption {
+    margin-top: -16%;
+    position: absolute;
+    top: 50%;
+  }
+
+  .slide--caption--center > .slide__content > .slide__caption,
+  .slide--caption--center-top > .slide__content > .slide__caption {
+    left: 50%;
+    margin-left: -21%;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+  }
+
+  .slide--caption--right > .slide__content > .slide__caption {
+    left: auto;
+    position: absolute;
+    right: 0;
+  }
+
+  .slide--caption--top > .slide__content > .slide__caption,
+  .slide--caption--bottom > .slide__content > .slide__caption {
+    position: absolute;
+    width: 100%;
+  }
+
+  .slide--caption--top > .slide__content > .slide__caption {
+    top: 0;
+  }
+
+  .slide--caption--bottom > .slide__content > .slide__caption {
+    bottom: 0;
+    top: auto;
+  }
+
+  .slick--has-arrow-down .slide--caption--bottom > .slide__content > .slide__caption {
+    padding-bottom: 80px;
+  }
+
+  .slide--caption--stage-left > .slide__content > .slide__caption,
+  .slide--caption--stage-right > .slide__content > .slide__caption,
+  .slide--caption--stage-zebra > .slide__content > .slide__caption {
+    left: 50%;
+    margin-left: -41%;
+    padding: 0;
+    position: absolute;
+    width: 82%;
+  }
+
+  .slick--display--thumbnail .slide__caption,
   .slide--caption--below > .slide__content > .slide__caption {
     padding: 20px 0;
     position: relative;
@@ -436,99 +470,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     width: 100%;
   }
 
-  .slide--caption--center > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--center > .slide__content > .slide__caption {
-    margin-top: -16%;
-    top: 50%;
-  }
-
-  .slide--caption--center > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--center-top > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--center > .slide__content > .slide__caption,
-  .slide--caption--center-top > .slide__content > .slide__caption {
-    left: 50%;
-    margin-left: -21%;
-    padding: 0;
-    text-align: center;
-  }
-
-  .slide--caption--right > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--right > .slide__content > .slide__caption {
-    left: auto;
-    right: 0;
-  }
-
-  .slide--caption--top > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--top > .slide__content > .slide__caption,
-  .slide--caption--bottom > .slide__content > .slide__caption {
-    width: 100%;
-  }
-
-  .slide--caption--top > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--top > .slide__content > .slide__caption {
-    top: 0;
-  }
-
-  .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--bottom > .slide__content > .slide__caption {
-    bottom: 0;
-    top: auto;
-  }
-
-  .slick--has-arrow-down .slide--caption--bottom > .slide__content > .slide__constrained > .slide__caption,
-  .slick--has-arrow-down .slide--caption--bottom > .slide__content > .slide__caption {
-    padding-bottom: 80px;
-  }
-
   .slick--display--thumbnail .slide__caption {
     padding: 5px 6px;
-    top: auto;
-    width: 100%;
-  }
-
-  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--stage-left > .slide__content > .slide__caption,
-  .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--stage-right > .slide__content > .slide__caption,
-  .slide--caption--stage-zebra > .slide__content > .slide__constrained > .slide__caption,
-  .slide--caption--stage-zebra > .slide__content > .slide__caption {
-    left: 50%;
-    margin-left: -41%;
-    padding: 0;
-    width: 82%;
-  }
-
-  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption > .slide__data,
-  .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption > .slide__data,
-  .slide--caption--stage-left > .slide__content > .slide__caption > .slide__data,
-  .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__caption > .slide__data {
-    margin-right: 56%;
-  }
-
-  .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption > .slide__data,
-  .slide--caption--stage-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption > .slide__data,
-  .slide--caption--stage-right > .slide__content > .slide__caption > .slide__data,
-  .slide--caption--stage-zebra:nth-child(even) > .slide__content > .slide__caption > .slide__data {
-    margin-left: 56%;
-  }
-
-  .slide--caption--stage-left > .slide__content > .slide__constrained > .slide__caption > .slide__overlay,
-  .slide--caption--stage-zebra:nth-child(odd) > .slide__content > .slide__constrained > .slide__caption > .slide__overlay {
-    float: right;
-    width: 52%;
-  }
-
-  .slide--caption--stage-right > .slide__content > .slide__constrained > .slide__caption > .slide__overlay,
-  .slide--caption--stage-zebra:nth-child(even) > .slide__content > .slide__constrained > .slide__caption > .slide__overlay {
-    float: left;
-    width: 52%;
-  }
-}
-
-@media (max-width: 767px) {
-  .slick--center {
-    padding-left: 20px;
-    padding-right: 20px;
   }
 }
