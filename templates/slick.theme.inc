@@ -227,8 +227,7 @@ function template_preprocess_slick_item(&$variables) {
     $variables['tag'] = 'div';
     $content_attributes['class'][] = 'slide__content';
     // Thumbnail may not have settings as it just prints the image.
-    // $settings = isset($item['#settings']) && is_array($item['#settings']) ? array_merge($settings, $item['#settings']) : $settings;
-    $settings = isset($item['#settings']) ? array_merge($settings, $item['#settings']) : $settings;
+    $settings = isset($item['#settings']) && is_array($item['#settings']) ? array_merge($settings, $item['#settings']) : $settings;
   }
 
   // 1, 2, 3, 1, 2, 3, drink.
