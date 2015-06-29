@@ -42,6 +42,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     'field_name' => $field_name,
     'entity_id'  => $entity_id,
     'attributes' => array('id' => $id),
+    'inline_css' => '',
   );
   $settings  = array_merge($settings, $display['settings']);
   $asnavfor  = $settings['optionset_thumbnail'];
@@ -66,12 +67,11 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   }
 
   $config = array(
-    'items' => $items,
-    'field' => $field,
+    'items'       => $items,
+    'field'       => $field,
     'entity_type' => $entity_type,
-    'entity' => $entity,
-    'langcode' => $langcode,
-    'inline_css' => slick_get_inline_css_skins($settings['skin']),
+    'entity'      => $entity,
+    'langcode'    => $langcode,
   );
   switch ($field['type']) {
     case 'image':
@@ -95,12 +95,10 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       break;
   }
 
-  // Inline CSS is to colorize FC individual slide, or fullscreen skin.
-  if (!empty($settings['inline_css'])) {
-    $css = implode("\n", (array) $settings['inline_css']);
-    drupal_alter('slick_fields_inline_css_output_info', $css, $items, $settings);
+  // Inline CSS is to colorize FC individual slide, or Fullscreen skin.
+  if ($inline_css = slick_get_inline_css($settings, $build)) {
     $attachments['css'][] = array(
-      'data' => $css,
+      'data' => $inline_css,
       'type' => 'inline',
       'group' => CSS_THEME + 1,
     );

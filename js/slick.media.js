@@ -47,7 +47,9 @@
 
           // Last, pause the slide, for just in case autoplay is on, and
           // pauseOnHover is disabled, and then trigger autoplay.
-          $slider.addClass("is-paused").slick("slickPause");
+          if ($slider.length) {
+            $slider.addClass("is-paused").slick("slickPause");
+          }
 
           t.addClass("is-playing").append(newIframe);
           newIframe.attr("src", url);

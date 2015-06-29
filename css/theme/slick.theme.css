@@ -261,7 +261,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   user-select: none;
 }
 
-.media,
 .slide__media {
   overflow: hidden;
   position: relative;
@@ -321,6 +320,11 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 /**
  * Bullets.
  */
+/* Makes the pointer work when bullets placed over the slide. */
+.slick-dots li button {
+  pointer-events: auto;
+}
+
 /* Overrides too tiny bullets from core slick.css */
 .slick-dots li button::before {
   font-size: 12px;
@@ -411,7 +415,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     width: 42%;
   }
 
-  /* Here comes the price for nested slicks: over-specificity! */  
+  /* Here comes the price for nested slicks: over-specificity! */
   .slide--caption--center > .slide__content > .slide__caption {
     margin-top: -16%;
     position: absolute;

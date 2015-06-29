@@ -250,8 +250,8 @@ function hook_slick_attach_info_alter(array &$attach) {
   // individual slide color, only if your clients don't change mind much.
   // Use key 'inline css' to register skin that wants inline CSS rather than
   // images when declaring the skins, see fullscreen skin.
-  // Use hook_slick_fields_inline_css_output_info_alter() to modify the output.
-  // @see slick_fields_inline_css_skins()
+  // Use hook_slick_inline_css_info_alter() to modify the output.
+  // @see slick_get_inline_css_skins()
   // @see slick_slick_skins_info()
   $attach['attach_inline_css'] = NULL;
 

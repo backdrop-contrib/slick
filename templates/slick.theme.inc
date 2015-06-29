@@ -82,7 +82,7 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = $general['template_class'];
   }
 
-  // Provides shit classes. Set 'slick_classes' to FALSE to disable them.
+  // Provides s*** classes. Set 'slick_classes' to FALSE to disable them.
   if ($settings['slick_classes']) {
     $attributes['class'][] = $js['slidesToShow'] > 1 ? 'slick--carousel' : 'slick--slider';
     $attributes['class'][] = $js['centerMode'] ? 'slick--center' : 'slick--float';
@@ -110,6 +110,7 @@ function template_preprocess_slick(&$variables) {
     }
   }
 
+  // All these s***s are to re-use one optionset when all these disabled.
   // focusOnSelect will not work with empty slide value, so add proper selector.
   $js['slide'] = empty($js['slide']) && $js['focusOnSelect'] ? '.slick__slide' : '';
 
@@ -135,11 +136,9 @@ function template_preprocess_slick(&$variables) {
 
   // Arrows are enforced to allow responsive options hide/show them.
   $tags = array('a', 'em', 'strong', 'button', 'p', 'div', 'i', 'span');
-  $settings['prev_arrow'] = filter_xss($js['prevArrow'], $tags);
-  $settings['next_arrow'] = filter_xss($js['nextArrow'], $tags);
-
-  // Provide skins classes for arrows and dots, if so configured.
-  $arrow_attributes = &$variables['arrow_attributes_array'];
+  $settings['prev_arrow']      = filter_xss($js['prevArrow'], $tags);
+  $settings['next_arrow']      = filter_xss($js['nextArrow'], $tags);
+  $arrow_attributes            = &$variables['arrow_attributes_array'];
   $arrow_attributes['class'][] = 'slick__arrow';
   if (!empty($settings['skin_arrows'])) {
     $skin_arrows = drupal_clean_css_identifier($settings['skin_arrows']);
@@ -236,7 +235,7 @@ function template_preprocess_slick_item(&$variables) {
   // Only add relevant Foundation block-grid classes if the skin is Grid.
   if (!empty($settings['grid']) && $settings['current_item'] == 'main') {
     $settings['grid_large'] = $settings['grid'];
-    if ($settings['skin'] == 'grid') {
+    if (!empty($settings['skin']) && $settings['skin'] == 'grid') {
       $grids = array('small', 'medium', 'large');
       foreach ($grids as $grid) {
         if ($settings['grid_' . $grid]) {
@@ -277,13 +276,13 @@ function template_preprocess_slick_item(&$variables) {
     $variables['caption'] = $captions;
 
     // Split image from captions if we do have captions, and main image.
-    if (($variables['caption'] && $item) || (strpos($settings['skin'], '3d') !== FALSE)) {
+    if (($variables['caption'] && $item) || (!empty($settings['skin']) && strpos($settings['skin'], '3d') !== FALSE)) {
       $variables['item_prefix'] = '<div class="slide__media">';
       $variables['item_suffix'] = '</div>';
     }
 
     // If fullwidth or fullscreen, add wrappers to hold caption and overlay.
-    if (strpos($settings['skin'], 'full') !== FALSE) {
+    if (!empty($settings['skin']) && strpos($settings['skin'], 'full') !== FALSE) {
       $variables['title_prefix'] = '<div class="slide__constrained">';
       $variables['title_suffix'] = '</div>';
     }
@@ -316,6 +315,7 @@ function template_preprocess_slick_item(&$variables) {
 function template_preprocess_slick_grid(&$variables) {
   $element  = $variables['element'];
   $settings = $element['#settings'];
+  $variables['wrapper_prefix'] = $variables['wrapper_suffix'] = array();
 
   // Implementors should be responsible to pass proper grid chunks.
   $variables['items'] = array();
@@ -346,7 +346,8 @@ function template_preprocess_slick_media(&$variables) {
   $type     = isset($settings['type']) ? $settings['type'] : 'image';
   $switcher = isset($settings['media_switch']) ? $settings['media_switch'] : FALSE;
 
-  // Views has no support for #asnavfor since it has no raw to work with yet.
+  // Prepare variables.
+  // $variables['classes_array'] = array_diff($variables['classes_array'], array('slick-media'));
   $variables['item_prefix'] = $variables['item_suffix'] = array();
   $variables['is_lightbox'] = $switcher && strpos($switcher, 'box') !== FALSE;
   $settings['is_media']     = isset($settings['is_media']) ? $settings['is_media'] : FALSE;
@@ -481,6 +482,7 @@ function theme_slick_image_lazy(array $variables) {
   $image_url     = file_create_url($image['path']);
 
   if ($variables['image_style']) {
+    // If dimensions have not been defined before.
     if (!isset($image['dimensions'])) {
       $dimensions = array(
         'width'  => $image['width'],
@@ -536,7 +538,7 @@ function theme_slick_image_lazy(array $variables) {
   // The link url and link options are both optional.
   if (isset($variables['url'])) {
     if (isset($options['lightbox']) && $switcher = $options['lightbox']) {
-      $build .= '<i class="media-icon media-icon--lightbox media-icon--' . $switcher . '"></i>';
+      $build .= empty($options['icon']) ? '<i class="media-icon media-icon--lightbox media-icon--' . $switcher . '"></i>' : $options['icon'];
       if (isset($options['has_pattern']) && $options['has_pattern']) {
         $build .= '<div class="slide__pattern"></div>';
       }

@@ -52,7 +52,7 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
   // to re-use a single file view mode for various file host entity view modes.
   if (!empty($settings['image_style'])) {
     $dimensions = array(
-      'width'  => empty($media['width']) ? NULL : $media['width'],
+      'width' => empty($media['width']) ? NULL : $media['width'],
       'height' => empty($media['height']) ? NULL : $media['height'],
     );
 
@@ -142,6 +142,50 @@ function slick_load_media_settings($type, $view_mode, $formatter) {
   $name = $type . '__' . $view_mode . '__' . $formatter;
   $displays = ctools_export_load_object('file_display', 'names', array($name));
   return $displays[$name]->settings;
+}
+
+/**
+ * Builds slide captions with possible multi-value fields.
+ */
+function slick_get_caption($settings, $entity_type, $entity, $view_mode, array &$slide) {
+  // Title can be plain text, or link field.
+  if (!empty($settings['slide_title']) && $slide_title = field_get_items($entity_type, $entity, $settings['slide_title'])) {
+    if (isset($slide_title[0]['value']) && !empty($slide_title[0]['value'])) {
+      // Prevents HTML filter enabled text from having bad markups (h2 > p).
+      $slide['caption']['title']['#markup'] = filter_xss($slide_title[0]['value']);
+    }
+    elseif (isset($slide_title[0]['url']) && !empty($slide_title[0]['title'])) {
+      // The $item paramater expected here is $slide_title[0].
+      $slide['caption']['title'] = field_view_value($entity_type, $entity, $settings['slide_title'], $slide_title[0], $view_mode);
+    }
+  }
+
+  // Other caption fields, if so configured.
+  if (!empty($settings['slide_caption'])) {
+    $caption_items = array();
+    foreach ($settings['slide_caption'] as $i => $caption_field) {
+      if (!empty($settings['markup'])) {
+        $caption_items[$i] = field_view_field($entity_type, $entity, $caption_field, $view_mode);
+      }
+      elseif ($captions = field_get_items($entity_type, $entity, $caption_field)) {
+        foreach ($captions as $j => $caption) {
+          $caption_items[$i][$j] = field_view_value($entity_type, $entity, $caption_field, $caption, $view_mode);
+        }
+      }
+    }
+    if ($caption_items) {
+      $slide['caption']['data'] = $caption_items;
+    }
+  }
+
+  // Link, if so configured.
+  if (!empty($settings['slide_link']) && $slide_links = field_get_items($entity_type, $entity, $settings['slide_link'])) {
+    $links = array();
+    foreach ($slide_links as $i => $slide_link) {
+      $links[$i] = field_view_value($entity_type, $entity, $settings['slide_link'], $slide_link, $view_mode);
+    }
+    $slide['caption']['link'] = $links;
+  }
 }
 
 /**

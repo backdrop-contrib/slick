@@ -5,7 +5,7 @@
 
 @media (min-width: 64em) {
   .slick--skin--fullwidth  .slide__constrained > .slide__caption,
-  .slick--skin--fullscreen  .slide__constrained > .slide__caption  {
+  .slick--skin--fullscreen  .slide__constrained > .slide__caption {
     position: absolute;
   }
 
@@ -22,17 +22,17 @@
     text-align: center;
   }
 
-  .slide--caption--right .slide__constrained > .slide__caption  {
+  .slide--caption--right .slide__constrained > .slide__caption {
     left: auto;
     right: 0;
   }
 
   .slide--caption--top .slide__constrained > .slide__caption,
-  .slide--caption--bottom .slide__constrained > .slide__caption  {
+  .slide--caption--bottom .slide__constrained > .slide__caption {
     width: 100%;
   }
 
-  .slide--caption--top .slide__constrained > .slide__caption  {
+  .slide--caption--top .slide__constrained > .slide__caption {
     top: 0;
   }
 
@@ -41,7 +41,7 @@
     top: auto;
   }
 
-  .slick--has-arrow-down .slide--caption--bottom .slide__constrained > .slide__caption  {
+  .slick--has-arrow-down .slide--caption--bottom .slide__constrained > .slide__caption {
     padding-bottom: 80px;
   }
 
@@ -60,7 +60,7 @@
   }
 
   .slide--caption--stage-right .slide__constrained > .slide__caption > .slide__data,
-  .slide--caption--stage-zebra:nth-child(even) .slide__constrained > .slide__caption > .slide__data  {
+  .slide--caption--stage-zebra:nth-child(even) .slide__constrained > .slide__caption > .slide__data {
     margin-left: 56%;
   }
 

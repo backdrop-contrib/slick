@@ -2,6 +2,12 @@
  * @file
  * Provides media integration with pure CSS fluid video wrapper.
  */
+
+.media {
+  overflow: hidden;
+  position: relative;
+}
+
 .media__iframe,
 .slick__litebox,
 .slick__slide picture {

@@ -1,4 +1,29 @@
 
+Slick 7.x-2.0-dev, 2015-6-30
+----------------------------
+- Allowed re-using slik.media.min.js outside slick.
+- Fixed bad markups (h2 > p) with Media slide title when plain text has HTML
+  filter enabled.
+- Fixed regression with FC thumbnail caption plain text not displayed with the
+  new EMW.
+- Fixed regression with FC slide title not displayed with the new EMW.
+- Fixed regression with Fullscreen single item/ unslick not displayed since no
+  slide wrappers in use.
+- Added support for Media multiple slide links, e.g.: Read more | Contact us.
+- Cleaned up field markups for Media/FC 'slide_caption' fields by default unless
+  'markup' set to TRUE. Use hook_slick_fields_default_settings_info_alter(), or
+  check the new option 'Keep field markups'  to keep deep field markups
+  (.field > .field-items > .field-item). Existing markups won't be affected till
+  Slick field settings re-saved.
+- Cleaned up field markups for Media/FC 'slide_link' fields since it is cleaner
+  to just have A tags within .slide__link DIV.
+- Renamed shit to s***, fire to f*** and rose to r***.
+  "And the f*** and the r*** are one." Little Gidding -- TS Eliot.
+- Renamed slick_fields_inline_css_output_info() to slick_inline_css_info().
+- Removed Fullscreen inline css building out of the field loop, and moved it
+  into slick_get_inline_css() instead since inline css is such an edge case.
+- Simplified admin repetitive lines for readability and consistency.
+
 Slick 7.x-2.0-dev, 2015-6-23
 ----------------------------
 - Fixed regression with Fullscreen CSS output for Media and FC fields.

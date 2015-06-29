@@ -43,6 +43,7 @@ function slick_get_fields_default_settings() {
     'picture_style'        => '',
     'picture_fallback'     => '',
     'colorbox_style'       => '',
+    'markup'               => FALSE,
     'type'                 => '',
     'lightbox_ready'       => FALSE,
     'picture_ready'        => FALSE,
@@ -87,14 +88,17 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
     $build = render($slide);
   }
   else {
+    if (!empty($settings['thumbnail_style'])) {
+      $media['attributes']['data-thumb'] = image_style_url($settings['thumbnail_style'], $media['uri']);
+    }
     $build = array(
       '#theme' => 'slick_image_lazy',
       '#item' => $media,
       '#image_style' => $settings['image_style'],
-      '#lazy' => $settings['lazy'],
+      '#lazy' => empty($settings['lazy']) ? '' : $settings['lazy'],
       '#options' => array(
         'type' => $media['type'],
-        'has_pattern' => $settings['has_pattern'],
+        'has_pattern' => !empty($settings['has_pattern']),
         'count' => $settings['count'],
         'delta' => $key,
         'url' => array(),
@@ -158,20 +162,17 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
 /**
  * Gets the thumbnail image.
  */
-function slick_get_thumbnail($thumbnail_style, array &$media) {
+function slick_get_thumbnail($thumbnail_style = '', $media = array()) {
   $thumbnail = array();
-  if (empty($thumbnail_style)) {
-    return $thumbnail;
-  }
-
-  $media['attributes']['data-thumb'] = image_style_url($thumbnail_style, $media['uri']);
-  $thumbnail = array(
-    '#theme' => 'image_style',
-    '#style_name' => $thumbnail_style,
-    '#path' => $media['uri'],
-  );
-  foreach (array('alt', 'height', 'title', 'width') as $data) {
-    $thumbnail["#$data"] = isset($media[$data]) ? $media[$data] : NULL;
+  if (!empty($thumbnail_style)) {
+    $thumbnail = array(
+      '#theme' => 'image_style',
+      '#style_name' => $thumbnail_style,
+      '#path' => $media['uri'],
+    );
+    foreach (array('alt', 'height', 'title', 'width') as $data) {
+      $thumbnail["#$data"] = isset($media[$data]) ? $media[$data] : NULL;
+    }
   }
   return $thumbnail;
 }
@@ -179,7 +180,20 @@ function slick_get_thumbnail($thumbnail_style, array &$media) {
 /**
  * Extracts the needed image data.
  */
-function slick_extract_image_data(array &$media, $item = array()) {
+function slick_extract_image_data($settings, array &$media, array &$slide, $item = array()) {
+  $slide += array(
+    'item'     => $item,
+    'slide'    => array(),
+    'caption'  => array(),
+    'settings' => array(
+      'count'        => $settings['count'],
+      'has_pattern'  => !empty($settings['has_pattern']),
+      'image_style'  => $settings['image_style'],
+      'layout'       => !empty($settings['slide_layout']) ? $settings['slide_layout'] : '',
+      'media_switch' => !empty($settings['media_switch']) ? $settings['media_switch'] : '',
+    ),
+  );
+
   $config = array('fid', 'height', 'width', 'alt', 'title', 'uri', 'type');
   foreach ($config as $data) {
     $media[$data] = isset($item[$data]) ? $item[$data] : NULL;
@@ -199,11 +213,31 @@ function slick_get_inline_css_skins($skin = NULL) {
 }
 
 /**
- * Gets the output of inline CSS background for Fullscreen skin.
+ * Builds the inline CSS output for skins with explicit 'inline css' key.
  */
-function slick_get_inline_css(array $settings, array &$slide, $key, $uri = NULL) {
-  $slick_id = $settings['attributes']['id'];
-  $slide['slide'] = array();
-  $image_url = !empty($settings['image_style']) ? image_style_url($settings['image_style'], $uri) : file_create_url($uri);
-  return "#{$slick_id} .slide--{$key} {background-image: url('{$image_url}')}";
+function slick_get_inline_css(array $settings, array &$items) {
+  $css = array();
+  if (slick_get_inline_css_skins($settings['skin'])) {
+    $id = $settings['attributes']['id'];
+    foreach ($items as $key => &$item) {
+      $slick = $settings['count'] > 1 ? $id . " .slide--{$key}" : $id;
+      if (isset($item['slide']['#uri']) && $uri = $item['slide']['#uri']) {
+        $image_url = !empty($settings['image_style']) ? image_style_url($settings['image_style'], $uri) : file_create_url($uri);
+        $css[] = "#{$slick} {background-image: url('{$image_url}')}";
+        $item['slide'] = array();
+      }
+    }
+  }
+
+  // Or individual dynamic slide colors as offered by FC.
+  if (!empty($settings['inline_css'])) {
+    $css = array_merge($css, $settings['inline_css']);
+    unset($settings['inline_css']);
+  }
+
+  if ($css) {
+    $css = implode("\n", $css);
+    drupal_alter('slick_inline_css_info', $css, $items, $settings);
+  }
+  return $css;
 }

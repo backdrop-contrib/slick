@@ -12,43 +12,31 @@ function _slick_fields_format_field_collection(&$settings, $config, $thumb_nav =
   $slick_id    = $settings['attributes']['id'];
   $nested_name = empty($settings['nested_optionset']) ? 'default' : $settings['nested_optionset'];
   $nested_set  = empty($settings['nested_slick']) ? NULL : slick_optionset_load($nested_name);
+  $entity_type = 'field_collection_item';
+  // It is un-reasonable to make large image as colorbox, so disable it.
+  $settings['lightbox_ready'] = FALSE;
+  $settings['picture_ready']  = TRUE;
 
-  $build = $css = $media = array();
+  $build = $css = array();
   foreach ($config['items'] as $key => $item) {
-    $slide = array(
-      'item'    => $item,
-      'caption' => array(),
-      'slide'   => array(),
-      'settings' => array(
-        'count'        => $settings['count'],
-        'image_style'  => $settings['image_style'],
-        'has_pattern'  => $settings['has_pattern'],
-        'layout'       => $settings['slide_layout'],
-        'media_switch' => $settings['media_switch'],
-      ),
-    );
-
-    // Prepares variables.
     $fc      = field_collection_field_get_entity($item);
-    $wrapper = entity_metadata_wrapper('field_collection_item', $fc);
+    $wrapper = entity_metadata_wrapper($entity_type, $fc);
     $view    = $fc->view($view_mode);
-    $id      = array_keys($view['field_collection_item']);
+    $id      = array_keys($view[$entity_type]);
     $id      = reset($id);
-    $fields  = $view['field_collection_item'][$id];
+    $fields  = $view[$entity_type][$id];
+    $slide   = array();
 
     // Main background image can be core Image, or File entity, multi or single.
     if (!empty($settings['slide_image']) && $slide_bg = $wrapper->$settings['slide_image']->value()) {
-      $file = isset($slide_bg['fid']) ? $slide_bg : (isset($slide_bg[0]) ? $slide_bg[0] : NULL);
-      $slide['settings']['type'] = isset($file['type']) ? $file['type'] : '';
+      $file  = isset($slide_bg['fid']) ? $slide_bg : (isset($slide_bg[0]) ? $slide_bg[0] : NULL);
       $media = array(
         'scheme' => file_uri_scheme($file['uri']),
         'media_uri' => $file['uri'],
       );
 
-      // It is un-reasonable to make large image as colorbox, so disable it.
-      $settings['lightbox_ready'] = FALSE;
-      $settings['picture_ready'] = TRUE;
-      slick_extract_image_data($media, $file);
+      slick_extract_image_data($settings, $media, $slide, $file);
+      $slide['settings']['type'] = isset($file['type']) ? $file['type'] : '';
 
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
       $thumb = empty($settings['thumbnail_style']) ? array() : slick_get_thumbnail($settings['thumbnail_style'], $media);
@@ -58,18 +46,14 @@ function _slick_fields_format_field_collection(&$settings, $config, $thumb_nav =
           '#theme'    => 'slick_media',
           '#item'     => slick_get_image($settings, $media, $key),
           '#settings' => $slide['settings'],
+          '#uri'      => $media['uri'],
         );
       }
       else {
         $slide['slide'] = $thumb;
         if (!empty($settings['thumbnail_caption']) && $caption = $wrapper->$settings['thumbnail_caption']->value()) {
-          $slide['caption']['data']['#markup'] = isset($caption['safe_value']) ? $caption['safe_value'] : filter_xss($caption['value']);
+          $slide['caption']['data']['#markup'] = isset($caption['safe_value']) ? $caption['safe_value'] : filter_xss($caption);
         }
-      }
-
-      // Fullscreen skin needs inline CSS if so configured.
-      if ($config['inline_css']) {
-        $css[] = slick_get_inline_css($settings, $slide, $key, $media['uri']);
       }
     }
 
@@ -91,53 +75,18 @@ function _slick_fields_format_field_collection(&$settings, $config, $thumb_nav =
           'config'      => $config,
         );
 
-        // Just display un-managed overlays with unknown formatters.
         if (!in_array($renderables['#formatter'], array('image', 'file_rendered')) && !isset($slides[0]->sid)) {
+          // Just display un-managed overlays with unknown formatters.
           $elements = $renderables;
         }
-        // Otherwise do the hard work.
         else {
+          // Otherwise do the hard work.
           $elements = _slick_fields_fc_build_overlay($settings, $wrapper, $options);
         }
         $slide['caption']['overlay'] = $elements;
       }
 
-      // Title, if so configured, can be plain text, or link field.
-      if (!empty($settings['slide_title']) && $slide_title = $wrapper->$settings['slide_title']->value()) {
-        $title = '';
-        if (isset($slide_title['safe_value'])) {
-          $title = $slide_title['safe_value'];
-        }
-        elseif (isset($slide_title['url'])) {
-          $title = $slide_title['title'];
-          if ($url = $slide_title['url']) {
-            $attributes = $slide_title['attributes'] ? array('attributes' => $slide_title['attributes']) : array();
-            $title = l($title, $url, $attributes);
-          }
-        }
-        if ($title) {
-          $slide['caption']['title']['#markup'] = $title;
-        }
-      }
-
-      // Other caption fields, if so configured.
-      if (!empty($settings['slide_caption'])) {
-        $caption_items = array();
-        foreach ($settings['slide_caption'] as $i => $caption_field) {
-          if (isset($fields[$caption_field])) {
-            $caption_items[$i] = $fields[$caption_field];
-          }
-        }
-
-        if ($caption_items) {
-          $slide['caption']['data'] = $caption_items;
-        }
-      }
-
-      // Link field if so configured, it is a renderable array.
-      if (!empty($settings['slide_link']) && isset($fields[$settings['slide_link']])) {
-        $slide['caption']['link'] = $fields[$settings['slide_link']];
-      }
+      slick_get_caption($settings, $entity_type, $fc, $view_mode, $slide);
 
       // Layout field as opposed from the builtin layout options.
       if (!empty($settings['slide_layout']) && strpos($settings['slide_layout'], 'field_') !== FALSE) {
@@ -194,7 +143,8 @@ function _slick_fields_fc_build_overlay(&$settings, $wrapper, $options = array()
 
   $settings['is_media'] = $settings['picture_ready'] = FALSE;
 
-  $overlays = $media = array();
+  $overlays = $media = $slide = array();
+  // @todo refine more to $slide['settings'] and match Media/Image formatters.
   $overset = array(
     'colorbox_style'  => $settings['colorbox_style'],
     'current_display' => 'overlay',
@@ -208,7 +158,7 @@ function _slick_fields_fc_build_overlay(&$settings, $wrapper, $options = array()
     case 'image':
     case 'file':
       foreach ($items as $i => $item) {
-        slick_extract_image_data($media, $item);
+        slick_extract_image_data($settings, $media, $slide, $item);
 
         if ($renderables['#field_type'] == 'file') {
           $file = (object) $item;
@@ -323,6 +273,7 @@ function _slick_fields_fc_build_overlay(&$settings, $wrapper, $options = array()
         '#theme'    => 'slick_media',
         '#item'     => $overlay_item[$idx],
         '#settings' => $media,
+        '#uri'      => $media['uri'],
       );
     }
 
