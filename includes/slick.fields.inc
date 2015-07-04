@@ -117,7 +117,7 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
             $url = strpos($url, '?') === FALSE ? $url . '?auto_play=true' : $url . '&amp;auto_play=true';
           }
         }
-        elseif (strpos($url, 'autoplay') === FALSE || strpos($url, 'auto_play=0') !== FALSE) {
+        elseif (strpos($url, 'autoplay') === FALSE || strpos($url, 'autoplay=0') !== FALSE) {
           $url = strpos($url, '?') === FALSE ? $url . '?autoplay=1' : $url . '&amp;autoplay=1';
         }
       }

@@ -101,6 +101,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       'data' => $inline_css,
       'type' => 'inline',
       'group' => CSS_THEME + 1,
+      'slick' => 'fields',
     );
   }
 

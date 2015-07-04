@@ -8,12 +8,15 @@
  * Formats image/media file data.
  */
 function _slick_fields_format_media(&$settings, $config, $thumb_nav = FALSE) {
-  $view_mode   = $settings['view_mode'] ? $settings['view_mode'] : 'full';
-  $is_ratio    = !empty($settings['media_switch']) && !empty($settings['aspect_ratio']);
+  $view_mode = $settings['view_mode'] ? $settings['view_mode'] : 'full';
+  $is_ratio  = !empty($settings['media_switch']) && !empty($settings['aspect_ratio']);
   $settings['lightbox_ready'] = $settings['picture_ready'] = TRUE;
 
   $build = array();
   foreach ($config['items'] as $key => $item) {
+    if (!isset($item['uri'])) {
+      continue;
+    }
     $file  = (object) $item;
     $uri   = $file->uri;
     $slide = array();
@@ -33,7 +36,7 @@ function _slick_fields_format_media(&$settings, $config, $thumb_nav = FALSE) {
     // Needed settings: type scheme image_style uri view_mode.
     $media['url'] = slick_get_media_url($slide['settings'], $media, $file);
 
-    // Get audio/video thumbnail uri as opposed to the actual (video) uri.
+    // Get audio/video thumbnail uri as opposed to the actual video uri.
     if ($media_image_uri = slick_get_media_thumbnail($slide['settings'], $media)) {
       $media['uri'] = $media_image_uri;
     }

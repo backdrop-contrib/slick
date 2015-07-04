@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-7-4
+---------------------------
+- Fixed a rare edge case with improper/broken data_export_import media files.
+
 Slick 7.x-2.0-dev, 2015-6-30
 ----------------------------
 - Allowed re-using slik.media.min.js outside slick.
