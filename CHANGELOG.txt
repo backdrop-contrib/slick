@@ -1,6 +1,10 @@
 
 Slick 7.x-2.0-dev, 2015-8-7
 ---------------------------
+- Simplified slick.colorbox.css to use "colorbox-on--media" rather than
+  separate "colorbox-on--audio" + "colorbox-on--video" for the video/audio
+  colorbox body classes.
+- #2546614 by stefan.korn: Colorbox integration iframe width?
 - Removed 'slick-nav' classes since 'slick-arrow' was added at v1.5.6. If you
   use 'slick-nav', be sure to update it to 'slick-arrow'.
 - Removed useless 'respondTo' option from responsive since it is always ignored/

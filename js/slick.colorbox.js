@@ -27,8 +27,7 @@
       }
 
       // Including slick-cloned.
-      var $slickColorbox = $(".slick__slide .slick__colorbox", context);
-      $slickColorbox.once("slick-colorbox", function () {
+      $(".slick__slide .slick__colorbox", context).once("slick-colorbox", function () {
         var t = $(this),
           id = t.closest(".slick").attr("id"),
           isSlick = $("#" + id).length,
@@ -43,18 +42,23 @@
             onOpen: function () {
               $body.addClass("colorbox-on colorbox-on--" + media.type);
               $body.data("mediaHeight", "");
+              $body.data("mediaWidth", "");
               if (isSlick) {
                 $slider.slick("slickPause");
               }
             },
             onLoad: function () {
+              Drupal.slickColorbox.removeClasses();
+
               // Rebuild media data based on the current active box.
-              media = $(this).data("media");
-              if (media.type !== "image") {
+              if (isMedia) {
                 $body.data("mediaHeight", media.height);
+                $body.data("mediaWidth", media.width);
+                $body.addClass("colorbox-on--media");
+              } else {
+                $body.removeClass("colorbox-on--media");
               }
 
-              Drupal.slickColorbox.removeClasses();
               $body.addClass("colorbox-on colorbox-on--" + media.type);
 
               // Remove these lines to disable slider scrolling under colorbox.
@@ -76,12 +80,15 @@
               if (media.type !== "image") {
                 Drupal.slickColorbox.resize(context, Drupal.settings);
               }
+              // Overrides colorbox_style.js when Plain style enabled.
+              $('#cboxPrevious, #cboxNext', context).removeClass('element-invisible');
             },
             onClosed: function () {
               // 120 offset is to play safe for possible fixed header.
               Drupal.slickColorbox.jumpScroll("#" + id, 120);
               Drupal.slickColorbox.removeClasses();
               $body.data("mediaHeight", "");
+              $body.data("mediaWidth", "");
             }
           };
 
@@ -99,7 +106,9 @@
   };
 
   Drupal.slickColorbox.removeClasses = function () {
-    $("body").removeClass("colorbox-on colorbox-on--image colorbox-on--video colorbox-on--audio");
+    $("body").removeClass(function (index, css) {
+      return (css.match(/(^|\s)colorbox-\S+/g) || []).join(' ');
+    });
   };
 
   Drupal.slickColorbox.jumpScroll = function (id, o) {
@@ -110,39 +119,36 @@
     }
   };
 
-  // Colorbox has no responsive support so far.
+  // Colorbox has no responsive support so far, drop them all when it does.
   Drupal.slickColorbox.resize = function (context, settings) {
     if (cboxResizeTimer) {
       clearTimeout(cboxResizeTimer);
     }
 
-    var mw = settings.colorbox.maxWidth,
-      mh = settings.colorbox.maxHeight,
+    var mw = $('body').data("mediaWidth") || settings.colorbox.maxWidth,
+      mh = $('body').data("mediaHeight") || settings.colorbox.maxHeight,
       o = {
-        width: "98%",
-        height: "98%",
+        width: settings.colorbox.maxWidth || "98%",
+        height: settings.colorbox.maxHeight || "98%",
         maxWidth: mw.indexOf("px") > 0 ? parseInt(mw) : mw,
         maxHeight: mh.indexOf("px") > 0 ? parseInt(mh) : mh
       };
 
     cboxResizeTimer = setTimeout(function () {
       if ($("#cboxOverlay").is(":visible")) {
-        var $container = $("#cboxLoadedContent"),
-          $content = $("> img, > iframe, > .node", $container);
+        var $container = $("#cboxLoadedContent");
+
+        if ($(".cboxIframe").length) {
+          $container.addClass("media");
+          $(".cboxIframe", $container).attr("width", o.maxWidth).attr("height", o.maxHeight);
+        } else {
+          $container.removeClass("media");
+        }
 
         $.colorbox.resize({
-          width: window.innerWidth > o.maxWidth ? o.maxWidth : o.width
+          innerWidth: o.maxWidth,
+          innerHeight: o.maxHeight
         });
-
-        $content.css({
-          width: $container.innerWidth(),
-          height: $("body").data("mediaHeight") !== "undefined" ? $("body")
-            .data("mediaHeight") : "auto"
-        });
-
-        $container.height($content.height());
-
-        $.colorbox.resize();
       }
     }, 0);
   };
