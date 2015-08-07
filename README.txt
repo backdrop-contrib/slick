@@ -251,6 +251,12 @@ HOW CAN YOU HELP?
 --------------------------------------------------------------------------------
 Please consider helping in the issue queue, provide improvement, or helping with
 documentation.
+If you have bug reports, please be sure to provide steps to reproduce it, or
+make sure that the bug is caused by the module. For the Slick library bug,
+please report it to the actual library issue queues:
+https://github.com/kenwheeler/slick
+You can create a fiddle isolate the bug if reproduceable outside the module:
+http://jsfiddle.net/
 
 
 TROUBLESHOOTING:
@@ -308,6 +314,13 @@ KNOWN ISSUES
   o Fade option with slideToShow > 1 will screw up.
   o variableWidth ignores slidesToShow.
   o Too much centerPadding at small device affects slidesToShow.
+  o The arrows visibility misbehaves with responsive options since v1.5.3-1.5.8
+    You can downgrade to v.1.5.2 to solve it. However if downgrading is not an
+    option, use the following CSS globally:
+    .slick-prev, .slick-next { display: none; }
+    Or better use CSS mediaqueries to control its visibilty.
+    The library will display it with inline style (display: inline-block;) where
+    required.
 
 
 UNKNOWN ISSUES

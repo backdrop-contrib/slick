@@ -37,7 +37,7 @@ $settings = array(
   'attributes' => array(
     'id' => $id,
   ),
-  // content_attributes ID i for nested, or asNavFor slicks.
+  // content_attributes ID is for nested, or asNavFor slicks.
   // Pass the proper ID to asnavfor_target, see slick_fields/slick_views.
   'content_attributes' => array(
     'id' => $id . '-slider',
@@ -60,7 +60,7 @@ foreach ($rows as $key => $row) {
     // 'caption' => 'some-caption data',
     // Individual slide supports some useful settings like layout, classes, etc.
     // Meaning each slide can have different layout, or classes.
-    // @see sub-modules implementation.
+    // See sub-modules implementation.
     'settings' => array(
       'layout' => 'bottom',
       'slide_classes' => 'slide--custom-class--' . $key,
@@ -78,7 +78,7 @@ $attach = array();
 $attachments = slick_attach($attach);
 // Add more attachments using regular library keys just as freely:
 $attachments['css'] += array(HOOK_PATH . '/css/zoom.css' => array('weight' => 9));
-$attachments['js'] += array(HOOK_PATH . '/css/zoom.min.js' => array('weight' => -5));
+$attachments['js'] += array(HOOK_PATH . '/js/zoom.min.js' => array('weight' => -5));
 
 // 5.
 // Optional specific Slick JS options, if no optionset provided above.

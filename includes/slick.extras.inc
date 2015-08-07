@@ -48,6 +48,10 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
     );
   }
 
+  // Colorbox videos need the actual video dimensions independent from images.
+  $media['media_height'] = $renderables['#options']['height'];
+  $media['media_width'] = $renderables['#options']['width'];
+
   // Allows various iframe dimensions based on the given image_style, good
   // to re-use a single file view mode for various file host entity view modes.
   if (!empty($settings['image_style'])) {
@@ -110,13 +114,7 @@ function slick_get_media_thumbnail(array &$settings, $media = array()) {
         break;
     }
 
-    $valid_image_styles = image_style_options(FALSE);
-    if (empty($settings['image_style']) || !isset($valid_image_styles[$settings['image_style']])) {
-      $image_uri = $wrapper->getOriginalThumbnailPath();
-    }
-    else {
-      $image_uri = $wrapper->getLocalThumbnailPath();
-    }
+    $image_uri = $wrapper->getLocalThumbnailPath();
 
     $settings['media_id'] = $media_id;
     if ($media_id) {
@@ -151,7 +149,7 @@ function slick_get_caption($settings, $entity_type, $entity, $view_mode, array &
   // Title can be plain text, or link field.
   if (!empty($settings['slide_title']) && $slide_title = field_get_items($entity_type, $entity, $settings['slide_title'])) {
     if (isset($slide_title[0]['value']) && !empty($slide_title[0]['value'])) {
-      // Prevents HTML filter enabled text from having bad markups (h2 > p).
+      // Prevents HTML-filter-enabled text from having bad markups (h2 > p).
       $slide['caption']['title']['#markup'] = filter_xss($slide_title[0]['value']);
     }
     elseif (isset($slide_title[0]['url']) && !empty($slide_title[0]['title'])) {
@@ -180,9 +178,13 @@ function slick_get_caption($settings, $entity_type, $entity, $view_mode, array &
 
   // Link, if so configured.
   if (!empty($settings['slide_link']) && $slide_links = field_get_items($entity_type, $entity, $settings['slide_link'])) {
-    $links = array();
-    foreach ($slide_links as $i => $slide_link) {
-      $links[$i] = field_view_value($entity_type, $entity, $settings['slide_link'], $slide_link, $view_mode);
+    $links = field_view_field($entity_type, $entity, $settings['slide_link'], $view_mode);
+    // Only simplify markups for the known formatters registered by link.module.
+    if (strpos($links['#formatter'], 'link_') !== FALSE) {
+      $links = array();
+      foreach ($slide_links as $i => $slide_link) {
+        $links[$i] = field_view_value($entity_type, $entity, $settings['slide_link'], $slide_link, $view_mode);
+      }
     }
     $slide['caption']['link'] = $links;
   }

@@ -34,15 +34,18 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $slick_id   = &drupal_static('slick_id', 0);
   $id         = drupal_clean_css_identifier("slick-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}-" . ++$slick_id);
   $thumb_id   = $id . '-thumbnail';
+  $entity_uri = entity_uri($entity_type, $entity);
 
   // Prepare settings for conditional features.
   $settings = array(
-    'count'      => count($items),
-    'field_type' => $field['type'],
-    'field_name' => $field_name,
-    'entity_id'  => $entity_id,
-    'attributes' => array('id' => $id),
-    'inline_css' => '',
+    'count'       => count($items),
+    'bundle'      => $bundle,
+    'field_type'  => $field['type'],
+    'field_name'  => $field_name,
+    'entity_id'   => $entity_id,
+    'entity_type' => $entity_type,
+    'attributes'  => array('id' => $id),
+    'entity_uri'  => $entity_uri['path'],
   );
   $settings  = array_merge($settings, $display['settings']);
   $asnavfor  = $settings['optionset_thumbnail'];
@@ -50,16 +53,22 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $settings['lazy']          = $optionset->options['settings']['lazyLoad'];
   $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
   $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
+  $settings['box_style']     = $settings['colorbox_style'];
 
   $attach = array(
     'attach_skin'           => $settings['skin'],
     'attach_skin_thumbnail' => $settings['skin_thumbnail'],
     'attach_skin_arrows'    => $settings['skin_arrows'],
     'attach_skin_dots'      => $settings['skin_dots'],
-    'attach_colorbox'       => $settings['media_switch'] == 'colorbox-switch',
-    'attach_photobox'       => $settings['media_switch'] == 'photobox-switch',
     'attach_media'          => $settings['media_switch'] == 'iframe-switch',
   );
+
+  if ($settings['media_switch'] && strpos($settings['media_switch'], 'box') !== FALSE) {
+    $lightbox = str_replace('-switch', '', $settings['media_switch']);
+    $attach += array(
+      'attach_' . $lightbox => $settings['media_switch'] == $lightbox . '-switch',
+    );
+  }
   $attachments = slick_attach($attach);
 
   if ($asnavfor) {
@@ -95,14 +104,15 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       break;
   }
 
+  // Sniffs for Views to allow block__no_wrapper, views_view_no_wrapper, etc.
+  if (isset($display['views_view']) && $view = $display['views_view']) {
+    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
+    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name . '--' . $view->current_display);
+  }
+
   // Inline CSS is to colorize FC individual slide, or Fullscreen skin.
   if ($inline_css = slick_get_inline_css($settings, $build)) {
-    $attachments['css'][] = array(
-      'data' => $inline_css,
-      'type' => 'inline',
-      'group' => CSS_THEME + 1,
-      'slick' => 'fields',
-    );
+    $attachments['css'][] = $inline_css;
   }
 
   if ($settings['mousewheel']) {
@@ -135,7 +145,6 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
 
     // Build the thumbnail/text navigation Slick.
     $slick[1] = slick_build($thumb, array(), $settings, array(), NULL, $optionset);
-
     $element = array(
       '#theme' => 'slick_wrapper',
       '#items' => $slick,
@@ -143,7 +152,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     );
   }
   else {
-    $element = $slick[0];
+    // Views will flatten the array unless we add a key 0, useful for more work.
+    $element = isset($view) && !empty($settings['markup']) ? $slick : $slick[0];
   }
   return $element;
 }

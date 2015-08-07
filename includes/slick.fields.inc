@@ -48,6 +48,7 @@ function slick_get_fields_default_settings() {
     'lightbox_ready'       => FALSE,
     'picture_ready'        => FALSE,
     'current_display'      => 'main',
+    'use_ajax'             => FALSE,
   );
 
   drupal_alter('slick_fields_default_settings_info', $settings);
@@ -65,7 +66,7 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
 
   // Ensures disabling Picture while being used doesn't screw up.
   $is_picture = function_exists('picture_mapping_load') && !empty($settings['picture_ready']);
-  if ($is_picture && $settings['picture'] && !empty($settings['picture_style'])) {
+  if ($is_picture && !empty($settings['picture']) && !empty($settings['picture_style'])) {
     $fallback    = $settings['picture_fallback'];
     $mappings    = picture_mapping_load($settings['picture_style']);
     $breakpoints = picture_get_mapping_breakpoints($mappings, $fallback);
@@ -85,7 +86,7 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
     foreach (array('uri', 'width', 'height', 'alt', 'title') as $data) {
       $slide["#$data"] = isset($media[$data]) ? $media[$data] : NULL;
     }
-    $build = render($slide);
+    $build = drupal_render($slide);
   }
   else {
     if (!empty($settings['thumbnail_style'])) {
@@ -105,54 +106,65 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
       ),
     );
 
-    // Provide relevant link path if it is a lightbox.
-    if (strpos($settings['media_switch'], 'box') !== FALSE && $settings['lightbox_ready']) {
-      $json = array('type' => $media['type']);
-      if (!empty($media['url'])) {
-        $url = $media['url'];
-        $json['scheme'] = $media['scheme'];
-        // Force autoplay for media URL on lightboxes, saving another click.
-        if ($json['scheme'] == 'soundcloud') {
-          if (strpos($url, 'auto_play') === FALSE || strpos($url, 'auto_play=false') !== FALSE) {
-            $url = strpos($url, '?') === FALSE ? $url . '?auto_play=true' : $url . '&amp;auto_play=true';
+    if (!empty($settings['media_switch'])) {
+      // Provide relevant link path if it is a lightbox.
+      if (strpos($settings['media_switch'], 'box') !== FALSE && $settings['lightbox_ready']) {
+        $json = array('type' => $media['type']);
+        if (!empty($media['url'])) {
+          $url = $media['url'];
+          $json['scheme'] = $media['scheme'];
+          // Force autoplay for media URL on lightboxes, saving another click.
+          if ($json['scheme'] == 'soundcloud') {
+            if (strpos($url, 'auto_play') === FALSE || strpos($url, 'auto_play=false') !== FALSE) {
+              $url = strpos($url, '?') === FALSE ? $url . '?auto_play=true' : $url . '&amp;auto_play=true';
+            }
+          }
+          elseif (strpos($url, 'autoplay') === FALSE || strpos($url, 'autoplay=0') !== FALSE) {
+            $url = strpos($url, '?') === FALSE ? $url . '?autoplay=1' : $url . '&amp;autoplay=1';
           }
         }
-        elseif (strpos($url, 'autoplay') === FALSE || strpos($url, 'autoplay=0') !== FALSE) {
-          $url = strpos($url, '?') === FALSE ? $url . '?autoplay=1' : $url . '&amp;autoplay=1';
+        else {
+          $url = !empty($settings['box_style']) ? image_style_url($settings['box_style'], $media['uri']) : file_create_url($media['uri']);
         }
-      }
-      else {
-        $url = !empty($settings['colorbox_style']) ? image_style_url($settings['colorbox_style'], $media['uri']) : file_create_url($media['uri']);
-      }
 
-      if ($settings['media_switch'] == 'colorbox-switch') {
-        $classes = array('slick__colorbox', 'slick__litebox');
-        if ($settings['count'] > 1) {
-          $json['rel'] = $id;
+        $lightbox = str_replace('-switch', '', $settings['media_switch']);
+        $classes  = array('slick__' . $lightbox, 'slick__litebox');
+        if ($settings['media_switch'] == 'colorbox-switch') {
+          if ($settings['count'] > 1) {
+            $json['rel'] = $id;
+          }
         }
-      }
-      elseif ($settings['media_switch'] == 'photobox-switch') {
-        $classes = array('slick__photobox', 'slick__litebox');
-        if (!empty($media['url'])) {
-          $build['#options']['url']['attributes']['rel'] = 'video';
+        elseif ($settings['media_switch'] == 'photobox-switch') {
+          if (!empty($media['url'])) {
+            $build['#options']['url']['attributes']['rel'] = 'video';
+          }
+          if (!empty($settings['thumbnail_style'])) {
+            $build['#item']['attributes']['data-src'] = image_style_url($settings['thumbnail_style'], $media['uri']);
+          }
         }
-        if (!empty($settings['thumbnail_style'])) {
-          $build['#item']['attributes']['data-src'] = image_style_url($settings['thumbnail_style'], $media['uri']);
+        elseif ($settings['media_switch'] == 'lightbox-switch') {
+          if (!empty($settings['entity_uri']) && !empty($settings['use_ajax'])) {
+            $url = $settings['entity_uri'];
+            $json['ajax'] = TRUE;
+          }
         }
-      }
 
-      // Video/audio has special attributes for JS interaction.
-      if ($media['type'] != 'image') {
-        $json['player'] = TRUE;
-        $json['height'] = $media['height'];
-        $json['width'] = $media['width'];
-        $build['#options']['url']['external'] = TRUE;
-      }
+        // Video/audio has special attributes for JS interaction.
+        if ($media['type'] != 'image') {
+          $json['player'] = TRUE;
+          $json['height'] = empty($media['media_height']) ? $media['height'] : $media['media_height'];
+          $json['width'] = empty($media['media_width']) ? $media['width'] : $media['media_width'];
+          $build['#options']['url']['external'] = TRUE;
+        }
 
-      $build['#url'] = $url;
-      $build['#options']['url']['attributes']['class'] = $classes;
-      $build['#options']['url']['attributes']['data-media'] = drupal_json_encode($json);
-      $build['#options']['lightbox'] = str_replace('-switch', '', $settings['media_switch']);
+        $build['#url'] = $url;
+        $build['#options']['url']['attributes']['class'] = $classes;
+        $build['#options']['url']['attributes']['data-media'] = drupal_json_encode($json);
+        $build['#options']['lightbox'] = $lightbox;
+      }
+      elseif (strpos($settings['media_switch'], 'content') !== FALSE && !empty($settings['entity_uri'])) {
+        $build['#url'] = $settings['entity_uri'];
+      }
     }
   }
   drupal_alter('slick_image_info', $build, $settings, $media, $key);
@@ -193,7 +205,7 @@ function slick_extract_image_data($settings, array &$media, array &$slide, $item
       'media_switch' => !empty($settings['media_switch']) ? $settings['media_switch'] : '',
     ),
   );
-
+  $media['bundle'] = !empty($settings['bundle']) ? $settings['bundle'] : '';
   $config = array('fid', 'height', 'width', 'alt', 'title', 'uri', 'type');
   foreach ($config as $data) {
     $media[$data] = isset($item[$data]) ? $item[$data] : NULL;
@@ -215,7 +227,7 @@ function slick_get_inline_css_skins($skin = NULL) {
 /**
  * Builds the inline CSS output for skins with explicit 'inline css' key.
  */
-function slick_get_inline_css(array $settings, array &$items) {
+function slick_get_inline_css(array &$settings, array &$items) {
   $css = array();
   if (slick_get_inline_css_skins($settings['skin'])) {
     $id = $settings['attributes']['id'];
@@ -238,6 +250,13 @@ function slick_get_inline_css(array $settings, array &$items) {
   if ($css) {
     $css = implode("\n", $css);
     drupal_alter('slick_inline_css_info', $css, $items, $settings);
+
+    $css = array(
+      'data' => $css,
+      'type' => 'inline',
+      'group' => CSS_THEME + 1,
+      'slick' => 'fields',
+    );
   }
   return $css;
 }

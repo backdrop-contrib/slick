@@ -172,8 +172,8 @@ function slick_attach(array $attach) {
 
   $navs = array('thumbnail', 'arrows', 'dots');
   foreach ($navs as $nav) {
-    $nav_skins = $nav == 'arrows' ? slick_arrows() : ($nav == 'dots' ? slick_dots() : $skins);
     if (isset($attach['attach_skin_' . $nav]) && $skin = $attach['attach_skin_' . $nav]) {
+      $nav_skins = $nav == 'arrows' ? slick_arrows() : ($nav == 'dots' ? slick_dots() : $skins);
       if (isset($nav_skins[$skin]['css']) && is_array($nav_skins[$skin]['css'])) {
         $load['css'] += $nav_skins[$skin]['css'];
       }
@@ -183,7 +183,7 @@ function slick_attach(array $attach) {
   // Attach default JS settings to allow responsive displays have a lookup,
   // excluding wasted/trouble options, e.g.: PHP string vs JS object.
   $defaults = slick_get_options();
-  $excludes = explode(' ', 'mobileFirst appendArrows appendDots asNavFor prevArrow nextArrow cssEaseBezier cssEaseOverride');
+  $excludes = explode(' ', 'mobileFirst appendArrows appendDots asNavFor prevArrow nextArrow cssEaseBezier cssEaseOverride respondTo');
   $load['js'][] = array(
     'data' => array('slick' => array_diff_key($defaults, drupal_map_assoc($excludes))),
     'type' => 'setting',
@@ -194,10 +194,7 @@ function slick_attach(array $attach) {
 }
 
 /**
- * Defines a list of options available for the Slick.
- *
- * @return array
- *   All available Slick carousel options.
+ * Returns an array of options available for a Slick instance.
  */
 function slick_get_options() {
   $options = &drupal_static(__FUNCTION__);
@@ -255,10 +252,7 @@ function slick_get_options() {
 }
 
 /**
- * Returns Slick skins registered via hook_slick_skins_info().
- *
- * @return array
- *   The associative array of available skins.
+ * Returns an array of skins registered via hook_slick_skins_info().
  */
 function slick_skins() {
   $skins = &drupal_static(__FUNCTION__, NULL);
@@ -270,10 +264,7 @@ function slick_skins() {
 }
 
 /**
- * Returns Slick arrow skins registered via hook_slick_arrows_info().
- *
- * @return array
- *   The associative array of available arrow skins.
+ * Returns an array of arrow skins registered via hook_slick_arrows_info().
  */
 function slick_arrows() {
   $arrows = &drupal_static(__FUNCTION__, NULL);
@@ -285,10 +276,7 @@ function slick_arrows() {
 }
 
 /**
- * Returns Slick dot skins registered via hook_slick_dots_info().
- *
- * @return array
- *   The associative array of available dot skins.
+ * Returns an array of dot skins registered via hook_slick_dots_info().
  */
 function slick_dots() {
   $dots = &drupal_static(__FUNCTION__, NULL);
@@ -300,13 +288,13 @@ function slick_dots() {
 }
 
 /**
- * Fetches the given optionset.
+ * Fetches the given optionset object.
  *
  * @param string $id
  *   The optionset ID.
  *
  * @return object
- *   Returns the optionset, or default, if no optionset found.
+ *   Returns the optionset, or else default, if no optionset found.
  */
 function slick_optionset_load($id) {
   ctools_include('export');
@@ -321,13 +309,13 @@ function slick_optionset_load($id) {
 }
 
 /**
- * Create a new optionset object without saving it to the database.
+ * Creates a new optionset object without saving it to the database.
  *
  * @param array $values
  *   The given values to build the optionset if provided.
  *
  * @return object
- *   Returns the optionset object.
+ *   Returns the programmatically created optionset object.
  */
 function slick_optionset_create($values = array()) {
   ctools_include('export');

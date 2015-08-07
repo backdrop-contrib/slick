@@ -443,7 +443,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['mobileFirst'] = array(
         'title' => t('Mobile first'),
-        'description' => t('Responsive settings use mobile first calculation.'),
+        'description' => t('Responsive settings use mobile first calculation, or equivalent to min-width query.'),
         'type' => 'checkbox',
       );
 
@@ -540,7 +540,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['appendDots'] = array(
         'title' => t('Append dots'),
-        'description' => t('Change where the navigation dots are attached (Selector, htmlString). If you change this, be sure to provide its relevant markup.'),
+        'description' => t('Change where the navigation dots are attached (Selector, htmlString). If you change this, be sure to provide its relevant markup. E.g.: try the supported markup ".slick__arrow" without quotes to put dots within .slick__arrow. Be sure to enable arrows in such a case.'),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][dots]"]' => array('checked' => TRUE))),
       );
@@ -761,7 +761,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements[$key]['breakpoint'] = array(
         'title' => t('Breakpoint'),
-        'description' => t('Breakpoint width in pixel.'),
+        'description' => t('Breakpoint width in pixel. If mobileFirst enabled, equivalent to min-width, otherwise max-width.'),
         'type' => 'textfield',
         'field_suffix' => 'px',
         'default' => FALSE,

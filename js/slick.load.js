@@ -3,26 +3,27 @@
  * Provides Slick loader.
  */
 
+/*jshint -W072 */
+/*eslint max-params: 0 */
 (function ($, Drupal) {
 
   "use strict";
 
   Drupal.behaviors.slick = {
     attach: function (context) {
+      var _ = this;
       $(".slick:not(.unslick)", context).once("slick", function () {
-        var _ = Drupal.slick,
-          t = $("> .slick__slider", this),
-          a = $("> .slick__arrow", this);
+        var $this = $(this),
+          t = $("> .slick__slider", $this),
+          a = $("> .slick__arrow", $this);
 
         // Build the Slick.
         _.beforeSlick(t, a);
         t.slick(_.globals(t, a));
         _.afterSlick(t);
       });
-    }
-  };
+    },
 
-  Drupal.slick = {
     /**
      * The event must be bound prior to slick being called.
      */
@@ -88,11 +89,15 @@
 
     /**
      * Gets active options based on breakpoint, or fallback to global.
+     *
+     * @fixme activeBreakpoint and arrows are broken since v1.5.3+.
      */
     options: function (slick) {
       var breakpoint = slick.activeBreakpoint || null;
       return breakpoint && (slick.windowWidth <= breakpoint)
-        ? slick.breakpointSettings[breakpoint] : slick.options;
+        ? $.extend({},
+        Drupal.settings.slick, slick.breakpointSettings[breakpoint])
+        : slick.options;
     },
 
     /**
@@ -112,30 +117,29 @@
 
     /**
      * Fixed known arrows issue when total <= slidesToShow, and not updated.
+     *
+     * @fixme activeBreakpoint and arrows are broken since v1.5.3+.
      */
     arrows: function (a, slick) {
       var _ = this,
         opt = _.options(slick);
-      a.find(">*:not(.slick-down)").addClass("slick-nav");
+      // @todo drop 'slick-nav' for 'slick-arrow' class, added v1.5.6 (7/11).
+      // a.find(">*:not(.slick-down)").addClass("slick-nav");
       // Do not remove arrows, to allow responsive have different options.
-      return slick.slideCount <= opt.slidesToShow
-        || opt.arrows === false ? a.hide() : a.show();
+      return slick.slideCount <= opt.slidesToShow || opt.arrows === false
+      ? a.addClass("element-hidden") : a.removeClass("element-hidden");
     },
 
     /**
      * Sets the current slide class.
      *
-     * With slidesToShow 1, .slick-active = .slide--current (ok)
-     * With slidesToShow > 1, .slick-active = all visible slides (bad)
-     * Only when it is centerMode, .slick-center = .slide--current (ok)
-     * Hence added a specific class: .slide--current for all cases.
-     * Also fixed total <= slidesToShow with centerMode.
-     * slick-current class is finally added 5/24/15, now is v1.5.5.
+     * Still kept after v1.5.8 (8/4) as "slick-current" fails with asNavFor:
+     *   - Create asNavFor with the total <= slidesToShow and centerMode.
+     *   - Drag the main large display, or click its arrows, thumbnail
+     *     slick-current class is not updated/ synched, always stucked at 0.
+     * Or else, drop slide--current, and just push slick-current where it fails.
      *
-     * @todo deprecate slide--current for slick-current from v1.5.6 when all
-     * scenarios above fixed.
-     *
-     * @see https://github.com/kenwheeler/slick/issues/1248
+     * @todo deprecate slide--current for slick-current from v1.5.8+ if fixed.
      */
     setCurrent: function (t, curr, slick) {
       // Must take care for both asNavFor instances, with/without slick-wrapper.
@@ -158,7 +162,8 @@
         lazyLoad: merged.lazyLoad,
         dotsClass: merged.dotsClass,
         rtl: merged.rtl,
-        appendDots: merged.appendDots || $(t),
+        appendDots: merged.appendDots === ".slick__arrow"
+          ? a : (merged.appendDots || $(t)),
         prevArrow: $(".slick-prev", a),
         nextArrow: $(".slick-next", a),
         appendArrows: a,

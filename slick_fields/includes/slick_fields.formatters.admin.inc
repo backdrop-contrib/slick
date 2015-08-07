@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Misc functions for Slick fields admin.
+ * Off-loaded hooks for the Slick fields admin.
  */
 
 /**
@@ -29,10 +29,9 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $layout_builtin = slick_layouts();
   $layout_options = $layout_builtin;
   $optionsets     = slick_optionset_options();
-  $is_tooltip     = array('class' => array('is-tooltip'));
   $readme         = url($slick_path . '/README.txt');
+  $is_views_ui    = '';
 
-  $is_views_ui = '';
   if ($instance['entity_type'] == 'ctools') {
     $is_views_ui = '<h3 class="form--slick__title">' . t('Be sure to check "Use field template" under "Style settings" below, if using multiple-value field for the slides. Views preview works with jQuery > 1.7.') . '</h3>';
   }
@@ -176,7 +175,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $elements['markup'] = array(
     '#type'        => 'checkbox',
     '#title'       => t('Keep field markups'),
-    '#description' => t('Leave it unchecked to clean up caption field markups, otherwise deep markups kept -- .field > .field-items > .field-item.'),
+    '#description' => t('Uncheck to clean up caption field markups, otherwise deep markups kept -- .field > .field-items > .field-item. Check only if you need renderable array at Views, e.g. for custom work with collages containing slick instances with your own advanced lazyLoad with recipe -- "Use field template" disabled and this option enabled, otherwise Views flattens/renders the array.'),
   );
 
   $field_entity_type = $field_type;
@@ -347,7 +346,10 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $elements['media_switch'] = array(
     '#title'       => t('Media switcher'),
     '#type'        => 'select',
-    '#options'     => array('iframe-switch' => t('Image to iframe switcher')),
+    '#options'     => array(
+      'content'       => t('Image linked to content'),
+      'iframe-switch' => t('Image to iframe switcher'),
+    ),
     '#description' => t('Supports Colorbox/Photobox and Media iframe.<ol><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox: image to colorbox.</li><li>Photobox: image to photobox. Be sure to select Thumbnail style for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
   );
 
@@ -356,7 +358,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     $elements['aspect_ratio'] = array(
       '#type'        => 'select',
       '#title'       => t('Aspect ratio'),
-      '#options'     => drupal_map_assoc(array('4:3', '16:9')),
+      '#options'     => drupal_map_assoc(array('1:1', '4:3', '16:9')),
       '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpedtedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc.', array(
         '@dimensions' => '//size43.com/jqueryVideoTool.html',
         '@follow'     => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
@@ -540,7 +542,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
         $elements[$key]['#default_value'] = $settings[$key];
       }
       if (!isset($elements[$key]['#attributes']) && isset($elements[$key]['#description'])) {
-        $elements[$key]['#attributes'] = $is_tooltip;
+        $elements[$key]['#attributes'] = array('class' => array('is-tooltip'));
       }
       if ($elements[$key]['#type'] == 'checkbox') {
         $elements[$key]['#field_suffix'] = '';
@@ -574,146 +576,44 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   return $elements;
 }
 
-
 /**
  * Off-loaded hook_field_formatter_settings_summary().
  */
 function _slick_fields_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-
+  $form = call_user_func_array('slick_fields_field_formatter_settings_form', array(
+    $field,
+    $instance,
+    $view_mode,
+    array(),
+    array(),
+  ));
   $summary = array();
-  $skins = slick_skins();
-
-  if (isset($settings['skin'])) {
-    $skin = $settings['skin'] ? $skins[$settings['skin']]['name'] : t('None');
-    $summary[] = t('Skin: @skin', array('@skin' => $skin));
-  }
-
-  if (isset($settings['skin_thumbnail'])) {
-    $skin_thumbnail = $settings['skin_thumbnail'] ? $skins[$settings['skin_thumbnail']]['name'] : t('None');
-    $summary[] = t('Skin thumbnail: @skin_thumbnail', array('@skin_thumbnail' => $skin_thumbnail));
-  }
-
-  if (isset($settings['optionset'])) {
-    $optionset = $settings['optionset'] ? $settings['optionset'] : t('Default');
-    $summary[] = t('Optionset: @optionset', array('@optionset' => $optionset));
-  }
-
-  if (isset($settings['optionset_thumbnail'])) {
-    $optionset_thumbnail = $settings['optionset_thumbnail'] ? $settings['optionset_thumbnail'] : t('None');
-    $summary[] = t('Optionset thumbnail: @optionset_thumbnail', array('@optionset_thumbnail' => $optionset_thumbnail));
-    $summary[] = isset($settings['thumbnail_caption']) && $settings['thumbnail_caption'] ? t('Yes') : t('None');
-
-    if (isset($settings['asnavfor_auto']) && $settings['asnavfor_auto']) {
-      $summary[] = t('asNavFor auto selectors: Yes');
-    }
-    else {
-      if (isset($settings['asnavfor_main'])) {
-        $asnavfor_main = $settings['asnavfor_main'] ? $settings['asnavfor_main'] : t('None');
-        $summary[] = t('asNavFor main: @asnavfor_main', array('@asnavfor_main' => $asnavfor_main));
+  if ($display['type'] == 'slick') {
+    $skins = slick_skins();
+    foreach ($settings as $key => $setting) {
+      $title = isset($form[$key]['#title']) ? $form[$key]['#title'] : '';
+      if (is_array($setting) || empty($title)) {
+        continue;
       }
-      if (isset($settings['asnavfor_thumbnail'])) {
-        $asnavfor_thumbnail = $settings['asnavfor_thumbnail'] ? $settings['asnavfor_thumbnail'] : t('None');
-        $summary[] = t('asNavFor thumbnail: @asnavfor_thumbnail', array('@asnavfor_thumbnail' => $asnavfor_thumbnail));
+
+      if (is_numeric($setting) || is_bool($setting)) {
+        $setting = empty($setting) ? t('No') : t('Yes');
+      }
+      elseif ($key == 'skin') {
+        $setting = empty($setting) ? t('None') : $skins[$setting]['name'];
+      }
+      elseif (empty($setting)) {
+        $setting = t('None');
+      }
+      if (isset($settings[$key])) {
+        $summary[] = t('@title: <strong>@setting</strong>', array(
+          '@title' => $title,
+          '@setting' => $setting,
+        ));
       }
     }
   }
-
-  if (isset($settings['image_style'])) {
-    $image_style = $settings['image_style'] ? $settings['image_style'] : t('None (original image)');
-    $summary[] = t('Image style: @image_style', array('@image_style' => $image_style));
-  }
-
-  if (!empty($settings['view_mode'])) {
-    $summary[] = t('File view mode: @view_mode', array('@view_mode' => $settings['view_mode']));
-  }
-
-  if (isset($settings['slide_image'])) {
-    $slide_image = $settings['slide_image'] ? $settings['slide_image'] : t('Self');
-    $summary[] = t('Image: @slide_image', array('@slide_image' => $slide_image));
-  }
-
-  if (isset($settings['thumbnail_style'])) {
-    $thumbnail_style = $settings['thumbnail_style'] ? $settings['thumbnail_style'] : t('None');
-    $summary[] = t('Thumbnail: @thumbnail_style', array('@thumbnail_style' => $thumbnail_style));
-    if (isset($settings['thumbnail_hover'])) {
-      $thumbnail_hover = $settings['thumbnail_hover'] ? t('Yes') : t('None');
-      $summary[] = t('Thumbnail hover: @thumbnail_hover', array('@thumbnail_hover' => $thumbnail_hover));
-    }
-  }
-
-  if (isset($settings['slide_overlay'])) {
-    $slide_overlay = $settings['slide_overlay'] ? $settings['slide_overlay'] : t('None');
-    $summary[] = t('Overlay image/video: @slide_overlay', array('@slide_overlay' => $slide_overlay));
-
-    if (isset($settings['nested_slick'])) {
-      $nested_slick = $settings['nested_slick'] ? t('Yes') : t('No');
-      $summary[] = t('Nested slicks: @nested_slick', array('@nested_slick' => $nested_slick));
-    }
-  }
-
-  if (isset($settings['slide_layout'])) {
-    $slide_layout = $settings['slide_layout'] ? $settings['slide_layout'] : t('None');
-    $summary[] = t('Layout: @slide_layout', array('@slide_layout' => $slide_layout));
-  }
-
-  if (isset($settings['media_switch'])) {
-    $media_switch = $settings['media_switch'] ? $settings['media_switch'] : t('None');
-    $summary[] = t('Media switch: @media_switch', array('@media_switch' => $media_switch));
-  }
-
-  if (isset($settings['slide_title'])) {
-    $slide_title = $settings['slide_title'] ? $settings['slide_title'] : t('None');
-    $summary[] = t('Title: @slide_title', array('@slide_title' => $slide_title));
-  }
-
-  if (isset($settings['slide_link'])) {
-    $slide_link = $settings['slide_link'] ? $settings['slide_link'] : t('None');
-    $summary[] = t('Link: @slide_link', array('@slide_link' => $slide_link));
-  }
-
-  if (isset($settings['slide_classes'])) {
-    $slide_classes = $settings['slide_classes'] ? $settings['slide_classes'] : t('None');
-    $summary[] = t('Slide classes: @slide_classes', array('@slide_classes' => $slide_classes));
-  }
-
-  if (!empty($settings['slide_caption'])) {
-    $captions = $settings['slide_caption'];
-    if (is_array($settings['slide_caption'])) {
-      $captions = array_filter(array_values($settings['slide_caption']));
-      $captions = implode(", ", $captions);
-      $captions = str_replace('_', ' ', $captions);
-    }
-    $summary[] = t('Caption: @captions', array('@captions' => $captions));
-  }
-  else {
-    $summary[] = t('Caption: None');
-  }
-
-  if (isset($settings['color_field'])) {
-    $color_field = $settings['color_field'] ? $settings['color_field'] : t('None');
-    $summary[] = t('Color: @color_field', array('@color_field' => $color_field));
-  }
-
-  if (isset($settings['picture'])) {
-    $picture_style = $settings['picture_style'] ? $settings['picture_style'] : t('None (original image)');
-    $summary[] = t('Picture style: @picture_style', array('@picture_style' => $picture_style));
-
-    if (!empty($settings['picture_fallback'])) {
-      $summary[] = t('Picture fallback: %picture_fallback', array('%picture_fallback' => $settings['picture_fallback']));
-    }
-  }
-
-  if (isset($settings['mousewheel'])) {
-    $mousewheel = $settings['mousewheel'] ? t('Yes') : t('No');
-    $summary[] = t('Mousewheel: @mousewheel', array('@mousewheel' => $mousewheel));
-  }
-
-  if (isset($settings['override'])) {
-    $override = $settings['override'] ? t('Yes') : t('No');
-    $summary[] = t('Override optionset: @override', array('@override' => $override));
-  }
-
   return $summary;
 }

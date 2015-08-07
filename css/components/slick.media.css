@@ -20,6 +20,11 @@
   height: 0;
 }
 
+/* 1:1 ratio */
+.media--ratio--11 {
+  padding-bottom: 100%;
+}
+
 /* 4:3 ratio */
 .media--ratio--43 {
   padding-bottom: 75%;
@@ -159,6 +164,7 @@
   z-index: 3;
 }
 
+.is-playing > img,
 .is-playing .slick__image,
 .is-playing.media--switch + .slide__pattern,
 .is-playing.media--switch .slick__image,

@@ -146,7 +146,7 @@ function _slick_fields_fc_build_overlay(&$settings, $wrapper, $options = array()
   $overlays = $media = $slide = array();
   // @todo refine more to $slide['settings'] and match Media/Image formatters.
   $overset = array(
-    'colorbox_style'  => $settings['colorbox_style'],
+    'box_style'       => $settings['colorbox_style'],
     'current_display' => 'overlay',
     'has_pattern'     => $settings['has_pattern'],
     'image_style'     => $nested_style,

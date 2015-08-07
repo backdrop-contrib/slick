@@ -56,6 +56,7 @@ function slick_clean_options(array $options) {
     'appendArrows',
     'dotsClass',
     'appendDots',
+    'respondTo',
     'rtl',
   ));
 
@@ -172,7 +173,7 @@ function slick_arrows_options() {
  * Load all slick optionsets as select options.
  *
  * @return array
- *   An array containing slicks indexed by their names.
+ *   An array containing slick optionsets indexed by their names.
  */
 function slick_optionset_options() {
   $optionsets = &drupal_static(__FUNCTION__, NULL);
@@ -205,7 +206,7 @@ function slick_optionset_exists($optionset_name) {
 }
 
 /**
- * Fetches all option sets from the storage.
+ * Fetches all optionsets from the storage.
  *
  * @param bool $reset
  *   If TRUE, the static cache of all objects will be flushed prior to

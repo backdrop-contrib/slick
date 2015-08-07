@@ -4,12 +4,9 @@
  */
 
 .colorbox-on--video #colorbox,
-.colorbox-on--video #cboxContent,
-.colorbox-on--video #cboxLoadedContent,
-.colorbox-on--audio #colorbox,
-.colorbox-on--audio #cboxContent,
-.colorbox-on--audio #cboxLoadedContent {
+.colorbox-on--video #colorbox * {
   box-sizing: border-box;
+  max-width: 100%;
 }
 
 .colorbox-on--video #cboxBottomCenter,
@@ -28,9 +25,7 @@
 .colorbox-on--audio #cboxTopLeft,
 .colorbox-on--audio #cboxMiddleLeft,
 .colorbox-on--audio #cboxMiddleRight {
-  display: none;
-  height: 0 !important;
-  width: 0 !important;
+  display: none !important;
 }
 
 .colorbox-on--video #cboxWrapper,
