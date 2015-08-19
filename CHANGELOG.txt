@@ -1,4 +1,28 @@
 
+Slick 7.x-2.0-dev, 2015-8-19
+----------------------------
+- Fixed for arrows visibility with responsive options due to inaccessible
+  activeBreakpoint flag.
+- Fixed for Photobox "infinite true + slidesToShow > 1" incompatibility at the
+  price of dup thumbnails which however can be disabled by "thumbs: false".
+  This is less problematic than broken Photobox links.  
+- Deprecated the following functions:
+  o _slick_fields_format_image() for slick_format_image().
+  o _slick_fields_format_media() for slick_format_media().
+  o _slick_fields_format_field_collection() for slick_format_field_collection().
+- Moved the contents of slick_fields includes files into core to re-use them
+  across field formatters and Views without hard dependency for slick_fields.
+  This is also to smoothen the transition out to Slick 3.x.
+- Added support for iframe only aspect ratio.  
+- Added support for Youtube or Vimeo url using plain text field within file
+  entity of type image to display a video overlay over the main image background.
+  Provided as currently file entity doesn't support nested files.
+- Added slick_get_grid_elements() and slick_build_grids() to reuse grid for
+  field formatter and Views.
+- Removed Photobox "data-src" thumbnails to use global "data-thumb" instead.
+- Added slick_get_admin_assets() to re-use the admin assests across field
+  formatter and Views.
+
 Slick 7.x-2.0-dev, 2015-8-7
 ---------------------------
 - Simplified slick.colorbox.css to use "colorbox-on--media" rather than
@@ -9,9 +33,9 @@ Slick 7.x-2.0-dev, 2015-8-7
   use 'slick-nav', be sure to update it to 'slick-arrow'.
 - Removed useless 'respondTo' option from responsive since it is always ignored/
   hard-coded by core: _.respondTo = _.options.respondTo || 'window';
-- Fixed for video switcher image not being hidden when swicthed and a single
+- Fixed for video switcher image not being hidden when switched and a single
   image, not carousel.
-- Added support to merge dots to .slick__arrow via appendDots: .slick__arrow to
+- Added support to merge dots to .slick__arrow via appendDots: .slick__arrow, to
   have this style: < o o o o o o o >
 - Added "Image linked to content" option to the "Media switcher" option to allow
   aggregated small slick fields linked to their host entity while using the

@@ -121,11 +121,13 @@ function slick_library() {
  *
  * @param array $attach
  *   An array of conditions to load the relevant assets, empty means basic.
+ * @param array $settings
+ *   An array of settings to check for the supported features.
  *
  * @return array
  *   The array formatted for the '#attached' property.
  */
-function slick_attach(array $attach) {
+function slick_attach(array $attach, $settings = array()) {
   $path  = drupal_get_path('module', 'slick');
   $skins = slick_skins();
   $load  = array();
@@ -135,7 +137,7 @@ function slick_attach(array $attach) {
     'attach_module_js'  => TRUE,
     'attach_module_css' => TRUE,
   );
-  drupal_alter('slick_attach_info', $attach);
+  drupal_alter('slick_attach_info', $attach, $settings);
 
   if ($easing = libraries_get_path('easing')) {
     $load['js'] += array($easing . '/jquery.easing.min.js' => array('group' => JS_LIBRARY, 'weight' => -6));
@@ -189,7 +191,7 @@ function slick_attach(array $attach) {
     'type' => 'setting',
   );
 
-  drupal_alter('slick_attach_load_info', $load, $attach, $skins);
+  drupal_alter('slick_attach_load_info', $load, $attach, $skins, $settings);
   return $load;
 }
 
@@ -329,9 +331,9 @@ function slick_optionset_create($values = array()) {
     }
   }
 
-  $defaults['general'] = array('goodies' => array());
+  $defaults['general']  = array('goodies' => array());
   $defaults['settings'] = slick_get_options();
-  $optionset->options = $optionset->options + $defaults;
+  $optionset->options   = $optionset->options + $defaults;
   return $optionset;
 }
 
@@ -360,15 +362,15 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
     if ($id && !isset($settings['attributes'])) {
       $settings += array('attributes' => array('id' => $id));
     }
-    $custom = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
-    $attachments = $custom ? $attach : slick_attach($attach);
+    $custom      = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
+    $attachments = $custom ? $attach : slick_attach($attach, $settings);
     $slick = array(
-      '#theme' => 'slick',
-      '#items' => $items,
-      '#options' => $options,
+      '#theme'     => 'slick',
+      '#items'     => $items,
+      '#options'   => $options,
       '#optionset' => $optionset,
-      '#settings' => $settings,
-      '#attached' => $attachments,
+      '#settings'  => $settings,
+      '#attached'  => $attachments,
     );
   }
   return $slick;

@@ -190,6 +190,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       $link_options    = slick_get_media_fields($instance, $link_fields);
       $thumb_captions  = slick_get_media_fields($instance, array('text_textfield', 'text_textarea'));
       $caption_options = slick_get_media_fields($instance);
+      $overlay_options = slick_get_media_fields($instance, array('text_textfield'));
       break;
 
     // This should go as a separate module, but alas.
@@ -232,22 +233,27 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
     $elements['slide_layout']['#prefix'] = '<h3 class="form--slick__title">' . t('Fields') . '</h3>';
+
+    // Media overlay.
+    $elements['slide_overlay'] = array(
+      '#title'       => t('Overlay video field'),
+      '#type'        => 'select',
+      '#options'     => $overlay_options,
+      '#description' => t("Choose the plain text field containing Youtube or Vimeo url to display video overlay over the main image background. Provided as currently file entity media browser doesn't support nested files. Be sure the parent file type is image, not video."),
+    );
+
     // Complex slide layout is provided by FC alone.
     // Skip media file field as it is the main/ background media already.
     if (in_array($field_entity_type, array('field_collection_item'))) {
+      // Field collection overlay.
+      $elements['slide_overlay']['#title'] = t('Overlay image/video field');
+      $elements['slide_overlay']['#description'] = t('Overlays can be single image/auvio/video, or nested slicks. If audio/video, be sure the display is not image. Manage its display at its own entity View mode (there). Two ways to build nested slicks: <ol><li>Make this field use Slick formatter there, and leave <strong>Enable nested slicks</strong> unchecked.</li><li>Or check <strong>Enable nested slicks</strong> here and be sure to use Image or Rendered file formatter (not Slick) there for the supported fields: Image, Media, Atom reference.</li></ol>');
+
       $elements['slide_image'] = array(
         '#title'       => t('Main image field'),
         '#type'        => 'select',
         '#options'     => $image_options,
         '#description' => t('Main background image field'),
-      );
-
-      // Field collection overlay.
-      $elements['slide_overlay'] = array(
-        '#title'       => t('Overlay image/video field'),
-        '#type'        => 'select',
-        '#options'     => $overlay_options,
-        '#description' => t('Overlays can be single image/auvio/video, or nested slicks. If audio/video, be sure the display is not image. Manage its display at its own entity View mode (there). Two ways to build nested slicks: <ol><li>Make this field use Slick formatter there, and leave <strong>Enable nested slicks</strong> unchecked.</li><li>Or check <strong>Enable nested slicks</strong> here and be sure to use Image or Rendered file formatter (not Slick) there for the supported fields: Image, Media, Atom reference.</li></ol>'),
       );
 
       // Field collection nested slicks, slicks within a slick.
@@ -350,7 +356,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       'content'       => t('Image linked to content'),
       'iframe-switch' => t('Image to iframe switcher'),
     ),
-    '#description' => t('Supports Colorbox/Photobox and Media iframe.<ol><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox: image to colorbox.</li><li>Photobox: image to photobox. Be sure to select Thumbnail style for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
+    '#description' => t('Supports Colorbox, Photobox, Media iframe, and content.<ol><li>Link to content: useful with aggregated small slicks.</li><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox: image to colorbox.</li><li>Photobox: image to photobox. Be sure to select Thumbnail style for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
@@ -366,7 +372,8 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       )),
       '#states' => array(
         'visible' => array(
-          'select[name*="[media_switch]"]' => array('value' => 'iframe-switch'),
+          array('select[name*="[media_switch]"]' => array('value' => 'iframe-switch')),
+          array('select[name*="[media_switch]"]' => array('value' => '')),
         ),
       ),
     );
@@ -407,7 +414,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
     if ($is_photobox) {
       $elements['media_switch']['#options']['photobox-switch'] = t('Image to photobox switcher');
-      $elements['colorbox_style']['#title'] = t('Lightbox image style');
     }
   }
 
@@ -535,85 +541,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#markup' => '</div>',
   );
 
-  // DRY.
-  foreach (element_children($elements) as $key) {
-    if (isset($elements[$key]['#type']) && !in_array($elements[$key]['#type'], array('item'))) {
-      if (!isset($elements[$key]['#default_value']) && isset($settings[$key])) {
-        $elements[$key]['#default_value'] = $settings[$key];
-      }
-      if (!isset($elements[$key]['#attributes']) && isset($elements[$key]['#description'])) {
-        $elements[$key]['#attributes'] = array('class' => array('is-tooltip'));
-      }
-      if ($elements[$key]['#type'] == 'checkbox') {
-        $elements[$key]['#field_suffix'] = '';
-        $elements[$key]['#title_display'] = 'before';
-      }
-      elseif ($elements[$key]['#type'] == 'checkboxes') {
-        foreach ($elements[$key]['#options'] as $i => $option) {
-          $elements[$key][$i]['#field_suffix'] = '';
-          $elements[$key][$i]['#title_display'] = 'before';
-        }
-      }
-      elseif ($elements[$key]['#type'] == 'select' && $key != 'optionset') {
-        if (!isset($elements[$key]['#empty_option'])) {
-          $elements[$key]['#empty_option'] = t('- None -');
-        }
-      }
-    }
-  }
-
-  if ($display['type'] == 'slick') {
-    if (module_exists('slick_ui')) {
-      $elements['#attached']['library'][] = array('slick_ui', 'slick.ui');
-    }
-    else {
-      $elements['#attached']['css'][] = $slick_path . '/css/admin/slick.admin--ui.css';
-      $elements['#attached']['css'][] = $slick_path . '/css/admin/slick.admin--ui--field.css';
-      $elements['#attached']['js'][]  = $slick_path . '/js/slick.admin.ui.min.js';
-    }
-  }
-
+  slick_get_admin_assets($elements, $settings);
   return $elements;
-}
-
-/**
- * Off-loaded hook_field_formatter_settings_summary().
- */
-function _slick_fields_field_formatter_settings_summary($field, $instance, $view_mode) {
-  $display = $instance['display'][$view_mode];
-  $settings = $display['settings'];
-  $form = call_user_func_array('slick_fields_field_formatter_settings_form', array(
-    $field,
-    $instance,
-    $view_mode,
-    array(),
-    array(),
-  ));
-  $summary = array();
-  if ($display['type'] == 'slick') {
-    $skins = slick_skins();
-    foreach ($settings as $key => $setting) {
-      $title = isset($form[$key]['#title']) ? $form[$key]['#title'] : '';
-      if (is_array($setting) || empty($title)) {
-        continue;
-      }
-
-      if (is_numeric($setting) || is_bool($setting)) {
-        $setting = empty($setting) ? t('No') : t('Yes');
-      }
-      elseif ($key == 'skin') {
-        $setting = empty($setting) ? t('None') : $skins[$setting]['name'];
-      }
-      elseif (empty($setting)) {
-        $setting = t('None');
-      }
-      if (isset($settings[$key])) {
-        $summary[] = t('@title: <strong>@setting</strong>', array(
-          '@title' => $title,
-          '@setting' => $setting,
-        ));
-      }
-    }
-  }
-  return $summary;
 }

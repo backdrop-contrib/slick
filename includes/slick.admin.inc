@@ -115,20 +115,26 @@ function slick_layouts() {
 /**
  * Gets supported Slick skins, and additional ones for select options.
  *
+ * @param string $group
+ *   The skin group name.
+ * @param bool $all
+ *   The flag to limit the skins, if FALSE only those specified within $group
+ *   returned, otherwise $group is excluded.
+ *
  * @return array
- *   An array of available skins.
+ *   An array of available skins excluding the $group if specified.
  */
-function slick_skins_options() {
-  $skins = &drupal_static(__FUNCTION__, NULL);
-
-  if (!isset($skins)) {
-    $skins = array();
-    foreach (slick_skins() as $skin => $properties) {
-      $skins[$skin] = $properties['name'];
+function slick_skins_options($group = 'lightbox', $all = TRUE) {
+  $skins = $groups = array();
+  foreach (slick_skins() as $skin => $properties) {
+    if (!empty($group) && !empty($properties['group']) && $properties['group'] == $group) {
+      $groups[$skin] = $properties['name'];
+      continue;
     }
+    $skins[$skin] = $properties['name'];
   }
 
-  return $skins;
+  return $group && !$all ? $groups : $skins;
 }
 
 /**
@@ -584,4 +590,132 @@ function slick_get_media_fields($instance, $widget_types = NULL) {
   }
 
   return $media_options;
+}
+
+/**
+ * Returns reusable grid elements across Slick fields and Views.
+ */
+function slick_get_grid_elements(array &$elements, $settings, &$form_state) {
+  $grid_options = drupal_map_assoc(range(1, 12));
+  $elements['grid'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Grid large'),
+    '#options'     => $grid_options,
+    '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. Use skin Grid for starter. This module feature has been around before the Slick library officiallly supported it. Leave empty to DIY.'),
+    '#prefix'      => '<h3 class="form--slick__title">' . t('Display content images as grid?') . '</h3>',
+  );
+
+  $elements['grid_medium'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Grid medium'),
+    '#options'     => $grid_options,
+    '#description' => t('The amount of block grid columns for medium devices 40.063em - 64em.'),
+  );
+
+  $elements['grid_small'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Grid small'),
+    '#options'     => $grid_options,
+    '#description' => t('The amount of block grid columns for small devices 0 - 40em.'),
+  );
+
+  $elements['visible_slides'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Visible slides'),
+    '#options'     => drupal_map_assoc(range(1, 32)),
+    '#description' => t('How many items per slide displayed at a time related to this grid. If Unslick checked, all will be displayed.'),
+  );
+
+  $elements['preserve_keys'] = array(
+    '#title'       => t('Preserve keys'),
+    '#type'        => 'checkbox',
+    '#description' => t('If checked, keys will be preserved. Default is FALSE which will reindex the grid chunk numerically'),
+  );
+
+  drupal_alter('slick_grid_elements_info', $elements, $settings, $form_state);
+  return $elements;
+}
+
+/**
+ * Returns reusable logic, styling and assets across Slick fields and Views.
+ */
+function slick_get_admin_assets(array &$elements, $settings = array()) {
+  foreach (element_children($elements) as $key) {
+    if (isset($elements[$key]['#type']) && !in_array($elements[$key]['#type'], array('item'))) {
+      if (!isset($elements[$key]['#default_value']) && isset($settings[$key])) {
+        $elements[$key]['#default_value'] = $settings[$key];
+      }
+      if (!isset($elements[$key]['#attributes']) && isset($elements[$key]['#description'])) {
+        $elements[$key]['#attributes'] = array('class' => array('is-tooltip'));
+      }
+      if ($elements[$key]['#type'] == 'checkbox' && $elements[$key]['#type'] != 'checkboxes') {
+        $elements[$key]['#field_suffix'] = '';
+        $elements[$key]['#title_display'] = 'before';
+      }
+      elseif ($elements[$key]['#type'] == 'checkboxes' && !empty($elements[$key]['#options'])) {
+        foreach ($elements[$key]['#options'] as $i => $option) {
+          $elements[$key][$i]['#field_suffix'] = '';
+          $elements[$key][$i]['#title_display'] = 'before';
+        }
+      }
+      elseif ($elements[$key]['#type'] == 'select' && $key != 'optionset') {
+        if (!isset($elements[$key]['#empty_option']) && !isset($elements[$key]['#required'])) {
+          $elements[$key]['#empty_option'] = t('- None -');
+        }
+      }
+    }
+  }
+
+  if (module_exists('slick_ui')) {
+    $elements['#attached']['library'][] = array('slick_ui', 'slick.ui');
+  }
+  else {
+    $slick_path = drupal_get_path('module', 'slick');
+    $elements['#attached']['css'][] = $slick_path . '/css/admin/slick.admin--ui.css';
+    $elements['#attached']['css'][] = $slick_path . '/css/admin/slick.admin--ui--field.css';
+    $elements['#attached']['js'][]  = $slick_path . '/js/slick.admin.ui.min.js';
+  }
+
+  drupal_alter('slick_admin_assets_info', $elements, $settings);
+  return $elements;
+}
+
+/**
+ * Returns reusable summaries across Slick field formatters.
+ */
+function slick_get_admin_summary($field, $instance, $view_mode, $module) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $form = call_user_func_array($module . '_field_formatter_settings_form', array(
+    $field,
+    $instance,
+    $view_mode,
+    array(),
+    array(),
+  ));
+  $skins = slick_skins();
+  $summary = array();
+  foreach ($settings as $key => $setting) {
+    $title = isset($form[$key]['#title']) ? $form[$key]['#title'] : '';
+    if (is_array($setting) || empty($title)) {
+      continue;
+    }
+
+    if (is_numeric($setting) || is_bool($setting)) {
+      $setting = empty($setting) ? t('No') : t('Yes');
+    }
+    elseif ($key == 'skin') {
+      $setting = empty($setting) ? t('None') : $skins[$setting]['name'];
+    }
+    elseif (empty($setting)) {
+      $setting = t('None');
+    }
+    if (isset($settings[$key])) {
+      $summary[] = t('@title: <strong>@setting</strong>', array(
+        '@title' => $title,
+        '@setting' => $setting,
+      ));
+    }
+  }
+  return $summary;
 }

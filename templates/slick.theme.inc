@@ -44,10 +44,10 @@ function template_preprocess_slick(&$variables) {
   $content_attributes  = &$variables['content_attributes_array'];
 
   if (isset($settings['attributes']) && is_array($settings['attributes'])) {
-    $attributes = array_merge_recursive($attributes, $settings['attributes']);
+    $attributes = drupal_array_merge_deep($attributes, $settings['attributes']);
   }
   if (isset($settings['content_attributes']) && is_array($settings['content_attributes'])) {
-    $content_attributes = array_merge_recursive($content_attributes, $settings['content_attributes']);
+    $content_attributes = drupal_array_merge_deep($content_attributes, $settings['content_attributes']);
   }
   if (!isset($attributes['id'])) {
     $slick_id         = &drupal_static('slick_id', 0);
@@ -61,7 +61,7 @@ function template_preprocess_slick(&$variables) {
   $content_attributes['class'][] = 'slick__slider';
 
   // Prevents broken slick when only one item given.
-  if ($settings['count'] == 1) {
+  if ($settings['count'] == 1 || !empty($settings['unslick'])) {
     $attributes['class'][] = 'unslick';
   }
   else {
@@ -213,7 +213,7 @@ function template_preprocess_slick_item(&$variables) {
   $variables['tag']    = $variables['content_tag'] = 'div';
 
   if ($settings['current_item'] == 'grid') {
-    $one                      = 'slide__grid';
+    $one                      = !empty($settings['unslick']) ? 'slick__grid' : 'slide__grid';
     $two                      = 'grid';
     $three                    = 'grid--' . $element['#delta'];
     $variables['tag']         = 'li';
@@ -238,6 +238,7 @@ function template_preprocess_slick_item(&$variables) {
     $settings['grid_large'] = $settings['grid'];
     if (!empty($settings['skin']) && $settings['skin'] == 'grid') {
       $grids = array('small', 'medium', 'large');
+      $content_attributes['class'][] = 'block-grid';
       foreach ($grids as $grid) {
         if ($settings['grid_' . $grid]) {
           $content_attributes['class'][] = $grid . '-block-grid-' . $settings['grid_' . $grid];
@@ -307,6 +308,12 @@ function template_preprocess_slick_item(&$variables) {
     $variables['content_suffix'] = '</' . $variables['content_tag'] . '>';
   }
 
+  // Removes useless .slick__slide DIV if it is a forced unslick grid.
+  if ($settings['current_item'] == 'main' && $variables['content_tag'] == 'ul' && !empty($settings['unslick'])) {
+    $variables['wrapper_prefix'] = $variables['wrapper_suffix'] = array();
+    $variables['content_prefix'] = str_replace("slide__content", "slide", $variables['content_prefix']);
+  }
+
   $variables['settings'] = $settings;
 }
 
@@ -345,7 +352,7 @@ function template_preprocess_slick_media(&$variables) {
   $item     = $variables['item'] = $element['#item'];
   $media    = isset($item['#item']) ? $item['#item'] : $settings;
   $type     = isset($settings['type']) ? $settings['type'] : 'image';
-  $switcher = isset($settings['media_switch']) ? $settings['media_switch'] : FALSE;
+  $switcher = $settings['media_switch'] = isset($settings['media_switch']) ? $settings['media_switch'] : FALSE;
 
   // Prepare variables.
   // $variables['classes_array'] = array_diff($variables['classes_array'], array('slick-media'));
@@ -362,7 +369,7 @@ function template_preprocess_slick_media(&$variables) {
   $attributes['class'][] = 'media--' . $type;
 
   if (isset($settings['content_attributes']) && is_array($settings['content_attributes'])) {
-    $content_attributes = array_merge_recursive($content_attributes, $settings['content_attributes']);
+    $content_attributes = drupal_array_merge_deep($content_attributes, $settings['content_attributes']);
   }
 
   // All media types: image/audio/video files.
@@ -373,14 +380,13 @@ function template_preprocess_slick_media(&$variables) {
       $switched = str_replace('-switch', '', $switcher);
       $attributes['class'][] = 'media--switch--' . $switched;
     }
-    elseif ($switcher == 'iframe-switch') {
-      // Pure CSS responsive iframes/images based on aspect ratio to get
-      // consistent display for a mix of image/audio/video at one slick.
-      $attributes['class'][] = !empty($settings['ratio']) ? 'media--ratio--on' : 'media--ratio--off';
-      if (!empty($settings['ratio'])) {
-        $attributes['class'][] = drupal_clean_css_identifier('media--ratio--' . $settings['ratio']);
-      }
-    }
+  }
+
+  // Pure CSS responsive iframes/images based on aspect ratio to get
+  // consistent display for a mix of image/audio/video at one slick.
+  if (!empty($settings['ratio'])) {
+    $attributes['class'][] = 'media--ratio--on';
+    $attributes['class'][] = drupal_clean_css_identifier('media--ratio--' . $settings['ratio']);
   }
 
   // The media audio/video files.
@@ -409,7 +415,7 @@ function template_preprocess_slick_media(&$variables) {
       $content_attributes['data-media'] = drupal_json_encode($json);
       $content_attributes['data-lazy']  = $media['url'];
     }
-    $variables['alternative_content'] = filter_xss($media['title']);
+    $variables['alternative_content'] = empty($media['title']) ? '' : filter_xss($media['title']);
   }
 
   $variables['settings']      = $settings;
@@ -472,7 +478,7 @@ function theme_slick_image_lazy(array $variables) {
   $attributes = &$variables['attributes'];
 
   if (isset($image['attributes']) && is_array($image['attributes'])) {
-    $attributes = array_merge_recursive($attributes, $image['attributes']);
+    $attributes = drupal_array_merge_deep($attributes, $image['attributes']);
   }
 
   $attributes['class'][] = 'slick__image';

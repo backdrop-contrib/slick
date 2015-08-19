@@ -7,9 +7,9 @@
 /**
  * Formats image/media file data.
  */
-function _slick_fields_format_media(&$settings, $config, $thumb_nav = FALSE) {
+function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
   $view_mode = $settings['view_mode'] ? $settings['view_mode'] : 'full';
-  $is_ratio  = !empty($settings['media_switch']) && !empty($settings['aspect_ratio']);
+  $is_ratio  = !empty($settings['aspect_ratio']);
   $settings['lightbox_ready'] = $settings['picture_ready'] = TRUE;
 
   $build = array();
@@ -85,6 +85,14 @@ function _slick_fields_format_media(&$settings, $config, $thumb_nav = FALSE) {
         '#settings' => $slide['settings'],
         '#uri'      => $media['uri'],
       );
+
+      // Plain text video URL for plain iframes.
+      if (!empty($settings['slide_overlay']) && $slide_overlay = field_get_items('file', $file, $settings['slide_overlay'])) {
+        $url = strip_tags($slide_overlay[0]['value']);
+        if ($media_id = slick_get_media_id($url)) {
+          $slide['caption']['overlay'] = slick_get_media_overlay($url, $media_id);
+        }
+      }
     }
     else {
       $slide['slide'] = $thumb;

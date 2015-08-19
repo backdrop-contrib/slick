@@ -48,15 +48,22 @@
           }
         }
 
-        // Update arrows with possible nested slick.
-        if (t.attr("id") === slick.$slider.attr("id")) {
-          _.arrows(a, slick);
-        }
         _.setCurrent(t, slick.currentSlide, slick);
       });
 
       t.on("beforeChange", function (e, slick, currentSlide, animSlide) {
         _.setCurrent(t, animSlide, slick);
+      });
+
+      // Fixed known arrows issue when total <= slidesToShow, and not updated.
+      t.on("setPosition", function (e, slick) {
+        var opt = _.options(slick);
+
+        // Do not remove arrows, to allow responsive have different options.
+        if (t.attr("id") === slick.$slider.attr("id")) {
+          return slick.slideCount <= opt.slidesToShow || opt.arrows === false
+            ? a.addClass("element-hidden") : a.removeClass("element-hidden");
+        }
       });
     },
 
@@ -69,7 +76,7 @@
         opt = _.options(slick);
 
       // Arrow down jumper.
-      t.parent().on("click", ".jump-scroll[data-target]", function (e) {
+      t.parent().on("click.slick-load", ".jump-scroll[data-target]", function (e) {
         e.preventDefault();
         var b = $(this);
         $("html, body").stop().animate({
@@ -78,7 +85,7 @@
       });
 
       if ($.isFunction($.fn.mousewheel) && opt.mousewheel) {
-        t.on("mousewheel", function (e, delta) {
+        t.on("mousewheel.slick-load", function (e, delta) {
           e.preventDefault();
           return (delta < 0) ? t.slick("slickNext") : t.slick("slickPrev");
         });
@@ -89,8 +96,6 @@
 
     /**
      * Gets active options based on breakpoint, or fallback to global.
-     *
-     * @fixme activeBreakpoint and arrows are broken since v1.5.3+.
      */
     options: function (slick) {
       var breakpoint = slick.activeBreakpoint || null;
@@ -113,21 +118,6 @@
             t.append(this);
           });
       }
-    },
-
-    /**
-     * Fixed known arrows issue when total <= slidesToShow, and not updated.
-     *
-     * @fixme activeBreakpoint and arrows are broken since v1.5.3+.
-     */
-    arrows: function (a, slick) {
-      var _ = this,
-        opt = _.options(slick);
-      // @todo drop 'slick-nav' for 'slick-arrow' class, added v1.5.6 (7/11).
-      // a.find(">*:not(.slick-down)").addClass("slick-nav");
-      // Do not remove arrows, to allow responsive have different options.
-      return slick.slideCount <= opt.slidesToShow || opt.arrows === false
-      ? a.addClass("element-hidden") : a.removeClass("element-hidden");
     },
 
     /**

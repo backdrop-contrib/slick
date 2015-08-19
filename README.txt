@@ -28,10 +28,6 @@ VERSIONS:
 7.x-2.x supports exportable optionsets via CTools.
 Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x to allow creating
 database table to store/ manage option sets.
-Any module that provides settings in the UI needs to store them in a table.
-With Bulk exporter, or Features, optionsets may be stored in codes to avoid
-database lookup. It is analog to Drupal 8 CMI.
-See slick_example.slick_default_preset.inc for the stored-in-code sample.
 
 7.x-2.x supports Slick 1.5 above, and dropped supporting Slick 1.4.x and below.
 Be sure to read the project home page for more info before updating your module.
@@ -87,7 +83,7 @@ OPTIONAL INTEGRATION:
 Slick supports enhancements and more complex layouts.
 - Colorbox
 - Photobox
-- Picture, to get truly responsive image using art direction technique.
+- Picture, to get truly responsive image.
   D8 in core: Responsive image.
 - Media, including media_youtube, media_vimeo, and media_soundcloud.
   D8: Media entity, or isfield.
@@ -107,10 +103,6 @@ To create your optionsets, go to:
 "admin/config/media/slick"
 These will be available at Manage display field format, and Views UI.
 
-To store optionsets in code for versioning and performance, use CTools Bulk
-exporter, or Features. And revert it via UI to Default to avoid database lookup.
-
-
 
 VIEWS AND FIELDS:
 --------------------------------------------------------------------------------
@@ -118,7 +110,6 @@ Slick works with Views and as field display formatters.
 Slick Views is available as a style plugin included at slick_views.module.
 Slick Fields is available as a display formatter included at slick_fields.module
 which supports core and contrib fields: Image, Media, Field collection.
-
 
 
 PROGRAMATICALLY:
@@ -255,7 +246,7 @@ If you have bug reports, please be sure to provide steps to reproduce it, or
 make sure that the bug is caused by the module. For the Slick library bug,
 please report it to the actual library issue queues:
 https://github.com/kenwheeler/slick
-You can create a fiddle isolate the bug if reproduceable outside the module:
+You can create a fiddle to isolate the bug if reproduceable outside the module:
 http://jsfiddle.net/
 
 
@@ -273,7 +264,7 @@ TROUBLESHOOTING:
   updating the module to ensure things are picked up:
   o admin/config/development/performance
 
-- Frontend type juggling is removed [#2497945]:
+- For (pre-)alpha users only: Frontend type juggling is removed [#2497945]:
   - Please re-save and re-export optionsets if you are a pre-alpha user who
     stored optionsets in codes before alpha release on 2015-3-31, or precisely
     before 2015-3-2 commit:
@@ -286,7 +277,8 @@ TROUBLESHOOTING:
 - If switching from beta1 to the latest via Drush fails, try the good old UI.
   Be sure to clear cache first, then run /update.php, if broken slick.
 
-- If you are customizing templates or theme funtions be sure to re-check them.
+- If you are customizing templates, or theme funtions be sure to re-check
+  against the latest.
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
@@ -299,13 +291,11 @@ KNOWN ISSUES
   If you want advanced lazyload, but not willing to use Picture, do preprocess
   with theme_image_lazy() and use lazy 'advanced' to override it and DIY.
   Please see theme_image_lazy() for more info.
-- Photobox is not compatible with infinite true + slidesToShow > 1, since slicks
-  will have clones which are filtered out by Photobox loader, otherwise dup
-  thumbnails. It works best for:
+- Photobox is best for:
   - infinite true + slidesToShow 1
   - infinite false + slidesToShow N
-  If "infinite true + slidesToShow > 1" is a must, simply override the JS to
-  remove ":not(.slick-cloned)", and disable 'thumbs' option.
+  If "infinite true + slidesToShow > 1" is a must, but you don't want dup
+  thumbnails, simply override the JS to disable 'thumbs' option.
 - The following is not module related, but worth a note:
   o lazyLoad ondemand has issue with dummy image excessive height.
     Added fixes to suppress it via CSS.
@@ -314,13 +304,6 @@ KNOWN ISSUES
   o Fade option with slideToShow > 1 will screw up.
   o variableWidth ignores slidesToShow.
   o Too much centerPadding at small device affects slidesToShow.
-  o The arrows visibility misbehaves with responsive options since v1.5.3-1.5.8
-    You can downgrade to v.1.5.2 to solve it. However if downgrading is not an
-    option, use the following CSS globally:
-    .slick-prev, .slick-next { display: none; }
-    Or better use CSS mediaqueries to control its visibilty.
-    The library will display it with inline style (display: inline-block;) where
-    required.
 
 
 UNKNOWN ISSUES
@@ -329,12 +312,22 @@ UNKNOWN ISSUES
   Please report if you find one. Your report and help is any module QA. Thanks.
 
 
+PERFORMANCE:
+--------------------------------------------------------------------------------
+Any module, even the most innocent one, that provides settings in the UI needs
+to store them in a table. The good thing is we can store them at codes.
+
+With Bulk exporter, or Features, optionsets may be stored in codes to avoid
+database lookup. Be sure to revert via UI to Default to avoid database lookup.
+It is analog to Drupal 8 CMI, so it is the decent choice today.
+
+See slick_example for the stored-in-code samples.
+
 
 CURRENT DEVELOPMENT STATUS
 --------------------------------------------------------------------------------
 A full release should be reasonable after proper feedbacks from the community,
 some code cleanup, and optimization where needed. Patches are very much welcome.
-
 
 
 ROADMAP

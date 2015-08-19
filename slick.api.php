@@ -240,11 +240,13 @@ function hook_slick_skins_info_alter(array &$skins) {
  *
  * @param array $attach
  *   The modified array of $attach information from slick_attach().
+ * @param array $settings
+ *   An array of settings to check for the supported features.
  *
  * @see slick_attach()
  * @see slick_example.module
  */
-function hook_slick_attach_info_alter(array &$attach) {
+function hook_slick_attach_info_alter(array &$attach, $settings) {
   // Disable inline CSS after copying the output to theme at final stage.
   // Inline CSS are only used for 2 cases: Fullscreen and Field collection
   // individual slide color, only if your clients don't change mind much.
@@ -270,12 +272,14 @@ function hook_slick_attach_info_alter(array &$attach) {
  *   The contextual array of $attach information.
  * @param array $skins
  *   The contextual array of $skins information.
+ * @param array $settings
+ *   An array of settings to check for the supported features.
  *
  * @see slick_attach()
  * @see slick_example.module
  * @see slick_devel.module
  */
-function hook_slick_attach_load_info_alter(&$load, $attach, $skins) {
+function hook_slick_attach_load_info_alter(&$load, $attach, $skins, $settings) {
   $slick_path = drupal_get_path('module', 'slick');
   $min = $slick_path . '/js/slick.load.min.js';
   $dev = $slick_path . '/js/slick.load.js';

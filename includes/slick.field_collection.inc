@@ -7,7 +7,7 @@
 /**
  * Formats Field collection data.
  */
-function _slick_fields_format_field_collection(&$settings, $config, $thumb_nav = FALSE) {
+function slick_format_field_collection(&$settings, $config, $thumb_nav = FALSE) {
   $view_mode   = $settings['view_mode'] ? $settings['view_mode'] : 'full';
   $slick_id    = $settings['attributes']['id'];
   $nested_name = empty($settings['nested_optionset']) ? 'default' : $settings['nested_optionset'];
@@ -81,7 +81,7 @@ function _slick_fields_format_field_collection(&$settings, $config, $thumb_nav =
         }
         else {
           // Otherwise do the hard work.
-          $elements = _slick_fields_fc_build_overlay($settings, $wrapper, $options);
+          $elements = _slick_build_fc_overlay($settings, $wrapper, $options);
         }
         $slide['caption']['overlay'] = $elements;
       }
@@ -127,7 +127,7 @@ function _slick_fields_format_field_collection(&$settings, $config, $thumb_nav =
 /**
  * Build the managed overlays: image, video, audio or nested slicks.
  */
-function _slick_fields_fc_build_overlay(&$settings, $wrapper, $options = array()) {
+function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
   $elements     = array();
   $key          = $options['key'];
   $items        = $wrapper->$settings['slide_overlay']->value();
@@ -137,7 +137,7 @@ function _slick_fields_fc_build_overlay(&$settings, $wrapper, $options = array()
   $bundle       = $renderables['#bundle'];
   $field_name   = $renderables['#field_name'];
   $nested_style = !empty($settings['nested_style']) ? $settings['nested_style'] : $settings['image_style'];
-  $is_ratio     = !empty($settings['media_switch']) && !empty($settings['aspect_ratio']);
+  $is_ratio     = !empty($settings['aspect_ratio']);
   $slick_id     = &drupal_static('slick_id', 0);
   $css_id       = drupal_clean_css_identifier("slick-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}-" . ++$slick_id);
 

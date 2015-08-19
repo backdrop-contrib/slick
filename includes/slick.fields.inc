@@ -44,6 +44,11 @@ function slick_get_fields_default_settings() {
     'picture_fallback'     => '',
     'colorbox_style'       => '',
     'markup'               => FALSE,
+    'grid'                 => '',
+    'grid_medium'          => '',
+    'grid_small'           => '',
+    'visible_slides'       => '',
+    'preserve_keys'        => FALSE,
     'type'                 => '',
     'lightbox_ready'       => FALSE,
     'picture_ready'        => FALSE,
@@ -96,7 +101,7 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
       '#theme' => 'slick_image_lazy',
       '#item' => $media,
       '#image_style' => $settings['image_style'],
-      '#lazy' => empty($settings['lazy']) ? '' : $settings['lazy'],
+      '#lazy' => empty($settings['lazy']) || !empty($settings['unslick']) ? '' : $settings['lazy'],
       '#options' => array(
         'type' => $media['type'],
         'has_pattern' => !empty($settings['has_pattern']),
@@ -138,11 +143,10 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
           if (!empty($media['url'])) {
             $build['#options']['url']['attributes']['rel'] = 'video';
           }
-          if (!empty($settings['thumbnail_style'])) {
-            $build['#item']['attributes']['data-src'] = image_style_url($settings['thumbnail_style'], $media['uri']);
-          }
         }
-        elseif ($settings['media_switch'] == 'lightbox-switch') {
+        elseif ($settings['media_switch'] == 'slickbox-switch') {
+          $classes  = array('slick__box', 'slick__litebox');
+          $json['entity_id'] = $settings['entity_id'];
           if (!empty($settings['entity_uri']) && !empty($settings['use_ajax'])) {
             $url = $settings['entity_uri'];
             $json['ajax'] = TRUE;

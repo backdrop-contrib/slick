@@ -81,6 +81,55 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
 }
 
 /**
+ * Builds Youtube/ Vimeo overlay as file entity don't support nested file.
+ */
+function slick_get_media_overlay($url, $media_id) {
+  if (strpos($url, 'youtu') !== FALSE) {
+    $url = 'https://www.youtube.com/embed/' . $media_id;
+    $scheme = 'youtube';
+  }
+  elseif (strpos($url, 'vimeo') !== FALSE) {
+    $url = 'https://player.vimeo.com/video/' . $media_id;
+    $scheme = 'vimeo';
+  }
+
+  return array(
+    '#theme'    => 'slick_media',
+    '#item'     => array(),
+    '#settings' => array(
+      'ratio'    => '16:9',
+      'type'     => 'video',
+      'is_media' => TRUE,
+      'scheme'   => $scheme,
+      'url'      => $url,
+      'current_display'    => 'overlay',
+      'content_attributes' => array('width' => 640, 'height' => 360),
+    ),
+  );
+}
+
+/**
+ * Gets Youtube/ Vimeo video ID from URL, thanks to Kus from s.o.
+ */
+function slick_get_media_id($url) {
+  $parts = parse_url($url);
+  if (isset($parts['query'])) {
+    parse_str($parts['query'], $qs);
+    if (isset($qs['v'])) {
+      return $qs['v'];
+    }
+    elseif (isset($qs['vi'])) {
+      return $qs['vi'];
+    }
+  }
+  if (isset($parts['path'])) {
+    $path = explode('/', trim($parts['path'], '/'));
+    return $path[count($path) - 1];
+  }
+  return FALSE;
+}
+
+/**
  * Format image/media file data, called by Media file and Field collection.
  */
 function slick_get_media_thumbnail(array &$settings, $media = array()) {
@@ -115,7 +164,6 @@ function slick_get_media_thumbnail(array &$settings, $media = array()) {
     }
 
     $image_uri = $wrapper->getLocalThumbnailPath();
-
     $settings['media_id'] = $media_id;
     if ($media_id) {
       $media_id = drupal_html_id('media-' . $media['scheme'] . '-' . $media_id);

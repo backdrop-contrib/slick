@@ -58,6 +58,10 @@ img {
   display: block;
 }
 
+.slick-initialized ~ .slick__arrow.element-hidden {
+  display: none;
+}
+
 .slick--has-arrow-down > .slick__arrow {
   bottom: 20px;
   height: 62px;
