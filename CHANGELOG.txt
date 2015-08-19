@@ -1,11 +1,13 @@
 
 Slick 7.x-2.0-dev, 2015-8-19
 ----------------------------
+- #2553385 by gausarts, esolitos: Slick CSS admin compatibility with contrib
+  admin themes.
 - Fixed for arrows visibility with responsive options due to inaccessible
   activeBreakpoint flag.
 - Fixed for Photobox "infinite true + slidesToShow > 1" incompatibility at the
   price of dup thumbnails which however can be disabled by "thumbs: false".
-  This is less problematic than broken Photobox links.  
+  This is less problematic than broken Photobox links.
 - Deprecated the following functions:
   o _slick_fields_format_image() for slick_format_image().
   o _slick_fields_format_media() for slick_format_media().
@@ -13,7 +15,7 @@ Slick 7.x-2.0-dev, 2015-8-19
 - Moved the contents of slick_fields includes files into core to re-use them
   across field formatters and Views without hard dependency for slick_fields.
   This is also to smoothen the transition out to Slick 3.x.
-- Added support for iframe only aspect ratio.  
+- Added support for iframe only aspect ratio.
 - Added support for Youtube or Vimeo url using plain text field within file
   entity of type image to display a video overlay over the main image background.
   Provided as currently file entity doesn't support nested files.

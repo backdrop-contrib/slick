@@ -85,6 +85,7 @@
 
 .form--slick div.vertical-tabs ul li.vertical-tab-button a,
 .form--slick div.vertical-tabs ul li.first a {
+  border-right: 0;
   border-top: 0;
 }
 
