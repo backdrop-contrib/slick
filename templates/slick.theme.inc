@@ -260,9 +260,7 @@ function template_preprocess_slick_item(&$variables) {
 
   // Title, caption and overlay, or nested media.
   if ($settings['current_item'] == 'thumbnail') {
-    if (!empty($captions['data'])) {
-      $variables['caption'] = $captions['data'];
-    }
+    $variables['caption'] = empty($captions['data']) ? array() : $captions['data'];
   }
   else {
     // Each slide can have unique, or uniform layout.
@@ -308,7 +306,7 @@ function template_preprocess_slick_item(&$variables) {
     $variables['content_suffix'] = '</' . $variables['content_tag'] . '>';
   }
 
-  // Removes useless .slick__slide DIV if it is a forced unslick grid.
+  // Removes useless .slick__slide DIV if it is an enforced unslick grid.
   if ($settings['current_item'] == 'main' && $variables['content_tag'] == 'ul' && !empty($settings['unslick'])) {
     $variables['wrapper_prefix'] = $variables['wrapper_suffix'] = array();
     $variables['content_prefix'] = str_replace("slide__content", "slide", $variables['content_prefix']);

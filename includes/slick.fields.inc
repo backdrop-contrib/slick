@@ -8,60 +8,39 @@
  * Defines default field formatter settings to avoid notices.
  */
 function slick_get_fields_default_settings() {
+  module_load_include('inc', 'slick', 'includes/slick.global');
   $settings = array(
-    'optionset'            => 'default',
-    'optionset_thumbnail'  => '',
-    'asnavfor_main'        => '',
-    'asnavfor_thumbnail'   => '',
-    'asnavfor_auto'        => FALSE,
-    'skin'                 => '',
-    'skin_thumbnail'       => '',
-    'skin_arrows'          => '',
-    'skin_dots'            => '',
-    'slide_layout'         => '',
-    'image_style'          => '',
-    'thumbnail_style'      => '',
-    'thumbnail_hover'      => FALSE,
-    'thumbnail_caption'    => '',
-    'slide_image'          => '',
-    'slide_caption'        => array(),
-    'media_switch'         => '',
-    'mousewheel'           => FALSE,
-    'override'             => FALSE,
-    'overridables'         => array(),
-    'slide_classes'        => '',
-    'color_field'          => '',
-    'nested_slick'         => FALSE,
-    'nested_optionset'     => '',
-    'nested_style'         => '',
-    'slide_overlay'        => array(),
-    'slide_link'           => '',
-    'slide_title'          => '',
-    'view_mode'            => '',
-    'aspect_ratio'         => '',
-    'picture'              => FALSE,
-    'picture_style'        => '',
-    'picture_fallback'     => '',
-    'colorbox_style'       => '',
-    'markup'               => FALSE,
-    'grid'                 => '',
-    'grid_medium'          => '',
-    'grid_small'           => '',
-    'visible_slides'       => '',
-    'preserve_keys'        => FALSE,
-    'type'                 => '',
-    'lightbox_ready'       => FALSE,
-    'picture_ready'        => FALSE,
-    'current_display'      => 'main',
-    'use_ajax'             => FALSE,
-  );
+    'image_style'       => '',
+    'thumbnail_style'   => '',
+    'thumbnail_hover'   => FALSE,
+    'media_switch'      => '',
+    'mousewheel'        => FALSE,
+    'slide_classes'     => '',
+    'color_field'       => '',
+    'nested_slick'      => FALSE,
+    'nested_optionset'  => '',
+    'nested_style'      => '',
+    'view_mode'         => '',
+    'aspect_ratio'      => '',
+    'picture'           => FALSE,
+    'picture_style'     => '',
+    'picture_fallback'  => '',
+    'colorbox_style'    => '',
+    'markup'            => FALSE,
+    'type'              => '',
+    'lightbox_ready'    => FALSE,
+    'picture_ready'     => FALSE,
+    'current_display'   => 'main',
+    'current_view_mode' => '',
+    'use_ajax'          => FALSE,
+  ) + slick_get_global_default_settings();
 
   drupal_alter('slick_fields_default_settings_info', $settings);
   return $settings;
 }
 
 /**
- * Gets the rendered image based on the Picture mapping, or Slick image lazy.
+ * Gets the image based on the Picture mapping, or Slick image lazy.
  */
 function slick_get_image($settings = array(), $media = array(), $key = 0) {
   $build = array();

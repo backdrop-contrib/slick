@@ -24,6 +24,8 @@
 // Provides HTML settings with optionset name and ID, none of JS related.
 // See slick_get_element_default_settings() for more supported keys.
 // To add JS key:value pairs, use #options at theme_slick() below instead.
+// If you provide ID, be sure unique per instance as it is cached.
+// Leave empty to be provided by the module.
 $id = 'slick-ticker';
 $settings = array(
 // Optional optionset name, otherwise fallback to default.
@@ -34,11 +36,13 @@ $settings = array(
 // various scenarios before being passed to the actual #attributes property.
 // Or ignore this, if the only attribute is just $id, and the $id is set.
 // @see README.txt for the HTML structure.
+// Leave empty to be provided by the module.
   'attributes' => array(
     'id' => $id,
   ),
   // content_attributes ID is for nested, or asNavFor slicks.
   // Pass the proper ID to asnavfor_target, see slick_fields/slick_views.
+  // Leave empty to be provided by the module.
   'content_attributes' => array(
     'id' => $id . '-slider',
   ),
@@ -110,8 +114,13 @@ $slick[0] = array(
 print render($slick);
 
 // 6.B.
-// Or alternatively, use slick_build() where the parameters are as described
-// above:
+// Or recommended, use slick_build() so you can cache the slick instance easily
+// if it is a hardly updated content, such as profile videos, logo carousels, or
+// more permanent home slideshows.
+// Cache the slick renderable array with a custom unique ID.
+$settings['cache'] = TRUE;
+$settings['cid'] = 'my-extra-unique-id';
+// Where the parameters as described above:
 $slick = slick_build($items, $options, $settings, $attachments, $id);
 // All is set, render the Slick.
 print render($slick);

@@ -14,11 +14,6 @@ html {
   text-rendering: optimizeSpeed !important;
 }
 
-.form--slick {
-  font-size: 16px;
-  font-size: 1rem;
-}
-
 /**
  * For anything you want to hide on page load when JS is enabled, so
  * that you can use the JS to control visibility and avoid flicker.
@@ -38,31 +33,20 @@ html {
   display: block;
 }
 
-/**
- * Float clearing.
- *
- * Based on the micro clearfix hack by Nicolas Gallagher, with the ::before
- * pseudo selector removed to allow normal top margin collapse.
- *
- * @see http://nicolasgallagher.com/micro-clearfix-hack
- */
-.clearfix::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
 /* Fix for adminimal theme */
 body.page-admin .form--slick,
 body.page-admin .form--slick *,
-.form--slick,
-.form--slick *,
 .form--slick *::before,
 .form--slick *::after {
   -o-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
+}
+
+.form--slick {
+  font-size: 16px;
+  font-size: 1rem;
 }
 
 /**
@@ -530,6 +514,10 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   z-index: 99;
 }
 
+.has-tooltip .form-item > .description strong {
+  font-weight: 600;
+}
+
 .has-tooltip .form-item.form-type-checkboxes > .description,
 .has-tooltip .form-item.form-type-textarea > .description {
   margin-left: -30% !important;
@@ -821,7 +809,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
  * Overrides
  */
 .form--slick .fieldset-wrapper div[class*="-breakpoint"],
-.form--slick .fieldset-wrapper div[class*="-unslick"] {
+.form--slick .vertical-tabs .fieldset-wrapper div[class*="-unslick"] {
   border: 0;
   background: none;
 }

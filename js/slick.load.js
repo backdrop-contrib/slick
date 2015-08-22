@@ -4,7 +4,7 @@
  */
 
 /*jshint -W072 */
-/*eslint max-params: 0 */
+/*eslint max-params: 0, consistent-this: [0, "_"] */
 (function ($, Drupal) {
 
   "use strict";
@@ -76,13 +76,14 @@
         opt = _.options(slick);
 
       // Arrow down jumper.
-      t.parent().on("click.slick-load", ".jump-scroll[data-target]", function (e) {
-        e.preventDefault();
-        var b = $(this);
-        $("html, body").stop().animate({
-          scrollTop: $(b.data("target")).offset().top - (b.data("offset") || 0)
-        }, 800, opt.easing || "swing");
-      });
+      t.parent()
+        .on("click.slick-load", ".jump-scroll[data-target]", function (e) {
+          e.preventDefault();
+          var b = $(this);
+          $("html, body").stop().animate({
+            scrollTop: $(b.data("target")).offset().top - (b.data("offset") || 0)
+          }, 800, opt.easing || "swing");
+        });
 
       if ($.isFunction($.fn.mousewheel) && opt.mousewheel) {
         t.on("mousewheel.slick-load", function (e, delta) {

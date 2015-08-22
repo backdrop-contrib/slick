@@ -56,6 +56,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
   $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
   $settings['box_style']     = $settings['colorbox_style'];
+  $settings['cid']           = $instance['id'] . $settings['current_view_mode'] . $settings['image_style'];
 
   if ($asnavfor) {
     $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_main'] : "#{$thumb_id}-slider";
@@ -65,6 +66,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   if ($view) {
     $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
     $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name . '--' . $view->current_display);
+    $settings['cid'] .= $view->name . $view->current_display;
   }
 
   $config = array(
@@ -136,12 +138,11 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
 
   // Build the Slick grid if provided.
   if (!empty($settings['grid'])) {
-    module_load_include('inc', 'slick', 'includes/slick.global');
     $build = slick_build_grids($build, $settings);
   }
 
   // Build the single/main display Slick.
-  $slick[0] = slick_build($build, $js, $settings, $attachments, NULL, $optionset);
+  $slick[0] = slick_build($build, $js, $settings, $attachments, $id, $optionset);
 
   if ($asnavfor) {
     $optionset = slick_optionset_load($asnavfor);
@@ -151,7 +152,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_thumbnail'] : "#{$id}-slider";
 
     // Build the thumbnail+/text navigation Slick.
-    $slick[1] = slick_build($thumb, array(), $settings, array(), NULL, $optionset);
+    $slick[1] = slick_build($thumb, array(), $settings, array(), $thumb_id, $optionset);
     $element = array(
       '#theme' => 'slick_wrapper',
       '#items' => $slick,

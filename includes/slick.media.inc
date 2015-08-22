@@ -9,11 +9,11 @@
  */
 function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
   $view_mode = $settings['view_mode'] ? $settings['view_mode'] : 'full';
-  $is_ratio  = !empty($settings['aspect_ratio']);
   $settings['lightbox_ready'] = $settings['picture_ready'] = TRUE;
 
   $build = array();
   foreach ($config['items'] as $key => $item) {
+    // Prevents edge case error with broken data_export_import.
     if (!isset($item['uri'])) {
       continue;
     }
@@ -28,7 +28,7 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
     // Build settings for both theme_slick_item() and theme_slick_media().
     slick_extract_image_data($settings, $media, $slide, $item);
     $slide['settings'] += array(
-      'ratio'     => $is_ratio ? $settings['aspect_ratio'] : FALSE,
+      'ratio'     => !empty($settings['aspect_ratio']) ? $settings['aspect_ratio'] : FALSE,
       'type'      => $file->type,
       'view_mode' => $view_mode,
     );
@@ -48,13 +48,13 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
 
       // Layout field as opposed from builtin layout above if so configured.
       if (!empty($settings['slide_layout']) && strpos($settings['slide_layout'], 'field_') !== FALSE) {
-        $field_layout = field_get_items('file', $file, $settings['slide_layout']);
-        $slide['settings']['layout'] = check_plain($field_layout[0]['value']);
+        $layout = field_get_items('file', $file, $settings['slide_layout']);
+        $slide['settings']['layout'] = check_plain($layout[0]['value']);
       }
 
       // Slide classes, if so configured.
-      if (!empty($settings['slide_classes']) && $slide_classes = field_get_items('file', $file, $settings['slide_classes'])) {
-        $slide['settings']['slide_classes'] = strip_tags($slide_classes[0]['value']);
+      if (!empty($settings['slide_classes']) && $classes = field_get_items('file', $file, $settings['slide_classes'])) {
+        $slide['settings']['slide_classes'] = strip_tags($classes[0]['value']);
       }
 
       // Editor links.
@@ -87,8 +87,8 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
       );
 
       // Plain text video URL for plain iframes.
-      if (!empty($settings['slide_overlay']) && $slide_overlay = field_get_items('file', $file, $settings['slide_overlay'])) {
-        $url = strip_tags($slide_overlay[0]['value']);
+      if (!empty($settings['slide_overlay']) && $overlay = field_get_items('file', $file, $settings['slide_overlay'])) {
+        $url = strip_tags($overlay[0]['value']);
         if ($media_id = slick_get_media_id($url)) {
           $slide['caption']['overlay'] = slick_get_media_overlay($url, $media_id);
         }

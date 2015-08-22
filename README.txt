@@ -81,11 +81,12 @@ REQUIREMENTS:
 OPTIONAL INTEGRATION:
 --------------------------------------------------------------------------------
 Slick supports enhancements and more complex layouts.
-- Colorbox
-- Photobox
+- Colorbox, to have grids/slides that open up image/video/audio in overlay.
+- Photobox, idem ditto.
 - Picture, to get truly responsive image.
   D8 in core: Responsive image.
-- Media, including media_youtube, media_vimeo, and media_soundcloud.
+- Media, including media_youtube, media_vimeo, and media_soundcloud, to have
+  fairly variant slides: image, video, audio, or a mix of em.
   D8: Media entity, or isfield.
 - Field Collection, to add Overlay image/audio/video over the main image stage,
   with additional basic Scald integration for the image/video/audio overlay.
@@ -95,6 +96,13 @@ Slick supports enhancements and more complex layouts.
 - Mousewheel, download from https://github.com/brandonaaron/jquery-mousewheel,
   so it is available at:
   sites/.../libraries/mousewheel/jquery.mousewheel.min.js
+
+
+RECOMMENDED MODULES
+--------------------------------------------------------------------------------
+- Block reference to have more complex slide content for Fullscreen/width skins.
+- Entity translation, to have translated file and translate links with Media.
+- Field formatter settings, to modify field formatter settings and summaries.
 
 
 OPTIONSETS:
@@ -225,19 +233,6 @@ After Slick 1.4:
 At both cases, asNavFor should target slick-initialized class/ID attributes.
 
 
-RECOMMENDED MODULES
---------------------------------------------------------------------------------
-The following modules are supported, but optional.
-- Colorbox, to have grids/slides that open up image/video/audio in overlay.
-- Photobox, idem ditto.
-- Media, to have fairly variant slides: image, video, audio.
-- Field collection, to have more complex layout along with Media file.
-- Color field, to colorize slide background individually via Field collection.
-- Block reference to have more complex slide content for Fullscreen/width skins.
-- Entity translation, to have translated file and translate links with Media.
-- Field formatter settings, to modify field formatter settings and summaries.
-
-
 HOW CAN YOU HELP?
 --------------------------------------------------------------------------------
 Please consider helping in the issue queue, provide improvement, or helping with
@@ -279,6 +274,12 @@ TROUBLESHOOTING:
 
 - If you are customizing templates, or theme funtions be sure to re-check
   against the latest.
+
+- A Slick instance may be cached by its ID, and will only take place if you
+  enable the "Cache" option. Having two different slicks with the same ID will
+  cause the first one cached override the second.
+  IDs are guaranteed unique if using sub-modules. However if you do custom works,
+  or input one at Slick Views UI, be sure to have unique IDs as they should be.
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
@@ -322,6 +323,19 @@ database lookup. Be sure to revert via UI to Default to avoid database lookup.
 It is analog to Drupal 8 CMI, so it is the decent choice today.
 
 See slick_example for the stored-in-code samples.
+
+Store large array of skins at my_module.slick.inc to get advantage of Drupal
+autoloading while short ones should be left in the main module file so that
+they are always available.
+
+Ditch all the slick logic to bare HTML by render cache, leaving only core
+drupal_process_attached() to load the assets.
+Most heavy logic were already moved to backend, however slick can be optimized
+more by enabling "Cache" option per slick instance. Useful for hardly updated
+static slicks such as profile videos, logo carousels, more permanent home
+slideshows, etc. Cached slick will not be expired until cron runs, regardless of
+the expiration time used. Be sure to have a working cron job, otherwise stale
+content is always displayed.
 
 
 CURRENT DEVELOPMENT STATUS

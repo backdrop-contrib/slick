@@ -1,4 +1,12 @@
 
+Slick 7.x-2.0-dev, 2015-8-23
+----------------------------
+- Added configurable #cache property to slick_build() to cache render array.
+- Merged similar field formatter and Views default settings into
+  slick_get_global_default_settings().
+- Merged reusable form elements across field formatter and Views via
+  slick_get_top_elements() and slick_get_elements().
+
 Slick 7.x-2.0-dev, 2015-8-19
 ----------------------------
 - #2553385 by gausarts, esolitos: Slick CSS admin compatibility with contrib

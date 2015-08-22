@@ -64,6 +64,7 @@ function slick_library() {
   $library_path = libraries_get_path('slick');
   $path = drupal_get_path('module', 'slick');
   $info = system_get_info('module', 'slick');
+  $components = $path . '/css/components/';
   $common = array(
     'website' => 'http://drupal.org/project/slick',
     'version' => !empty($info['version']) ? $info['version'] : '7.x-2.x',
@@ -87,8 +88,8 @@ function slick_library() {
       $path . '/js/slick.colorbox.min.js' => array('group' => JS_DEFAULT, 'weight' => 1),
     ),
     'css' => array(
-      $path . '/css/components/slick.colorbox.css' => array(),
-      $path . '/css/components/slick.lightbox.css' => array(),
+      $components . 'slick.colorbox.css' => array(),
+      $components . 'slick.lightbox.css' => array(),
     ),
   );
 
@@ -97,9 +98,7 @@ function slick_library() {
     'js' => array(
       $path . '/js/slick.photobox.min.js' => array('group' => JS_DEFAULT, 'weight' => 1),
     ),
-    'css' => array(
-      $path . '/css/components/slick.lightbox.css' => array(),
-    ),
+    'css' => array($components . 'slick.lightbox.css' => array()),
     'dependencies' => array(array('photobox', 'photobox')),
   );
 
@@ -108,9 +107,7 @@ function slick_library() {
     'js' => array(
       $path . '/js/slick.media.min.js' => array('group' => JS_DEFAULT, 'weight' => -1),
     ),
-    'css' => array(
-      $path . '/css/components/slick.media.css' => array(),
-    ),
+    'css' => array($components . 'slick.media.css' => array()),
   );
 
   return $libraries;
@@ -183,7 +180,7 @@ function slick_attach(array $attach, $settings = array()) {
   }
 
   // Attach default JS settings to allow responsive displays have a lookup,
-  // excluding wasted/trouble options, e.g.: PHP string vs JS object.
+  // excluding wasted+/trouble options, e.g.: PHP string vs JS object.
   $defaults = slick_get_options();
   $excludes = explode(' ', 'mobileFirst appendArrows appendDots asNavFor prevArrow nextArrow cssEaseBezier cssEaseOverride respondTo');
   $load['js'][] = array(
@@ -202,51 +199,51 @@ function slick_get_options() {
   $options = &drupal_static(__FUNCTION__);
   if (!isset($options)) {
     $options = array(
-      'mobileFirst'       => FALSE,
-      'asNavFor'          => '',
-      'accessibility'     => TRUE,
-      'adaptiveHeight'    => FALSE,
-      'autoplay'          => FALSE,
-      'autoplaySpeed'     => 3000,
-      'pauseOnHover'      => TRUE,
-      'pauseOnDotsHover'  => FALSE,
-      'arrows'            => TRUE,
-      'appendArrows'      => '$(element)',
-      'prevArrow'         => '<button type="button" data-role="none" class="slick-prev" aria-label="previous">Previous</button>',
-      'nextArrow'         => '<button type="button" data-role="none" class="slick-next" aria-label="next">Next</button>',
-      'centerMode'        => FALSE,
-      'centerPadding'     => '50px',
-      'dots'              => FALSE,
-      'dotsClass'         => 'slick-dots',
-      'appendDots'        => '$(element)',
-      'draggable'         => TRUE,
-      'fade'              => FALSE,
-      'focusOnSelect'     => FALSE,
-      'infinite'          => TRUE,
-      'initialSlide'      => 0,
-      'lazyLoad'          => 'ondemand',
-      'respondTo'         => 'window',
-      'rtl'               => FALSE,
-      'rows'              => 1,
-      'slidesPerRow'      => 1,
-      'slide'             => '',
-      'slidesToShow'      => 1,
-      'slidesToScroll'    => 1,
-      'speed'             => 500,
-      'swipe'             => TRUE,
-      'swipeToSlide'      => FALSE,
-      'edgeFriction'      => 0.35,
-      'touchMove'         => TRUE,
-      'touchThreshold'    => 5,
-      'useCSS'            => TRUE,
-      'cssEase'           => 'ease',
-      'cssEaseBezier'     => '',
-      'cssEaseOverride'   => '',
-      'easing'            => 'linear',
-      'variableWidth'     => FALSE,
-      'vertical'          => FALSE,
-      'verticalSwiping'   => FALSE,
-      'waitForAnimate'    => TRUE,
+      'mobileFirst'      => FALSE,
+      'asNavFor'         => '',
+      'accessibility'    => TRUE,
+      'adaptiveHeight'   => FALSE,
+      'autoplay'         => FALSE,
+      'autoplaySpeed'    => 3000,
+      'pauseOnHover'     => TRUE,
+      'pauseOnDotsHover' => FALSE,
+      'arrows'           => TRUE,
+      'appendArrows'     => '$(element)',
+      'prevArrow'        => '<button type="button" data-role="none" class="slick-prev" aria-label="previous">Previous</button>',
+      'nextArrow'        => '<button type="button" data-role="none" class="slick-next" aria-label="next">Next</button>',
+      'centerMode'       => FALSE,
+      'centerPadding'    => '50px',
+      'dots'             => FALSE,
+      'dotsClass'        => 'slick-dots',
+      'appendDots'       => '$(element)',
+      'draggable'        => TRUE,
+      'fade'             => FALSE,
+      'focusOnSelect'    => FALSE,
+      'infinite'         => TRUE,
+      'initialSlide'     => 0,
+      'lazyLoad'         => 'ondemand',
+      'respondTo'        => 'window',
+      'rtl'              => FALSE,
+      'rows'             => 1,
+      'slidesPerRow'     => 1,
+      'slide'            => '',
+      'slidesToShow'     => 1,
+      'slidesToScroll'   => 1,
+      'speed'            => 500,
+      'swipe'            => TRUE,
+      'swipeToSlide'     => FALSE,
+      'edgeFriction'     => 0.35,
+      'touchMove'        => TRUE,
+      'touchThreshold'   => 5,
+      'useCSS'           => TRUE,
+      'cssEase'          => 'ease',
+      'cssEaseBezier'    => '',
+      'cssEaseOverride'  => '',
+      'easing'           => 'linear',
+      'variableWidth'    => FALSE,
+      'vertical'         => FALSE,
+      'verticalSwiping'  => FALSE,
+      'waitForAnimate'   => TRUE,
     );
     drupal_alter('slick_options_info', $options);
   }
@@ -338,7 +335,7 @@ function slick_optionset_create($values = array()) {
 }
 
 /**
- * Returns a renderable array of a simple slick instance.
+ * Returns a cacheable renderable array of a simple slick instance.
  *
  * @param array $items
  *   An array of slick contents: text, image or media.
@@ -354,23 +351,34 @@ function slick_optionset_create($values = array()) {
  *   The cached optionset object to avoid possible multiple invocations.
  *
  * @return array
- *   The renderable array of a slick instance, or empty array.
+ *   The cacheable renderable array of a slick instance, or empty array.
  */
 function slick_build($items = array(), $options = array(), $settings = array(), $attach = array(), $id = NULL, $optionset = NULL) {
-  $slick = array();
-  if ($items) {
-    if ($id && !isset($settings['attributes'])) {
-      $settings += array('attributes' => array('id' => $id));
-    }
-    $custom      = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
-    $attachments = $custom ? $attach : slick_attach($attach, $settings);
-    $slick = array(
-      '#theme'     => 'slick',
-      '#items'     => $items,
-      '#options'   => $options,
-      '#optionset' => $optionset,
-      '#settings'  => $settings,
-      '#attached'  => $attachments,
+  if (empty($items)) {
+    return array();
+  }
+
+  $slick_id    = &drupal_static('slick_id', 0);
+  $fallback    = isset($settings['attributes']['id']) ? $settings['attributes']['id'] : 'slick-' . ++$slick_id;
+  $id          = $settings['attributes']['id'] = empty($id) ? $fallback : $id;
+  $custom      = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
+  $attachments = $custom ? $attach : slick_attach($attach, $settings);
+
+  $slick = array(
+    '#theme'     => 'slick',
+    '#items'     => $items,
+    '#options'   => $options,
+    '#optionset' => $optionset,
+    '#settings'  => $settings,
+    '#attached'  => $attachments,
+  );
+
+  // Cache the render array if so configured.
+  if (!empty($settings['cache'])) {
+    $cid = empty($settings['cid']) ? 'custom' : $settings['cid'];
+    $slick['#cache'] = array(
+      'keys' => array('slick', 'cache', $id, $cid),
+      'expire' => CACHE_TEMPORARY,
     );
   }
   return $slick;

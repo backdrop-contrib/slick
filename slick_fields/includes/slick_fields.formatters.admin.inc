@@ -30,153 +30,8 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $layout_options = $layout_builtin;
   $optionsets     = slick_optionset_options();
   $readme         = url($slick_path . '/README.txt');
+  $image_styles   = image_style_options(FALSE, PASS_THROUGH);
   $is_views_ui    = '';
-
-  if ($instance['entity_type'] == 'ctools') {
-    $is_views_ui = '<h3 class="form--slick__title">' . t('Be sure to check "Use field template" under "Style settings" below, if using multiple-value field for the slides. Views preview works with jQuery > 1.7.') . '</h3>';
-  }
-
-  $elements['opening'] = array(
-    '#markup' => '<div class="form--slick form--compact form--field has-tooltip">' . $is_views_ui,
-  );
-
-  $elements['optionset'] = array(
-    '#title'       => t('Optionset main'),
-    '#type'        => 'select',
-    '#options'     => $optionsets,
-    '#description' => t('Manage optionsets at <a href="@link" target="_blank">Slick carousel admin page</a>.', array('@link' => url('admin/config/media/slick'))),
-  );
-
-  $skins = slick_skins_options();
-  $elements['skin'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Skin main'),
-    '#options'     => $skins,
-    '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See <a href="@url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY, or use hook_slick_skins_info() to override one.', array('@url' => $readme)),
-  );
-
-  $elements['optionset_thumbnail'] = array(
-    '#title'       => t('Optionset thumbnail'),
-    '#type'        => 'select',
-    '#options'     => $optionsets,
-    '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Leave empty to not use thumbnail navigation.'),
-  );
-
-  $elements['skin_thumbnail'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Skin thumbnail'),
-    '#options'     => $skins,
-    '#description' => t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', array('@url' => $readme)),
-  );
-
-  $elements['skin_arrows'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Skin arrows'),
-    '#options'     => array(),
-    '#description' => t('Use hook_slick_arrows_info() to add your own arrows skins, in the same format as hook_slick_skins_info().'),
-    '#access'      => FALSE,
-  );
-
-  if ($arrows = slick_arrows_options()) {
-    $elements['skin_arrows']['#options'] = $arrows;
-    $elements['skin_arrows']['#access'] = TRUE;
-  }
-
-  $elements['skin_dots'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Skin dots'),
-    '#options'     => array(),
-    '#description' => t('Use hook_slick_dots_info() to add your own dots skins, in the same format as hook_slick_skins_info().'),
-    '#access'      => FALSE,
-  );
-
-  if ($dots = slick_dots_options()) {
-    $elements['skin_dots']['#options'] = $dots;
-    $elements['skin_dots']['#access'] = TRUE;
-  }
-
-  $elements['asnavfor_main'] = array(
-    '#type'        => 'textfield',
-    '#title'       => t('asNavFor main'),
-    '#attributes'  => array('class' => array('is-tooltip', 'js-expandable')),
-    '#description' => t('Valid CSS selector (with "." or "#") for the main display. Target the thumbnail display class or ID attributes. See <a href="@url" target="_blank">HTML structure section at README.txt</a> for details on asNavFor targets.', array('@url' => $readme)),
-    '#states' => array(
-      'invisible' => array(
-        array('select[name*="[optionset_thumbnail]"]' => array('value' => '')),
-        array(':input[name*="[asnavfor_auto]"]' => array('checked' => TRUE)),
-      ),
-    ),
-  );
-
-  $elements['asnavfor_thumbnail'] = array(
-    '#type'        => 'textfield',
-    '#title'       => t('asNavFor thumbnail'),
-    '#attributes'  => array('class' => array('is-tooltip', 'js-expandable')),
-    '#description' => t('Valid CSS selector (with "." or "#") for the thumbnail display. Target the main display class or ID attributes.'),
-    '#states' => array(
-      'invisible' => array(
-        array('select[name*="[optionset_thumbnail]"]' => array('value' => '')),
-        array(':input[name*="[asnavfor_auto]"]' => array('checked' => TRUE)),
-      ),
-    ),
-  );
-
-  $elements['asnavfor_auto'] = array(
-    '#title'       => t('asNavFor auto selectors'),
-    '#type'        => 'checkbox',
-    '#description' => t('If checked, asNavFor selectors will be determined by the current field ID selectors automatically. Check if unsure with manual selectors.'),
-    '#states' => array(
-      'invisible' => array(
-        'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
-      ),
-    ),
-  );
-
-  $elements['thumbnail_caption'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Thumbnail caption'),
-    '#options'     => array(),
-    '#access'      => FALSE,
-    '#description' => t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
-    '#states' => array(
-      'invisible' => array(
-        'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
-      ),
-    ),
-  );
-
-  $image_styles = image_style_options(FALSE, PASS_THROUGH);
-  $elements['image_style'] = array(
-    '#title'        => t('Image style'),
-    '#type'         => 'select',
-    '#empty_option' => t('None (original image)'),
-    '#options'      => $image_styles,
-    '#description'  => t('The main image style. This allows more variant per View mode with a single optionset.'),
-  );
-
-  $elements['thumbnail_style'] = array(
-    '#title'       => t('Thumbnail style'),
-    '#type'        => 'select',
-    '#options'     => $image_styles,
-    '#description' => t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>If <em>Dots with thumbnail</em> selected, displayed when hovering over dots.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.'),
-  );
-
-  $elements['thumbnail_hover'] = array(
-    '#title'       => t('Dots with thumbnail'),
-    '#type'        => 'checkbox',
-    '#description' => t('Dependent on a skin, dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
-    '#states' => array(
-      'invisible' => array(
-        'select[name*="[thumbnail_style]"]' => array('value' => ''),
-      ),
-    ),
-  );
-
-  $elements['markup'] = array(
-    '#type'        => 'checkbox',
-    '#title'       => t('Keep field markups'),
-    '#description' => t('Uncheck to clean up caption field markups, otherwise deep markups kept -- .field > .field-items > .field-item. Check only if you need renderable array at Views, e.g. for custom work with collages containing slick instances with your own advanced lazyLoad with recipe -- "Use field template" disabled and this option enabled, otherwise Views flattens/renders the array.'),
-  );
 
   $field_entity_type = $field_type;
   switch ($field_type) {
@@ -222,6 +77,62 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     default:
       break;
   }
+
+  if ($instance['entity_type'] == 'ctools') {
+    $is_views_ui = '<h3 class="form--slick__title">' . t('Be sure to check "Use field template" under "Style settings" below, if using multiple-value field for the slides. Views preview works with jQuery > 1.7.') . '</h3>';
+  }
+
+  $elements['opening'] = array(
+    '#markup' => '<div class="form--slick form--compact form--field has-tooltip">' . $is_views_ui,
+    '#weight' => -100,
+  );
+
+  slick_get_top_elements($elements, $settings, $form_state);
+
+  $elements['image_style'] = array(
+    '#title'        => t('Image style'),
+    '#type'         => 'select',
+    '#empty_option' => t('None (original image)'),
+    '#options'      => $image_styles,
+    '#description'  => t('The main image style. This allows more variant per View mode with a single optionset.'),
+  );
+
+  $elements['thumbnail_style'] = array(
+    '#title'       => t('Thumbnail style'),
+    '#type'        => 'select',
+    '#options'     => $image_styles,
+    '#description' => t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>If <em>Dots with thumbnail</em> selected, displayed when hovering over dots.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.'),
+  );
+
+  $elements['thumbnail_hover'] = array(
+    '#title'       => t('Dots with thumbnail'),
+    '#type'        => 'checkbox',
+    '#description' => t('Dependent on a skin, dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
+    '#states' => array(
+      'invisible' => array(
+        'select[name*="[thumbnail_style]"]' => array('value' => ''),
+      ),
+    ),
+  );
+
+  $elements['thumbnail_caption'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Thumbnail caption'),
+    '#options'     => array(),
+    '#access'      => FALSE,
+    '#description' => t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
+    '#states' => array(
+      'invisible' => array(
+        'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
+      ),
+    ),
+  );
+
+  $elements['markup'] = array(
+    '#type'        => 'checkbox',
+    '#title'       => t('Keep field markups'),
+    '#description' => t('Uncheck to clean up caption field markups, otherwise deep markups kept -- .field > .field-items > .field-item. Check only if you need renderable array at Views, e.g. for custom work with collages containing slick instances with your own advanced lazyLoad with recipe -- "Use field template" disabled and this option enabled, otherwise Views flattens/renders the array.'),
+  );
 
   // Layout to all supported fields.
   $elements['slide_layout'] = array(
@@ -356,7 +267,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       'content'       => t('Image linked to content'),
       'iframe-switch' => t('Image to iframe switcher'),
     ),
-    '#description' => t('Supports Colorbox, Photobox, Media iframe, and content.<ol><li>Link to content: useful with aggregated small slicks.</li><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox: image to colorbox.</li><li>Photobox: image to photobox. Be sure to select Thumbnail style for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
+    '#description' => t('Supports:<ol><li>Link to content: for aggregated small slicks.</li><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
@@ -515,30 +426,15 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#description' => t('Be sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
   );
 
-  // Re-uses one optionset for various displays.
-  $elements['override'] = array(
-    '#title'       => t('Override optionset'),
-    '#type'        => 'checkbox',
-    '#description' => t('If checked, the following options will override the main optionset. Useful to re-use one optionset for several different displays.'),
-  );
-
-  $overridable_options = slick_get_overridable_options();
-  $overridable_values = is_array($settings['overridables']) ? array_values($settings['overridables']) : $settings['overridables'];
-  $elements['overridables'] = array(
-    '#type'          => 'checkboxes',
-    '#title'         => t('Overridable options'),
-    '#description'   => t("Override the main optionset to re-use one. Anything dictated here will override the current main optionset. OFF means FALSE"),
-    '#options'       => $overridable_options,
-    '#default_value' => $overridable_values,
-    '#states' => array(
-      'visible' => array(
-        ':input[name$="[override]"]' => array('checked' => TRUE),
-      ),
-    ),
+  slick_get_elements($elements, $settings, $form_state);
+  $elements['current_view_mode'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $view_mode,
   );
 
   $elements['closing'] = array(
     '#markup' => '</div>',
+    '#weight' => 100,
   );
 
   slick_get_admin_assets($elements, $settings);
