@@ -114,11 +114,17 @@ $slick[0] = array(
 print render($slick);
 
 // 6.B.
-// Or recommended, use slick_build() so you can cache the slick instance easily
-// if it is a hardly updated content, such as profile videos, logo carousels, or
-// more permanent home slideshows.
-// Cache the slick renderable array with a custom unique ID.
-$settings['cache'] = TRUE;
+// Or recommended, use slick_build() so you can cache the slick instance easily.
+// If it is a hardly updated content, such as profile videos, logo carousels, or
+// more permanent home slideshows, select "Persistent", otherwise time.
+// Cache the slick for 1 hour and fetch fresh contents when the time reached.
+// If stale cache is not cleared, slick will keep fetching fresh contents.
+$settings['cache'] = 3600;
+// Or cache the slick and keep stale contents till the next cron runs.
+$settings['cache'] = 'persistent';
+// One cron hits, slick will use the new cached version regardless of expiration
+// time due to the nature of render cache.
+// Add a custom unique cache ID.
 $settings['cid'] = 'my-extra-unique-id';
 // Where the parameters as described above:
 $slick = slick_build($items, $options, $settings, $attachments, $id);

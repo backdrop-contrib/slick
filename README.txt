@@ -276,8 +276,8 @@ TROUBLESHOOTING:
   against the latest.
 
 - A Slick instance may be cached by its ID, and will only take place if you
-  enable the "Cache" option. Having two different slicks with the same ID will
-  cause the first one cached override the second.
+  set the "Cache" to some value than None. Having two different slicks with the
+  same ID will cause the first one cached override the second.
   IDs are guaranteed unique if using sub-modules. However if you do custom works,
   or input one at Slick Views UI, be sure to have unique IDs as they should be.
 
@@ -328,14 +328,21 @@ Store large array of skins at my_module.slick.inc to get advantage of Drupal
 autoloading while short ones should be left in the main module file so that
 they are always available.
 
-Ditch all the slick logic to bare HTML by render cache, leaving only core
-drupal_process_attached() to load the assets.
 Most heavy logic were already moved to backend, however slick can be optimized
-more by enabling "Cache" option per slick instance. Useful for hardly updated
-static slicks such as profile videos, logo carousels, more permanent home
-slideshows, etc. Cached slick will not be expired until cron runs, regardless of
-the expiration time used. Be sure to have a working cron job, otherwise stale
-content is always displayed.
+more by configuring the "Cache" value per slick instance.
+
+Ditch all the slick logic to cached bare HTML:
+1. Persistent: the stale content will persist (kept/ displayed) till the next
+   cron runs, best for static contents where freshness is no use, such as logo,
+   team, profile video, more permanent home slideshows, etc.
+2. Any number: slick is expired (detached from cached contents) by the selected
+   expiration time, and fetches fresh contents till the next cache rebuilt.
+   If stale cache is not cleared, slick will keep fetching fresh contents.
+
+Be sure to have a working cron job to clear stale cache, so that slick is loaded
+from the correct cached version. At any rate, cached contents will be refreshed
+regardless of the expiration time after the cron hits due to the nature of cron.
+Leave it empty to disable caching.
 
 
 CURRENT DEVELOPMENT STATUS

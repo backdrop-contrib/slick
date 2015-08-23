@@ -729,11 +729,14 @@ function slick_get_elements(array &$elements, $settings, &$form_state) {
     ),
   );
 
+  $a = array(300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400);
+  $period = drupal_map_assoc($a, 'format_interval');
   $elements['cache'] = array(
-    '#type'        => 'checkbox',
+    '#type'        => 'select',
     '#title'       => t('Cache'),
+    '#options'     => $period + array('persistent' => t('Persistent')),
     '#weight'      => 99,
-    '#description' => t('Ditch all the slick logic to bare HTML by render cache, leaving only core drupal_process_attached() to load the assets. Cached slick will not be expired until cron runs, regardless of the expiration time used. Be sure to have a working cron job, otherwise stale content is always displayed. Useful if you have hardly updated contents such as profile videos, logo carousels, or permanent home slideshows. Leave it unchecked to disable caching, such as for highly dynamic newsticker.'),
+    '#description' => t('Ditch all the slick logic to cached bare HTML.<ol><li><strong>Persistent</strong>: the stale content will persist (kept/ displayed) till the next cron runs, best for static contents.</li><li><strong>Any number</strong>: slick is expired (detached from cached contents) by the selected expiration time, and fetches fresh contents till the next cache rebuilt. If stale cache is not cleared, slick will keep fetching fresh contents.</li></ol>Be sure to have a working cron job to clear stale cache, so that slick is loaded from the correct cached version. At any rate, cached contents will be refreshed regardless of the expiration time after the cron hits due to the nature of cron. Leave it empty to disable caching.'),
   );
 
   drupal_alter('slick_elements_info', $elements, $settings, $form_state);

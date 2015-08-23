@@ -1,6 +1,13 @@
 
 Slick 7.x-2.0-dev, 2015-8-23
 ----------------------------
+- Added cache fallbacks:
+  o fetching from fresh contents if expiration time is provided, useful for
+    dynamic contents which value freshness.
+  o fetching from stale ones if "Persistent" is selected, useful for static
+    contents which value cache lifetime better than freshness.
+- Changed cache keys to a more reliable cid since keys will append active theme
+  which adds additional check.
 - Added configurable #cache property to slick_build() to cache render array.
 - Merged similar field formatter and Views default settings into
   slick_get_global_default_settings().

@@ -38,6 +38,10 @@
 .media--ratio--on > iframe {
   background: rgba(0, 0, 0, 0.8);
   max-width: 100%;
+}
+
+/* Ensures not affecting iframe only without media swicther */
+.media--player.media--ratio--on > iframe {
   opacity: 0;
   visibility: hidden;
 }
@@ -155,6 +159,7 @@
 .media--switch .slick__image,
 .media-icon--play,
 .is-playing .media__iframe,
+.is-playing.media--ratio--on > iframe,
 .is-playing:hover .media-icon--close {
   opacity: 1;
   visibility: visible;

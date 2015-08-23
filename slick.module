@@ -375,11 +375,16 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
 
   // Cache the render array if so configured.
   if (!empty($settings['cache'])) {
-    $cid = empty($settings['cid']) ? 'custom' : $settings['cid'];
-    $slick['#cache'] = array(
-      'keys' => array('slick', 'cache', $id, $cid),
-      'expire' => CACHE_TEMPORARY,
-    );
+    $cid     = empty($settings['cid']) ? $id . ':custom' : $id . ':' . $settings['cid'];
+    $cache   = cache_get($cid, 'cache');
+    $enabled = $settings['cache'] == 'persistent' ? TRUE : REQUEST_TIME < $cache->expire;
+
+    if (!$cache || $enabled) {
+      $slick['#cache'] = array(
+        'cid'    => $cid,
+        'expire' => $settings['cache'] == 'persistent' ? CACHE_TEMPORARY : REQUEST_TIME + $settings['cache'],
+      );
+    }
   }
   return $slick;
 }

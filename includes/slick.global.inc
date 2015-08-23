@@ -32,7 +32,7 @@ function slick_get_global_default_settings() {
     'preserve_keys'       => FALSE,
     'override'            => FALSE,
     'overridables'        => array(),
-    'cache'               => FALSE,
+    'cache'               => 0,
   );
   return $settings;
 }
