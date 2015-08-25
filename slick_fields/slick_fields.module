@@ -48,26 +48,45 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     'entity_uri'  => $entity_uri['path'],
     'attributes'  => array('id' => $id),
   ) + slick_get_fields_default_settings();
-  $settings  = array_merge($settings, $display['settings']);
-  $optionset = slick_optionset_load($settings['optionset']);
-  $asnavfor  = $settings['optionset_thumbnail'];
-
-  $settings['lazy']          = $optionset->options['settings']['lazyLoad'];
-  $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
-  $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
-  $settings['box_style']     = $settings['colorbox_style'];
-  $settings['cid']           = $instance['id'] . $settings['current_view_mode'] . $settings['image_style'];
-
-  if ($asnavfor) {
-    $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_main'] : "#{$thumb_id}-slider";
-  }
+  $settings = array_merge($settings, $display['settings']);
+  $asnavfor = $settings['optionset_thumbnail'];
+  $cid      = $instance['id'] . $settings['current_view_mode'] . $settings['image_style'];
 
   // Sniffs for Views to allow block__no_wrapper, views_view_no_wrapper, etc.
   if ($view) {
     $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
     $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name . '--' . $view->current_display);
-    $settings['cid'] .= $view->name . $view->current_display;
+    $cid .= $view->name . $view->current_display;
   }
+
+  $settings['cid'] = $cid;
+
+  // Renders slicks from cache if any, as render cache is just cache.
+  $show_cache = FALSE;
+  if ($settings['cache'] && $cache = cache_get($id . ':' . $cid, 'cache')) {
+    $show_cache = $settings['cache'] == 'persistent' ? TRUE : REQUEST_TIME < $cache->expire;
+  }
+
+  if ($show_cache) {
+    $slick[0] = $cache->data;
+    if ($asnavfor && $thumb_cache = cache_get($thumb_id . ':' . $cid, 'cache')) {
+      $slick[1] = $thumb_cache->data;
+    }
+
+    // Passes slicks to theme_slick_wrapper() to clean up the field markups.
+    return array(
+      '#theme'    => 'slick_wrapper',
+      '#items'    => $slick,
+      '#settings' => $settings,
+    );
+  }
+
+  // Otherwise do the routines before a cache stored, or when disabled.
+  $optionset = slick_optionset_load($settings['optionset']);
+  $settings['lazy']          = $optionset->options['settings']['lazyLoad'];
+  $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
+  $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
+  $settings['box_style']     = $settings['colorbox_style'];
 
   $config = array(
     'items'       => $items,
@@ -141,6 +160,10 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $build = slick_build_grids($build, $settings);
   }
 
+  if ($asnavfor) {
+    $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_main'] : "#{$thumb_id}-slider";
+  }
+
   // Build the single/main display Slick.
   $slick[0] = slick_build($build, $js, $settings, $attachments, $id, $optionset);
 
@@ -154,8 +177,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     // Build the thumbnail+/text navigation Slick.
     $slick[1] = slick_build($thumb, array(), $settings, array(), $thumb_id, $optionset);
     $element = array(
-      '#theme' => 'slick_wrapper',
-      '#items' => $slick,
+      '#theme'    => 'slick_wrapper',
+      '#items'    => $slick,
       '#settings' => $settings,
     );
   }
@@ -163,6 +186,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     // Views will flatten the array unless we add a key 0, useful for more work.
     $element = $view && !empty($settings['markup']) ? $slick : $slick[0];
   }
+
   return $element;
 }
 

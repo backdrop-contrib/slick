@@ -280,6 +280,14 @@ TROUBLESHOOTING:
   same ID will cause the first one cached override the second.
   IDs are guaranteed unique if using sub-modules. However if you do custom works,
   or input one at Slick Views UI, be sure to have unique IDs as they should be.
+  Be sure no useless/ sensitive data such as "Edit link" as they may be rendered
+  as is regardless permissions.
+
+- Current slide previously has a workaround class "slide--current". Core added
+  "slick-current" later (a year or so) at v1.5.6. Now (8/25/15) "slide--current"
+  is dropped for "slick-current", but the workaround is still kept due to core
+  known issue with asNavFor and nested slicks not having proper "slick-current".
+  If you use "slide--current" before, be sure to update it to "slick-current".
 
 More info relevant to each option is available at their form display by hovering
 over them, and click a dark question mark.
@@ -316,7 +324,7 @@ UNKNOWN ISSUES
 PERFORMANCE:
 --------------------------------------------------------------------------------
 Any module, even the most innocent one, that provides settings in the UI needs
-to store them in a table. The good thing is we can store them at codes.
+to store them in a table. The good thing is we can store them in codes.
 
 With Bulk exporter, or Features, optionsets may be stored in codes to avoid
 database lookup. Be sure to revert via UI to Default to avoid database lookup.

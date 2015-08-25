@@ -1,4 +1,15 @@
 
+Slick 7.x-2.0-dev, 2015-8-25
+----------------------------
+- Fixed for useless Media file entity editor links being cached for anonymous.
+- Improved Slick fields cache routines.
+- Fixed for slick-current with adjacent slicks with/without slick_wrapper,
+  block__no_wrapper/ views_view_no_wrapper, etc. No wonder core fails with it :(
+- Dropped slide--current, and pushed slick-current s planned instead to
+  reduce dup classes. If you use "slide--current", be sure to change it to
+  "slick-current". The workaround is still kept, only easier to drop later when
+  fixed.
+
 Slick 7.x-2.0-dev, 2015-8-23
 ----------------------------
 - Added cache fallbacks:

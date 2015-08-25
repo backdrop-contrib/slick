@@ -36,7 +36,7 @@
 }
 
 .media--ratio--on > iframe {
-  background: rgba(0, 0, 0, 0.8);
+  /* background: rgba(0, 0, 0, 0.8); */
   max-width: 100%;
 }
 

@@ -270,7 +270,9 @@ function template_preprocess_slick_item(&$variables) {
 
     // Captions contain: editor, overlay, title, alt, data, link.
     if (!empty($captions['editor'])) {
-      $variables['editor'] = $captions['editor'];
+      if (empty($settings['cache'])) {
+        $variables['editor'] = $captions['editor'];
+      }
       unset($captions['editor']);
     }
     $variables['caption'] = $captions;
@@ -428,7 +430,7 @@ function template_process_slick_media(&$variables) {
 }
 
 /**
- * Returns HTML for a slick_wrapper when asNavFor in use.
+ * Returns HTML for a slick_wrapper when asNavFor, or cache, in use.
  *
  * @param array $variables
  *   An associative array containing:
@@ -440,10 +442,11 @@ function template_process_slick_media(&$variables) {
 function theme_slick_wrapper(array $variables) {
   $build    = '';
   $element  = $variables['element'];
+  $items    = $element['#items'];
   $settings = isset($element['#settings']) ? $element['#settings'] : array();
   $skin     = isset($settings['skin']) ? $settings['skin'] : '';
 
-  foreach ($element['#items'] as $item) {
+  foreach ($items as $item) {
     $build .= drupal_render($item);
   }
 
@@ -451,7 +454,9 @@ function theme_slick_wrapper(array $variables) {
   if ($skin && $skin != 'asnavfor') {
     $attributes['class'][] = drupal_clean_css_identifier('slick-wrapper--' . $skin);
   }
-  return '<div' . drupal_attributes($attributes) . '>' . $build . '</div>';
+
+  // Clean up markups for the cached version if it is a single slick.
+  return count($items) > 1 ? '<div' . drupal_attributes($attributes) . '>' . $build . '</div>' : $build;
 }
 
 /**

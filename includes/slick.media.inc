@@ -57,8 +57,8 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
         $slide['settings']['slide_classes'] = strip_tags($classes[0]['value']);
       }
 
-      // Editor links.
-      if (file_entity_access('update', $file)) {
+      // Editor links, excluding from render cache.
+      if (empty($settings['cache']) && file_entity_access('update', $file)) {
         if (!empty($slide['caption']) && field_is_translatable($config['entity_type'], $config['field'])) {
           $slide['caption']['editor']['translate']['#markup'] = l(t('Translate'), 'file/' . $file->fid . '/translate', array(
             'query' => drupal_get_destination(),

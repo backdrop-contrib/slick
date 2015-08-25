@@ -61,19 +61,19 @@
   transform: scale(0);
 }
 
-.slick--skin--3d-back .slick-initialized .slide--current ~ .slide .slide__media {
+.slick--skin--3d-back .slick-initialized .slick-current ~ .slide .slide__media {
   -ms-transform: rotateY(-25deg);
   -webkit-transform: rotateY(-25deg);
   transform: rotateY(-25deg);
 }
 
-.slick--skin--3d-back .slick-initialized .slide--current.slide .slide__media {
+.slick--skin--3d-back .slick-initialized .slick-current.slide .slide__media {
   -ms-transform: rotateY(0deg);
   -webkit-transform: rotateY(0deg);
   transform: rotateY(0deg);
 }
 
-.slick--skin--3d-back .slick-initialized .slide--current.slide .slide__caption {
+.slick--skin--3d-back .slick-initialized .slick-current.slide .slide__caption {
   bottom: auto;
   position: relative;
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);

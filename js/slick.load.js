@@ -128,18 +128,18 @@
      *   - Create asNavFor with the total <= slidesToShow and centerMode.
      *   - Drag the main large display, or click its arrows, thumbnail
      *     slick-current class is not updated/ synched, always stucked at 0.
-     * Or else, drop slide--current, and just push slick-current where it fails.
      *
-     * @todo deprecate slide--current for slick-current from v1.5.8+ if fixed.
+     * @todo drop if any core fix after v1.5.8 (8/4).
      */
     setCurrent: function (t, curr, slick) {
-      // Must take care for both asNavFor instances, with/without slick-wrapper.
-      var w = t.parent(".slick").parent();
+      // Must take care for both asNavFor instances, with/without slick-wrapper,
+      // with/without block__no_wrapper/ views_view_no_wrapper, etc.
+      var w = t.parent().parent(".slick-wrapper").length ? t.parent().parent(".slick-wrapper") : t.parent(".slick");
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
       if (t.attr("id") === slick.$slider.attr("id")) {
-        $(".slick-slide", w).removeClass("slide--current");
-        $("[data-slick-index='" + curr + "']", w).addClass("slide--current");
+        $(".slick-slide", w).removeClass("slick-current");
+        $("[data-slick-index='" + curr + "']", w).addClass("slick-current");
       }
     },
 

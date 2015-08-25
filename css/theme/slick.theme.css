@@ -250,7 +250,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   z-index: 1;
 }
 
-.slick__slide.slide--current {
+.slick__slide.slick-current {
   z-index: 4;
 }
 

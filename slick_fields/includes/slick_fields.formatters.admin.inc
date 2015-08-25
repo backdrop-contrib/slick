@@ -213,6 +213,24 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       '#description' => t('If provided, it will bre wrapped with H2 and class .slide__title.'),
     );
 
+    $elements['slide_link'] = array(
+      '#title'       => t('Link field'),
+      '#type'        => 'select',
+      '#options'     => $link_options,
+      '#description' => t('Link to content: Read more, View Case Study, etc, wrapped with class .slide__link.'),
+    );
+
+    if ($field_entity_type == 'file') {
+      $elements['view_mode']['#description'] .= t('For video, make sure to choose relevant video display, not as image.');
+
+      $elements['slide_classes'] = array(
+        '#title'       => t('Slide class field'),
+        '#type'        => 'select',
+        '#options'     => $slide_classes,
+        '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split.'),
+      );
+    }
+
     $elements['slide_caption'] = array(
       '#title'       => t('Caption fields'),
       '#type'        => 'checkboxes',
@@ -228,13 +246,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       $elements['slide_caption']['#description'] = t('No fields found for the captions. You need to add relevant fields for the captions.');
     }
 
-    $elements['slide_link'] = array(
-      '#title'       => t('Link field'),
-      '#type'        => 'select',
-      '#options'     => $link_options,
-      '#description' => t('Link to content: Read more, View Case Study, etc, wrapped with class .slide__link.'),
-    );
-
     // Layout fields to make individual slide more variant.
     $elements['slide_layout']['#title'] = t('Slide layout field');
     $elements['slide_layout']['#description'] = t('Create a dedicated List (text - max number 1) field related to the caption placement with the following supported keys: top, right, bottom, left, center, center-top, etc. See <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Split half requires any skin Split. Leave empty to DIY.', array('@url' => url($path . '/README.txt')));
@@ -247,17 +258,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       '#description' => t('Be sure the View mode is enabled, and the enabled fields here are not hidden at this particular view mode. Adjust the video/audio dimensions accordingly at their display page if not using aspect ratio. Create more view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>.', array('@url' => '//drupal.org/project/entity_view_mode')),
       '#access' => count($view_mode_options) > 1,
     );
-
-    if ($field_entity_type == 'file') {
-      $elements['view_mode']['#description'] .= t('For video, make sure to choose relevant video display, not as image.');
-
-      $elements['slide_classes'] = array(
-        '#title'       => t('Slide class field'),
-        '#type'        => 'select',
-        '#options'     => $slide_classes,
-        '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split.'),
-      );
-    }
   }
 
   $elements['media_switch'] = array(
