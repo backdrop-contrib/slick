@@ -61,9 +61,9 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
 
   $settings['cid'] = $cid;
 
-  // Renders slicks from cache if any, as render cache is just cache.
+  // Renders slicks quickly from cache if any, as render cache is just cache.
   $show_cache = FALSE;
-  if ($settings['cache'] && $cache = cache_get($id . ':' . $cid, 'cache')) {
+  if (!empty($settings['cache']) && $cache = cache_get($id . ':' . $cid, 'cache')) {
     $show_cache = $settings['cache'] == 'persistent' ? TRUE : REQUEST_TIME < $cache->expire;
   }
 

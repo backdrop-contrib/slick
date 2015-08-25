@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-8-26
+----------------------------
+- Fixed for Notice: Undefined index: cache in slick_build() (line 376..
+
 Slick 7.x-2.0-dev, 2015-8-25
 ----------------------------
 - Fixed for useless Media file entity editor links being cached for anonymous.

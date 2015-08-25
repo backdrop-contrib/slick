@@ -373,15 +373,15 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
   );
 
   // Cache the render array if so configured.
-  if (($interval = $settings['cache']) != NULL) {
+  if (!empty($settings['cache'])) {
     $cid    = empty($settings['cid']) ? $id . ':custom' : $id . ':' . $settings['cid'];
     $cache  = cache_get($cid, 'cache');
-    $active = $interval == 'persistent' ? TRUE : (!$cache ? TRUE : REQUEST_TIME < $cache->expire);
+    $active = $settings['cache'] == 'persistent' ? TRUE : (!$cache ? TRUE : REQUEST_TIME < $cache->expire);
 
     if (!$cache || $active) {
       $slick['#cache'] = array(
         'cid'    => $cid,
-        'expire' => $interval == 'persistent' ? CACHE_TEMPORARY : REQUEST_TIME + $interval,
+        'expire' => $settings['cache'] == 'persistent' ? CACHE_TEMPORARY : REQUEST_TIME + $settings['cache'],
       );
     }
   }
