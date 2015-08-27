@@ -1,6 +1,18 @@
 
-Slick 7.x-2.0-dev, 2015-8-26
+Slick 7.x-2.0-dev, 2015-8-27
 ----------------------------
+- Moved slick stuffs out of unslick at template_preprocess_slick().
+- Updated slick.load.min.js to abandon inaccessible activeBreakpoint approach:
+  o Removed broken activeBreakpoint options, and use setPosition event instead.
+  o Moved all setCurrent to also be placed at setPosition event.
+  Note: setPosition was avoided so far because it is executed a lot, at least 4
+  times on init, but appears to be the guy to fix a few known issues at one
+  place with slick-current and arrows visibility with responsive options and
+  asNavFor.
+  Both are still kept till fixed by core, and finally dropped from the module.
+- Fixed for Notice: Undefined index: view_mode in
+  _slick_fields_field_formatter_settings_form() (line 224... due to the latest
+  admin Slick fields rearrangement.
 - Fixed for Notice: Undefined index: cache in slick_build() (line 376..
 
 Slick 7.x-2.0-dev, 2015-8-25

@@ -16,7 +16,7 @@
  */
 ?>
 <div<?php print $attributes; ?>>
-  <?php if ($settings['count'] > 1): ?>
+  <?php if (empty($settings['unslick'])): ?>
     <div<?php print $content_attributes; ?>>
   <?php endif; ?>
 
@@ -24,7 +24,7 @@
       <?php print render($item); ?>
     <?php endforeach; ?>
 
-  <?php if ($settings['count'] > 1): ?>
+  <?php if (empty($settings['unslick'])): ?>
     </div>
     <nav<?php print $arrow_attributes; ?>>
       <?php print $settings['prev_arrow']; ?>

@@ -6,8 +6,6 @@
 
 /**
  * Implements hook_requirements().
- *
- * Checks for the Slick library.
  */
 function slick_requirements($phase) {
   $t = get_t();

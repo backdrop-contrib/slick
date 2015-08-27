@@ -115,19 +115,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     ),
   );
 
-  $elements['thumbnail_caption'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Thumbnail caption'),
-    '#options'     => array(),
-    '#access'      => FALSE,
-    '#description' => t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
-    '#states' => array(
-      'invisible' => array(
-        'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
-      ),
-    ),
-  );
-
   $elements['markup'] = array(
     '#type'        => 'checkbox',
     '#title'       => t('Keep field markups'),
@@ -142,12 +129,25 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#description' => t('This affects the entire slides. Split half requires any skin Split. Leave empty to DIY.'),
   );
 
+  $elements['thumbnail_caption'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Thumbnail caption'),
+    '#options'     => array(),
+    '#access'      => FALSE,
+    '#description' => t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
+    '#states' => array(
+      'invisible' => array(
+        'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
+      ),
+    ),
+  );
+
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
     $elements['slide_layout']['#prefix'] = '<h3 class="form--slick__title">' . t('Fields') . '</h3>';
 
     // Media overlay.
     $elements['slide_overlay'] = array(
-      '#title'       => t('Overlay video field'),
+      '#title'       => t('Overlay video'),
       '#type'        => 'select',
       '#options'     => $overlay_options,
       '#description' => t("Choose the plain text field containing Youtube or Vimeo url to display video overlay over the main image background. Provided as currently file entity media browser doesn't support nested files. Be sure the parent file type is image, not video."),
@@ -157,11 +157,11 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     // Skip media file field as it is the main/ background media already.
     if (in_array($field_entity_type, array('field_collection_item'))) {
       // Field collection overlay.
-      $elements['slide_overlay']['#title'] = t('Overlay image/video field');
+      $elements['slide_overlay']['#title'] = t('Overlay image/video');
       $elements['slide_overlay']['#description'] = t('Overlays can be single image/auvio/video, or nested slicks. If audio/video, be sure the display is not image. Manage its display at its own entity View mode (there). Two ways to build nested slicks: <ol><li>Make this field use Slick formatter there, and leave <strong>Enable nested slicks</strong> unchecked.</li><li>Or check <strong>Enable nested slicks</strong> here and be sure to use Image or Rendered file formatter (not Slick) there for the supported fields: Image, Media, Atom reference.</li></ol>');
 
       $elements['slide_image'] = array(
-        '#title'       => t('Main image field'),
+        '#title'       => t('Main image'),
         '#type'        => 'select',
         '#options'     => $image_options,
         '#description' => t('Main background image field'),
@@ -207,24 +207,22 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     }
 
     $elements['slide_title'] = array(
-      '#title'       => t('Slide title field'),
+      '#title'       => t('Slide title'),
       '#type'        => 'select',
       '#options'     => $title_options,
       '#description' => t('If provided, it will bre wrapped with H2 and class .slide__title.'),
     );
 
     $elements['slide_link'] = array(
-      '#title'       => t('Link field'),
+      '#title'       => t('Link'),
       '#type'        => 'select',
       '#options'     => $link_options,
       '#description' => t('Link to content: Read more, View Case Study, etc, wrapped with class .slide__link.'),
     );
 
     if ($field_entity_type == 'file') {
-      $elements['view_mode']['#description'] .= t('For video, make sure to choose relevant video display, not as image.');
-
       $elements['slide_classes'] = array(
-        '#title'       => t('Slide class field'),
+        '#title'       => t('Slide class'),
         '#type'        => 'select',
         '#options'     => $slide_classes,
         '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split.'),
@@ -247,7 +245,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     }
 
     // Layout fields to make individual slide more variant.
-    $elements['slide_layout']['#title'] = t('Slide layout field');
     $elements['slide_layout']['#description'] = t('Create a dedicated List (text - max number 1) field related to the caption placement with the following supported keys: top, right, bottom, left, center, center-top, etc. See <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Split half requires any skin Split. Leave empty to DIY.', array('@url' => url($path . '/README.txt')));
 
     $view_mode_options = slick_get_view_modes($field_entity_type, TRUE);
@@ -258,6 +255,10 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       '#description' => t('Be sure the View mode is enabled, and the enabled fields here are not hidden at this particular view mode. Adjust the video/audio dimensions accordingly at their display page if not using aspect ratio. Create more view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>.', array('@url' => '//drupal.org/project/entity_view_mode')),
       '#access' => count($view_mode_options) > 1,
     );
+
+    if ($field_entity_type == 'file') {
+      $elements['view_mode']['#description'] .= t('For video, make sure to choose relevant video display, not as image.');
+    }
   }
 
   $elements['media_switch'] = array(
@@ -267,7 +268,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       'content'       => t('Image linked to content'),
       'iframe-switch' => t('Image to iframe switcher'),
     ),
-    '#description' => t('Supports:<ol><li>Link to content: for aggregated small slicks.</li><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
+    '#description' => t('<ol><li>Link to content: for aggregated small slicks.</li><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {

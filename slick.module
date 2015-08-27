@@ -244,6 +244,7 @@ function slick_get_options() {
       'vertical'         => FALSE,
       'verticalSwiping'  => FALSE,
       'waitForAnimate'   => TRUE,
+      'mousewheel'       => FALSE,
     );
     drupal_alter('slick_options_info', $options);
   }

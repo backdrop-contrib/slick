@@ -62,12 +62,12 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $settings['cid'] = $cid;
 
   // Renders slicks quickly from cache if any, as render cache is just cache.
-  $show_cache = FALSE;
+  $render_cache = FALSE;
   if (!empty($settings['cache']) && $cache = cache_get($id . ':' . $cid, 'cache')) {
-    $show_cache = $settings['cache'] == 'persistent' ? TRUE : REQUEST_TIME < $cache->expire;
+    $render_cache = $settings['cache'] == 'persistent' ? TRUE : REQUEST_TIME < $cache->expire;
   }
 
-  if ($show_cache) {
+  if ($render_cache) {
     $slick[0] = $cache->data;
     if ($asnavfor && $thumb_cache = cache_get($thumb_id . ':' . $cid, 'cache')) {
       $slick[1] = $thumb_cache->data;

@@ -55,7 +55,7 @@ function slick_build_grids(array $build, &$settings) {
       '#settings' => array(
         'count' => 2,
         'skin' => $settings['skin'],
-        'unslick' => !empty($settings['unslick']),
+        'unslick' => TRUE,
       ),
     );
   }

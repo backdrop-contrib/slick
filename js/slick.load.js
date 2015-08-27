@@ -10,24 +10,25 @@
   "use strict";
 
   Drupal.behaviors.slick = {
-    attach: function (context) {
+    attach: function (context, settings) {
       var _ = this;
       $(".slick:not(.unslick)", context).once("slick", function () {
-        var $this = $(this),
-          t = $("> .slick__slider", $this),
-          a = $("> .slick__arrow", $this);
+        var me = $(this),
+          t = $("> .slick__slider", me),
+          a = $("> .slick__arrow", me),
+          o = $.extend({}, settings.slick, t.data("slick"));
 
         // Build the Slick.
-        _.beforeSlick(t, a);
-        t.slick(_.globals(t, a));
-        _.afterSlick(t);
+        _.beforeSlick(t, a, o);
+        t.slick(_.globals(t, a, o));
+        _.afterSlick(t, o);
       });
     },
 
     /**
      * The event must be bound prior to slick being called.
      */
-    beforeSlick: function (t, a) {
+    beforeSlick: function (t, a, o) {
       var _ = this,
         breakpoint;
       _.randomize(t);
@@ -42,22 +43,18 @@
               slick.breakpointSettings[sets[breakpoint].breakpoint] = $.extend(
                 {},
                 Drupal.settings.slick,
-                _.globals(t, a),
+                _.globals(t, a, o),
                 sets[breakpoint].settings);
             }
           }
         }
-
-        _.setCurrent(t, slick.currentSlide, slick);
-      });
-
-      t.on("beforeChange", function (e, slick, currentSlide, animSlide) {
-        _.setCurrent(t, animSlide, slick);
       });
 
       // Fixed known arrows issue when total <= slidesToShow, and not updated.
       t.on("setPosition", function (e, slick) {
-        var opt = _.options(slick);
+        var opt = slick.options;
+
+        _.setCurrent(t, slick.currentSlide, slick);
 
         // Do not remove arrows, to allow responsive have different options.
         if (t.attr("id") === slick.$slider.attr("id")) {
@@ -70,22 +67,20 @@
     /**
      * The event must be bound after slick being called.
      */
-    afterSlick: function (t) {
+    afterSlick: function (t, o) {
       var _ = this,
-        slick = t.slick("getSlick"),
-        opt = _.options(slick);
+        slick = t.slick("getSlick");
 
       // Arrow down jumper.
-      t.parent()
-        .on("click.slick-load", ".jump-scroll[data-target]", function (e) {
+      t.parent().on("click.slick-load", ".slick-down", function (e) {
           e.preventDefault();
           var b = $(this);
           $("html, body").stop().animate({
             scrollTop: $(b.data("target")).offset().top - (b.data("offset") || 0)
-          }, 800, opt.easing || "swing");
+          }, 800, o.easing);
         });
 
-      if ($.isFunction($.fn.mousewheel) && opt.mousewheel) {
+      if (o.mousewheel) {
         t.on("mousewheel.slick-load", function (e, delta) {
           e.preventDefault();
           return (delta < 0) ? t.slick("slickNext") : t.slick("slickPrev");
@@ -93,17 +88,6 @@
       }
 
       t.trigger("afterSlick", [_, slick, slick.currentSlide]);
-    },
-
-    /**
-     * Gets active options based on breakpoint, or fallback to global.
-     */
-    options: function (slick) {
-      var breakpoint = slick.activeBreakpoint || null;
-      return breakpoint && (slick.windowWidth <= breakpoint)
-        ? $.extend({},
-        Drupal.settings.slick, slick.breakpointSettings[breakpoint])
-        : slick.options;
     },
 
     /**
@@ -146,15 +130,14 @@
     /**
      * Declare global options explicitly to copy into responsive settings.
      */
-    globals: function (t, a) {
-      var merged = $.extend({}, Drupal.settings.slick, t.data("slick"));
+    globals: function (t, a, o) {
       return {
-        slide: merged.slide,
-        lazyLoad: merged.lazyLoad,
-        dotsClass: merged.dotsClass,
-        rtl: merged.rtl,
-        appendDots: merged.appendDots === ".slick__arrow"
-          ? a : (merged.appendDots || $(t)),
+        slide: o.slide,
+        lazyLoad: o.lazyLoad,
+        dotsClass: o.dotsClass,
+        rtl: o.rtl,
+        appendDots: o.appendDots === ".slick__arrow"
+          ? a : (o.appendDots || $(t)),
         prevArrow: $(".slick-prev", a),
         nextArrow: $(".slick-next", a),
         appendArrows: a,
@@ -162,7 +145,7 @@
           var tn = slick.$slides.eq(i).find("[data-thumb]") || null,
             alt = Drupal.t(tn.attr("alt")) || "",
             img = "<img alt='" + alt + "' src='" + tn.data("thumb") + "'>",
-            dotsThumb = tn.length && merged.dotsClass.indexOf("thumbnail") > 0 ?
+            dotsThumb = tn.length && o.dotsClass.indexOf("thumbnail") > 0 ?
               "<div class='slick-dots__thumbnail'>" + img + "</div>" : "";
           return dotsThumb + slick.defaults.customPaging(slick, i);
         }

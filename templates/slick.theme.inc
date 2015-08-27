@@ -31,8 +31,10 @@ function template_preprocess_slick(&$variables) {
   $goodies   = $general['goodies'];
   $js        = $customs ? array_merge($optionset->options['settings'], $customs) : $optionset->options['settings'];
   $skin      = $settings['skin'] ? $settings['skin'] : $optionset->skin;
-  // Allows manipulating markups with fake count.
-  $settings['count'] = !empty($settings['count']) ? $settings['count'] : $count;
+
+  // Allows manipulating markups with an enforced unslick.
+  $settings['count']   = !empty($settings['count']) ? $settings['count'] : $count;
+  $settings['unslick'] = !empty($settings['unslick']) || $settings['count'] == 1 ? TRUE : FALSE;
 
   if ($settings['current_display'] == 'thumbnail') {
     $skin = !empty($settings['skin_thumbnail']) ? $settings['skin_thumbnail'] : $optionset->skin;
@@ -46,30 +48,14 @@ function template_preprocess_slick(&$variables) {
   if (isset($settings['attributes']) && is_array($settings['attributes'])) {
     $attributes = drupal_array_merge_deep($attributes, $settings['attributes']);
   }
-  if (isset($settings['content_attributes']) && is_array($settings['content_attributes'])) {
-    $content_attributes = drupal_array_merge_deep($content_attributes, $settings['content_attributes']);
-  }
+
   if (!isset($attributes['id'])) {
     $slick_id         = &drupal_static('slick_id', 0);
     $id               = 'slick-' . ++$slick_id;
     $attributes['id'] = $settings['current_display'] == 'thumbnail' ? $id . '-thumbnail' : $id;
   }
-  if (!isset($content_attributes['id'])) {
-    $content_attributes['id'] = $attributes['id'] . '-slider';
-  }
 
-  $content_attributes['class'][] = 'slick__slider';
-
-  // Prevents broken slick when only one item given.
-  if ($settings['count'] == 1 || !empty($settings['unslick'])) {
-    $attributes['class'][] = 'unslick';
-  }
-  else {
-    if (!empty($goodies['random'])) {
-      $attributes['class'][] = 'slick--random';
-    }
-  }
-
+  // Consistent styling is always needed even for an unslick.
   if ($skin) {
     foreach (array('boxed', 'split') as $key) {
       if ($skin !== $key && strpos($skin, $key) !== FALSE) {
@@ -85,27 +71,93 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = $general['template_class'];
   }
 
-  // Provides s*** classes. Set 'slick_classes' to FALSE to disable them.
-  if ($settings['slick_classes']) {
-    $attributes['class'][] = $js['slidesToShow'] > 1 ? 'slick--carousel' : 'slick--slider';
-    $attributes['class'][] = $js['centerMode'] ? 'slick--center' : 'slick--float';
+  // Prevents broken slick when only one item given, or an enforced unslick.
+  if (!empty($settings['unslick'])) {
+    $attributes['class'][] = 'unslick';
+  }
+  else {
+    if (!empty($goodies['random'])) {
+      $attributes['class'][] = 'slick--random';
+    }
 
-    // Provide context to fix excessive height with lazyLoad ondemand.
-    if ($js['lazyLoad'] == 'ondemand') {
-      $attributes['class'][] = 'slick--ondemand';
+    if (isset($settings['content_attributes']) && is_array($settings['content_attributes'])) {
+      $content_attributes = drupal_array_merge_deep($content_attributes, $settings['content_attributes']);
+    }
+    if (!isset($content_attributes['id'])) {
+      $content_attributes['id'] = $attributes['id'] . '-slider';
+    }
+    $content_attributes['class'][] = 'slick__slider';
+
+    // The slider must have the attribute "dir" set to "rtl", if so configured.
+    if (!empty($js['rtl'])) {
+      $content_attributes['dir'] = 'rtl';
+    }
+
+    // Arrows are enforced to allow responsive options hide/show them.
+    $tags = array('a', 'em', 'strong', 'button', 'p', 'div', 'i', 'span');
+    $settings['prev_arrow']      = filter_xss($js['prevArrow'], $tags);
+    $settings['next_arrow']      = filter_xss($js['nextArrow'], $tags);
+    $arrow_attributes            = &$variables['arrow_attributes_array'];
+    $arrow_attributes['class'][] = 'slick__arrow';
+    if (!empty($settings['skin_arrows'])) {
+      $skin_arrows = drupal_clean_css_identifier($settings['skin_arrows']);
+      $arrow_attributes['class'][] = 'slick__arrow--' . $skin_arrows;
+    }
+
+    // Provides helper class if thumbnail on dots hover provided.
+    if (!empty($settings['thumbnail_style']) && !empty($settings['thumbnail_hover'])) {
+      $js['dotsClass'] .= ' slick-dots--thumbnail';
+    }
+
+    // Provides dots skin modifier class if provided.
+    if (!empty($settings['skin_dots'])) {
+      $js['dotsClass'] .= ' ' . drupal_clean_css_identifier('slick-dots--' . $settings['skin_dots']);
+    }
+
+    // All these s***s are to re-use one optionset when all these disabled.
+    // focusOnSelect will not work with empty slide value, so add proper selector.
+    $js['slide'] = empty($js['slide']) && $js['focusOnSelect'] ? '.slick__slide' : '';
+
+    // Only if asNavFor, enforce clickable thumbnail, otherwise no joy.
+    if (!empty($settings['optionset_thumbnail']) && !empty($settings['asnavfor_target'])) {
+      if ($settings['current_display'] == 'thumbnail') {
+        $js['slide'] = '.slick__slide';
+        $js['focusOnSelect'] = TRUE;
+      }
+
+      $attributes['class'][] = 'slick--display--' . $settings['current_display'];
+      $js['asNavFor'] = trim($settings['asnavfor_target']);
+    }
+    // Prevents non-empty, but not-used, asNavFor from breaking the slide.
+    else {
+      $js['asNavFor'] = '';
+    }
+
+    if ($settings['current_display'] == 'main') {
+      if (!empty($goodies['arrow-down']) && $general['arrow_down_target']) {
+        $attributes['class'][]     = 'slick--has-arrow-down';
+        $arrow_down['class']       = array('slick-down', 'jump-scroll');
+        $arrow_down['data-target'] = $general['arrow_down_target'];
+        $arrow_down['data-offset'] = $general['arrow_down_offset'];
+        $variables['arrow_down']   = '<button' . drupal_attributes($arrow_down) . '></button>';
+      }
+    }
+
+    // Provides s*** classes. Set 'slick_classes' to FALSE to disable them.
+    if ($settings['slick_classes']) {
+      $attributes['class'][] = $js['slidesToShow'] > 1 ? 'slick--carousel' : 'slick--slider';
+      $attributes['class'][] = $js['centerMode'] ? 'slick--center' : 'slick--float';
+
+      // Provide context to fix excessive height with lazyLoad ondemand.
+      if ($js['lazyLoad'] == 'ondemand') {
+        $attributes['class'][] = 'slick--ondemand';
+      }
     }
   }
 
   // Some settings are only reasonable for the main display, not thumbnail.
   if ($settings['current_display'] == 'main') {
     $settings['has_pattern'] = $settings['has_pattern'] ? TRUE : !empty($goodies['pattern']);
-    if (!empty($goodies['arrow-down']) && $general['arrow_down_target']) {
-      $attributes['class'][]     = 'slick--has-arrow-down';
-      $arrow_down['class']       = array('slick-down', 'jump-scroll');
-      $arrow_down['data-target'] = $general['arrow_down_target'];
-      $arrow_down['data-offset'] = $general['arrow_down_offset'];
-      $variables['arrow_down']   = '<button' . drupal_attributes($arrow_down) . '></button>';
-    }
 
     if (!empty($settings['media_switch']) && strpos($settings['media_switch'], 'box') !== FALSE) {
       $swicther = str_replace('-switch', '', $settings['media_switch']);
@@ -113,55 +165,10 @@ function template_preprocess_slick(&$variables) {
     }
   }
 
-  // All these s***s are to re-use one optionset when all these disabled.
-  // focusOnSelect will not work with empty slide value, so add proper selector.
-  $js['slide'] = empty($js['slide']) && $js['focusOnSelect'] ? '.slick__slide' : '';
-
-  // Only if asNavFor, enforce clickable thumbnail, otherwise no joy.
-  if (!empty($settings['optionset_thumbnail']) && !empty($settings['asnavfor_target'])) {
-    if ($settings['current_display'] == 'thumbnail') {
-      $js['slide'] = '.slick__slide';
-      $js['focusOnSelect'] = TRUE;
-    }
-
-    $attributes['class'][] = 'slick--display--' . $settings['current_display'];
-    $js['asNavFor'] = trim($settings['asnavfor_target']);
-  }
-  // Prevents non-empty, but not-used, asNavFor from breaking the slide.
-  else {
-    $js['asNavFor'] = '';
-  }
-
-  // The slider must have the attribute "dir" set to "rtl", if so configured.
-  if (!empty($js['rtl'])) {
-    $content_attributes['dir'] = 'rtl';
-  }
-
-  // Arrows are enforced to allow responsive options hide/show them.
-  $tags = array('a', 'em', 'strong', 'button', 'p', 'div', 'i', 'span');
-  $settings['prev_arrow']      = filter_xss($js['prevArrow'], $tags);
-  $settings['next_arrow']      = filter_xss($js['nextArrow'], $tags);
-  $arrow_attributes            = &$variables['arrow_attributes_array'];
-  $arrow_attributes['class'][] = 'slick__arrow';
-  if (!empty($settings['skin_arrows'])) {
-    $skin_arrows = drupal_clean_css_identifier($settings['skin_arrows']);
-    $arrow_attributes['class'][] = 'slick__arrow--' . $skin_arrows;
-  }
-
-  // Provides helper class if thumbnail on dots hover provided.
-  if (!empty($settings['thumbnail_style']) && !empty($settings['thumbnail_hover'])) {
-    $js['dotsClass'] .= ' slick-dots--thumbnail';
-  }
-
-  // Provides dots skin modifier class if provided.
-  if (!empty($settings['skin_dots'])) {
-    $js['dotsClass'] .= ' ' . drupal_clean_css_identifier('slick-dots--' . $settings['skin_dots']);
-  }
-
   // Add the configuration as JSON object into the slick container.
   $variables['settings'] = $settings;
   $js_data = _slick_remove_default_optionset_options($optionset, $js, $variables['settings']);
-  if ($settings['count'] > 1 && !isset($content_attributes['data-slick']) && $js_data) {
+  if (empty($settings['unslick']) && !isset($content_attributes['data-slick']) && $js_data) {
     $content_attributes['data-slick'] = drupal_json_encode($js_data);
   }
 

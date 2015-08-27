@@ -719,7 +719,7 @@ function slick_get_elements(array &$elements, $settings, &$form_state) {
   $elements['overridables'] = array(
     '#type'          => 'checkboxes',
     '#title'         => t('Overridable options'),
-    '#description'   => t("Override the main optionset to re-use one. Anything dictated here will override the current main optionset. OFF means FALSE"),
+    '#description'   => t("Override the main optionset to re-use one. Anything dictated here will override the current main optionset. Unchecked means FALSE"),
     '#options'       => $overridable_options,
     '#default_value' => $overridable_values,
     '#states' => array(
@@ -736,7 +736,7 @@ function slick_get_elements(array &$elements, $settings, &$form_state) {
     '#title'       => t('Cache'),
     '#options'     => $period + array('persistent' => t('Persistent')),
     '#weight'      => 99,
-    '#description' => t('Ditch all the slick logic to cached bare HTML. <ol><li><strong>Persistent</strong>: the stale content will persist (kept/ displayed) till the next cron runs, best for static contents.</li><li><strong>Any number</strong>: slick is expired (detached from cached contents) by the selected expiration time, and fetches fresh contents till the next cache rebuilt. If stale cache is not cleared, slick will keep fetching fresh contents.</li></ol>A working cron job is required to clear stale cache, so that slick is loaded from the correct cached version. At any rate, cached contents will be refreshed regardless of the expiration time after the cron hits due to the nature of cron. Leave it empty to disable caching.<br /><strong>Warning!</strong> Be sure no useless/ sensitive data such as Edit links as they may be rendered as is regardless permissions.'),
+    '#description' => t('Ditch all the slick logic to cached bare HTML. <ol><li><strong>Persistent</strong>: the cached content will persist (be kept/ displayed) till the next cron runs, best for hardly changed contents.</li><li><strong>Any number</strong>: slick is expired (detached from cached contents) by the selected expiration time, and fetches fresh contents till the next cache rebuilt. If stale cache is not cleared, slick will keep fetching fresh contents.</li></ol>A working cron job is required to clear stale cache, so that slick is loaded from the correct cached version. At any rate, cached contents will be refreshed regardless of the expiration time after the cron hits due to the nature of cron. Leave it empty to disable caching.<br /><strong>Warning!</strong> Be sure no useless/ sensitive data such as Edit links as they may be rendered as is regardless permissions.'),
   );
 
   drupal_alter('slick_elements_info', $elements, $settings, $form_state);
