@@ -1,6 +1,10 @@
 
 Slick 7.x-2.0-dev, 2015-8-27
 ----------------------------
+- Simplified cache option description.
+
+Slick 7.x-2.0-dev, 2015-8-27
+----------------------------
 - Moved slick stuffs out of unslick at template_preprocess_slick().
 - Updated slick.load.min.js to abandon inaccessible activeBreakpoint approach:
   o Removed broken activeBreakpoint options, and use setPosition event instead.
