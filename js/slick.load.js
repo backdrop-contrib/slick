@@ -33,7 +33,7 @@
         breakpoint;
       _.randomize(t);
 
-      t.on("init", function (e, slick) {
+      t.on("init.slick", function (e, slick) {
         // Populate defaults + globals into each breakpoint.
         var sets = slick.options.responsive || null;
         if (sets && sets.length > -1) {
@@ -50,17 +50,8 @@
         }
       });
 
-      // Fixed known arrows issue when total <= slidesToShow, and not updated.
-      t.on("setPosition", function (e, slick) {
-        var opt = slick.options;
-
-        _.setCurrent(t, slick.currentSlide, slick);
-
-        // Do not remove arrows, to allow responsive have different options.
-        if (t.attr("id") === slick.$slider.attr("id")) {
-          return slick.slideCount <= opt.slidesToShow || opt.arrows === false
-            ? a.addClass("element-hidden") : a.removeClass("element-hidden");
-        }
+      t.on("setPosition.slick", function (e, slick) {
+        _.setPosition(t, a, slick);
       });
     },
 
@@ -72,7 +63,7 @@
         slick = t.slick("getSlick");
 
       // Arrow down jumper.
-      t.parent().on("click.slick-load", ".slick-down", function (e) {
+      t.parent().on("click.slick.load", ".slick-down", function (e) {
           e.preventDefault();
           var b = $(this);
           $("html, body").stop().animate({
@@ -81,7 +72,7 @@
         });
 
       if (o.mousewheel) {
-        t.on("mousewheel.slick-load", function (e, delta) {
+        t.on("mousewheel.slick.load", function (e, delta) {
           e.preventDefault();
           return (delta < 0) ? t.slick("slickNext") : t.slick("slickPrev");
         });
@@ -106,7 +97,7 @@
     },
 
     /**
-     * Sets the current slide class.
+     * Fixed for known issues with the slick-current and arrows.
      *
      * Still kept after v1.5.8 (8/4) as "slick-current" fails with asNavFor:
      *   - Create asNavFor with the total <= slidesToShow and centerMode.
@@ -115,15 +106,22 @@
      *
      * @todo drop if any core fix after v1.5.8 (8/4).
      */
-    setCurrent: function (t, curr, slick) {
-      // Must take care for both asNavFor instances, with/without slick-wrapper,
-      // with/without block__no_wrapper/ views_view_no_wrapper, etc.
-      var w = t.parent().parent(".slick-wrapper").length ? t.parent().parent(".slick-wrapper") : t.parent(".slick");
+    setPosition: function (t, a, slick) {
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
       if (t.attr("id") === slick.$slider.attr("id")) {
+        var opt = slick.options;
+        // Must take care for asNavFor instances, with/without slick-wrapper,
+        // with/without block__no_wrapper/ views_view_no_wrapper, etc.
+        var w = t.parent().parent(".slick-wrapper").length
+          ? t.parent().parent(".slick-wrapper") : t.parent(".slick");
+
         $(".slick-slide", w).removeClass("slick-current");
-        $("[data-slick-index='" + curr + "']", w).addClass("slick-current");
+        $("[data-slick-index='" + slick.currentSlide + "']", w).addClass("slick-current");
+
+        // Do not remove arrows, to allow responsive have different options.
+        return slick.slideCount <= opt.slidesToShow || opt.arrows === false
+          ? a.addClass("element-hidden") : a.removeClass("element-hidden");
       }
     },
 

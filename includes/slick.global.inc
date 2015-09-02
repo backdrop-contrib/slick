@@ -45,7 +45,6 @@ function slick_build_grids(array $build, &$settings) {
   if (!empty($settings['unslick'])) {
     $settings['current_display'] = 'main';
     $settings['current_item'] = 'grid';
-    $settings['slick_classes'] = FALSE;
 
     // Displays all items if unslick is enforced such as plain grid to lightbox.
     $grids[0] = array(

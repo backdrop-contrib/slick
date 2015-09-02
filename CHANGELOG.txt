@@ -1,5 +1,12 @@
 
-Slick 7.x-2.0-dev, 2015-8-27
+
+Slick 7.x-2.0-dev, 2015-9-02
+----------------------------
+- Added a warning to Cache option: Only enable it when all is done, otherwise
+  cached options will be displayed while changing them.
+- Merged slick-current and arrows fixes into setPosition.
+
+Slick 7.x-2.0-dev, 2015-8-28
 ----------------------------
 - Simplified cache option description.
 

@@ -49,6 +49,7 @@ function slick_clean_options(array $options) {
   $excludes = drupal_map_assoc(array(
     'mobileFirst',
     'asNavFor',
+    'mousewheel',
     'slide',
     'lazyLoad',
     'prevArrow',
@@ -543,7 +544,7 @@ function slick_get_view_modes($entity_type, $exclude = TRUE) {
 }
 
 /**
- * Gets a list of fields in the Field Collection item.
+ * Gets a list of fields in the Field collection item.
  */
 function slick_get_fc_fields($instance, $field_types) {
   $fc_options = array();
@@ -593,7 +594,7 @@ function slick_get_media_fields($instance, $widget_types = NULL) {
 }
 
 /**
- * Returns shared starting form elements across field formatter and Views.
+ * Returns shared starting form elements across Slick field formatter and Views.
  */
 function slick_get_top_elements(array &$elements, $settings, &$form_state) {
   $slick_path = drupal_get_path('module', 'slick');
@@ -704,7 +705,7 @@ function slick_get_top_elements(array &$elements, $settings, &$form_state) {
 }
 
 /**
- * Returns shared ending form elements across field formatter and Views.
+ * Returns shared ending form elements across Slick field formatter and Views.
  */
 function slick_get_elements(array &$elements, $settings, &$form_state) {
   // Re-uses one optionset for various displays.
@@ -736,7 +737,7 @@ function slick_get_elements(array &$elements, $settings, &$form_state) {
     '#title'       => t('Cache'),
     '#options'     => $period + array('persistent' => t('Persistent')),
     '#weight'      => 99,
-    '#description' => t('Ditch all the slick logic to cached bare HTML. <ol><li><strong>Persistent</strong>: cached contents will persist (be displayed) till the next cron runs.</li><li><strong>Any number</strong>: expired by the selected expiration time, and fresh contents are fetched till the next cache rebuilt.</li></ol>A working cron job is required to clear stale cache. At any rate, cached contents will be refreshed regardless of the expiration time after the cron hits. <br />Leave it empty to disable caching.<br /><strong>Warning!</strong> Be sure no useless/ sensitive data such as Edit links as they are rendered as is regardless permissions.'),
+    '#description' => t('Ditch all the slick logic to cached bare HTML. <ol><li><strong>Persistent</strong>: cached contents will persist (be displayed) till the next cron runs.</li><li><strong>Any number</strong>: expired by the selected expiration time, and fresh contents are fetched till the next cache rebuilt.</li></ol>A working cron job is required to clear stale cache. At any rate, cached contents will be refreshed regardless of the expiration time after the cron hits. <br />Leave it empty to disable caching.<br /><strong>Warning!</strong> Be sure no useless/ sensitive data such as Edit links as they are rendered as is regardless permissions. Only enable it when all is done, otherwise cached options will be displayed while changing them.'),
   );
 
   drupal_alter('slick_elements_info', $elements, $settings, $form_state);
@@ -744,7 +745,7 @@ function slick_get_elements(array &$elements, $settings, &$form_state) {
 }
 
 /**
- * Returns reusable grid elements across Slick fields and Views.
+ * Returns reusable grid elements across Slick field formatter and Views.
  */
 function slick_get_grid_elements(array &$elements, $settings, &$form_state) {
   $grid_options = drupal_map_assoc(range(1, 12));

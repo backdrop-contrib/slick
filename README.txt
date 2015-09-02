@@ -1,4 +1,4 @@
-Slick Carousel Module
+Slick carousel module
 ================================================================================
 
 Drupal module for Ken Wheeler's Slick carousel.
@@ -9,7 +9,7 @@ o Uses CSS3 when available. Fully functional when not.
 o Swipe enabled. Or disabled, if you prefer.
 o Desktop mouse dragging.
 o Fully accessible with arrow key navigation.
-o Autoplay, pagers, arrows, text+/thumbnail pagers etc...
+o Random, autoplay, pagers, arrows, text+/thumbnail pagers etc...
 o Exportable via CTools.
 o Works with Views, core and contrib fields: Image, Media or Field collection.
 o Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
@@ -23,7 +23,7 @@ o Modular integration with various contribs via optional sub-modules. You can
 
 
 
-VERSIONS:
+VERSIONS
 --------------------------------------------------------------------------------
 7.x-2.x supports exportable optionsets via CTools.
 Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x to allow creating
@@ -33,14 +33,14 @@ database table to store/ manage option sets.
 Be sure to read the project home page for more info before updating your module.
 
 
-INSTALLATION:
+INSTALLATION
 --------------------------------------------------------------------------------
 Install the module as usual, more info can be found on:
 http://drupal.org/documentation/install/modules-themes/modules-7
 
 The Slick module has several sub-modules:
-- slick_ui, to manage optionsets, can be uninstalled at production.
-- slick_fields, supports Image, Media file, and Field collection fields.
+- slick_ui, included, to manage optionsets, can be uninstalled at production.
+- slick_fields, included, supports Image, Media, and Field collection fields.
 - slick_views, a separate project as of 2015-5-29, > beta1:
   http://dgo.to/slick_views
 - slick_devel, if you want to help testing and developing the Slick.
@@ -51,7 +51,7 @@ The Slick module has several sub-modules:
 See README.txt on each sub-module for their relevant information.
 
 
-REQUIREMENTS:
+REQUIREMENTS
 --------------------------------------------------------------------------------
 - Slick library:
   o Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/
@@ -78,7 +78,7 @@ REQUIREMENTS:
 
 
 
-OPTIONAL INTEGRATION:
+OPTIONAL INTEGRATION
 --------------------------------------------------------------------------------
 Slick supports enhancements and more complex layouts.
 - Colorbox, to have grids/slides that open up image/video/audio in overlay.
@@ -101,26 +101,25 @@ Slick supports enhancements and more complex layouts.
 RECOMMENDED MODULES
 --------------------------------------------------------------------------------
 - Block reference to have more complex slide content for Fullscreen/width skins.
-- Entity translation, to have translated file and translate links with Media.
 - Field formatter settings, to modify field formatter settings and summaries.
 
 
-OPTIONSETS:
+OPTIONSETS
 --------------------------------------------------------------------------------
 To create your optionsets, go to:
 "admin/config/media/slick"
 These will be available at Manage display field format, and Views UI.
 
 
-VIEWS AND FIELDS:
+VIEWS AND FIELDS
 --------------------------------------------------------------------------------
 Slick works with Views and as field display formatters.
 Slick Views is available as a style plugin included at slick_views.module.
-Slick Fields is available as a display formatter included at slick_fields.module
+Slick fields is available as a display formatter included at slick_fields.module
 which supports core and contrib fields: Image, Media, Field collection.
 
 
-PROGRAMATICALLY:
+PROGRAMATICALLY
 --------------------------------------------------------------------------------
 See slick_fields.module for advanced sample, or slick.api.php for a simple one.
 
@@ -135,7 +134,7 @@ Use Field collection, or Views to build one.
 Supported multi-value fields for nested slicks: Image, Media, Atom reference.
 
 
-SKINS:
+SKINS
 --------------------------------------------------------------------------------
 Skins allow swappable layouts like next/prev links, split image or caption, etc.
 Be sure to enable slick_fields.module and provide a dedicated slide layout
@@ -144,7 +143,7 @@ skins and options may lead to unpredictable layouts, get dirty yourself.
 
 Some default complex layout skins applied to desktop only, adjust for the mobile
 accordingly. The provided skins are very basic to support the necessary layouts.
-It is not the module job to match your design requirements.
+It is not the module job to match your awesome design requirements.
 
 Optional skins:
 --------------
@@ -210,7 +209,7 @@ normally < 0 (slick.load.min.js) is the one.
 See slick.slick.inc for more info on skins.
 
 
-HTML structure:
+HTML structure
 --------------------------------------------------------------------------------
 Note, non-BEM classes are added by JS.
 Before Slick 1.4:
@@ -245,7 +244,7 @@ You can create a fiddle to isolate the bug if reproduceable outside the module:
 http://jsfiddle.net/
 
 
-TROUBLESHOOTING:
+TROUBLESHOOTING
 --------------------------------------------------------------------------------
 - When upgrading from Slick v1.3.6 to later version, try to resave options at:
   o admin/config/media/slick
@@ -321,13 +320,13 @@ UNKNOWN ISSUES
   Please report if you find one. Your report and help is any module QA. Thanks.
 
 
-PERFORMANCE:
+PERFORMANCE
 --------------------------------------------------------------------------------
 Any module, even the most innocent one, that provides settings in the UI needs
 to store them in a table. The good thing is we can store them in codes.
 
 With Bulk exporter, or Features, optionsets may be stored in codes to avoid
-database lookup. Be sure to revert via UI to Default to avoid database lookup.
+database lookup. Be sure to revert to Default via UI to avoid database lookup.
 It is analog to Drupal 8 CMI, so it is the decent choice today.
 
 See slick_example for the stored-in-code samples.
@@ -340,7 +339,7 @@ Most heavy logic were already moved to backend, however slick can be optimized
 more by configuring the "Cache" value per slick instance.
 
 Ditch all the slick logic to cached bare HTML:
-1. Persistent: the stale content will persist (kept/ displayed) till the next
+1. Persistent: the cached content will persist (be displayed) till the next
    cron runs, best for static contents where freshness is no use, such as logo,
    team, profile video, more permanent home slideshows, etc.
 2. Any number: slick is expired (detached from cached contents) by the selected

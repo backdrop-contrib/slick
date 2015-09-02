@@ -8,7 +8,7 @@
  * Checks for the supported media sub-modules.
  */
 function slick_is_media($scheme) {
-  if (in_array($scheme, array('vimeo', 'youtube', 'soundcloud'))) {
+  if (in_array($scheme, array('soundcloud', 'vimeo', 'youtube'))) {
     return TRUE;
   }
   return FALSE;

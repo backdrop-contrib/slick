@@ -362,7 +362,6 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
   $slick_id = &drupal_static('slick_id', 0);
   $fallback = isset($settings['attributes']['id']) ? $settings['attributes']['id'] : 'slick-' . ++$slick_id;
   $id       = $settings['attributes']['id'] = empty($id) ? $fallback : $id;
-  $custom   = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
 
   $slick = array(
     '#theme'     => 'slick',
@@ -370,8 +369,12 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
     '#options'   => $options,
     '#optionset' => $optionset,
     '#settings'  => $settings,
-    '#attached'  => $custom ? $attach : slick_attach($attach, $settings),
   );
+
+  if (!empty($attach)) {
+    $custom = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
+    $slick['#attached'] = $custom ? $attach : slick_attach($attach, $settings);
+  }
 
   // Cache the render array if so configured.
   if (!empty($settings['cache'])) {

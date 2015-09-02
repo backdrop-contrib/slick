@@ -2,7 +2,40 @@
 /**
  * @file
  * Hooks and preprocess functions for the Slick module.
+ *
+ * The entire functions here, save for theme_slick_wrapper(), are skipped when
+ * the render cache option is enabled.
  */
+
+/**
+ * Returns HTML for a slick_wrapper when asNavFor, or cache, in use.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - items: An array of slick instances: main and thumbnail slicks.
+ *   - settings: HTML related settings.
+ *
+ * @ingroup themeable
+ */
+function theme_slick_wrapper(array $variables) {
+  $build    = '';
+  $element  = $variables['element'];
+  $items    = $element['#items'];
+  $settings = isset($element['#settings']) ? $element['#settings'] : array();
+  $skin     = isset($settings['skin']) ? $settings['skin'] : '';
+
+  foreach ($items as $item) {
+    $build .= drupal_render($item);
+  }
+
+  $attributes['class'] = array('slick-wrapper', 'slick-wrapper--asnavfor');
+  if ($skin && $skin != 'asnavfor') {
+    $attributes['class'][] = drupal_clean_css_identifier('slick-wrapper--' . $skin);
+  }
+
+  // Clean up markups for the cached version if it is a single slick.
+  return count($items) > 1 ? '<div' . drupal_attributes($attributes) . '>' . $build . '</div>' : $build;
+}
 
 /**
  * Prepares variables for slick templates.
@@ -104,12 +137,12 @@ function template_preprocess_slick(&$variables) {
       $arrow_attributes['class'][] = 'slick__arrow--' . $skin_arrows;
     }
 
-    // Provides helper class if thumbnail on dots hover provided.
+    // Adds helper class if thumbnail on dots hover provided.
     if (!empty($settings['thumbnail_style']) && !empty($settings['thumbnail_hover'])) {
       $js['dotsClass'] .= ' slick-dots--thumbnail';
     }
 
-    // Provides dots skin modifier class if provided.
+    // Adds dots skin modifier class if provided.
     if (!empty($settings['skin_dots'])) {
       $js['dotsClass'] .= ' ' . drupal_clean_css_identifier('slick-dots--' . $settings['skin_dots']);
     }
@@ -437,36 +470,6 @@ function template_process_slick_media(&$variables) {
 }
 
 /**
- * Returns HTML for a slick_wrapper when asNavFor, or cache, in use.
- *
- * @param array $variables
- *   An associative array containing:
- *   - items: An array of slick instances: main and thumbnail slicks.
- *   - settings: HTML related settings.
- *
- * @ingroup themeable
- */
-function theme_slick_wrapper(array $variables) {
-  $build    = '';
-  $element  = $variables['element'];
-  $items    = $element['#items'];
-  $settings = isset($element['#settings']) ? $element['#settings'] : array();
-  $skin     = isset($settings['skin']) ? $settings['skin'] : '';
-
-  foreach ($items as $item) {
-    $build .= drupal_render($item);
-  }
-
-  $attributes['class'] = array('slick-wrapper', 'slick-wrapper--asnavfor');
-  if ($skin && $skin != 'asnavfor') {
-    $attributes['class'][] = drupal_clean_css_identifier('slick-wrapper--' . $skin);
-  }
-
-  // Clean up markups for the cached version if it is a single slick.
-  return count($items) > 1 ? '<div' . drupal_attributes($attributes) . '>' . $build . '</div>' : $build;
-}
-
-/**
  * Overrides theme_image with Slick lazy loading.
  *
  * @param array $variables
@@ -553,7 +556,7 @@ function theme_slick_image_lazy(array $variables) {
   if (isset($variables['url'])) {
     if (isset($options['lightbox']) && $switcher = $options['lightbox']) {
       $build .= empty($options['icon']) ? '<i class="media-icon media-icon--lightbox media-icon--' . $switcher . '"></i>' : $options['icon'];
-      if (isset($options['has_pattern']) && $options['has_pattern']) {
+      if (!empty($options['has_pattern'])) {
         $build .= '<div class="slide__pattern"></div>';
       }
     }

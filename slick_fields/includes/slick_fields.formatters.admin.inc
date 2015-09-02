@@ -376,6 +376,12 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     $elements['thumbnail_caption']['#access'] = TRUE;
   }
 
+  $elements['mousewheel'] = array(
+    '#type'        => 'checkbox',
+    '#title'       => t('Mousewheel'),
+    '#description' => t('Be sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
+  );
+
   // Picture module integration.
   if ($is_picture) {
     $elements['picture'] = array(
@@ -420,12 +426,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       ),
     );
   }
-
-  $elements['mousewheel'] = array(
-    '#type'        => 'checkbox',
-    '#title'       => t('Enable mousewheel'),
-    '#description' => t('Be sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
-  );
 
   slick_get_elements($elements, $settings, $form_state);
   $elements['current_view_mode'] = array(
