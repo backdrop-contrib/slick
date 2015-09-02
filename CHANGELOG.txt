@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-9-03
+----------------------------
+- #2553385 by gausarts, heliogabal, esolitos: Slick CSS admin compatibility with
+  contrib admin themes
 
 Slick 7.x-2.0-dev, 2015-9-02
 ----------------------------

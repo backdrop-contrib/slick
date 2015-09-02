@@ -823,8 +823,10 @@ function slick_get_admin_assets(array &$elements, $settings = array()) {
   }
   else {
     $slick_path = drupal_get_path('module', 'slick');
-    $elements['#attached']['css'][] = $slick_path . '/css/admin/slick.admin--ui.css';
-    $elements['#attached']['css'][] = $slick_path . '/css/admin/slick.admin--ui--field.css';
+    $elements['#attached']['css'] = array(
+      $slick_path . '/css/admin/slick.admin--ui.css' => array('group' => CSS_THEME +1),
+      $slick_path . '/css/admin/slick.admin--ui--field.css' => array('group' => CSS_THEME +1),
+    );
     $elements['#attached']['js'][]  = $slick_path . '/js/slick.admin.ui.min.js';
   }
 

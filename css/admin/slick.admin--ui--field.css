@@ -2,6 +2,7 @@
  * @file
  * Overrides over-specified tough Seven.
  */
+
 /* Fix for shiny */
 #field-display-overview .field-formatter-settings-edit-form .form--slick  .form-item {
   margin: 0;
@@ -26,57 +27,13 @@
   border-bottom: 1px solid #e7e7e7;
   border-left: 1px solid #e7e7e7;
   border-top: 1px solid #fff;
-  padding: 20px 10px 12px;
   margin: 0;
+  padding: 20px 10px 12px;
 }
 
 .form--field.form--slick .form-type-radio,
 .form--field.form--slick .form-type-textarea {
   border: 0;
-}
-
-@media (min-width: 64em) {
-  .form--field.form--slick .form-item {
-    display: block;
-    float: left;
-    padding: 20px 0 12px;
-    width: 50%;
-  }
-
-  .form--field.form--slick .form-checkboxes {
-    width: 100%;
-  }
-
-  .form--field.form--slick .form-type-textarea {
-    display: block;
-    padding: 12px;
-  }
-
-  .form--field.form--slick .form-item label {
-    width: 180px;
-  }
-
-  .form--field.form--slick .form-type-radios {
-    padding-bottom: 0;
-  }
-
-  .form--field.form--slick .form-radios .form-type-radio {
-    min-height: 22px;
-    padding: 0;
-  }
-
-  .form--field.form--slick .form-radios .form-type-radio input {
-    float: none;
-    max-width: 100%;
-  }
-
-  .form--field.form--slick .form-radios .form-type-radio label.option {
-    float: none;
-    min-height: 22px;
-    padding-left: 32px !important;
-    text-align: left;
-    width: auto;
-  }
 }
 
 .form--field.form--slick .form-type-checkboxes {
@@ -116,4 +73,54 @@
 
 #edit-style-options-slick .form-item-style-options-slick-slide-field-wrapper {
   z-index: 4;
+}
+
+@media (min-width: 64em) {
+  .form--field.form--slick .form-item {
+    display: block;
+    float: left;
+    padding: 20px 0 12px;
+    width: 49.8888%; /* Fix for UNIX rounding margin */
+  }
+
+  .form--field.form--slick .form-checkboxes,
+  .form--field.form--slick .form-type-checkboxes {
+    width: 100%;
+  }
+
+  .form--field.form--slick .form-type-textarea {
+    display: block;
+    padding: 12px;
+  }
+
+  .form--field.form--slick .form-item label {
+    width: 180px;
+  }
+
+  .form--field.form--slick .form-type-checkboxes > label {
+    width: 100%;
+  }
+
+  .form--compact.form--slick .form-type-radios {
+    padding-bottom: 0;
+    padding-top: 10px;
+  }
+
+  .form--field.form--slick .form-radios .form-type-radio {
+    min-height: 22px;
+    padding: 0;
+  }
+
+  .form--field.form--slick .form-radios .form-type-radio input {
+    float: none;
+    max-width: 100%;
+  }
+
+  .form--field.form--slick .form-radios .form-type-radio label.option {
+    float: none;
+    min-height: 22px;
+    padding-left: 32px !important;
+    text-align: left;
+    width: auto;
+  }
 }
