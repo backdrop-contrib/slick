@@ -3,7 +3,7 @@
  * @file
  * Hooks and preprocess functions for the Slick module.
  *
- * The entire functions here, save for theme_slick_wrapper(), are skipped when
+ * The entire functions here, save for theme_slick_wrapper(), are dormant when
  * the render cache option is enabled.
  */
 

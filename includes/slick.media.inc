@@ -21,7 +21,7 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
     $uri   = $file->uri;
     $slide = array();
     $media = array(
-      'scheme' => file_uri_scheme($uri),
+      'scheme'    => file_uri_scheme($uri),
       'media_uri' => $uri,
     );
 
@@ -57,7 +57,7 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
         $slide['settings']['slide_classes'] = strip_tags($classes[0]['value']);
       }
 
-      // Editor links, excluding from render cache.
+      // Editor links, excluded from render cache.
       if (empty($settings['cache']) && file_entity_access('update', $file)) {
         if (!empty($slide['caption']) && field_is_translatable($config['entity_type'], $config['field'])) {
           $slide['caption']['editor']['translate']['#markup'] = l(t('Translate'), 'file/' . $file->fid . '/translate', array(

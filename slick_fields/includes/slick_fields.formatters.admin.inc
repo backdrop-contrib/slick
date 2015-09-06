@@ -94,7 +94,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#type'         => 'select',
     '#empty_option' => t('None (original image)'),
     '#options'      => $image_styles,
-    '#description'  => t('The main image style. This allows more variant per View mode with a single optionset.'),
+    '#description'  => t('The main image style. This allows more variants per view mode with a single optionset. If Media module installed, this also determines iframe sizes to have various iframe dimensions with just a single file entity view mode, relevant for a mix of image and multimedia to get a consistent display.'),
   );
 
   $elements['thumbnail_style'] = array(
@@ -113,12 +113,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
         'select[name*="[thumbnail_style]"]' => array('value' => ''),
       ),
     ),
-  );
-
-  $elements['markup'] = array(
-    '#type'        => 'checkbox',
-    '#title'       => t('Keep field markups'),
-    '#description' => t('Uncheck to clean up caption field markups, otherwise deep markups kept -- .field > .field-items > .field-item. Check only if you need renderable array at Views, e.g. for custom work with collages containing slick instances with your own advanced lazyLoad with recipe -- "Use field template" disabled and this option enabled, otherwise Views flattens/renders the array.'),
   );
 
   // Layout to all supported fields.
@@ -426,6 +420,12 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       ),
     );
   }
+
+  $elements['markup'] = array(
+    '#type'        => 'checkbox',
+    '#title'       => t('Keep field markups'),
+    '#description' => t('Uncheck to clean up caption field markups, otherwise deep markups kept -- .field > .field-items > .field-item. Check only if you need renderable array at Views, e.g. for custom work with collages containing slick instances with your own advanced lazyLoad with recipe -- "Use field template" disabled and this option enabled, otherwise Views flattens/renders the array.'),
+  );
 
   slick_get_elements($elements, $settings, $form_state);
   $elements['current_view_mode'] = array(

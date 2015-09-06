@@ -1,25 +1,48 @@
-Slick carousel module
+
+Slick Carousel
 ================================================================================
 
-Drupal module for Ken Wheeler's Slick carousel.
-See http://kenwheeler.github.io/slick.
+Slick is a powerful and performant slideshow/carousel solution leveraging Ken
+Wheeler's Slick carousel.
+See http://kenwheeler.github.io/slick
 
+Powerful: Slick is one of the sliders [1], as of 9/15, the only one [2], which
+supports a mix of responsive and lazy-loaded image, and 3rd party video and
+audio in a single slideshow/carousel with image to iframe or lightbox switchers.
+
+Performant: Slick is stored as plain HTML the first time it is requested, and
+then reused on subsequent requests. Carousels with cacheability and lazyload
+are lighter and faster than those without.
+
+As a CTools plugin, which is future-proof D8 CMI, Slick is easy to customize
+either via UI or code, and can be stored at database, or codebase.
+
+[1] https://groups.drupal.org/node/20384
+[2] https://www.drupal.org/node/418616
+
+
+FEATURES
+--------------------------------------------------------------------------------
 o Fully responsive. Scales with its container.
 o Uses CSS3 when available. Fully functional when not.
 o Swipe enabled. Or disabled, if you prefer.
 o Desktop mouse dragging.
 o Fully accessible with arrow key navigation.
-o Random, autoplay, pagers, arrows, text+/thumbnail pagers etc...
+o Built-in lazyLoad, and multiple breakpoint options.
+o Random, autoplay, pagers, arrows, dots/text/tabs/thumbnail pagers etc...
+o Supports pure text, responsive image, iframe, video, and audio carousels with
+  aspect ratio.
 o Exportable via CTools.
 o Works with Views, core and contrib fields: Image, Media or Field collection.
 o Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
   Grid, Split. Nothing loaded unless configured so.
 o Various slide layouts are built with pure CSS goodness.
-o Nested slicks, slide overlays or multiple slicks within a single Slick using
-  Field collection, or Views.
+o Nested slicks, image/video/audio slide carousels/overlay or multiple slicks
+  within a single Slick using Field collection, or Views.
 o Some useful hooks and drupal_alters for advanced works.
-o Modular integration with various contribs via optional sub-modules. You can
-  build slicks without sub-modules by simply passing markups to theme_slick().
+o Modular integration with various contribs via optional sub-modules to build
+  carousels with lightboxes or multimedia.
+o Cacheability + lazyload = light + fast.
 
 
 
@@ -108,7 +131,7 @@ OPTIONSETS
 --------------------------------------------------------------------------------
 To create your optionsets, go to:
 "admin/config/media/slick"
-These will be available at Manage display field format, and Views UI.
+These will be available at field formatter "Manage display", and Views UI.
 
 
 VIEWS AND FIELDS
@@ -129,7 +152,7 @@ NESTED SLICKS
 Nested slick is a parent Slick containing slides which contain individual child
 slick per slide. The child slicks are basically regular slide overlays like
 a single video over the large background image, only with nested slicks it can
-be many videos displayed as a slideshow.
+be many videos displayed as a slideshow as well.
 Use Field collection, or Views to build one.
 Supported multi-value fields for nested slicks: Image, Media, Atom reference.
 
@@ -209,7 +232,7 @@ normally < 0 (slick.load.min.js) is the one.
 See slick.slick.inc for more info on skins.
 
 
-HTML structure
+HTML STRUCTURE
 --------------------------------------------------------------------------------
 Note, non-BEM classes are added by JS.
 Before Slick 1.4:
@@ -287,9 +310,6 @@ TROUBLESHOOTING
   is dropped for "slick-current", but the workaround is still kept due to core
   known issue with asNavFor and nested slicks not having proper "slick-current".
   If you use "slide--current" before, be sure to update it to "slick-current".
-
-More info relevant to each option is available at their form display by hovering
-over them, and click a dark question mark.
 
 
 KNOWN ISSUES
@@ -379,6 +399,10 @@ With the help from the community:
 READ MORE
 --------------------------------------------------------------------------------
 See the project page on drupal.org: http://drupal.org/project/slick.
+
+More info relevant to each option is available at their form display by hovering
+over them, and click a dark question mark.
+
 See the Slick docs at:
 - http://kenwheeler.github.io/slick/
 - https://github.com/kenwheeler/slick/

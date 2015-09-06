@@ -8,7 +8,8 @@
  * Checks for the supported media sub-modules.
  */
 function slick_is_media($scheme) {
-  if (in_array($scheme, array('soundcloud', 'vimeo', 'youtube'))) {
+  $schemes = array('soundcloud', 'vimeo', 'youtube');
+  if (in_array($scheme, variable_get('slick_schemes', $schemes))) {
     return TRUE;
   }
   return FALSE;
@@ -28,12 +29,9 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
     $file->type = file_get_type($file);
   }
 
-  if (empty($media['type'])) {
-    $media['type'] = $file->type;
-  }
-  if (empty($settings['view_mode'])) {
-    $settings['view_mode'] = 'full';
-  }
+  $media['type'] = empty($media['type']) ? $file->type : $media['type'];
+  $settings['view_mode'] = empty($settings['view_mode']) ? 'full' : $settings['view_mode'];
+
   $renderables = file_view_file($file, $settings['view_mode']);
 
   // Only do the hard work if we do have a misconfigured file view mode.
@@ -53,7 +51,8 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
   $media['media_width'] = $renderables['#options']['width'];
 
   // Allows various iframe dimensions based on the given image_style, good
-  // to re-use a single file view mode for various file host entity view modes.
+  // to re-use a single file view mode for various file host entity view modes,
+  // and a mix of image and media.
   if (!empty($settings['image_style'])) {
     $dimensions = array(
       'width' => empty($media['width']) ? NULL : $media['width'],

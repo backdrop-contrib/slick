@@ -56,10 +56,10 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
     $breakpoints = picture_get_mapping_breakpoints($mappings, $fallback);
 
     $slide = array(
-      '#theme' => 'picture',
-      '#style_name' => $settings['picture_style'],
+      '#theme'       => 'picture',
+      '#style_name'  => $settings['picture_style'],
       '#breakpoints' => $breakpoints,
-      '#attached' => array(
+      '#attached'    => array(
         'library' => array(
           array('picture', 'picturefill'),
           array('picture', 'picture.ajax'),
@@ -77,16 +77,16 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
       $media['attributes']['data-thumb'] = image_style_url($settings['thumbnail_style'], $media['uri']);
     }
     $build = array(
-      '#theme' => 'slick_image_lazy',
-      '#item' => $media,
-      '#image_style' => $settings['image_style'],
-      '#lazy' => empty($settings['lazy']) || !empty($settings['unslick']) ? '' : $settings['lazy'],
-      '#options' => array(
-        'type' => $media['type'],
+      '#theme'        => 'slick_image_lazy',
+      '#item'         => $media,
+      '#image_style'  => $settings['image_style'],
+      '#lazy'         => empty($settings['lazy']) || !empty($settings['unslick']) ? '' : $settings['lazy'],
+      '#options'      => array(
+        'type'        => $media['type'],
         'has_pattern' => !empty($settings['has_pattern']),
-        'count' => $settings['count'],
-        'delta' => $key,
-        'url' => array(),
+        'count'       => $settings['count'],
+        'delta'       => $key,
+        'url'         => array(),
       ),
     );
 
@@ -124,7 +124,7 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
           }
         }
         elseif ($settings['media_switch'] == 'slickbox-switch') {
-          $classes  = array('slick__box', 'slick__litebox');
+          $classes = array('slick__box', 'slick__litebox');
           $json['entity_id'] = $settings['entity_id'];
           if (!empty($settings['entity_uri']) && !empty($settings['use_ajax'])) {
             $url = $settings['entity_uri'];
@@ -136,7 +136,7 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
         if ($media['type'] != 'image') {
           $json['player'] = TRUE;
           $json['height'] = empty($media['media_height']) ? $media['height'] : $media['media_height'];
-          $json['width'] = empty($media['media_width']) ? $media['width'] : $media['media_width'];
+          $json['width']  = empty($media['media_width']) ? $media['width'] : $media['media_width'];
           $build['#options']['url']['external'] = TRUE;
         }
 
@@ -161,9 +161,9 @@ function slick_get_thumbnail($thumbnail_style = '', $media = array()) {
   $thumbnail = array();
   if (!empty($thumbnail_style)) {
     $thumbnail = array(
-      '#theme' => 'image_style',
+      '#theme'      => 'image_style',
       '#style_name' => $thumbnail_style,
-      '#path' => $media['uri'],
+      '#path'       => $media['uri'],
     );
     foreach (array('alt', 'height', 'title', 'width') as $data) {
       $thumbnail["#$data"] = isset($media[$data]) ? $media[$data] : NULL;
@@ -217,8 +217,8 @@ function slick_get_inline_css(array &$settings, array &$items) {
     foreach ($items as $key => &$item) {
       $slick = $settings['count'] > 1 ? $id . " .slide--{$key}" : $id;
       if (isset($item['slide']['#uri']) && $uri = $item['slide']['#uri']) {
-        $image_url = !empty($settings['image_style']) ? image_style_url($settings['image_style'], $uri) : file_create_url($uri);
-        $css[] = "#{$slick} {background-image: url('{$image_url}')}";
+        $image_url     = !empty($settings['image_style']) ? image_style_url($settings['image_style'], $uri) : file_create_url($uri);
+        $css[]         = "#{$slick} {background-image: url('{$image_url}')}";
         $item['slide'] = array();
       }
     }
@@ -235,8 +235,8 @@ function slick_get_inline_css(array &$settings, array &$items) {
     drupal_alter('slick_inline_css_info', $css, $items, $settings);
 
     $css = array(
-      'data' => $css,
-      'type' => 'inline',
+      'data'  => $css,
+      'type'  => 'inline',
       'group' => CSS_THEME + 1,
       'slick' => 'fields',
     );

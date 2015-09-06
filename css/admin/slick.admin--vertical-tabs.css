@@ -47,6 +47,7 @@
   list-style: none;
   list-style-image: none;
   margin: 0;
+  text-align: right;
 }
 
 .form--slick div.vertical-tabs ul li.vertical-tab-button a {
@@ -56,7 +57,6 @@
   font-size: 0.875rem;
   line-height: 22px;
   padding: 10px 20px;
-  text-align: right;
   text-decoration: none;
 }
 
@@ -128,6 +128,7 @@
   padding-top: 0 !important;
 }
 
+/* Overrides vertical-tabs.css */
 .form--slick div.vertical-tabs-panes .fieldset-wrapper > div:first-child {
   padding-top: 20px;
 }
@@ -144,6 +145,16 @@
   height: 1px;
   width: 1px;
   word-wrap: normal;
+}
+
+@media all and (max-width: 900px) {
+  .form--slick div.vertical-tabs .vertical-tabs-list {
+    width: 30%;
+  }
+
+  .form--slick div.vertical-tabs-panes {
+    margin-left: 30%;
+  }
 }
 
 @media all and (max-width: 768px) {
@@ -179,5 +190,16 @@
     height: 1px;
     width: 1px;
     word-wrap: normal;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .form--slick div.vertical-tabs .vertical-tabs-list {
+    padding: 0;
+  }
+
+  .form--slick div.vertical-tabs ul li.vertical-tab-button {
+    display: block;
+    text-align: left;
   }
 }

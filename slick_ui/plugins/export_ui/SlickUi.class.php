@@ -112,8 +112,8 @@ class SlickUi extends ctools_export_ui {
       '#title' => t('Goodies'),
       '#default_value' => !empty($options['general']['goodies']) ? array_values((array) $options['general']['goodies']) : array(),
       '#options' => array(
-        'pattern' => t('Use pattern overlay'),
         'arrow-down' => t('Use arrow down'),
+        'pattern' => t('Use pattern overlay'),
         'random' => t('Randomize'),
       ),
       '#description' => t('Applies to main display, not thumbnail pager. <ol><li>Pattern overlay is background image with pattern placed over the main stage.</li><li>Arrow down to scroll down into a certain page section, make sure to provide target selector.</li><li>Randomize the slide display, useful to manipulate cached blocks.</li></ol>'),
@@ -279,7 +279,7 @@ class SlickUi extends ctools_export_ui {
               if (isset($responsive['field_suffix'])) {
                 $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = $responsive['field_suffix'];
               }
-              if (!isset($responsive['field_suffix']) && is_bool($responsive['default'])) {
+              if (!isset($responsive['field_suffix']) && $responsive['type'] == 'checkbox') {
                 $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = '';
                 $form['options']['responsives']['responsive'][$i][$key]['#title_display'] = 'before';
               }

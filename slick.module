@@ -288,7 +288,7 @@ function slick_dots() {
 }
 
 /**
- * Fetches the given optionset object.
+ * Fetches the given optionset object identified by $id.
  *
  * @param string $id
  *   The optionset ID.
@@ -312,7 +312,7 @@ function slick_optionset_load($id) {
  * Creates a new optionset object without saving it to the database.
  *
  * @param array $values
- *   The given values to build the optionset if provided.
+ *   The values to build the optionset if provided.
  *
  * @return object
  *   Returns the programmatically created optionset object.
@@ -362,6 +362,7 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
   $slick_id = &drupal_static('slick_id', 0);
   $fallback = isset($settings['attributes']['id']) ? $settings['attributes']['id'] : 'slick-' . ++$slick_id;
   $id       = $settings['attributes']['id'] = empty($id) ? $fallback : $id;
+  $display  = empty($settings['current_display']) ? 'main' : $settings['current_display'];
 
   $slick = array(
     '#theme'     => 'slick',
@@ -371,7 +372,7 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
     '#settings'  => $settings,
   );
 
-  if (!empty($attach)) {
+  if ($display != 'thumbnail') {
     $custom = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
     $slick['#attached'] = $custom ? $attach : slick_attach($attach, $settings);
   }

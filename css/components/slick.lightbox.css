@@ -66,3 +66,7 @@
   opacity: 1;
   visibility: visible;
 }
+
+.slick__litebox {
+  display: block;
+}
