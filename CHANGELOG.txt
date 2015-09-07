@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2015-9-07
+----------------------------
+- Made slick admin css optional. Execute the following anywhere once to disable
+  slick admin stylings:
+  variable_set('slick_admin_css', FALSE);
+
 Slick 7.x-2.0-dev, 2015-9-06
 ----------------------------
 - #2553385 by gausarts, heliogabal, esolitos: Slick CSS admin compatibility with

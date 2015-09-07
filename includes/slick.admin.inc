@@ -802,17 +802,19 @@ function slick_get_admin_assets(array &$elements, $settings = array()) {
       if (!isset($elements[$key]['#attributes']) && isset($elements[$key]['#description'])) {
         $elements[$key]['#attributes'] = array('class' => array('is-tooltip'));
       }
-      if ($elements[$key]['#type'] == 'checkbox' && $elements[$key]['#type'] != 'checkboxes') {
-        $elements[$key]['#field_suffix'] = '';
-        $elements[$key]['#title_display'] = 'before';
-      }
-      elseif ($elements[$key]['#type'] == 'checkboxes' && !empty($elements[$key]['#options'])) {
-        foreach ($elements[$key]['#options'] as $i => $option) {
-          $elements[$key][$i]['#field_suffix'] = '';
-          $elements[$key][$i]['#title_display'] = 'before';
+      if (variable_get('slick_admin_css', TRUE)) {
+        if ($elements[$key]['#type'] == 'checkbox' && $elements[$key]['#type'] != 'checkboxes') {
+          $elements[$key]['#field_suffix'] = '';
+          $elements[$key]['#title_display'] = 'before';
+        }
+        elseif ($elements[$key]['#type'] == 'checkboxes' && !empty($elements[$key]['#options'])) {
+          foreach ($elements[$key]['#options'] as $i => $option) {
+            $elements[$key][$i]['#field_suffix'] = '';
+            $elements[$key][$i]['#title_display'] = 'before';
+          }
         }
       }
-      elseif ($elements[$key]['#type'] == 'select' && $key != 'optionset') {
+      if ($elements[$key]['#type'] == 'select' && $key != 'optionset') {
         if (!isset($elements[$key]['#empty_option']) && !isset($elements[$key]['#required'])) {
           $elements[$key]['#empty_option'] = t('- None -');
         }
@@ -820,16 +822,18 @@ function slick_get_admin_assets(array &$elements, $settings = array()) {
     }
   }
 
-  if (module_exists('slick_ui')) {
-    $elements['#attached']['library'][] = array('slick_ui', 'slick.ui');
-  }
-  else {
-    $slick_path = drupal_get_path('module', 'slick');
-    $elements['#attached']['css'] = array(
-      $slick_path . '/css/admin/slick.admin--ui.css' => array('group' => CSS_THEME + 1),
-      $slick_path . '/css/admin/slick.admin--ui--field.css' => array('group' => CSS_THEME + 1),
-    );
-    $elements['#attached']['js'][]  = $slick_path . '/js/slick.admin.ui.min.js';
+  if (variable_get('slick_admin_css', TRUE)) {
+    if (module_exists('slick_ui')) {
+      $elements['#attached']['library'][] = array('slick_ui', 'slick.ui');
+    }
+    else {
+      $slick_path = drupal_get_path('module', 'slick');
+      $elements['#attached']['css'] = array(
+        $slick_path . '/css/admin/slick.admin--ui.css' => array('group' => CSS_THEME + 1),
+        $slick_path . '/css/admin/slick.admin--ui--field.css' => array('group' => CSS_THEME + 1),
+      );
+      $elements['#attached']['js'][]  = $slick_path . '/js/slick.admin.ui.min.js';
+    }
   }
 
   drupal_alter('slick_admin_assets_info', $elements, $settings);

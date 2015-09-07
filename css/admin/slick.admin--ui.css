@@ -178,8 +178,14 @@ body.page-admin .form--slick *,
 }
 
 .form--slick fieldset .fieldset-title {
+  background: none;
   color: #111;
   display: block;
+  font-size: 18px;
+  font-size: 1.125rem;
+  height: auto;
+  padding: 0;
+  text-transform: uppercase;
 }
 
 .form--slick fieldset .fieldset-title:hover {
@@ -236,6 +242,11 @@ body.page-admin .form--slick *,
   padding: 0;
 }
 
+.form--slick .fieldset--responsive--ajax .fieldset--responsive .fieldset--settings .fieldset-wrapper {
+  margin-top: 0;
+  padding: 0;
+}
+
 html.js .form--slick .collapsible,
 html.js .form--slick .collapsed {
   border: 0;
@@ -252,10 +263,14 @@ html.js .form--slick .collapsed legend {
 html.js .form--slick .collapsible .fieldset-legend,
 html.js .form--slick .collapsed .fieldset-legend {
   background: none;
-  margin: 10px;
+  margin: 0;
   padding: 0;
   position: absolute;
   width: 100%;
+}
+
+html.js .form--slick .collapsible legend .icon {
+  display: none;
 }
 
 html.js .form--slick .collapsible .fieldset-legend::after {
@@ -668,7 +683,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   border-left: 0;
 }
 
-.form--slick .vertical-tabs .fieldset-wrapper {
+.form--slick .vertical-tabs .has-tooltip .fieldset-wrapper {
   margin-right: -4px;
   padding: 0;
 }

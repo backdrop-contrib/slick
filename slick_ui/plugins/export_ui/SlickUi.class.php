@@ -23,10 +23,12 @@ class SlickUi extends ctools_export_ui {
     $options = $optionset->options;
     $slick_options = slick_get_options();
 
-    $form['#attached']['library'][] = array('slick_ui', 'slick.ui');
-    $form['#attached']['css'][] = $module_path . '/css/admin/slick.admin--vertical-tabs.css';
+    if (variable_get('slick_admin_css', TRUE)) {
+      $form['#attached']['library'][] = array('slick_ui', 'slick.ui');
+      $form['#attached']['css'][] = $module_path . '/css/admin/slick.admin--vertical-tabs.css';
+    }
 
-    $form['#attributes']['class'][] = 'no-js';
+    // $form['#attributes']['class'][] = 'no-js';
     $form['#attributes']['class'][] = 'form--slick';
     $form['#attributes']['class'][] = 'form--compact';
     $form['#attributes']['class'][] = 'form--optionset';
@@ -181,9 +183,11 @@ class SlickUi extends ctools_export_ui {
         $form['options']['settings'][$name]['#maxlength'] = 255;
       }
 
-      if (!isset($element['field_suffix']) && is_bool($element['default'])) {
-        $form['options']['settings'][$name]['#field_suffix'] = '';
-        $form['options']['settings'][$name]['#title_display'] = 'before';
+      if (variable_get('slick_admin_css', TRUE)) {
+        if (!isset($element['field_suffix']) && is_bool($element['default'])) {
+          $form['options']['settings'][$name]['#field_suffix'] = '';
+          $form['options']['settings'][$name]['#title_display'] = 'before';
+        }
       }
 
       if (is_int($element['default'])) {
@@ -279,9 +283,12 @@ class SlickUi extends ctools_export_ui {
               if (isset($responsive['field_suffix'])) {
                 $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = $responsive['field_suffix'];
               }
-              if (!isset($responsive['field_suffix']) && $responsive['type'] == 'checkbox') {
-                $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = '';
-                $form['options']['responsives']['responsive'][$i][$key]['#title_display'] = 'before';
+
+              if (variable_get('slick_admin_css', TRUE)) {
+                if (!isset($responsive['field_suffix']) && $responsive['type'] == 'checkbox') {
+                  $form['options']['responsives']['responsive'][$i][$key]['#field_suffix'] = '';
+                  $form['options']['responsives']['responsive'][$i][$key]['#title_display'] = 'before';
+                }
               }
               break;
 
@@ -363,9 +370,12 @@ class SlickUi extends ctools_export_ui {
                 if (isset($item['field_suffix'])) {
                   $form['options']['responsives']['responsive'][$i][$key][$k]['#field_suffix'] = $item['field_suffix'];
                 }
-                if (!isset($item['field_suffix']) && is_bool($item['default'])) {
-                  $form['options']['responsives']['responsive'][$i][$key][$k]['#field_suffix'] = '';
-                  $form['options']['responsives']['responsive'][$i][$key][$k]['#title_display'] = 'before';
+
+                if (variable_get('slick_admin_css', TRUE)) {
+                  if (!isset($item['field_suffix']) && is_bool($item['default'])) {
+                    $form['options']['responsives']['responsive'][$i][$key][$k]['#field_suffix'] = '';
+                    $form['options']['responsives']['responsive'][$i][$key][$k]['#title_display'] = 'before';
+                  }
                 }
               }
               break;
