@@ -149,9 +149,11 @@ class SlickUi extends ctools_export_ui {
     );
 
     // Add empty suffix to style checkboxes like iOS.
-    foreach ($form['options']['general']['goodies']['#options'] as $key => $value) {
-      $form['options']['general']['goodies'][$key]['#field_suffix'] = '';
-      $form['options']['general']['goodies'][$key]['#title_display'] = 'before';
+    if (variable_get('slick_admin_css', TRUE)) {
+      foreach ($form['options']['general']['goodies']['#options'] as $key => $value) {
+        $form['options']['general']['goodies'][$key]['#field_suffix'] = '';
+        $form['options']['general']['goodies'][$key]['#title_display'] = 'before';
+      }
     }
 
     // Main options.

@@ -8,7 +8,8 @@ See http://kenwheeler.github.io/slick
 
 Powerful: Slick is one of the sliders [1], as of 9/15, the only one [2], which
 supports a mix of responsive and lazy-loaded image, and 3rd party video and
-audio in a single slideshow/carousel with image to iframe or lightbox switchers.
+audio in a single slideshow/carousel with image to iframe or multimedia lightbox
+switchers. See below for the supported media.
 
 Performant: Slick is stored as plain HTML the first time it is requested, and
 then reused on subsequent requests. Carousels with cacheability and lazyload
@@ -41,7 +42,7 @@ o Nested slicks, image/video/audio slide carousels/overlay or multiple slicks
   within a single Slick using Field collection, or Views.
 o Some useful hooks and drupal_alters for advanced works.
 o Modular integration with various contribs via optional sub-modules to build
-  carousels with lightboxes or multimedia.
+  carousels with multimedia lightboxes or inline multimedia.
 o Cacheability + lazyload = light + fast.
 
 
@@ -71,8 +72,6 @@ The Slick module has several sub-modules:
   The last two are separate projects as of 2015-5-31, > beta1:
   http://dgo.to/slick_extras
 
-See README.txt on each sub-module for their relevant information.
-
 
 REQUIREMENTS
 --------------------------------------------------------------------------------
@@ -99,11 +98,17 @@ REQUIREMENTS
   sites/../libraries/easing/jquery.easing.min.js
   This is a fallback for non-supporting browsers.
 
+- A basic knowledge of Drupal site building is required.
+  Please refer to the provided README on each sub-module, and each form item
+  description for more info.
+  Also refer to the supported modules guidelines to be useful for Slick.
+
 
 
 OPTIONAL INTEGRATION
 --------------------------------------------------------------------------------
 Slick supports enhancements and more complex layouts.
+
 - Colorbox, to have grids/slides that open up image/video/audio in overlay.
 - Photobox, idem ditto.
 - Picture, to get truly responsive image.
@@ -259,12 +264,30 @@ HOW CAN YOU HELP?
 --------------------------------------------------------------------------------
 Please consider helping in the issue queue, provide improvement, or helping with
 documentation.
-If you have bug reports, please be sure to provide steps to reproduce it, or
-make sure that the bug is caused by the module. For the Slick library bug,
-please report it to the actual library issue queues:
-https://github.com/kenwheeler/slick
+
+
+BUG REPORTS OR SUPPORT REQUESTS
+--------------------------------------------------------------------------------
+A basic knowledge of Drupal site building is required, and Slick can't help you.
+When you don't know how to build things, you may be tempted to think it is bug.
+
+Please refer to the provided README, including descriptions on each form item,
+also the relevant guidelines from the supported modules.
+
+If you do have bug reports, we love bugs, but please be sure to:
+ o provide steps to reproduce it,
+ o more detailed info such as screenshots of the output and Slick form, or words
+   to identify it any better,
+ o make sure that the bug is caused by the module.
+
+For the Slick library bug, please report it to the actual library:
+  https://github.com/kenwheeler/slick
+
 You can create a fiddle to isolate the bug if reproduceable outside the module:
-http://jsfiddle.net/
+  http://jsfiddle.net/
+
+For the support requests, detailed info on the problem is helpful.
+Shortly, you should kindly help me with detailed info to help you. Thanks.
 
 
 TROUBLESHOOTING

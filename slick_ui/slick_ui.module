@@ -5,6 +5,23 @@
  */
 
 /**
+ * Implements hook_menu().
+ */
+function slick_ui_menu() {
+  $items['admin/config/media/slick/ui'] = array(
+    'title' => 'UI',
+    'description' => 'Configure the Slick UI.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('slick_ui_form_settings'),
+    'access arguments' => array('administer slick'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_library().
  */
 function slick_ui_library() {
@@ -45,6 +62,20 @@ function slick_ui_permission() {
       'title' => t('Administer the Slick carousel module'),
     ),
   );
+}
+
+/**
+ * Form for Slick UI module settings.
+ */
+function slick_ui_form_settings() {
+  $form['slick_admin_css'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Enable Slick admin CSS'),
+    '#description'   => t('Uncheck if trouble with slick admin CSS compatibility for your admin theme.'),
+    '#default_value' => variable_get('slick_admin_css', TRUE),
+  );
+
+  return system_settings_form($form);
 }
 
 /**
