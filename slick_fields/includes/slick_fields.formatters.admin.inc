@@ -79,7 +79,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   }
 
   if ($instance['entity_type'] == 'ctools') {
-    $is_views_ui = '<h3 class="form--slick__title">' . t('Be sure to check "Use field template" under "Style settings" below, if using multiple-value field for the slides. Views preview works with jQuery > 1.7.') . '</h3>';
+    $is_views_ui = '<h3 class="form--slick__title">' . t('Check "Use field template" under "Style settings" below, if using multiple-value field for the slides. <small>Views preview works with jQuery > 1.7.</small>') . '</h3>';
   }
 
   $elements['opening'] = array(
@@ -246,12 +246,12 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       '#type'        => 'select',
       '#title'       => t('View mode'),
       '#options'     => $view_mode_options,
-      '#description' => t('Be sure the View mode is enabled, and the enabled fields here are not hidden at this particular view mode. Adjust the video/audio dimensions accordingly at their display page if not using aspect ratio. Create more view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>.', array('@url' => '//drupal.org/project/entity_view_mode')),
-      '#access' => count($view_mode_options) > 1,
+      '#description' => t('Required to grab the fields. Be sure the "View mode" is enabled, and the enabled fields here are not hidden there. Create view modes using hook_entity_info_alter, or <a href="@url" target="_blank">entity_view_mode</a>.', array('@url' => '//drupal.org/project/entity_view_mode')),
+      '#access'      => count($view_mode_options) > 1,
     );
 
     if ($field_entity_type == 'file') {
-      $elements['view_mode']['#description'] .= t('For video, make sure to choose relevant video display, not as image.');
+      $elements['view_mode']['#description'] .= '<br />' . t('For video, make sure to choose relevant video display, not as image.');
     }
   }
 

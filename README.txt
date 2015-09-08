@@ -274,7 +274,7 @@ When you don't know how to build things, you may be tempted to think it is bug.
 Please refer to the provided README, including descriptions on each form item,
 also the relevant guidelines from the supported modules.
 
-If you do have bug reports, we love bugs, but please be sure to:
+If you do have bug reports, we love bugs, please be sure to:
  o provide steps to reproduce it,
  o more detailed info such as screenshots of the output and Slick form, or words
    to identify it any better,

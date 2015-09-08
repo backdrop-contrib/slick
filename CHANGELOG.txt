@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2015-9-08
 ----------------------------
+- Added hook_uninstall() since we now have a variable to delete.
 - Added a configurable option using slick_ui.module to toggle slick admin css
   which can be accessed at: admin/config/media/slick/ui
 - #2553385 by gausarts, xtfer: Slick CSS admin compatibility with contrib admin

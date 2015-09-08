@@ -777,13 +777,13 @@ function slick_get_grid_elements(array &$elements, $settings, &$form_state) {
     '#type'        => 'select',
     '#title'       => t('Visible slides'),
     '#options'     => drupal_map_assoc(range(1, 32)),
-    '#description' => t('How many items per slide displayed at a time related to this grid. If Unslick checked, all will be displayed.'),
+    '#description' => t('How many items per slide displayed at a time related to this grid.'),
   );
 
   $elements['preserve_keys'] = array(
     '#title'       => t('Preserve keys'),
     '#type'        => 'checkbox',
-    '#description' => t('If checked, keys will be preserved. Default is FALSE which will reindex the grid chunk numerically'),
+    '#description' => t('If checked, keys will be preserved. Default is FALSE which will reindex the grid chunk numerically.'),
   );
 
   drupal_alter('slick_grid_elements_info', $elements, $settings, $form_state);

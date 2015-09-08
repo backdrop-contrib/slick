@@ -45,6 +45,7 @@ body.page-admin .form--slick *,
   -o-box-sizing: border-box;
   -ms-box-sizing: border-box;
   -moz-box-sizing: border-box; /* Old FF */
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
@@ -53,7 +54,6 @@ body.page-admin .form--slick *,
  * Form
  */
 .form--slick {
-  font-family: Arial, sans-serif;
   font-size: 16px;
   font-size: 1rem;
   padding: 0;
@@ -152,6 +152,25 @@ body.page-admin .form--slick *,
   border-color: #808080;
 }
 
+.form--slick fieldset {
+  padding: 30px 15px;
+}
+
+.form--slick fieldset fieldset {
+  background: none;
+  padding: 60px 0 1em;
+}
+
+.form--slick .vertical-tabs fieldset {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.form--slick .fieldset--responsive--ajax,
+.form--slick .fieldset--responsive--ajax > .fieldset-wrapper {
+  padding: 0;
+}
+
 .form--slick fieldset .fieldset-description {
   padding: 5px 15px;
 }
@@ -197,25 +216,6 @@ body.page-admin .form--slick *,
   outline: 0;
 }
 
-.form--slick fieldset {
-  padding: 30px 15px;
-}
-
-.form--slick fieldset fieldset {
-  background: none;
-  padding: 60px 0 1em;
-}
-
-.form--slick .vertical-tabs fieldset {
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.form--slick .fieldset--responsive--ajax,
-.form--slick .fieldset--responsive--ajax > .fieldset-wrapper {
-  padding: 0;
-}
-
 .form--slick .fieldset--responsive--ajax > legend,
 .form--slick .fieldset--responsive--ajax .fieldset--settings > legend {
   position: absolute !important;
@@ -254,6 +254,8 @@ html.js .form--slick .collapsed {
 
 html.js .form--slick .collapsible legend,
 html.js .form--slick .collapsed legend {
+  background: none;
+  border: 0;
   display: block;
   padding: 0;
   position: relative;
@@ -543,15 +545,17 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
 }
 
 .form--slick .form-item .form-select {
-  line-height: 22px; /* Fix for Chrome linux */
+  line-height: 18px; /* Fix for Chrome linux */
   min-height: 28px;
   min-width: 120px;
   padding: 4px 2px 2px; /* Fix for Chrome linux */
   vertical-align: middle;
   -moz-appearance: none;
   -webkit-appearance: none;
+  appearance: none;
   text-indent: .01px;
   text-overflow: "";
+  white-space: nowrap; /* Fix for Bartik */
 }
 
 .form--slick .form-type-textfield .field-prefix {
@@ -654,10 +658,10 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   display: block;
   font-size: 22px;
   font-size: 1.375rem;
-  padding-right: 0 !important;
   line-height: 42px;
   margin-top: -1px;
   min-height: 42px;
+  padding-right: 0 !important;
   padding-top: 20px;
   width: 100%;
 }
@@ -689,7 +693,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
 }
 
 .form--slick .vertical-tabs .fieldset--responsive > .fieldset-wrapper {
-  padding: 0 15px;
+  padding: 0;
 }
 
 .form--slick .vertical-tabs .fieldset--responsive .form-item input,
@@ -723,7 +727,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   height: 22px;
   display: inline-block;
   float: none;
-  margin: 0; /* Fix for ember */
+  margin: 0; /* Fix for Ember */
   opacity: 0;
   width: 22px;
   vertical-align: middle;
@@ -862,9 +866,10 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   padding: 10px 0;
 }
 
+.ui-dialog-content .form--views > .fieldset-wrapper > .description,
 .form--slick .form-item.form-type-checkboxes > label,
 .form--slick__title {
-  background: #e7e7e7;
+  background: #fafafa;
   clear: both;
   display: block;
   float: none;
@@ -880,6 +885,11 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   width: 100%;
 }
 
+.form--slick .form-item.form-type-checkboxes > label,
+.form--slick__title {
+  background: #e7e7e7;
+}
+
 .form--slick .fieldset--no-checkboxes-label .form-item.form-type-checkboxes > label {
   position: absolute !important;
   clip: rect(1px, 1px, 1px, 1px);
@@ -889,8 +899,11 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   word-wrap: normal;
 }
 
+.ui-dialog-content .form--views > .fieldset-wrapper > .description small,
 .form--slick__title small {
   display: block;
+  font-size: 14px;
+  margin-top: -1px;
   text-transform: none;
 }
 
@@ -986,18 +999,27 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
 }
 
 .ui-dialog-content .form--slick {
+  padding-top: 0;
+}
+
+.ui-dialog-content .form--views {
   padding-top: 40px;
+}
+
+.ui-dialog-content .form--views > .fieldset-wrapper {
+  padding: 0 !important; /* Fix for Rubik */
 }
 
 .ui-dialog-content .form--slick > legend {
   background: none;
+  border: 0;
   margin: 0;
   padding: 0;
   position: absolute;
   top: 0;
 }
 
-.ui-dialog-content .form--slick > legend  .fieldset-legend {
+.ui-dialog-content .form--slick > legend .fieldset-legend {
   margin: 0;
   padding: 10px 15px;
   position: absolute;
@@ -1006,6 +1028,8 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
 }
 
 .form--slick .form-item.form-type-checkboxes {
+  border-left: 0;
+  border-right: 0;
   clear: both;
   float: none;
   padding: 0;
@@ -1021,6 +1045,10 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
 
 #edit-label-machine-name-suffix {
   padding-left: 5px;
+}
+
+.page-admin-config-media-slick #main {
+  width: 100%;
 }
 
 @media screen and (max-width: 1280px) {

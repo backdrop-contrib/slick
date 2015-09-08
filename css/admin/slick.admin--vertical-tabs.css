@@ -30,13 +30,20 @@
   border: 0;
 }
 
+.form--slick div.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
+  padding: 0;
+}
+
+.form--slick div.vertical-tabs .fieldset--responsive--ajax {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 .form--slick div.vertical-tabs .vertical-tabs-list {
   border: 0;
-  float: left;
-  /* LTR */
+  float: left; /* LTR */
   line-height: 1;
-  margin: 0 -100% -1px 0;
-  /* LTR */
+  margin: 0 -100% -1px 0; /* LTR */
   padding: 20px 0 0;
   position: relative;
   width: 16%;
@@ -44,6 +51,7 @@
 }
 
 .form--slick div.vertical-tabs ul li.vertical-tab-button {
+  border: 0;
   list-style: none;
   list-style-image: none;
   margin: 0;
@@ -51,6 +59,7 @@
 }
 
 .form--slick div.vertical-tabs ul li.vertical-tab-button a {
+  border: 0;
   color: #808080;
   display: block;
   font-size: 14px;

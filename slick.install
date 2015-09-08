@@ -39,12 +39,17 @@ function slick_requirements($phase) {
 }
 
 /**
- * Implements hook_schema().
+ * Implements hook_uninstall().
  */
-function slick_schema() {
-  $schema = array();
+function slick_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'slick_%'");
+}
 
-  $schema['slick_optionset'] = array(
+/**
+ * Returns schema for slick.
+ */
+function _slick_schema() {
+  return array(
     'description' => 'Store option sets for slick instances.',
     'export' => array(
       'key' => 'name',
@@ -95,7 +100,14 @@ function slick_schema() {
     ),
     'primary key' => array('name'),
   );
+}
 
+/**
+ * Implements hook_schema().
+ */
+function slick_schema() {
+  $schema = array();
+  $schema['slick_optionset'] = _slick_schema();
   return $schema;
 }
 
@@ -104,58 +116,7 @@ function slick_schema() {
  */
 function slick_update_7005() {
   if (!db_table_exists('slick_optionset')) {
-    $schema['slick_optionset'] = array(
-      'description' => 'Store option sets for slick instances.',
-      'export' => array(
-        'key' => 'name',
-        'key name' => 'Optionset',
-        'identifier' => 'preset',
-        'admin_title' => 'label',
-        'default hook' => 'slick_default_presets',
-        'bulk export' => TRUE,
-        'api' => array(
-          'owner' => 'slick',
-          'api' => 'slick_default_preset',
-          'minimum_version' => 1,
-          'current_version' => 1,
-        ),
-      ),
-      'fields' => array(
-        'name' => array(
-          'description' => 'The machine-readable option set name.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-        ),
-        'label' => array(
-          'description' => 'The human-readable label for this option set.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-        ),
-        'breakpoints' => array(
-          'description' => 'The number of defined breakpoints.',
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-        ),
-        'skin' => array(
-          'description' => 'The slick skin.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'options' => array(
-          'description' => 'The options array.',
-          'type' => 'blob',
-          'size' => 'big',
-          'serialize' => TRUE,
-        ),
-      ),
-      'primary key' => array('name'),
-    );
-
+    $schema['slick_optionset'] = _slick_schema();
     db_create_table('slick_optionset', $schema['slick_optionset']);
   }
 }
