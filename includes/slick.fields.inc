@@ -42,8 +42,8 @@ function slick_get_fields_default_settings() {
 /**
  * Gets the image based on the Picture mapping, or Slick image lazy.
  */
-function slick_get_image($settings = array(), $media = array(), $key = 0) {
-  $build = array();
+function slick_get_image($settings = array(), $media = array(), $key = 0, $media_settings = array()) {
+  $image = array();
 
   // Must be similar for the colorbox rel gallery for image/video/audio.
   $id = isset($settings['lightbox_id']) ? $settings['lightbox_id'] : $settings['attributes']['id'];
@@ -70,13 +70,13 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
     foreach (array('uri', 'width', 'height', 'alt', 'title') as $data) {
       $slide["#$data"] = isset($media[$data]) ? $media[$data] : NULL;
     }
-    $build = drupal_render($slide);
+    $image = drupal_render($slide);
   }
   else {
     if (!empty($settings['thumbnail_style'])) {
       $media['attributes']['data-thumb'] = image_style_url($settings['thumbnail_style'], $media['uri']);
     }
-    $build = array(
+    $image = array(
       '#theme'        => 'slick_image_lazy',
       '#item'         => $media,
       '#image_style'  => $settings['image_style'],
@@ -120,7 +120,7 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
         }
         elseif ($settings['media_switch'] == 'photobox-switch') {
           if (!empty($media['url'])) {
-            $build['#options']['url']['attributes']['rel'] = 'video';
+            $image['#options']['url']['attributes']['rel'] = 'video';
           }
         }
         elseif ($settings['media_switch'] == 'slickbox-switch') {
@@ -137,21 +137,29 @@ function slick_get_image($settings = array(), $media = array(), $key = 0) {
           $json['player'] = TRUE;
           $json['height'] = empty($media['media_height']) ? $media['height'] : $media['media_height'];
           $json['width']  = empty($media['media_width']) ? $media['width'] : $media['media_width'];
-          $build['#options']['url']['external'] = TRUE;
+          $image['#options']['url']['external'] = TRUE;
         }
 
-        $build['#url'] = $url;
-        $build['#options']['url']['attributes']['class'] = $classes;
-        $build['#options']['url']['attributes']['data-media'] = drupal_json_encode($json);
-        $build['#options']['lightbox'] = $lightbox;
+        $image['#url'] = $url;
+        $image['#options']['url']['attributes']['class'] = $classes;
+        $image['#options']['url']['attributes']['data-media'] = drupal_json_encode($json);
+        $image['#options']['lightbox'] = $lightbox;
       }
       elseif (strpos($settings['media_switch'], 'content') !== FALSE && !empty($settings['entity_uri'])) {
-        $build['#url'] = $settings['entity_uri'];
+        $image['#url'] = $settings['entity_uri'];
       }
     }
   }
-  drupal_alter('slick_image_info', $build, $settings, $media, $key);
-  return $build;
+
+  drupal_alter('slick_image_info', $image, $settings, $media, $key);
+
+  // Build the slide with picture, lightbox or multimedia supports.
+  return array(
+    '#theme'    => 'slick_media',
+    '#item'     => $image,
+    '#settings' => $media_settings,
+    '#uri'      => $media['uri'],
+  );
 }
 
 /**

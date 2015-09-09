@@ -7,5 +7,5 @@
  * the process is reversed: running /update.php prior to clearing cache.
  * The safe recommended procedure is: clearing cache/registry -> /update.php.
  *
- * @todo delete after beta2, or so before full release.
+ * @todo delete after full release or so, till beta1 installs decrease.
  */

@@ -15,8 +15,6 @@ function slick_format_image(&$settings, $config, $thumb_nav = FALSE) {
     $media = $slide = array();
     slick_extract_image_data($settings, $media, $slide, $item);
 
-    // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-    $thumb = empty($settings['thumbnail_style']) ? array() : slick_get_thumbnail($settings['thumbnail_style'], $media);
     if (!$thumb_nav) {
       if (!empty($settings['slide_caption'])) {
         foreach ($settings['slide_caption'] as $caption) {
@@ -28,15 +26,11 @@ function slick_format_image(&$settings, $config, $thumb_nav = FALSE) {
       }
 
       // Image with picture, lazyLoad, and lightbox supports.
-      $slide['slide'] = array(
-        '#theme'    => 'slick_media',
-        '#item'     => slick_get_image($settings, $media, $key),
-        '#settings' => $slide['settings'],
-        '#uri'      => $media['uri'],
-      );
+      $slide['slide'] = slick_get_image($settings, $media, $key, $slide['settings']);
     }
     else {
-      $slide['slide'] = $thumb;
+      // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
+      $slide['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $media);
       if (!empty($settings['thumbnail_caption'])) {
         $data = str_replace("_field", "", $settings['thumbnail_caption']);
         if (!empty($media[$data])) {

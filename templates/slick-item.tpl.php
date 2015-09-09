@@ -13,10 +13,6 @@
  *   - Overlay: may be audio/video Media, or image.
  *   - Data: any possible field for more complex data if crazy enough.
  *
- * Notes:
- * .slide__pattern is also to fix draggable issue in Firefox, apart from
- * displaying overlay pattern. It is conditionally provided based on settings.
- *
  * @see template_preprocess_slick_item()
  */
 ?>

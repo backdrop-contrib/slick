@@ -104,6 +104,16 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = $general['template_class'];
   }
 
+  // Some settings are only reasonable for the main display, not thumbnail.
+  if ($settings['current_display'] == 'main') {
+    $settings['has_pattern'] = $settings['has_pattern'] ? TRUE : !empty($goodies['pattern']);
+
+    if (!empty($settings['media_switch']) && strpos($settings['media_switch'], 'box') !== FALSE) {
+      $swicther = str_replace('-switch', '', $settings['media_switch']);
+      $attributes['class'][] = 'slick--' . $swicther;
+    }
+  }
+
   // Prevents broken slick when only one item given, or an enforced unslick.
   if (!empty($settings['unslick'])) {
     $attributes['class'][] = 'unslick';
@@ -186,24 +196,15 @@ function template_preprocess_slick(&$variables) {
         $attributes['class'][] = 'slick--ondemand';
       }
     }
-  }
 
-  // Some settings are only reasonable for the main display, not thumbnail.
-  if ($settings['current_display'] == 'main') {
-    $settings['has_pattern'] = $settings['has_pattern'] ? TRUE : !empty($goodies['pattern']);
-
-    if (!empty($settings['media_switch']) && strpos($settings['media_switch'], 'box') !== FALSE) {
-      $swicther = str_replace('-switch', '', $settings['media_switch']);
-      $attributes['class'][] = 'slick--' . $swicther;
+    // Add the configuration as JSON object into the slick container.
+    $js_data = _slick_remove_default_optionset_options($optionset, $js, $settings);
+    if (!isset($content_attributes['data-slick']) && $js_data) {
+      $content_attributes['data-slick'] = drupal_json_encode($js_data);
     }
   }
 
-  // Add the configuration as JSON object into the slick container.
   $variables['settings'] = $settings;
-  $js_data = _slick_remove_default_optionset_options($optionset, $js, $variables['settings']);
-  if (empty($settings['unslick']) && !isset($content_attributes['data-slick']) && $js_data) {
-    $content_attributes['data-slick'] = drupal_json_encode($js_data);
-  }
 
   // Process individual item.
   $variables['items'] = array();

@@ -41,8 +41,6 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
       $media['uri'] = $media_image_uri;
     }
 
-    // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-    $thumb = empty($settings['thumbnail_style']) ? array() : slick_get_thumbnail($settings['thumbnail_style'], $media);
     if (!$thumb_nav) {
       slick_get_caption($settings, 'file', $file, $view_mode, $slide);
 
@@ -79,12 +77,7 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
       }
 
       // Image with picture, lazyLoad, and lightbox supports.
-      $slide['slide'] = array(
-        '#theme'    => 'slick_media',
-        '#item'     => slick_get_image($settings, $media, $key),
-        '#settings' => $slide['settings'],
-        '#uri'      => $media['uri'],
-      );
+      $slide['slide'] = slick_get_image($settings, $media, $key, $slide['settings']);
 
       // Plain text video URL for plain iframes.
       if (!empty($settings['slide_overlay']) && $overlay = field_get_items('file', $file, $settings['slide_overlay'])) {
@@ -95,7 +88,8 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
       }
     }
     else {
-      $slide['slide'] = $thumb;
+      // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
+      $slide['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $media);
       if (!empty($settings['thumbnail_caption']) && $caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
         $slide['caption']['data']['#markup'] = filter_xss($caption[0]['value']);
       }

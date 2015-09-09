@@ -18,8 +18,14 @@ are lighter and faster than those without.
 As a CTools plugin, which is future-proof D8 CMI, Slick is easy to customize
 either via UI or code, and can be stored at database, or codebase.
 
+Slick has a gazillion of options, please start with the very basic working
+samples from slick_example [3] only if trouble to build slicks. Be sure to read
+its README.txt. Spending 5 minutes or so will save you hours in building more
+complex slideshows.
+
 [1] https://groups.drupal.org/node/20384
 [2] https://www.drupal.org/node/418616
+[3] http://dgo.to/slick_extras
 
 
 FEATURES
@@ -32,7 +38,7 @@ o Fully accessible with arrow key navigation.
 o Built-in lazyLoad, and multiple breakpoint options.
 o Random, autoplay, pagers, arrows, dots/text/tabs/thumbnail pagers etc...
 o Supports pure text, responsive image, iframe, video, and audio carousels with
-  aspect ratio.
+  aspect ratio. No extra jQuery plugin FitVids is required. Just CSS.
 o Exportable via CTools.
 o Works with Views, core and contrib fields: Image, Media or Field collection.
 o Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
@@ -164,6 +170,11 @@ Supported multi-value fields for nested slicks: Image, Media, Atom reference.
 
 SKINS
 --------------------------------------------------------------------------------
+The main purpose of skins are to demonstrate that often times some CSS lines are
+enough to build fairly variant layouts. No JS needed. Unless, of course, when
+you want more sophisticated slider like spiral 3D carousel which is beyond what
+CSS can do. But more often CSS will do.
+
 Skins allow swappable layouts like next/prev links, split image or caption, etc.
 Be sure to enable slick_fields.module and provide a dedicated slide layout
 per field to get more control over caption placements. However a combination of

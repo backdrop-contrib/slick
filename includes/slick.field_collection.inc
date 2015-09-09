@@ -31,26 +31,20 @@ function slick_format_field_collection(&$settings, $config, $thumb_nav = FALSE) 
     if (!empty($settings['slide_image']) && $slide_bg = $wrapper->$settings['slide_image']->value()) {
       $file  = isset($slide_bg['fid']) ? $slide_bg : (isset($slide_bg[0]) ? $slide_bg[0] : NULL);
       $media = array(
-        'scheme' => file_uri_scheme($file['uri']),
+        'scheme'    => file_uri_scheme($file['uri']),
         'media_uri' => $file['uri'],
       );
 
       slick_extract_image_data($settings, $media, $slide, $file);
       $slide['settings']['type'] = isset($file['type']) ? $file['type'] : '';
 
-      // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-      $thumb = empty($settings['thumbnail_style']) ? array() : slick_get_thumbnail($settings['thumbnail_style'], $media);
       if (!$thumb_nav) {
         // Image with picture, lazyLoad, and lightbox supports.
-        $slide['slide'] = array(
-          '#theme'    => 'slick_media',
-          '#item'     => slick_get_image($settings, $media, $key),
-          '#settings' => $slide['settings'],
-          '#uri'      => $media['uri'],
-        );
+        $slide['slide'] = slick_get_image($settings, $media, $key, $slide['settings']);
       }
       else {
-        $slide['slide'] = $thumb;
+        // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
+        $slide['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $media);
         if (!empty($settings['thumbnail_caption']) && $caption = $wrapper->$settings['thumbnail_caption']->value()) {
           $slide['caption']['data']['#markup'] = isset($caption['safe_value']) ? $caption['safe_value'] : filter_xss($caption);
         }
@@ -268,13 +262,7 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
       }
 
       // Image with picture, lazyLoad, and lightbox supports.
-      $overlay_item[$idx] = slick_get_image($main_settings, $media, $idx);
-      $element[$idx]['slide'] = array(
-        '#theme'    => 'slick_media',
-        '#item'     => $overlay_item[$idx],
-        '#settings' => $media,
-        '#uri'      => $media['uri'],
-      );
+      $element[$idx]['slide'] = slick_get_image($main_settings, $media, $idx, $media);
     }
 
     // Build the nested slicks.
