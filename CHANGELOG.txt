@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-9-11
 ----------------------------
+- Issue #2566799 by quasi: Image linked to content should not be
+  removed without colorbox/photobox.
 - Cleaned up README.txt, and a few other things.
 
 Slick 7.x-2.0-dev, 2015-9-09

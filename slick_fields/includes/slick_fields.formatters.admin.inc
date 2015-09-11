@@ -262,7 +262,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       'content'       => t('Image linked to content'),
       'iframe-switch' => t('Image to iframe switcher'),
     ),
-    '#description' => t('<ol><li>Link to content: for aggregated small slicks.</li><li>Iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
+    '#description' => t('Dependent on the enabled supported modules.<ol><li>Link to content: for aggregated small slicks.</li><li>Media file iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
@@ -286,7 +286,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
     if ($field_entity_type == 'field_collection_item') {
       $elements['media_switch']['#title'] = t('Media overlay switcher');
-      $elements['media_switch']['#description'] .= t('<br />Both applied to overlay only.');
+      $elements['media_switch']['#description'] .= t('<br />Applied to overlay only.');
 
       $elements['color_field'] = array(
         '#type'        => 'select',
@@ -326,8 +326,11 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   // Good old core image field.
   if ($field_entity_type == 'image') {
     unset($elements['media_switch']['#options']['iframe-switch']);
-    if (!$is_colorbox && !$is_photobox) {
-      $elements['media_switch']['#access'] = FALSE;
+    if (!$is_colorbox) {
+      unset($elements['media_switch']['#options']['colorbox-switch']);
+    }
+    if (!$is_photobox) {
+      unset($elements['media_switch']['#options']['photobox-switch']);
     }
 
     $slide_caption_options = $thumb_captions = array(
