@@ -616,7 +616,7 @@ function _slick_remove_default_optionset_options($optionset, $settings = array()
   }
   unset($config['prevArrow'], $config['nextArrow']);
 
-  // Clean up responsive options if similar to the main defaults.
+  // Clean up responsive options if similar to the defaults.
   $responses = array();
   if (isset($options['responsives']) && isset($options['responsives']['responsive'])) {
     $responsives = $options['responsives']['responsive'];

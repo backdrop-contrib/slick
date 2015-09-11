@@ -122,11 +122,11 @@ print render($slick);
 $settings['cache'] = 3600;
 // Or cache the slick and keep stale contents till the next cron runs.
 $settings['cache'] = 'persistent';
-// One cron hits, slick will use the new cached version regardless of expiration
-// time due to the nature of render cache.
+// Once cron hits, slick will use the new cached version regardless of
+// expiration time due to the nature of render cache.
 // Add a custom unique cache ID.
 $settings['cid'] = 'my-extra-unique-id';
-// Where the parameters as described above:
+// The parameters are as described above:
 $slick = slick_build($items, $options, $settings, $attachments, $id);
 // All is set, render the Slick.
 print render($slick);

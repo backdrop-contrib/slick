@@ -249,6 +249,7 @@ body.page-admin .form--slick *,
 
 html.js .form--slick .collapsible,
 html.js .form--slick .collapsed {
+  clear: both;
   border: 0;
 }
 
@@ -1072,7 +1073,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 940px) {
   .form--slick.form--field .form-item,
   .form--slick .vertical-tabs-panes .form-item {
     min-height: 100px;

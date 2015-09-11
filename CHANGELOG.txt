@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-9-11
+----------------------------
+- Cleaned up README.txt, and a few other things.
+
 Slick 7.x-2.0-dev, 2015-9-09
 ----------------------------
 - Merged DRY stuffs into slick_get_image().

@@ -7,9 +7,9 @@ Wheeler's Slick carousel.
 See http://kenwheeler.github.io/slick
 
 Powerful: Slick is one of the sliders [1], as of 9/15, the only one [2], which
-supports a mix of responsive and lazy-loaded image, and 3rd party video and
-audio in a single slideshow/carousel with image to iframe or multimedia lightbox
-switchers. See below for the supported media.
+supports nested sliders and a mix of lazy-loaded image/video/audio with
+image-to-iframe or multimedia lightbox switchers.
+See below for the supported media.
 
 Performant: Slick is stored as plain HTML the first time it is requested, and
 then reused on subsequent requests. Carousels with cacheability and lazyload
@@ -49,6 +49,8 @@ o Nested slicks, image/video/audio slide carousels/overlay or multiple slicks
 o Some useful hooks and drupal_alters for advanced works.
 o Modular integration with various contribs via optional sub-modules to build
   carousels with multimedia lightboxes or inline multimedia.
+o Media switcher: Image linked to content, Image to iframe, Image to colorbox,
+  Image to photobox.
 o Cacheability + lazyload = light + fast.
 
 
@@ -56,11 +58,9 @@ o Cacheability + lazyload = light + fast.
 VERSIONS
 --------------------------------------------------------------------------------
 7.x-2.x supports exportable optionsets via CTools.
-Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x to allow creating
-database table to store/ manage option sets.
+Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x.
 
 7.x-2.x supports Slick 1.5 above, and dropped supporting Slick 1.4.x and below.
-Be sure to read the project home page for more info before updating your module.
 
 
 INSTALLATION
@@ -70,12 +70,15 @@ http://drupal.org/documentation/install/modules-themes/modules-7
 
 The Slick module has several sub-modules:
 - slick_ui, included, to manage optionsets, can be uninstalled at production.
+
 - slick_fields, included, supports Image, Media, and Field collection fields.
-- slick_views, a separate project as of 2015-5-29, > beta1:
+
+- slick_views, to get more complex slides.
   http://dgo.to/slick_views
+
 - slick_devel, if you want to help testing and developing the Slick.
-- slick_example, if you want to get up and running quickly.
-  The last two are separate projects as of 2015-5-31, > beta1:
+- slick_example, to get up and running quickly.
+  Both are included in slick_extras post beta1 (2015-5-31):
   http://dgo.to/slick_extras
 
 
@@ -83,21 +86,18 @@ REQUIREMENTS
 --------------------------------------------------------------------------------
 - Slick library:
   o Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/
-  o Extract it as is, rename "slick-master" to "slick", so the needed assets are
-    available at:
+  o Extract it as is, rename "slick-master" to "slick", so the assets are at:
+
     sites/../libraries/slick/slick/slick.css
     sites/../libraries/slick/slick/slick-theme.css (optional if a skin chosen)
     sites/../libraries/slick/slick/slick.min.js
 
 - CTools, for exportable optionsets -- only the main "Chaos tools" is needed.
   If you have Views installed, CTools is already enabled.
-  D8 in core: CMI.
 
 - libraries (>=2.x)
-  D8: dropped.
 
 - jquery_update with jQuery > 1.7, perhaps 1.8 if trouble with the latest Slick.
-  D8: dropped.
 
 - Download jqeasing from http://gsgd.co.uk/sandbox/jquery/easing
   Rename jquery.easing.1.3.js to jquery.easing.min.js, so available at:
@@ -118,15 +118,11 @@ Slick supports enhancements and more complex layouts.
 - Colorbox, to have grids/slides that open up image/video/audio in overlay.
 - Photobox, idem ditto.
 - Picture, to get truly responsive image.
-  D8 in core: Responsive image.
 - Media, including media_youtube, media_vimeo, and media_soundcloud, to have
   fairly variant slides: image, video, audio, or a mix of em.
-  D8: Media entity, or isfield.
 - Field Collection, to add Overlay image/audio/video over the main image stage,
   with additional basic Scald integration for the image/video/audio overlay.
-  D8: ?
 - Color field module within Field Collection to colorize the slide individually.
-  D8 in core: Color field.
 - Mousewheel, download from https://github.com/brandonaaron/jquery-mousewheel,
   so it is available at:
   sites/.../libraries/mousewheel/jquery.mousewheel.min.js
@@ -141,7 +137,9 @@ RECOMMENDED MODULES
 OPTIONSETS
 --------------------------------------------------------------------------------
 To create your optionsets, go to:
-"admin/config/media/slick"
+
+  admin/config/media/slick
+
 These will be available at field formatter "Manage display", and Views UI.
 
 
@@ -279,17 +277,19 @@ documentation.
 
 BUG REPORTS OR SUPPORT REQUESTS
 --------------------------------------------------------------------------------
-A basic knowledge of Drupal site building is required, and Slick can't help you.
-When you don't know how to build things, you may be tempted to think it is bug.
+A basic knowledge of Drupal site building is required. If you get stuck:
 
-Please refer to the provided README, including descriptions on each form item,
-also the relevant guidelines from the supported modules.
+  o see the provided READMEs,
+  o descriptions on each form item,
+  o the relevant guidelines from the supported modules,
+  o consider the project issue queues, your problem may be already addressed,
+  o install slick_example.
 
-If you do have bug reports, we love bugs, please be sure to:
- o provide steps to reproduce it,
- o more detailed info such as screenshots of the output and Slick form, or words
-   to identify it any better,
- o make sure that the bug is caused by the module.
+If you do have bug reports, we love bugs, please:
+  o provide steps to reproduce it,
+  o provide detailed info, a screenshot of the output and Slick form, or words
+    to identify it any better,
+  o make sure that the bug is caused by the module.
 
 For the Slick library bug, please report it to the actual library:
   https://github.com/kenwheeler/slick
@@ -297,7 +297,8 @@ For the Slick library bug, please report it to the actual library:
 You can create a fiddle to isolate the bug if reproduceable outside the module:
   http://jsfiddle.net/
 
-For the support requests, detailed info on the problem is helpful.
+For the support requests, detailed info or a screenshot of the output and Slick
+form is helpful.
 Shortly, you should kindly help me with detailed info to help you. Thanks.
 
 
@@ -308,22 +309,12 @@ TROUBLESHOOTING
   o admin/structure/types/manage/CONTENT_TYPE/display
   o admin/structure/views/view/VIEW
   only if trouble to see the new options, or when options don't apply properly.
-  This is most likely true when the library adds/changes options, or the module
+  Most likely true when the library adds/changes options, or the module
   does something new.
 
 - Always clear the cache, and re-generate JS (if aggregation is on) when
   updating the module to ensure things are picked up:
   o admin/config/development/performance
-
-- For (pre-)alpha users only: Frontend type juggling is removed [#2497945]:
-  - Please re-save and re-export optionsets if you are a pre-alpha user who
-    stored optionsets in codes before alpha release on 2015-3-31, or precisely
-    before 2015-3-2 commit:
-    http://cgit.drupalcode.org/slick/commit/?id=f08c3b4
-
-  - Please ignore if you:
-    o are a (pre-)alpha user who stored optionsets in codes after alpha.
-    o never stored/exported optionsets in codes.
 
 - If switching from beta1 to the latest via Drush fails, try the good old UI.
   Be sure to clear cache first, then run /update.php, if broken slick.
@@ -331,8 +322,7 @@ TROUBLESHOOTING
 - If you are customizing templates, or theme funtions be sure to re-check
   against the latest.
 
-- A Slick instance may be cached by its ID, and will only take place if you
-  set the "Cache" to some value than None. Having two different slicks with the
+- A Slick instance may be cached by its ID. Having two different slicks with the
   same ID will cause the first one cached override the second.
   IDs are guaranteed unique if using sub-modules. However if you do custom works,
   or input one at Slick Views UI, be sure to have unique IDs as they should be.
@@ -348,16 +338,19 @@ TROUBLESHOOTING
 
 KNOWN ISSUES
 --------------------------------------------------------------------------------
+- Slick admin CSS may not be compatible with your private or contrib admin
+  themes. Only if trouble with improper stylings, please disable it at:
+  admin/config/media/slick/ui
+
 - The Slick lazyLoad is not supported with picture-enabled images. Slick only
   facilitates Picture to get in. The image formatting is taken over by Picture.
-  If you want advanced lazyload, but not willing to use Picture, do preprocess
-  with theme_image_lazy() and use lazy 'advanced' to override it and DIY.
-  Please see theme_image_lazy() for more info.
+
 - Photobox is best for:
   - infinite true + slidesToShow 1
   - infinite false + slidesToShow N
   If "infinite true + slidesToShow > 1" is a must, but you don't want dup
   thumbnails, simply override the JS to disable 'thumbs' option.
+
 - The following is not module related, but worth a note:
   o lazyLoad ondemand has issue with dummy image excessive height.
     Added fixes to suppress it via CSS.
@@ -379,8 +372,8 @@ PERFORMANCE
 Any module, even the most innocent one, that provides settings in the UI needs
 to store them in a table. The good thing is we can store them in codes.
 
-With Bulk exporter, or Features, optionsets may be stored in codes to avoid
-database lookup. Be sure to revert to Default via UI to avoid database lookup.
+With Bulk exporter, or Features, optionsets may be stored in codes. Be sure to
+revert to Default via UI to avoid database lookup.
 It is analog to Drupal 8 CMI, so it is the decent choice today.
 
 See slick_example for the stored-in-code samples.
@@ -403,7 +396,6 @@ Ditch all the slick logic to cached bare HTML:
 Be sure to have a working cron job to clear stale cache, so that slick is loaded
 from the correct cached version. At any rate, cached contents will be refreshed
 regardless of the expiration time after the cron hits due to the nature of cron.
-Leave it empty to disable caching.
 
 
 CURRENT DEVELOPMENT STATUS
