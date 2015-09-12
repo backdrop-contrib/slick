@@ -156,7 +156,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   }
 
   // Build the Slick grid if provided.
-  if (!empty($settings['grid'])) {
+  if (!empty($settings['grid']) && !empty($settings['visible_slides'])) {
     $build = slick_build_grids($build, $settings);
   }
 

@@ -226,12 +226,14 @@ Optional skins:
 - Boxed split
   Caption and image/media are split half, and have edge margin 0 60px.
 
-- Grid, to create the last grid carousel. Use slidesToShow > 1 to have more grid
-  combination, only if you have considerable amount of grids, otherwise 1.
+- Grid
+  Only reasonable if you have considerable amount of slides.
   Avoid variableWidth and adaptiveHeight. Use consistent dimensions.
   Choose skin "Grid" for starter.
   Uses the Foundation 5.5 block-grid, and disabled if you choose your own skin
-  not name Grid. Otherwise overrides skin Grid accordingly.
+  not named Grid. Otherwise overrides skin Grid accordingly.
+  This has been around before core provides Rows option.
+  Configurable via Views UI.
 
 - Rounded, should be named circle
   This will circle the main image display, reasonable for small carousels, maybe
@@ -299,7 +301,8 @@ You can create a fiddle to isolate the bug if reproduceable outside the module:
 
 For the support requests, detailed info or a screenshot of the output and Slick
 form is helpful.
-Shortly, you should kindly help me with detailed info to help you. Thanks.
+Shortly, you should kindly help the maintainers with detailed info to help you.
+Thanks.
 
 
 TROUBLESHOOTING
@@ -363,7 +366,7 @@ KNOWN ISSUES
 
 UNKNOWN ISSUES
 --------------------------------------------------------------------------------
-- Anything I am not aware of.
+- Anything the maintainers are not aware of.
   Please report if you find one. Your report and help is any module QA. Thanks.
 
 

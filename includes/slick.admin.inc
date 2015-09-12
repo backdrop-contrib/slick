@@ -755,8 +755,8 @@ function slick_get_grid_elements(array &$elements, $settings, &$form_state) {
     '#type'        => 'select',
     '#title'       => t('Grid large'),
     '#options'     => $grid_options,
-    '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. Use skin Grid for starter. This module feature has been around before the Slick library officiallly supported it. Leave empty to DIY.'),
-    '#prefix'      => '<h3 class="form--slick__title">' . t('Display content images as grid?') . '</h3>',
+    '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. <br /><strong>Requires</strong>:<ol><li>Visible slides,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents,</li><li>Optionset with Rows and slidesPerRow = 1.</li></ol>Leave empty to DIY, or to not build grids.'),
+    '#prefix'      => '<h3 class="form--slick__title">' . t('Display content images as block grid?<small>An alternative to the newer core <strong>Rows</strong> option. Only works if Views rows count &gt; <strong>Visible slides</strong>. <br />Note: block grid != slidesToShow, yet both can work in tandem.</small>') . '</h3>',
   );
 
   $elements['grid_medium'] = array(
@@ -777,7 +777,7 @@ function slick_get_grid_elements(array &$elements, $settings, &$form_state) {
     '#type'        => 'select',
     '#title'       => t('Visible slides'),
     '#options'     => drupal_map_assoc(range(1, 32)),
-    '#description' => t('How many items per slide displayed at a time related to this grid.'),
+    '#description' => t('How many items per slide displayed at a time. Required if Grid provided. Grid will not work if Views rows count &lt; <strong>Visible slides</strong>.'),
   );
 
   $elements['preserve_keys'] = array(

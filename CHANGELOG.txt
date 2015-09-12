@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2015-9-12
+----------------------------
+- #2567233 by espacecode: Grid options require Visible slides, otherwise no
+  slides shown anymore.
+  Added more information on Grid options about requiring Visible slides.
+
 Slick 7.x-2.0-dev, 2015-9-11
 ----------------------------
 - Issue #2566799 by quasi: Image linked to content should not be

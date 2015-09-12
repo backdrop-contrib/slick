@@ -52,27 +52,26 @@ function slick_build_grids(array $build, &$settings) {
       '#items' => $build,
       '#delta' => 0,
       '#settings' => array(
-        'count' => 2,
-        'skin' => $settings['skin'],
+        'count'    => 2,
+        'skin'    => $settings['skin'],
         'unslick' => TRUE,
       ),
     );
   }
   else {
     // Otherwise do chunks to have a grid carousel.
-    if ($visible_slides = $settings['visible_slides']) {
-      $grid_items = array_chunk($build, $visible_slides, $settings['preserve_keys']);
-      foreach ($grid_items as $delta => $grid_item) {
-        $grids[] = array(
-          '#theme' => 'slick_grid',
-          '#items' => $grid_item,
-          '#delta' => $delta,
-          '#settings' => array(
-            'count' => count($grid_items),
-            'skin' => $settings['skin'],
-          ),
-        );
-      }
+    $preserve_keys = !empty($settings['preserve_keys']) ? TRUE : FALSE;
+    $grid_items = array_chunk($build, $settings['visible_slides'], $preserve_keys);
+    foreach ($grid_items as $delta => $grid_item) {
+      $grids[] = array(
+        '#theme' => 'slick_grid',
+        '#items' => $grid_item,
+        '#delta' => $delta,
+        '#settings' => array(
+          'count' => count($grid_items),
+          'skin'  => $settings['skin'],
+        ),
+      );
     }
   }
 
