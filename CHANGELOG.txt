@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-11-07
+-----------------------------
+- #2596599 by mparker17: Add link to settings page in .info file
+
 Slick 7.x-2.0-dev, 2015-9-30
 ----------------------------
 - Clarified several descriptions on form items, and elsewhere.
