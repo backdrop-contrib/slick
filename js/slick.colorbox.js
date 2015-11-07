@@ -27,13 +27,13 @@
       }
 
       // Including slick-cloned.
-      $(".slick__slide .slick__colorbox", context).once("slick-colorbox", function () {
+      $(".slick__colorbox", context).once("slick-colorbox", function () {
         var t = $(this),
           id = t.closest(".slick").attr("id"),
-          isSlick = $("#" + id).length,
           $body = $("body"),
           media = t.data("media") || {},
           $slider = t.closest(".slick__slider", "#" + id + ".slick"),
+          isSlick = $slider.length,
           isMedia = media.type !== "image" ? true : false,
           curr,
           runtimeOptions = {
