@@ -214,7 +214,8 @@ function hook_slick_arrows_info() {
  * Alter Slick skins.
  *
  * This function lives in a module file, not my_module.slick.inc.
- * Overriding skin CSS can be done via theme.info, hook_css_alter(), or below.
+ * Overriding skin CSS can be done via theme.info, hook_css_alter(), or below
+ * before anything passed to drupal_process_attached().
  *
  * @param array $skins
  *   The associative array of skin information from hook_slick_skins_info().

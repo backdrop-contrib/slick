@@ -15,9 +15,6 @@ Performant: Slick is stored as plain HTML the first time it is requested, and
 then reused on subsequent requests. Carousels with cacheability and lazyload
 are lighter and faster than those without.
 
-As a CTools plugin, which is future-proof D8 CMI, Slick is easy to customize
-either via UI or code, and can be stored at database, or codebase.
-
 Slick has a gazillion of options, please start with the very basic working
 samples from slick_example [3] only if trouble to build slicks. Be sure to read
 its README.txt. Spending 5 minutes or so will save you hours in building more
@@ -26,7 +23,6 @@ complex slideshows.
 [1] https://groups.drupal.org/node/20384
 [2] https://www.drupal.org/node/418616
 [3] http://dgo.to/slick_extras
-
 
 FEATURES
 --------------------------------------------------------------------------------
@@ -42,13 +38,13 @@ o Supports pure text, responsive image, iframe, video, and audio carousels with
 o Exportable via CTools.
 o Works with Views, core and contrib fields: Image, Media or Field collection.
 o Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
-  Grid, Split. Nothing loaded unless configured so.
+  Split, Grid or a multi row carousel.
 o Various slide layouts are built with pure CSS goodness.
-o Nested slicks, image/video/audio slide carousels/overlay or multiple slicks
-  within a single Slick using Field collection, or Views.
+o Nested sliders/overlays, or multiple slicks within a single Slick via Field
+  collection, or Views.
 o Some useful hooks and drupal_alters for advanced works.
-o Modular integration with various contribs via optional sub-modules to build
-  carousels with multimedia lightboxes or inline multimedia.
+o Modular integration with various contribs to build carousels with multimedia
+  lightboxes or inline multimedia.
 o Media switcher: Image linked to content, Image to iframe, Image to colorbox,
   Image to photobox.
 o Cacheability + lazyload = light + fast.
@@ -60,7 +56,11 @@ VERSIONS
 7.x-2.x supports exportable optionsets via CTools.
 Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x.
 
+As a CTools plugin, which is future-proof D8 CMI, Slick is easy to customize
+either via UI or code, and can be stored at database, or codebase.
+
 7.x-2.x supports Slick 1.5 above, and dropped supporting Slick 1.4.x and below.
+Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.
 
 
 INSTALLATION
@@ -168,15 +168,16 @@ Supported multi-value fields for nested slicks: Image, Media, Atom reference.
 
 SKINS
 --------------------------------------------------------------------------------
-The main purpose of skins are to demonstrate that often times some CSS lines are
-enough to build fairly variant layouts. No JS needed. Unless, of course, when
-you want more sophisticated slider like spiral 3D carousel which is beyond what
-CSS can do. But more often CSS will do.
+The main purpose of skins are to demonstrate that often some CSS lines are
+enough to build fairly variant layouts. No JS needed. Unless, of course, for
+more sophisticated slider like spiral 3D carousel which is beyond what CSS can
+do. But more often CSS will do.
 
 Skins allow swappable layouts like next/prev links, split image or caption, etc.
-Be sure to enable slick_fields.module and provide a dedicated slide layout
-per field to get more control over caption placements. However a combination of
-skins and options may lead to unpredictable layouts, get dirty yourself.
+with just CSS. Be sure to enable slick_fields.module and provide a dedicated
+slide layout per field to get more control over caption placements. However a
+combination of skins and options may lead to unpredictable layouts, get
+yourself dirty.
 
 Some default complex layout skins applied to desktop only, adjust for the mobile
 accordingly. The provided skins are very basic to support the necessary layouts.
@@ -228,12 +229,15 @@ Optional skins:
 
 - Grid
   Only reasonable if you have considerable amount of slides.
-  Avoid variableWidth and adaptiveHeight. Use consistent dimensions.
-  Choose skin "Grid" for starter.
   Uses the Foundation 5.5 block-grid, and disabled if you choose your own skin
   not named Grid. Otherwise overrides skin Grid accordingly.
-  This has been around before core provides Rows option.
-  Configurable via Views UI.
+
+  Requires:
+  Visible slides, Skin Grid for starter, A reasonable amount of contents,
+  Optionset with Rows and slidesPerRow = 1.
+  Avoid variableWidth and adaptiveHeight. Use consistent dimensions.
+  This is module feature, older than core Rows, and offers more flexibility.
+  Available at slick_views, and configurable via Views UI.
 
 - Rounded, should be named circle
   This will circle the main image display, reasonable for small carousels, maybe
@@ -245,7 +249,9 @@ more advanced 3d carousels, etc, simply put them into js array of the target
 skin. Be sure to add proper weight, if you are acting on existing slick events,
 normally < 0 (slick.load.min.js) is the one.
 
-See slick.slick.inc for more info on skins.
+Use hook_slick_skins_info() to register ones.
+See slick.slick.inc, or slick.api.php for more info on skins.
+
 
 
 HTML STRUCTURE
@@ -281,7 +287,7 @@ BUG REPORTS OR SUPPORT REQUESTS
 --------------------------------------------------------------------------------
 A basic knowledge of Drupal site building is required. If you get stuck:
 
-  o see the provided READMEs,
+  o consult the provided READMEs,
   o descriptions on each form item,
   o the relevant guidelines from the supported modules,
   o consider the project issue queues, your problem may be already addressed,
@@ -299,8 +305,7 @@ For the Slick library bug, please report it to the actual library:
 You can create a fiddle to isolate the bug if reproduceable outside the module:
   http://jsfiddle.net/
 
-For the support requests, detailed info or a screenshot of the output and Slick
-form is helpful.
+For the support requests, a screenshot of the output and Slick form is helpful.
 Shortly, you should kindly help the maintainers with detailed info to help you.
 Thanks.
 
@@ -322,7 +327,7 @@ TROUBLESHOOTING
 - If switching from beta1 to the latest via Drush fails, try the good old UI.
   Be sure to clear cache first, then run /update.php, if broken slick.
 
-- If you are customizing templates, or theme funtions be sure to re-check
+- If you are customizing template files, or theme funtions be sure to re-check
   against the latest.
 
 - A Slick instance may be cached by its ID. Having two different slicks with the
@@ -342,11 +347,12 @@ TROUBLESHOOTING
 KNOWN ISSUES
 --------------------------------------------------------------------------------
 - Slick admin CSS may not be compatible with your private or contrib admin
-  themes. Only if trouble with improper stylings, please disable it at:
+  themes. Only if trouble with admin display, please disable it at:
   admin/config/media/slick/ui
 
 - The Slick lazyLoad is not supported with picture-enabled images. Slick only
   facilitates Picture to get in. The image formatting is taken over by Picture.
+  Some other options such as Media switchers are currently not supported either.
 
 - Photobox is best for:
   - infinite true + slidesToShow 1
@@ -362,6 +368,8 @@ KNOWN ISSUES
   o Fade option with slideToShow > 1 will screw up.
   o variableWidth ignores slidesToShow.
   o Too much centerPadding at small device affects slidesToShow.
+  o Infinite option will create duplicates or clone slides which look more
+    obvious if slidesToShow > 1. Simply disable it if not desired.
 
 
 UNKNOWN ISSUES
@@ -411,8 +419,8 @@ ROADMAP
 --------------------------------------------------------------------------------
 - Bug fixes, code cleanup, optimization, and full release.
 - Get 1.x out of dev.
+- Slick 2.x
 - Drupal 8 port.
-
 
 
 AUTHOR/MAINTAINER/CREDITS

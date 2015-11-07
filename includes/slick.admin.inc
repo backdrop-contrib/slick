@@ -613,7 +613,7 @@ function slick_get_top_elements(array &$elements, $settings, &$form_state) {
     '#type'        => 'select',
     '#title'       => t('Skin main'),
     '#options'     => $skins,
-    '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get dirty yourself. See <a href="@url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY, or use hook_slick_skins_info() to override one.', array('@url' => $readme)),
+    '#description' => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. with just CSS. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <a href="@url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY, or use hook_slick_skins_info() to register ones.', array('@url' => $readme)),
   );
 
   $elements['optionset_thumbnail'] = array(
@@ -755,8 +755,8 @@ function slick_get_grid_elements(array &$elements, $settings, &$form_state) {
     '#type'        => 'select',
     '#title'       => t('Grid large'),
     '#options'     => $grid_options,
-    '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. <br /><strong>Requires</strong>:<ol><li>Visible slides,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents,</li><li>Optionset with Rows and slidesPerRow = 1.</li></ol>Leave empty to DIY, or to not build grids.'),
-    '#prefix'      => '<h3 class="form--slick__title">' . t('Display content images as block grid?<small>An alternative to the newer core <strong>Rows</strong> option. Only works if Views rows count &gt; <strong>Visible slides</strong>. <br />Note: block grid != slidesToShow, yet both can work in tandem.</small>') . '</h3>',
+    '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. <br /><strong>Requires</strong>:<ol><li>Visible slides,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents,</li><li>Optionset with Rows and slidesPerRow = 1.</li></ol>This is module feature, older than core Rows, and offers more flexibility. Leave empty to DIY, or to not build grids.'),
+    '#prefix'      => '<h3 class="form--slick__title">' . t('Group individual slide as block grid?<small>An older alternative to core <strong>Rows</strong> option. Only works if the total items &gt; <strong>Visible slides</strong>. <br />block grid != slidesToShow option, yet both can work in tandem.<br />block grid = Rows option, yet the first is module feature, the later core.</small>') . '</h3>',
   );
 
   $elements['grid_medium'] = array(

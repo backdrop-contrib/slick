@@ -15,18 +15,16 @@
 ?>
 <?php print render($item_prefix); ?>
 <div<?php print $attributes; ?>>
-  <?php if ($settings['is_media']): ?>
-    <?php if (!$is_lightbox): ?>
-      <iframe<?php print $content_attributes; ?> allowfullscreen><?php print $alternative_content; ?></iframe>
-    <?php endif; ?>
-    <?php if ($settings['media_switch'] == 'iframe-switch'): ?>
-      <i class="media-icon media-icon--close"></i>
-      <i class="media-icon media-icon--play"></i>
-      <i class="media-icon media-icon--spinner"></i>
-    <?php endif; ?>
+<?php if ($settings['is_media']): ?>
+  <?php if (!$is_lightbox): ?>
+    <iframe<?php print $content_attributes; ?> allowfullscreen><?php print $alternative_content; ?></iframe>
   <?php endif; ?>
-
-  <?php print render($item); ?>
-
+  <?php if ($settings['media_switch'] == 'iframe-switch'): ?>
+    <i class="media-icon media-icon--close"></i>
+    <i class="media-icon media-icon--play"></i>
+    <i class="media-icon media-icon--spinner"></i>
+  <?php endif; ?>
+<?php endif; ?>
+<?php print render($item); ?>
 </div>
 <?php print render($item_suffix); ?>

@@ -75,6 +75,20 @@ function slick_ui_form_settings() {
     '#default_value' => variable_get('slick_admin_css', TRUE),
   );
 
+  $form['slick_module_css'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Enable Slick module slick.theme.css'),
+    '#description'   => t('Uncheck to permanently disable the module slick.theme.css, normally included along with skins.'),
+    '#default_value' => variable_get('slick_module_css', TRUE),
+  );
+
+  $form['slick_css'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Enable Slick library slick-theme.css'),
+    '#description'   => t('Uncheck to permanently disable the optional slick-theme.css, normally included along with skins.'),
+    '#default_value' => variable_get('slick_css', TRUE),
+  );
+
   return system_settings_form($form);
 }
 

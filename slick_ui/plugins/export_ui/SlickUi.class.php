@@ -219,7 +219,7 @@ class SlickUi extends ctools_export_ui {
     $form['options']['responsives'] = array(
       '#title' => t('Responsive display'),
       '#type' => 'fieldset',
-      '#description' => t('Containing breakpoints and settings objects. Settings set at a given breakpoint/screen width is self-contained and does not inherit the main settings, but defaults.'),
+      '#description' => t('Containing breakpoints and settings objects. Settings set at a given breakpoint/screen width is self-contained and does not inherit the main settings, but defaults. Be sure to set Breakpoints option above.'),
       '#collapsible' => FALSE,
       '#tree' => TRUE,
     );
@@ -456,7 +456,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['asNavFor'] = array(
         'title' => t('asNavFor target'),
-        'description' => t('Leave empty if using sub-modules to have it auto-matched. Set the slider to be the navigation of other slider (Class or ID Name). Use selector identifier ("." or "#") accordingly. If class, use the provided Wrapper class under General as needed, e.g.: if the main display has class "slick--for", and the thumbnail navigation "slick--nav", place the opposite here as its target. Or use existing classes based on optionsets, e.g.: .slick--optionset--main, or .slick--optionset--main-nav. Overriden per field formatter.'),
+        'description' => t('Leave empty if using sub-modules to have it auto-matched. Set the slider to be the navigation of other slider (Class or ID Name). Use selector identifier ("." or "#") accordingly. See HTML structure section at README.txt for more info. Overriden by field formatter, or Views style.'),
         'type' => 'textfield',
       );
 
@@ -507,14 +507,14 @@ class SlickUi extends ctools_export_ui {
 
       $elements['prevArrow'] = array(
         'title' => t('Previous arrow'),
-        'description' => t("Customize the previous arrow markups. Be sure to keep the expected class."),
+        'description' => t("Customize the previous arrow markups. Be sure to keep the expected class: slick-prev."),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
       );
 
       $elements['nextArrow'] = array(
         'title' => t('Next arrow'),
-        'description' => t("Customize the next arrow markups. Be sure to keep the expected class."),
+        'description' => t("Customize the next arrow markups. Be sure to keep the expected class: slick-next."),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][arrows]"]' => array('checked' => TRUE))),
       );
@@ -547,7 +547,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['appendDots'] = array(
         'title' => t('Append dots'),
-        'description' => t('Change where the navigation dots are attached (Selector, htmlString). If you change this, be sure to provide its relevant markup. E.g.: try the supported markup ".slick__arrow" without quotes to put dots within .slick__arrow. Be sure to enable arrows in such a case.'),
+        'description' => t('Change where the navigation dots are attached (Selector, htmlString). If you change this, be sure to provide its relevant markup. Try <strong>.slick__arrow</strong> to achieve this style: <br />&lt; o o o o o o o &gt;<br />Be sure to enable Arrows in such a case.'),
         'type' => 'textfield',
         'states' => array('visible' => array(':input[name*="options[settings][dots]"]' => array('checked' => TRUE))),
       );

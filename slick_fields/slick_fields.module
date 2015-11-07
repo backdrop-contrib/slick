@@ -48,11 +48,12 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     'entity_uri'  => $entity_uri['path'],
     'attributes'  => array('id' => $id),
   ) + slick_get_fields_default_settings();
+
   $settings = array_merge($settings, $display['settings']);
   $asnavfor = $settings['optionset_thumbnail'];
   $cid      = $instance['id'] . $settings['current_view_mode'] . $settings['image_style'];
 
-  // Sniffs for Views to allow block__no_wrapper, views_view_no_wrapper, etc.
+  // Sniffs for Views to allow block__no_wrapper, views_view__no_wrapper, etc.
   if ($view) {
     $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
     $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name . '--' . $view->current_display);
@@ -138,9 +139,9 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $attachments['css'][] = $inline_css;
   }
 
-  if ($settings['mousewheel'] && $mousewheel = libraries_get_path('mousewheel') . '/jquery.mousewheel.min.js') {
+  if ($settings['mousewheel'] && $mousewheel = libraries_get_path('mousewheel')) {
     $js['mousewheel'] = TRUE;
-    $attachments['js'] += array($mousewheel => array('group' => JS_LIBRARY, 'weight' => -5));
+    $attachments['js'] += array($mousewheel . '/jquery.mousewheel.min.js' => array('group' => JS_LIBRARY, 'weight' => -5));
   }
 
   if ($settings['skin'] && $settings['thumbnail_hover']) {
@@ -186,7 +187,6 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     // Views will flatten the array unless we add a key 0, useful for more work.
     $element = $view && !empty($settings['markup']) ? $slick : $slick[0];
   }
-
   return $element;
 }
 

@@ -1,4 +1,14 @@
 
+Slick 7.x-2.0-dev, 2015-9-30
+----------------------------
+- Clarified several descriptions on form items, and elsewhere.
+- Moved some contents of slick.field.inc into slick.global.inc to share with
+  Slick views for its future enhancement with Media file like Slick fields.
+- Added configurable optional core slick-theme.css and module slick.theme.css
+  which are normally included by default along with skins.
+- Removed problematic Editor links for Media file, since it is not displayed
+  when cache enabled anyway.
+
 Slick 7.x-2.0-dev, 2015-9-12
 ----------------------------
 - #2567233 by espacecode: Grid options require Visible slides, otherwise no

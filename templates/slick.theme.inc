@@ -158,7 +158,7 @@ function template_preprocess_slick(&$variables) {
     }
 
     // All these s***s are to re-use one optionset when all these disabled.
-    // focusOnSelect will not work with empty slide value, so add proper selector.
+    // focusOnSelect won't work with empty slide value, so add proper selector.
     $js['slide'] = empty($js['slide']) && $js['focusOnSelect'] ? '.slick__slide' : '';
 
     // Only if asNavFor, enforce clickable thumbnail, otherwise no joy.
@@ -281,8 +281,8 @@ function template_preprocess_slick_item(&$variables) {
       $grids = array('small', 'medium', 'large');
       $content_attributes['class'][] = 'block-grid';
       foreach ($grids as $grid) {
-        if ($settings['grid_' . $grid]) {
-          $content_attributes['class'][] = $grid . '-block-grid-' . $settings['grid_' . $grid];
+        if ($column = $settings['grid_' . $grid]) {
+          $content_attributes['class'][] = $grid . '-block-grid-' . $column;
         }
       }
     }
@@ -563,18 +563,15 @@ function theme_slick_image_lazy(array $variables) {
     }
 
     $url = $variables['url'];
-    $options = isset($variables['options']['url']) ? (array) $variables['options']['url'] : array();
-    $options['html'] = TRUE;
-    $build = l($build, $url, $options);
+    $link_options = isset($options['url']) ? (array) $options['url'] : array();
+    $link_options['html'] = TRUE;
+    $build = l($build, $url, $link_options);
   }
   return $build;
 }
 
 /**
  * Returns HTML or layout related settings to avoid extra checks and notices.
- *
- * @return array
- *   An array of alterable default theme settings.
  */
 function slick_get_element_default_settings() {
   $settings = array(

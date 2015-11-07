@@ -55,27 +55,6 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
         $slide['settings']['slide_classes'] = strip_tags($classes[0]['value']);
       }
 
-      // Editor links, excluded from render cache.
-      if (empty($settings['cache']) && file_entity_access('update', $file)) {
-        if (!empty($slide['caption']) && field_is_translatable($config['entity_type'], $config['field'])) {
-          $slide['caption']['editor']['translate']['#markup'] = l(t('Translate'), 'file/' . $file->fid . '/translate', array(
-            'query' => drupal_get_destination(),
-            'attributes' => array(
-              'title' => t('Translate file @title', array('@title' => $file->filename)),
-              'class' => array('file__translate edit-link icon-globe'),
-            ),
-          ));
-        }
-
-        $slide['caption']['editor']['edit']['#markup'] = l(t('Edit'), 'file/' . $file->fid . '/edit', array(
-          'query' => drupal_get_destination(),
-          'attributes' => array(
-            'title' => t('Edit file @title', array('@title' => $file->filename)),
-            'class' => array('file__edit edit-link icon-edit'),
-          ),
-        ));
-      }
-
       // Image with picture, lazyLoad, and lightbox supports.
       $slide['slide'] = slick_get_image($settings, $media, $key, $slide['settings']);
 

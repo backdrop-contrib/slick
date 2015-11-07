@@ -262,7 +262,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       'content'       => t('Image linked to content'),
       'iframe-switch' => t('Image to iframe switcher'),
     ),
-    '#description' => t('Dependent on the enabled supported modules.<ol><li>Link to content: for aggregated small slicks.</li><li>Media file iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails. Photobox is not compatible with infinite true + slidesToShow > 1, see Known Issues.</li></ol>'),
+    '#description' => t('Dependent on the enabled supported modules.<ol><li>Link to content: for aggregated small slicks.</li><li>Media file iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li></ol>'),
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
@@ -315,11 +315,11 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     );
 
     if ($is_colorbox) {
-      $elements['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox switcher');
+      $elements['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox');
     }
 
     if ($is_photobox) {
-      $elements['media_switch']['#options']['photobox-switch'] = t('Image to photobox switcher');
+      $elements['media_switch']['#options']['photobox-switch'] = t('Image to photobox');
     }
   }
 
@@ -381,10 +381,12 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
   // Picture module integration.
   if ($is_picture) {
+    $elements['media_switch']['#description'] .= t('<br />Ignored if Picture mapping is enabled.');
+
     $elements['picture'] = array(
       '#type'        => 'checkbox',
       '#title'       => t('Picture mapping'),
-      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick lazyLoad is not supported with picture-enabled images. Slick only accommodates Picture to get in. The image formatting is taken over by Picture.'),
+      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick lazyLoad and Media switchers are not supported with picture-enabled images. Slick only accommodates Picture to get in. The image formatting is taken over by Picture.'),
     );
 
     $picture_options = picture_get_mapping_options();
