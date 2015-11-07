@@ -2,6 +2,8 @@
 Slick 7.x-2.0-dev, 2015-11-07
 -----------------------------
 - #2596599 by mparker17: Add link to settings page in .info file
+  Oops, sorry, attribution!
+- #2596599 by mparker17: Add link to settings page in .info file
 
 Slick 7.x-2.0-dev, 2015-9-30
 ----------------------------
