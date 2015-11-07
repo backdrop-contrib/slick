@@ -404,12 +404,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     pointer-events: none;
   }
 
-  .slick--center .slick-slide.slick-center {
-    -ms-transform: scale(1.08);
-    -webkit-transform: scale(1.08);
-    transform: scale(1.08);
-  }
-
   .slide__caption {
     left: 0;
     padding: 20px;

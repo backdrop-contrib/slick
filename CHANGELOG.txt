@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-11-07
 -----------------------------
+- #2600970 by dalearyous: remove the image zoom or magnification for center
+  image slick carousel
 - #2610348 by IckZ: Colorbox not working when only one image is displayed.
 - #2596599 by mparker17: Add link to settings page in .info file
   Oops, sorry, attribution!
