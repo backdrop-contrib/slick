@@ -1,4 +1,12 @@
 
+Slick 7.x-2.0-dev, 2015-11-16
+-----------------------------
+- Disabled thumbnail navigation if items < 2 to avoid gargantuan broken single
+  thumbnail nav since it will be unslicked anyway. The good thing is this allows
+  a combination of asnavfor at one page and/or a single image or slideshow
+  display at another without creating different fields.
+- Added caching per language to reflect the change at Slick Views per 2611838.
+
 Slick 7.x-2.0-dev, 2015-11-07
 -----------------------------
 - #2600970 by dalearyous: remove the image zoom or magnification for center

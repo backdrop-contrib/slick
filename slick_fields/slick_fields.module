@@ -49,9 +49,10 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     'attributes'  => array('id' => $id),
   ) + slick_get_fields_default_settings();
 
-  $settings = array_merge($settings, $display['settings']);
-  $asnavfor = $settings['optionset_thumbnail'];
-  $cid      = $instance['id'] . $settings['current_view_mode'] . $settings['image_style'];
+  $settings    = array_merge($settings, $display['settings']);
+  $asnavfor    = $settings['optionset_thumbnail'];
+  $is_asnavfor = $asnavfor && count($items) > 1;
+  $cid         = $instance['id'] . $settings['current_view_mode'] . $settings['image_style'] . $langcode;
 
   // Sniffs for Views to allow block__no_wrapper, views_view__no_wrapper, etc.
   if ($view) {
@@ -70,7 +71,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
 
   if ($render_cache) {
     $slick[0] = $cache->data;
-    if ($asnavfor && $thumb_cache = cache_get($thumb_id . ':' . $cid, 'cache')) {
+    if ($is_asnavfor && $thumb_cache = cache_get($thumb_id . ':' . $cid, 'cache')) {
       $slick[1] = $thumb_cache->data;
     }
 
@@ -100,21 +101,21 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     case 'image':
       module_load_include('inc', 'slick', 'includes/slick.image');
       $build = slick_format_image($settings, $config);
-      $thumb = empty($asnavfor) ? '' : slick_format_image($settings, $config, TRUE);
+      $thumb = !$is_asnavfor ? '' : slick_format_image($settings, $config, TRUE);
       break;
 
     case 'file':
       module_load_include('inc', 'slick', 'includes/slick.extras');
       module_load_include('inc', 'slick', 'includes/slick.media');
       $build = slick_format_media($settings, $config);
-      $thumb = empty($asnavfor) ? '' : slick_format_media($settings, $config, TRUE);
+      $thumb = !$is_asnavfor ? '' : slick_format_media($settings, $config, TRUE);
       break;
 
     case 'field_collection':
       module_load_include('inc', 'slick', 'includes/slick.extras');
       module_load_include('inc', 'slick', 'includes/slick.field_collection');
       $build = slick_format_field_collection($settings, $config);
-      $thumb = empty($asnavfor) ? '' : slick_format_field_collection($settings, $config, TRUE);
+      $thumb = !$is_asnavfor ? '' : slick_format_field_collection($settings, $config, TRUE);
       break;
   }
 
@@ -161,14 +162,14 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $build = slick_build_grids($build, $settings);
   }
 
-  if ($asnavfor) {
+  if ($is_asnavfor) {
     $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_main'] : "#{$thumb_id}-slider";
   }
 
   // Build the single/main display Slick.
   $slick[0] = slick_build($build, $js, $settings, $attachments, $id, $optionset);
 
-  if ($asnavfor) {
+  if ($is_asnavfor) {
     $optionset = slick_optionset_load($asnavfor);
     $settings['attributes']['id'] = $thumb_id;
     $settings['optionset'] = $asnavfor;
