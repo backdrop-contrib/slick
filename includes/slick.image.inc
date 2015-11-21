@@ -13,6 +13,7 @@ function slick_format_image(&$settings, $config, $thumb_nav = FALSE) {
   $build = array();
   foreach ($config['items'] as $key => $item) {
     $media = $slide = array();
+    $item['type'] = !isset($item['type']) ? 'image' : $item['type'];
     slick_extract_image_data($settings, $media, $slide, $item);
 
     if (!$thumb_nav) {

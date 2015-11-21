@@ -1,4 +1,9 @@
 
+
+Slick 7.x-2.0-dev, 2015-11-21
+-----------------------------
+- #2546614 by Dr.Osd: Colorbox integration has broken iframe width
+
 Slick 7.x-2.0-dev, 2015-11-16
 -----------------------------
 - Disabled thumbnail navigation if items < 2 to avoid gargantuan broken single
