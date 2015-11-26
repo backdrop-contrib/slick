@@ -233,7 +233,7 @@ Optional skins:
   not named Grid. Otherwise overrides skin Grid accordingly.
 
   Requires:
-  Visible slides, Skin Grid for starter, A reasonable amount of contents,
+  Visible slides, Skin Grid for starter, A reasonable amount of slides,
   Optionset with Rows and slidesPerRow = 1.
   Avoid variableWidth and adaptiveHeight. Use consistent dimensions.
   This is module feature, older than core Rows, and offers more flexibility.
@@ -252,6 +252,31 @@ normally < 0 (slick.load.min.js) is the one.
 Use hook_slick_skins_info() to register ones.
 See slick.slick.inc, or slick.api.php for more info on skins.
 
+
+GRID
+--------------------------------------------------------------------------------
+To create Slick grid or multiple rows carousel, there are 3 options:
+
+1. One row grid managed by library:
+   Visit admin/config/media/slick,
+   Edit current optionset, and set
+   slidesToShow > 1, and Rows and slidesperRow = 1
+
+2. Multiple rows grid managed by library:
+   Visit admin/config/media/slick,
+   Edit current optionset, and set
+   slidesToShow = 1, Rows > 1 and slidesPerRow > 1
+
+3. Multiple rows grid managed by Module:
+   Visit admin/structure/views/view/slick_x/edit/block_grid from slick_example,
+   Be sure to install the Slick example sub-module first.
+   Requires skin "Grid", and set
+   slidesToShow, Rows and slidesPerRow = 1.
+
+The first 2 are supported by core library using pure JS approach.
+The last is the Module feature using pure CSS Foundation block-grid. The key is:
+the total amount of Views results must be bigger than Visible slides, otherwise
+broken Grid, see skin Grid above for more detals.
 
 
 HTML STRUCTURE
@@ -327,7 +352,7 @@ TROUBLESHOOTING
 - If switching from beta1 to the latest via Drush fails, try the good old UI.
   Be sure to clear cache first, then run /update.php, if broken slick.
 
-- If you are customizing template files, or theme funtions be sure to re-check
+- If you are customizing template files, or theme funtions, be sure to re-check
   against the latest.
 
 - A Slick instance may be cached by its ID. Having two different slicks with the

@@ -266,6 +266,17 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   );
 
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
+    $elements['iframe_lazy'] = array(
+      '#type'        => 'checkbox',
+      '#title'       => t('Lazy iframe'),
+      '#description' => t('Check to make the video/audio iframes truly lazyloaded, and speed up loading time. Depends on JS enabled at client side.'),
+      '#states' => array(
+        'visible' => array(
+          array('select[name*="[media_switch]"]' => array('value' => 'iframe-switch')),
+        ),
+      ),
+    );
+
     // http://en.wikipedia.org/wiki/List_of_common_resolutions
     $elements['aspect_ratio'] = array(
       '#type'        => 'select',

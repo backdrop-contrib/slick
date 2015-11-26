@@ -1,4 +1,16 @@
 
+Slick 7.x-2.0-dev, 2015-11-26
+-----------------------------
+- Added more description on Slick Grid or multiple rows carousel.
+- Removed personal styling from slick.theme.css, mostly those testing rules
+  against Bartik.
+- Added "Lazy iframe" option to have truly lazyloaded iframes for Media and FC
+  to speed up loading time before JS fired.
+- Moved media icons and iframes after the image to allow using CSS siblings
+  selector (~) for spinner visibility in combination with [data-lazy] which is
+  removed when the image is fully loaded, e.g.:
+  .media-icon--spinner { display: none; }
+  img[data-lazy] ~ .media-icon--spinner { display: block; }
 
 Slick 7.x-2.0-dev, 2015-11-21
 -----------------------------

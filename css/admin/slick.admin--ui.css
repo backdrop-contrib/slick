@@ -56,6 +56,7 @@ body.page-admin .form--slick *,
 .form--slick {
   font-size: 16px;
   font-size: 1rem;
+  max-width: 100%;
   padding: 0;
   position: relative;
 }
@@ -105,14 +106,6 @@ body.page-admin .form--slick *,
   box-shadow: 0 2px 5px -3px rgba(0, 0, 0, 0.5) inset;
   color: #fff;
   outline: 0;
-}
-
-#edit-delete {
-  background: none;
-  border: 0;
-  box-shadow: none;
-  color: #fff;
-  float: right;
 }
 
 .form--slick .form-disabled {
@@ -191,7 +184,7 @@ body.page-admin .form--slick *,
 }
 
 .form--slick > .fieldset-wrapper {
-  padding: 0;
+  padding: 40px 0 0;
 }
 
 .form--slick fieldset legend {
@@ -1014,10 +1007,6 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
 .ui-dialog-content .form--slick .form-item,
 .ui-dialog-content .form--slick .form-item .form-item {
   clear: none;
-}
-
-.ui-dialog-content .form--slick {
-  padding-top: 0;
 }
 
 .ui-dialog-content .form--views {

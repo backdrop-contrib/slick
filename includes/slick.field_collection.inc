@@ -147,6 +147,7 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
     'media_switch'    => $settings['media_switch'],
     'ratio'           => $is_ratio ? $settings['aspect_ratio'] : FALSE,
     'view_mode'       => $options['view_mode'],
+    'iframe_lazy'     => !empty($settings['iframe_lazy']),
   );
   switch ($renderables['#field_type']) {
     case 'image':

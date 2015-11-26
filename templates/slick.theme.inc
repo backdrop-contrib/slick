@@ -445,6 +445,9 @@ function template_preprocess_slick_media(&$variables) {
         $attributes['class'][] = 'media--player';
         $attributes['class'][] = 'media--switch--player';
         $attributes['class'][] = drupal_clean_css_identifier('media--' . $media['scheme'] . '-player');
+        if (!empty($settings['iframe_lazy'])) {
+          $content_attributes['src'] = 'about:blank';
+        }
       }
 
       // Gets consistent with colorbox to share JS manipulation.

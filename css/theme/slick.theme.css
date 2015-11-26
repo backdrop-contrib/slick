@@ -1,7 +1,6 @@
 /**
  * @file.
  * Provided basic layout and styling for the Slick based on custom settings.
- * Detailed stylings are all yours, get yourself dirty.
  */
 
 .slick-wrapper,
@@ -14,19 +13,11 @@
   box-sizing: border-box;
 }
 
-img,
-object,
-embed,
-audio,
-canvas,
-video {
-  border: 0;
-  max-width: 100%;
-}
-
 img {
-  -ms-interpolation-mode: bicubic;
+  border: 0;
   height: auto;
+  max-width: 100%;
+  -ms-interpolation-mode: bicubic;  
 }
 
 .slick-hidden {
@@ -168,31 +159,6 @@ img {
 }
 
 /**
- * Edit link
- */
-.slide__content .edit-link {
-  display: block;
-  font-size: 0;
-  padding: 5px;
-  position: absolute;
-  left: 0;
-  text-indent: -9999px;
-  top: 0;
-  z-index: 2;
-}
-
-.slide__content .edit-link::before {
-  display: block;
-  font-size: 18px;
-  font-size: 1.125rem;
-  text-indent: 0;
-}
-
-.slide__content .file__translate {
-  left: 32px;
-}
-
-/**
  * Slick center, depends on JS centerMode with partial view if visible ones > 2.
  */
 .slick--center .slick-track {
@@ -237,6 +203,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 
 .slick,
 .slick__slide {
+  max-width: 100%;
   position: relative;
 }
 
@@ -293,24 +260,8 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   line-height: 1.2;
 }
 
-.slick--carousel .slide__title {
-  font-size: 22px;
-  font-size: 1.375rem;
-}
-
 .slide__link {
   margin: 30px auto;
-  text-transform: uppercase;
-}
-
-.slide__link .field-item {
-  display: inline-block;
-  vertical-align: top;
-}
-
-.slide__link .field-item a {
-  display: block;
-  padding: 5px 10px;
 }
 
 .slide__pattern {
@@ -342,8 +293,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 /* Overrides .slick-slider to make caption text selectable. */
 .slide__caption {
   cursor: text;
-  font-size: 16px;
-  font-size: 1rem;
   position: relative;
   -moz-user-select: text;
   -ms-user-select: text;
@@ -361,7 +310,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 
 /**
  * Complex layout needs custom refinement for mobile, hence it is reasonable
- * to apply for Desktop up. You have to adjust mobile version by your design.
+ * to apply for Desktop up. Adjust mobile version accordingly.
  */
 /**
  * Slide layouts, adjust accordingly per actual container slide.

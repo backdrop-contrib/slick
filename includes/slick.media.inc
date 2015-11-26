@@ -28,9 +28,10 @@ function slick_format_media(&$settings, $config, $thumb_nav = FALSE) {
     // Build settings for both theme_slick_item() and theme_slick_media().
     slick_extract_image_data($settings, $media, $slide, $item);
     $slide['settings'] += array(
-      'ratio'     => !empty($settings['aspect_ratio']) ? $settings['aspect_ratio'] : FALSE,
-      'type'      => $file->type,
-      'view_mode' => $view_mode,
+      'ratio'       => !empty($settings['aspect_ratio']) ? $settings['aspect_ratio'] : FALSE,
+      'type'        => $file->type,
+      'view_mode'   => $view_mode,
+      'iframe_lazy' => !empty($settings['iframe_lazy']),
     );
 
     // Needed settings: type scheme image_style uri view_mode.

@@ -15,6 +15,7 @@
 ?>
 <?php print render($item_prefix); ?>
 <div<?php print $attributes; ?>>
+<?php print render($item); ?>
 <?php if ($settings['is_media']): ?>
   <?php if (!$is_lightbox): ?>
     <iframe<?php print $content_attributes; ?> allowfullscreen><?php print $alternative_content; ?></iframe>
@@ -25,6 +26,5 @@
     <i class="media-icon media-icon--spinner"></i>
   <?php endif; ?>
 <?php endif; ?>
-<?php print render($item); ?>
 </div>
 <?php print render($item_suffix); ?>

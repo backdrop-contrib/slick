@@ -25,6 +25,7 @@ function slick_get_fields_default_settings() {
     'thumbnail_hover'   => FALSE,
     'type'              => '',
     'current_view_mode' => '',
+    'iframe_lazy'       => FALSE,
     'lightbox_ready'    => FALSE,
     'picture_ready'     => FALSE,
     'use_ajax'          => FALSE,
