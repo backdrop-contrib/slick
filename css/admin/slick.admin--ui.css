@@ -184,6 +184,7 @@ body.page-admin .form--slick *,
 }
 
 .form--slick > .fieldset-wrapper {
+  max-width: 100%;
   padding: 40px 0 0;
 }
 
@@ -374,6 +375,8 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
  */
 .form--slick .form-item .description {
   color: #808080;
+  max-width: 80%;
+  white-space: normal;
 }
 
 .has-tooltip .form-item > .description {

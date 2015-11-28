@@ -388,18 +388,19 @@ function template_preprocess_slick_grid(&$variables) {
  * Implements hook_preprocess_slick_media().
  */
 function template_preprocess_slick_media(&$variables) {
-  $element  = $variables['element'];
-  $settings = $element['#settings'];
-  $item     = $variables['item'] = $element['#item'];
-  $media    = isset($item['#item']) ? $item['#item'] : $settings;
-  $type     = isset($settings['type']) ? $settings['type'] : 'image';
-  $switcher = $settings['media_switch'] = isset($settings['media_switch']) ? $settings['media_switch'] : FALSE;
+  $element    = $variables['element'];
+  $settings   = $element['#settings'];
+  $item       = $variables['item'] = $element['#item'];
+  $media      = isset($item['#item']) ? $item['#item'] : $settings;
+  $type       = isset($settings['type']) ? $settings['type'] : 'image';
+  $switcher   = $settings['media_switch'] = isset($settings['media_switch']) ? $settings['media_switch'] : FALSE;
+  $multimedia = in_array($type, array('video', 'audio'));
 
   // Prepare variables.
   // $variables['classes_array'] = array_diff($variables['classes_array'], array('slick-media'));
   $variables['item_prefix'] = $variables['item_suffix'] = array();
   $variables['is_lightbox'] = $switcher && strpos($switcher, 'box') !== FALSE;
-  $settings['is_media']     = isset($settings['is_media']) && $switcher != 'content' ? $settings['is_media'] : FALSE;
+  $settings['is_media']     = isset($settings['is_media']) && $multimedia ? $settings['is_media'] : FALSE;
   $variables['alternative_content'] = '';
 
   // Configure attributes for containing elements.

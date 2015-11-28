@@ -1,4 +1,9 @@
 
+Slick 7.x-2.0-dev, 2015-11-28
+-----------------------------
+- Cleaned up useless lines.
+- Fixed for FC nested slicks with iframe and media icons visibility.
+
 Slick 7.x-2.0-dev, 2015-11-26
 -----------------------------
 - Added more description on Slick Grid or multiple rows carousel.

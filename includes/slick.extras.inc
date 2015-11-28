@@ -137,7 +137,6 @@ function slick_get_media_thumbnail(array &$settings, $media = array()) {
     return $image_uri;
   }
 
-  $settings['soundcloud'] = FALSE;
   // Ensures disabling Media sub-modules while being used doesn't screw up.
   try {
     $wrapper = file_stream_wrapper_get_instance_by_uri($media['media_uri']);
@@ -155,9 +154,6 @@ function slick_get_media_thumbnail(array &$settings, $media = array()) {
         break;
 
       case 'soundcloud':
-        if ($wrapper->interpolateUrl()) {
-          $settings['soundcloud'] = TRUE;
-        }
         $media_id = $parts['u'];
         break;
     }
