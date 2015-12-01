@@ -3,6 +3,7 @@
  * Best with 1 slidesToShow, placed at external region.
  * Detailed stylings are all yours, get yourself dirty.
  */
+
 html,
 body {
   height: 100%;
@@ -14,32 +15,43 @@ body {
   overflow: hidden;
 }
 
-body.page-admin {
-  overflow: visible;
-}
-
+.slick-wrapper--fullscreen,
+.slick-wrapper--fullscreen .slick,
 .slick--skin--fullscreen {
-  height: 100%;
   left: 0;
-  min-height: 100%;
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 8;
 }
 
-.page-admin .slick--skin--fullscreen {
-  min-height: 120px;
-  position: relative;
+.slick-wrapper--fullscreen,
+.slick--skin--fullscreen {
+  height: 100%;
+  min-height: 100%;
+}
+
+.slick-wrapper--fullscreen {
+  z-index: 997;
+}
+
+.slick--skin--fullscreen {
+  z-index: 998;
+}
+
+.slick-wrapper--fullscreen .slick--display--thumbnail {
+  bottom: 0;
+  top: auto;
+  z-index: 999;
+}
+
+.slick-wrapper--fullscreen .slick__slider {
+  margin-bottom: 0;
 }
 
 .slick--skin--fullscreen .slick__slider {
   height: 100%;
+  margin-bottom: 0;
   min-height: 100%;
-}
-
-.page-admin .slick--skin--fullscreen .slick__slider {
-  min-height: 120px;
 }
 
 .slick--skin--fullscreen .slick-list,
@@ -100,7 +112,6 @@ body.page-admin {
   color: #fff;
   font-size: 48px;
   font-size: 3rem;
-  font-weight: 600;
   line-height: 1;
   text-transform: uppercase;
 }
@@ -121,6 +132,28 @@ body.page-admin {
 
 .slick--skin--fullscreen .slick-dots {
   bottom: 20px;
+}
+
+/* Views UI Preview */
+body.page-admin {
+  overflow: visible;
+}
+
+.page-admin .slick-wrapper--fullscreen,
+.page-admin .slick-wrapper--fullscreen .slick,
+.page-admin .slick--skin--fullscreen,
+.page-admin .slick--skin--fullscreen .slide__media {
+  min-height: 620px;
+  position: relative;
+}
+
+.page-admin .slick-wrapper--fullscreen .slick--display--thumbnail {
+  min-height: 80px;
+  position: absolute;
+}
+
+.page-admin .slick--skin--fullscreen .slick__slider {
+  min-height: 120px;
 }
 
 @media (min-width: 65em) {

@@ -1,4 +1,13 @@
 
+Slick 7.x-2.0-dev, 2015-12-02
+-----------------------------
+- Removed too specific lines from most skin CSS, such as color, weight, etc.
+  where appropriate.
+- Fixed for Fullscreen skin thumbnail nav with asNavFor.
+- Removed over-specificity from slick.theme.css due to expected nested slicks
+  as it turned out to break some builtin layouts like Full width. Your overrides
+  should not be affected as the slick.theme.css is now less specific.
+
 Slick 7.x-2.0-dev, 2015-11-28
 -----------------------------
 - Cleaned up useless lines.

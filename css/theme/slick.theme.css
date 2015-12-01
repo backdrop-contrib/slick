@@ -17,7 +17,7 @@ img {
   border: 0;
   height: auto;
   max-width: 100%;
-  -ms-interpolation-mode: bicubic;  
+  -ms-interpolation-mode: bicubic;
 }
 
 .slick-hidden {
@@ -69,9 +69,11 @@ img {
   display: block;
   font-size: 0;
   height: 42px;
-  margin-top: -21px;
   pointer-events: auto;
+  position: absolute;
   top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
   width: 42px;
 }
 
@@ -112,15 +114,10 @@ img {
 /* Pure CSS arrow down, override by icon font accordingly */
 .slick-down {
   background: #ff6d2c;
-  border: 0;
-  border-radius: 50%;
-  bottom: 0;
   cursor: pointer;
-  display: block;
   height: 48px;
   left: 50%;
-  margin: -24px 0 0 -24px;
-  position: absolute;
+  margin-left: -24px;
   top: 50%;
   width: 48px;
 }
@@ -365,15 +362,14 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     width: 42%;
   }
 
-  /* Here comes the price for nested slicks: over-specificity! */
-  .slide--caption--center > .slide__content > .slide__caption {
+  .slide--caption--center .slide__caption {
     margin-top: -16%;
     position: absolute;
     top: 50%;
   }
 
-  .slide--caption--center > .slide__content > .slide__caption,
-  .slide--caption--center-top > .slide__content > .slide__caption {
+  .slide--caption--center .slide__caption,
+  .slide--caption--center-top .slide__caption {
     left: 50%;
     margin-left: -21%;
     padding: 0;
@@ -381,34 +377,34 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
     text-align: center;
   }
 
-  .slide--caption--right > .slide__content > .slide__caption {
+  .slide--caption--right .slide__caption {
     left: auto;
     position: absolute;
     right: 0;
   }
 
-  .slide--caption--top > .slide__content > .slide__caption,
-  .slide--caption--bottom > .slide__content > .slide__caption {
+  .slide--caption--top .slide__caption,
+  .slide--caption--bottom .slide__caption {
     position: absolute;
     width: 100%;
   }
 
-  .slide--caption--top > .slide__content > .slide__caption {
+  .slide--caption--top .slide__caption {
     top: 0;
   }
 
-  .slide--caption--bottom > .slide__content > .slide__caption {
+  .slide--caption--bottom .slide__caption {
     bottom: 0;
     top: auto;
   }
 
-  .slick--has-arrow-down .slide--caption--bottom > .slide__content > .slide__caption {
+  .slick--has-arrow-down .slide--caption--bottom .slide__caption {
     padding-bottom: 80px;
   }
 
-  .slide--caption--stage-left > .slide__content > .slide__caption,
-  .slide--caption--stage-right > .slide__content > .slide__caption,
-  .slide--caption--stage-zebra > .slide__content > .slide__caption {
+  .slide--caption--stage-left .slide__caption,
+  .slide--caption--stage-right .slide__caption,
+  .slide--caption--stage-zebra .slide__caption {
     left: 50%;
     margin-left: -41%;
     padding: 0;
@@ -417,7 +413,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   }
 
   .slick--display--thumbnail .slide__caption,
-  .slide--caption--below > .slide__content > .slide__caption {
+  .slide--caption--below .slide__caption {
     padding: 20px 0;
     position: relative;
     top: auto;
@@ -426,5 +422,11 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 
   .slick--display--thumbnail .slide__caption {
     padding: 5px 6px;
+  }
+
+  #overlay .slick {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1040px;
   }
 }

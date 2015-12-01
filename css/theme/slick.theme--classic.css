@@ -3,11 +3,12 @@
  * Detailed stylings are all yours, get yourself dirty.
  * Transform is more performed than positions.
  */
+
 .slick--skin--classic .slick__slide {
   overflow: hidden;
 }
 
-.slick--skin--classic .slick__slide .slide__caption {
+.slick--skin--classic .slide__caption {
   background-color: #000;
   background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
@@ -20,7 +21,7 @@
   width: 100%;
 }
 
-.slick--skin--classic .slick__slide .slide__description {
+.slick--skin--classic .slide__description {
   margin: 0;
 }
 
@@ -46,17 +47,20 @@
 }
 
 @media (min-width: 64em) {
-  .slick--skin--classic .slick__slide .slide__caption {
+  .slick--skin--classic .slide__caption {
     height: 100%;
     min-height: 100%;
+    padding: 60px 30px;
     top: 0;
     width: 22%;
   }
-  .slick--skin--classic .slick__slide .slide__caption .slide__data {
+
+  .slick--skin--classic .slide__caption .slide__data {
     margin: 0 !important;
     padding: 15px;
     width: 100%;
   }
+
   .slick--skin--classic .slide--caption--center .slide__caption {
     height: 120px;
     left: 50%;
@@ -65,14 +69,17 @@
     top: 50%;
     width: 80%;
   }
+
   .slick--skin--classic .slide--caption--top .slide__caption,
   .slick--skin--classic .slide--caption--center-top .slide__caption,
   .slick--skin--classic .slide--caption--bottom .slide__caption,
   .slick--skin--classic .slide--caption--below .slide__caption {
     height: auto;
     min-height: 80px;
+    padding: 30px;
     width: 100%;
   }
+
   .slick--skin--classic .slide--caption--bottom .slide__caption {
     bottom: 0;
     -ms-transform: translateY(210px);
@@ -81,6 +88,11 @@
     min-height: 120px;
     top: auto;
   }
+
+  .slick--skin--classic .slide--caption--stage-zebra .slide__title {
+    margin-bottom: 30px;
+  }
+
   .slick--skin--classic .slide--caption--stage-zebra:nth-child(odd) .slide__caption,
   .slick--skin--classic .slide--caption--stage-left .slide__caption,
   .slick--skin--classic .slide--caption--left .slide__caption {
@@ -89,6 +101,7 @@
     -webkit-transform: translateX(-320px);
     transform: translateX(-320px);
   }
+
   .slick--skin--classic .slide--caption--stage-zebra:nth-child(even) .slide__caption,
   .slick--skin--classic .slide--caption--stage-right .slide__caption,
   .slick--skin--classic .slide--caption--right .slide__caption {
@@ -98,6 +111,7 @@
     -webkit-transform: translateX(320px);
     transform: translateX(320px);
   }
+
   .slick--skin--classic .slide--caption--top .slide__caption,
   .slick--skin--classic .slide--caption--center-top .slide__caption {
     top: 0;
@@ -105,6 +119,7 @@
     -webkit-transform: translateY(-210px);
     transform: translateY(-210px);
   }
+
   .slick--skin--classic .slick__slide.slick-active .slide__caption {
     -ms-transform: translateY(0);
     -webkit-transform: translateY(0);

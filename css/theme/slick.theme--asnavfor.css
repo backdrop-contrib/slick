@@ -5,6 +5,7 @@
  * Thumbnail has class "slick--display--thumbnail".
  * Tips: make sure to use odd number for slideToShow with centerMode on.
  */
+
 .slick--display--thumbnail.slick--skin--asnavfor {
   margin-left: auto;
   margin-right: auto;

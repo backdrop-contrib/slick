@@ -3,6 +3,7 @@
  * Adds 3d view with focal point at back, best with centerMode + 3 slidesToShow.
  * Detailed stylings are all yours, get yourself dirty.
  */
+
 .slick--skin--3d-back .slick-initialized {
   overflow: hidden;
   padding-bottom: 30px;
