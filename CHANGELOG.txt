@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2015-12-02
 -----------------------------
+- Issue #2623396 by dalemoore, Spanners: Really wide View edit screen in admin
+  overlay
 - Removed too specific lines from most skin CSS, such as color, weight, etc.
   where appropriate.
 - Fixed for Fullscreen skin thumbnail nav with asNavFor.
