@@ -1062,6 +1062,20 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   width: 100%;
 }
 
+@media screen and (min-width: 1280px) {
+  #overlay .form--slick .form-item label {
+    width: 140px;
+  }
+  
+  #overlay .form--field .form-item label {
+    width: 200px;
+  }
+
+  #overlay .form--slick .form-type-checkboxes > label  {
+    width: 100%;
+  }
+}
+
 @media screen and (max-width: 1280px) {
   .form--slick.form--field .form-item,
   .form--slick .vertical-tabs-panes .form-item {
@@ -1084,6 +1098,10 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
 }
 
 @media screen and (max-width: 940px) {
+  #overlay .form--slick .form-item label {
+    width: 100%;
+  }
+
   .form--slick.form--field .form-item,
   .form--slick .vertical-tabs-panes .form-item {
     min-height: 100px;

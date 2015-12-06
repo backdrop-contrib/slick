@@ -22,6 +22,7 @@ function slick_get_global_default_settings() {
     'skin_arrows'         => '',
     'skin_dots'           => '',
     'slide_caption'       => array(),
+    'slide_classes'       => '',
     'slide_image'         => '',
     'slide_layout'        => '',
     'slide_overlay'       => array(),

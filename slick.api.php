@@ -9,8 +9,56 @@
 /**
  * Slick may be configured using the web interface via sub-modules.
  *
- * However if you want to code it, use slick_build(), or build it from the
- * available data for more advanced slick such as asNavFor, see slick_fields.
+ * However if you want to code it, use slick_build() for easy build.
+ *
+ * @see slick_fields or slick_views.
+ */
+
+/**
+ * 1. Quick sample.
+ *
+ * @see slick_build().
+ */
+  $element = array();
+
+  // Add items.
+  $items = array();
+
+  // Use theme_slick_lazy to have lazyLoad, or theme_image_style/theme_image.
+  // Caption contains: editor, overlay, title, alt, data, link.
+  $items[] = array(
+    'slide'   => '<img src="https://drupal.org/files/One.gif" />',
+    'caption' => array('title' => t('Description #1')),
+  );
+
+  $items[] = array(
+    'slide'   => '<img src="https://drupal.org/files/Two.gif" />',
+    'caption' => array('title' => t('Description #2')),
+  );
+
+  $items[] = array(
+    'slide'   => '<img src="https://drupal.org/files/Three.gif" />',
+    'caption' => array('title' => t('Description #3')),
+  );
+
+  // Add options.
+  $options = array(
+    'autoplay' => TRUE,
+    'dots'     => TRUE,
+    'arrows'   => FALSE,
+  );
+
+  // Build the slick.
+  $element = slick_build($items, $options);
+
+  // Render the $element, such as found normally at a .tpl file.
+  print render($element);
+
+  // Or simply return the $element if a renderable array is expected.
+  return $element;
+
+/**
+ * 2. Detailed sample.
  *
  * The example is showing a customized views-view-unformatted--ticker.tpl.php.
  * Practically any content-related .tpl.php file where you have data to print.
@@ -20,116 +68,267 @@
  * First, create an unformatted Views block, says 'Ticker' containing ~ 10
  * titles, or any data for the contents -- using EFQ, or static array will do.
  */
-// 1.
-// Provides HTML settings with optionset name and ID, none of JS related.
-// See slick_get_element_default_settings() for more supported keys.
-// To add JS key:value pairs, use #options at theme_slick() below instead.
-// If you provide ID, be sure unique per instance as it is cached.
-// Leave empty to be provided by the module.
-$id = 'slick-ticker';
-$settings = array(
-// Optional optionset name, otherwise fallback to default.
-// 'optionset' => 'default',
-// Optional skin name fetched from hook_slick_skins_info(), otherwise none.
-// 'skin' => 'default',
-// Note we add attributes to the settings, not as theme key here, to allow
-// various scenarios before being passed to the actual #attributes property.
-// Or ignore this, if the only attribute is just $id, and the $id is set.
-// @see README.txt for the HTML structure.
-// Leave empty to be provided by the module.
-  'attributes' => array(
-    'id' => $id,
-  ),
-  // content_attributes ID is for nested, or asNavFor slicks.
-  // Pass the proper ID to asnavfor_target, see slick_fields/slick_views.
+  // 1.
+  // Optional $settings, can be removed.
+  // Provides HTML settings with optionset name and ID, none of JS related.
+  // See slick_get_element_default_settings() for more supported keys.
+  // To add JS key:value pairs, use #options at theme_slick() below instead.
+  // If you provide ID, be sure unique per instance as it is cached.
   // Leave empty to be provided by the module.
-  'content_attributes' => array(
-    'id' => $id . '-slider',
-  ),
-);
+  $id = 'slick-ticker';
+  $settings = array(
+    // Optional optionset name, otherwise fallback to default.
+    // 'optionset' => 'blog',
 
-// 3.
-// Prepare $items contents, note the 'slide' key is to hold the actual slide
-// which can be pure and simple text, or any image/media file. Meaning $rows can
-// be text only, or image/audio/video, or a combination of both.
-// To add caption/overlay, use 'caption' key with the supported sub-keys:
-// title, alt, link, overlay, editor, or data for complex content.
-// Sanitize each sub-key content accordingly.
-// See template_preprocess_slick_item() for more info.
-$items = array();
-foreach ($rows as $key => $row) {
-  $items[] = array(
-    'slide' => $row,
-    // If the slide is an image, to add text caption, use:
-    // 'caption' => 'some-caption data',
-    // Individual slide supports some useful settings like layout, classes, etc.
-    // Meaning each slide can have different layout, or classes.
-    // See sub-modules implementation.
-    'settings' => array(
-      'layout' => 'bottom',
-      'slide_classes' => 'slide--custom-class--' . $key,
-      'has_pattern' => TRUE,
+    // Optional skin name fetched from hook_slick_skins_info(), otherwise none.
+   // 'skin' => 'fullwidth',
+
+    // Note we add attributes to the settings, not as theme key here, to allow
+    // various scenarios before being passed to the actual #attributes property.
+    // As ID can be used for lightbox group, cache ID, the asnavfor, etc.
+    // Or ignore this, if the only attribute is just $id, and the $id is set.
+    // @see README.txt for the HTML structure.
+    // Do not supply attributes to be provided by the module instead.
+    'attributes' => array(
+      'id' => $id,
     ),
   );
-}
 
-// 4.
-// Optional JS and CSS assets loader, see slick_attach(). An empty array should
-// suffice for the most basic slick with no skin at all.
-// @see slick_fields/slick_views for the real world samples.
-$attach = array();
-// Add more assets using supported slick_attach() keys.
-$attachments = slick_attach($attach);
-// Add more attachments using regular library keys just as freely:
-$attachments['css'] += array(HOOK_PATH . '/css/zoom.css' => array('weight' => 9));
-$attachments['js'] += array(HOOK_PATH . '/js/zoom.min.js' => array('weight' => -5));
+  // 3.
+  // Obligatory $items, as otherwise empty slick.
+  // Prepare $items contents, note the 'slide' key is to hold the actual slide
+  // which can be pure and simple text, or any image/media file.
+  // Meaning $rows can be text only, or image/audio/video, or a combination
+  // of both.
 
-// 5.
-// Optional specific Slick JS options, if no optionset provided above.
-// Play with speed and options to achieve desired result.
-// @see slick_get_options()
-$options = array(
-  'arrows' => FALSE,
-  'autoplay' => TRUE,
-  'vertical' => TRUE,
-  'draggable' => FALSE,
-);
+  // To add caption/overlay, use 'caption' key with the supported sub-keys:
+  // title, alt, link, overlay, editor, or data for complex content.
+  // Sanitize each sub-key content accordingly.
+  // @see template_preprocess_slick_item() for more info.
+  $items = array();
+  foreach ($rows as $key => $row) {
+    $items[] = array(
+      'slide' => $row,
 
-// 6.A.
-// Build the slick, note key 0 just to mark the thumbnail asNavFor with key 1.
-$slick[0] = array(
-  '#theme' => 'slick',
-  '#items' => $items,
-  '#options' => $options,
-  '#settings' => $settings,
-  // Attach the Slick library, see slick_attach() for more options.
-  // At D8, #attached is obligatory to avoid issue with caching.
-  '#attached' => $attachments,
-);
+      // Optional caption contains: editor, overlay, title, alt, data, link.
+      // If the above slide is an image, to add text caption, use:
+      // 'caption' => array('title' => 'some-caption data'),
 
-// Optionally build an asNavFor with $slick[1], and both should be passed to
-// theme_slick_wrapper(), otherwise a single theme_slick() will do.
-// See slick_fields, or slick_views sub-modules for asNavFor samples.
-// All is set, render the Slick.
-print render($slick);
+      // Optional settings to manipulate layout, can be removed.
+      // Individual slide supports some useful settings like layout, classes,
+      // etc.
+      // Meaning each slide can have different layout, or classes.
+      // @see slick_layouts()
+      // @see slick_fields README.txt for layout, or sub-modules implementation.
+      'settings' => array(
 
-// 6.B.
-// Or recommended, use slick_build() so you can cache the slick instance easily.
-// If it is a hardly updated content, such as profile videos, logo carousels, or
-// more permanent home slideshows, select "Persistent", otherwise time.
-// Cache the slick for 1 hour and fetch fresh contents when the time reached.
-// If stale cache is not cleared, slick will keep fetching fresh contents.
-$settings['cache'] = 3600;
-// Or cache the slick and keep stale contents till the next cron runs.
-$settings['cache'] = 'persistent';
-// Once cron hits, slick will use the new cached version regardless of
-// expiration time due to the nature of render cache.
-// Add a custom unique cache ID.
-$settings['cid'] = 'my-extra-unique-id';
-// The parameters are as described above:
-$slick = slick_build($items, $options, $settings, $attachments, $id);
-// All is set, render the Slick.
-print render($slick);
+        // Optinally adds a custom layout, can be a static uniform value, or
+        // dynamic one based on the relevant field value.
+        // @see slick_fields README.txt for the supported layout keys.
+        'layout' => 'bottom',
+
+        // Optinally adds a custom class, can be a static uniform class, or
+        // dynamic one based on the relevant field value.
+        'slide_classes' => 'slide--custom-class--' . $key,
+
+        // Optinally adds CSS image pattern overlay over the main image.
+        'has_pattern' => TRUE,
+      ),
+    );
+  }
+
+  // 4.
+  // Optional assets loader if using slick_build(), yet required for renderable.
+  // An empty array should suffice for the most basic slick with no skin at all.
+  // @see slick_attach().
+  // @see slick_fields/slick_views for the real world samples.
+  $attach = array();
+
+  // Add more assets using supported slick_attach() keys.
+  $attach = array(
+    'attach_skin' => 'my-custom-skin',
+
+    // If building asnavfor with a custom skin, otherwise ignore this.
+    'attach_skin_thumbnail' => 'my-custom-skin-thumbnail',
+  );
+
+  $attachments = slick_attach($attach);
+
+  // Add more attachments using regular library keys just as freely:
+  $attachments['css'] += array(MYTHEME_PATH . '/css/zoom.css'   => array('weight' => 9));
+  $attachments['js']  += array(MYTHEME_PATH . '/js/zoom.min.js' => array('weight' => 0));
+
+  // 5.
+  // Optional specific JS options, to re-use one optionset, can be removed.
+  // Play with speed and options to achieve desired result.
+  // @see slick_get_options()
+  $options = array(
+    'arrows'    => FALSE,
+    'autoplay'  => TRUE,
+    'vertical'  => TRUE,
+    'draggable' => FALSE,
+  );
+
+  // 6.A.
+  // Build the slick, note key 0 just to mark the thumbnail asNavFor with key 1.
+  $slick[0] = array(
+    '#theme'    => 'slick',
+    '#items'    => $items,
+
+    // The following 3 lines are optional, if needed, and can be removed.
+    '#options'  => $options,
+    '#settings' => $settings,
+
+    // Attach the Slick library, see slick_attach() for more options.
+    '#attached' => $attachments,
+  );
+
+  // Optionally build an asNavFor with $slick[1], and both should be passed to
+  // theme_slick_wrapper(), otherwise a single theme_slick() will do.
+  // See slick_fields, or slick_views sub-modules for asNavFor samples.
+  // ATM, we only have one slick and all is set, so render the Slick.
+  print render($slick);
+
+  // 6.B.
+  // Optional Cache option, can be removed.
+  // Or recommended, use slick_build() to cache the slick instance easily.
+  // If it is a hardly updated content, such as profile videos, logo carousels,
+  // or more permanent home slideshows, select "Persistent", otherwise time.
+
+  // Cache the slick for 1 hour and fetch fresh contents when the time reached.
+  // If stale cache is not cleared, slick will keep fetching fresh contents.
+  $settings['cache'] = 3600;
+
+  // Or cache the slick and keep stale contents till the next cron runs.
+  $settings['cache'] = 'persistent';
+
+  // Optionally add a custom unique cache ID.
+  $settings['cid'] = 'my-extra-unique-id';
+
+  // Build the slick with the arguments as described above:
+  $slick = slick_build($items, $options, $settings, $attachments, $id);
+
+  // The following should also work as the only required is $items:
+  $slick = slick_build($items);
+
+  // All is set, render the Slick.
+  print render($slick);
+
+/**
+ * 3. AsNavFor sample.
+ *
+ * Requirements for asNavFor:
+ *   - $settings['optionset_thumbnail'] = 'optionset_name';
+ *     Defined for both slick main and thumbnail where 'optionset_name' is
+ *     the same optionset name.
+ *
+ *   - $settings['current_display'] = 'thumbnail';
+ *     Must be defined explicitly only for the thumbnail $settings.
+ *
+ *   - $settings['asnavfor_target'] = '#TARGETID-slider';
+ *     Defined for both slick main and thumbnail where "TARGETID-slider" is the
+ *     actual target which is placed within the $content_attributes.
+ *
+ *     See the HTML structure below to get a clear idea.
+ *
+ * 1. Main slider:
+ * <div id="slick-for" class="slick slick-processed">
+ *   <div id="slick-for-slider" class="slick__slider slick-initialized slick-slider">
+ *     <div class="slick__slide"></div>
+ *   </div>
+ * </div>
+ *
+ * 2. Thumbnail slider:
+ * <div id="slick-nav" class="slick slick-processed">
+ *   <div id="slick-nav-slider" class="slick__slider slick-initialized slick-slider">
+ *     <div class="slick__slide"></div>
+ *   </div>
+ * </div>
+ *
+ * At both cases, asNavFor should target slick-initialized class/ID attributes,
+ * hence "#slick-for-slider" and "#slick-nav-slider" respectively.
+ * Note the "#" before the ID. Slick is expecting valid CSS selector.
+ * The suffix "-slider" is automatically added by module.
+ */
+
+  $slick = array();
+
+  // 1. Main slider ------------------------------------------------------------
+  // Main caption contain: editor, overlay, title, alt, data, link.
+
+  // Add items.
+  $items = array();
+
+   // Use theme_slick_lazy to have lazyLoad, or theme_image_style/theme_image.
+  $images = array(1, 2, 3, 4, 6, 7);
+  foreach ($images as $key) {
+    $items[] = array(
+      'slide'   => '<img src="/sites/all/images/image-0' . $key . '.jpg" width="1140" />',
+      'caption' => array('title' => t('Description #' . $key)),
+    );
+  }
+
+  // Add options.
+  $options = array(
+    'arrows'        => FALSE,
+    'centerMode'    => TRUE,
+    'centerPadding' => '',
+  );
+
+  // Satisfy two requirements for the main asnavfor.
+  $settings = array(
+    'optionset_thumbnail' => 'optionset_name_must_be_similar',
+
+    // If the main slick ID is "slick-for", the asNavfor target is
+    // targetting the thumbnail slider ID, suffixed with "-slider" automatically.
+    'asnavfor_target' => '#slick-nav-slider',
+  );
+
+  // Build the main slider.
+  $slick[0] = slick_build($items, $options, $settings, $attach = array(), $id = 'slick-for');
+
+  // 2. Thumbnail slider -------------------------------------------------------
+  // Thumbnail caption only accepts: data.
+  $items = array();
+  foreach ($images as $key) {
+    $items[] = array(
+      'slide'   => '<img src="/sites/all/images/image-0' . $key . '.jpg" width="210" />',
+      'caption' => array('data' => t('Description #' . $key)),
+    );
+  }
+
+  // Add options.
+  $options = array(
+    'arrows'        => TRUE,
+    'centerMode'    => TRUE,
+    'centerPadding' => '10px',
+
+    // Be sure to have multiple slides for the thumbnail, otherwise nonsense.
+    'slidesToShow'  => 5,
+  );
+
+  // Satisfy three requirements for the thumbnail asnavfor.
+  $settings = array(
+    'optionset_thumbnail' => 'optionset_name_must_be_similar',
+
+    // Must define 'current_display' explicitly to 'thumbnail'.
+    'current_display' => 'thumbnail',
+
+    // If the thumbnail slick ID is "slick-nav", the asNavfor target is
+    // targetting the main slider ID, suffixed with "-slider" automatically.
+    'asnavfor_target' => '#slick-for-slider',
+  );
+
+  // Build the thumbnail slider.
+  $slick[1] = slick_build($items, $options, $settings, $attach = array(), $id = 'slick-nav');
+
+  // Pass both slicks to theme_slick_wrapper() to get a wrapper.
+  $element = array(
+    '#theme' => 'slick_wrapper',
+    '#items' => $slick,
+  );
+
+  return $element;
 
 /**
  * Registers Slick skins.
@@ -165,7 +364,7 @@ function hook_slick_skins_info() {
 
   return array(
     'skin_name' => array(
-      // Human readable skin name.
+  // Human readable skin name.
       'name' => t('Skin name'),
       // Description of the skin.
       'description' => t('Skin description.'),
@@ -230,7 +429,7 @@ function hook_slick_attach_info_alter(array &$attach, $settings) {
   // Use key 'inline css' to register skin that wants inline CSS rather than
   // images when declaring the skins, see fullscreen skin.
   // Use hook_slick_inline_css_info_alter() to modify the output.
-  // @see slick_get_inline_css_skins()
+  // @see cssInlineSkin()
   // @see slick_slick_skins_info()
   $attach['attach_inline_css'] = NULL;
 
@@ -261,7 +460,7 @@ function hook_slick_attach_load_info_alter(&$load, $attach, $skins, $settings) {
   $min = $slick_path . '/js/slick.load.min.js';
   $dev = $slick_path . '/js/slick.load.js';
 
-  if (HOOK_DEBUG) {
+  if (MYMODULE_DEBUG) {
     // Switch to the non-minified version of the slick.load.min.js.
     $load['js'] += array(
       $dev => array('group' => JS_DEFAULT, 'weight' => 0),

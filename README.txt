@@ -276,7 +276,7 @@ To create Slick grid or multiple rows carousel, there are 3 options:
 The first 2 are supported by core library using pure JS approach.
 The last is the Module feature using pure CSS Foundation block-grid. The key is:
 the total amount of Views results must be bigger than Visible slides, otherwise
-broken Grid, see skin Grid above for more detals.
+broken Grid, see skin Grid above for more details.
 
 
 HTML STRUCTURE

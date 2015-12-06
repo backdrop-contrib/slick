@@ -110,7 +110,7 @@
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
       if (t.attr("id") === slick.$slider.attr("id")) {
-        var opt = slick.options;
+        var o = slick.options;
         // Must take care for asNavFor instances, with/without slick-wrapper,
         // with/without block__no_wrapper/ views_view_no_wrapper, etc.
         var w = t.parent().parent(".slick-wrapper").length
@@ -119,8 +119,13 @@
         $(".slick-slide", w).removeClass("slick-current");
         $("[data-slick-index='" + slick.currentSlide + "']", w).addClass("slick-current");
 
+        // Removes padding rules, if no value is provided to allow non-inline.
+        if (!o.centerPadding || o.centerPadding === "0") {
+          slick.$list.css("padding", "");
+        }
+
         // Do not remove arrows, to allow responsive have different options.
-        return slick.slideCount <= opt.slidesToShow || opt.arrows === false
+        return slick.slideCount <= o.slidesToShow || o.arrows === false
           ? a.addClass("element-hidden") : a.removeClass("element-hidden");
       }
     },

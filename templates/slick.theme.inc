@@ -162,6 +162,7 @@ function template_preprocess_slick(&$variables) {
     $js['slide'] = empty($js['slide']) && $js['focusOnSelect'] ? '.slick__slide' : '';
 
     // Only if asNavFor, enforce clickable thumbnail, otherwise no joy.
+    $settings['asnavfor_target'] = empty($settings['asnavfor_target']) ? $js['asNavFor'] : $settings['asnavfor_target'];
     if (!empty($settings['optionset_thumbnail']) && !empty($settings['asnavfor_target'])) {
       if ($settings['current_display'] == 'thumbnail') {
         $js['slide'] = '.slick__slide';
@@ -660,6 +661,7 @@ function slick_remove_wasted_dependent_options(array &$config) {
     'autoplay'   => array('pauseOnHover', 'pauseOnDotsHover', 'autoplaySpeed'),
     'centerMode' => array('centerPadding'),
     'dots'       => array('dotsClass', 'appendDots'),
+    'rows'       => array('slidesPerRow'),
     'swipe'      => array('swipeToSlide'),
     'vertical'   => array('verticalSwiping'),
     'useCSS'     => array('cssEase', 'cssEaseBezier', 'cssEaseOverride'),

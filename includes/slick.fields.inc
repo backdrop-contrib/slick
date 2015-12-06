@@ -20,7 +20,6 @@ function slick_get_fields_default_settings() {
     'picture'           => FALSE,
     'picture_style'     => '',
     'picture_fallback'  => '',
-    'slide_classes'     => '',
     'thumbnail_style'   => '',
     'thumbnail_hover'   => FALSE,
     'type'              => '',

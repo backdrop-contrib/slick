@@ -1,4 +1,11 @@
 
+Slick 7.x-2.0-dev, 2015-12-07
+-----------------------------
+- Updated slick.api.php with more samples, quick and asnavfor ones.
+- Respected empty centerPadding ('0' or '') to allow pure CSS controlled styled
+  rather than inline style. This removed inline padding: 0px, so CSS do not have
+  to use !important to override it.
+
 Slick 7.x-2.0-dev, 2015-12-02
 -----------------------------
 - Issue #2623396 by dalemoore, Spanners: Really wide View edit screen in admin
