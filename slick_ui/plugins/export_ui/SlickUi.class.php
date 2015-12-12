@@ -674,7 +674,7 @@ class SlickUi extends ctools_export_ui {
 
       $elements['useCSS'] = array(
         'title' => t('Use CSS'),
-        'description' => t('Enable/Disable CSS Transitions.'),
+        'description' => t('Enable/disable CSS transitions.'),
         'type' => 'checkbox',
       );
 
@@ -696,6 +696,12 @@ class SlickUi extends ctools_export_ui {
         'options' => _slick_css_easing_options(),
         'empty_option' => t('- None -'),
         'states' => array('visible' => array(':input[name*="options[settings][useCSS]"]' => array('checked' => TRUE))),
+      );
+
+      $elements['useTransform'] = array(
+        'title' => t('Use transform'),
+        'description' => t('Enable/disable CSS transforms.'),
+        'type' => 'checkbox',
       );
 
       $elements['easing'] = array(

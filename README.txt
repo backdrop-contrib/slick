@@ -352,7 +352,7 @@ TROUBLESHOOTING
 - If switching from beta1 to the latest via Drush fails, try the good old UI.
   Be sure to clear cache first, then run /update.php, if broken slick.
 
-- If you are customizing template files, or theme funtions, be sure to re-check
+- If you are customizing template files, or theme functions, be sure to re-check
   against the latest.
 
 - A Slick instance may be cached by its ID. Having two different slicks with the

@@ -24,7 +24,7 @@
   // Add items.
   $items = array();
 
-  // Use theme_slick_lazy to have lazyLoad, or theme_image_style/theme_image.
+  // Use theme_slick_image_lazy to have lazyLoad, or theme_image_style/theme_image.
   // Caption contains: editor, overlay, title, alt, data, link.
   $items[] = array(
     'slide'   => '<img src="https://drupal.org/files/One.gif" />',
@@ -114,7 +114,7 @@
       // If the above slide is an image, to add text caption, use:
       // 'caption' => array('title' => 'some-caption data'),
 
-      // Optional settings to manipulate layout, can be removed.
+      // Optional slide settings to manipulate layout, can be removed.
       // Individual slide supports some useful settings like layout, classes,
       // etc.
       // Meaning each slide can have different layout, or classes.
@@ -122,16 +122,16 @@
       // @see slick_fields README.txt for layout, or sub-modules implementation.
       'settings' => array(
 
-        // Optinally adds a custom layout, can be a static uniform value, or
+        // Optionally adds a custom layout, can be a static uniform value, or
         // dynamic one based on the relevant field value.
         // @see slick_fields README.txt for the supported layout keys.
         'layout' => 'bottom',
 
-        // Optinally adds a custom class, can be a static uniform class, or
+        // Optionally adds a custom class, can be a static uniform class, or
         // dynamic one based on the relevant field value.
         'slide_classes' => 'slide--custom-class--' . $key,
 
-        // Optinally adds CSS image pattern overlay over the main image.
+        // Optionally adds CSS image pattern overlay over the main image.
         'has_pattern' => TRUE,
       ),
     );
@@ -259,12 +259,12 @@
   // Add items.
   $items = array();
 
-   // Use theme_slick_lazy to have lazyLoad, or theme_image_style/theme_image.
+  // Use theme_slick_image_lazy to have lazyLoad, or theme_image_style/theme_image.
   $images = array(1, 2, 3, 4, 6, 7);
   foreach ($images as $key) {
     $items[] = array(
       'slide'   => '<img src="/sites/all/images/image-0' . $key . '.jpg" width="1140" />',
-      'caption' => array('title' => t('Description #' . $key)),
+      'caption' => array('title' => 'Description #' . $key),
     );
   }
 
@@ -276,8 +276,9 @@
   );
 
   // Satisfy two requirements for the main asnavfor.
+  // 'optionset_thumbnail_name_must_be_similar', e.g.: default, slick_nav.
   $settings = array(
-    'optionset_thumbnail' => 'optionset_name_must_be_similar',
+    'optionset_thumbnail' => 'optionset_thumbnail_name_must_be_similar',
 
     // If the main slick ID is "slick-for", the asNavfor target is
     // targetting the thumbnail slider ID, suffixed with "-slider" automatically.
@@ -293,7 +294,7 @@
   foreach ($images as $key) {
     $items[] = array(
       'slide'   => '<img src="/sites/all/images/image-0' . $key . '.jpg" width="210" />',
-      'caption' => array('data' => t('Description #' . $key)),
+      'caption' => array('data' => 'Description #' . $key),
     );
   }
 
@@ -308,8 +309,9 @@
   );
 
   // Satisfy three requirements for the thumbnail asnavfor.
+  // 'optionset_thumbnail_name_must_be_similar', e.g.: default, slick_nav.
   $settings = array(
-    'optionset_thumbnail' => 'optionset_name_must_be_similar',
+    'optionset_thumbnail' => 'optionset_thumbnail_name_must_be_similar',
 
     // Must define 'current_display' explicitly to 'thumbnail'.
     'current_display' => 'thumbnail',

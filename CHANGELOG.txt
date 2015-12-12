@@ -1,4 +1,9 @@
 
+Slick 7.x-2.0-dev, 2015-12-11
+-----------------------------
+- Updated for v1.5.9 with the new option useTransform.
+- Fixed for Navbar compatibility.
+
 Slick 7.x-2.0-dev, 2015-12-07
 -----------------------------
 - Updated slick.api.php with more samples, quick and asnavfor ones.

@@ -239,6 +239,7 @@ function slick_get_options() {
       'cssEase'          => 'ease',
       'cssEaseBezier'    => '',
       'cssEaseOverride'  => '',
+      'useTransform'     => FALSE,
       'easing'           => 'linear',
       'variableWidth'    => FALSE,
       'vertical'         => FALSE,
