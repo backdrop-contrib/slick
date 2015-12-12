@@ -13,10 +13,16 @@
       $(".media--switch--player", context).once("slick-media", function () {
         var t = $(this),
           $slider = t.closest(".slick__slider"),
+          $slick = $slider.closest(".slick"),
           iframe = t.find("iframe"),
           newIframe = iframe.clone(),
           media = newIframe.data("media"),
-          url = newIframe.data("lazy");
+          url = newIframe.data("lazy"),
+          $nester = '';
+
+          if ($slick.closest(".slick__slider").length) {
+            $nester = $slick.closest(".slick__slider");
+          }
 
         // Remove iframe to avoid browser requesting them till clicked.
         iframe.remove();
@@ -51,6 +57,10 @@
             $slider.addClass("is-paused").slick("slickPause");
           }
 
+          if ($nester) {
+            $nester.addClass("is-paused").slick("slickPause");
+          }
+
           t.addClass("is-playing").append(newIframe);
           newIframe.attr("src", url);
 
@@ -68,6 +78,13 @@
           $slider.find(".is-playing .media-icon--close")
             .trigger("click.media-close");
         });
+
+        if ($nester) {
+          $nester.on("afterChange", function () {
+            $nester.find(".is-playing .media-icon--close")
+              .trigger("click.media-close");
+          });
+        }
       });
     }
   };

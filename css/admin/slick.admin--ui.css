@@ -1083,7 +1083,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   }
 
   .form--field {
-    min-width: 800px;
+    min-width: 760px;
   }
 }
 

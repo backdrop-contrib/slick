@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2015-12-12
+-----------------------------
+- Fixed for nested slicks with videos. The videos should be turned off when
+  either the nested slick, or the parent slick, with/without asnavfor, is
+  changing.
+
 Slick 7.x-2.0-dev, 2015-12-11
 -----------------------------
 - Updated for v1.5.9 with the new option useTransform.
