@@ -282,7 +282,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       '#type'        => 'select',
       '#title'       => t('Aspect ratio'),
       '#options'     => drupal_map_assoc(array('1:1', '4:3', '16:9')),
-      '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpedtedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc.', array(
+      '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpectedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc.', array(
         '@dimensions' => '//size43.com/jqueryVideoTool.html',
         '@follow'     => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
         '@link'       => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
@@ -366,12 +366,15 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       if ($instance['entity_type'] != 'ctools') {
         $elements['slide_caption']['#disabled'] = TRUE;
       }
+
+      $bundle_path = _slick_fields_get_bundle_path($instance);
+
       $elements['slide_caption']['#description'] = t('You need to <a href="@url" target="_blank">enable both title and alt fields</a> to use them as caption.', array(
-        '@url' => url('admin/structure/types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'],
+        '@url' => url($bundle_path['field'],
             array(
-              'fragment' => 'edit-instance-settings-title-field',
+              'fragment' => 'edit-instance-settings-alt-field',
               'query' => array(
-                'destination' => 'admin/structure/types/manage/' . $instance['bundle'] . '/display',
+                'destination' => $bundle_path['display'],
               ),
             )
           ),
@@ -456,4 +459,30 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
   slick_get_admin_assets($elements, $settings);
   return $elements;
+}
+
+/*
+ * Helper function for getting correct bundle for manage field/display path.
+ */
+function _slick_fields_get_bundle_path($instance) {
+  $path = array();
+
+  switch ($instance['entity_type']) {
+    case 'bean':
+      $path['field'] = 'admin/structure/block-types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'];
+      $path['display'] = 'admin/structure/block-types/manage/' . $instance['bundle'] . '/display';
+      break;
+
+    case 'taxonomy_term':
+      $path['field'] = 'admin/structure/taxonomy/' . $instance['bundle'] . '/fields/' . $instance['field_name'];
+      $path['display'] = 'admin/structure/taxonomy/' . $instance['bundle'] . '/display';
+      break;
+
+    default:
+      $path['field'] = 'admin/structure/types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'];
+      $path['display'] = 'admin/structure/types/manage/' . $instance['bundle'] . '/display';
+      break;
+  }
+
+  return $path;
 }

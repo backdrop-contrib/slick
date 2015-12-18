@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2015-12-19
+-----------------------------
+- #2637706 by kyletaylored: Support when using Slick as field in BEAN/Taxonomy.
+
 Slick 7.x-2.0-dev, 2015-12-12
 -----------------------------
 - Fixed for nested slicks with videos. The videos should be turned off when
