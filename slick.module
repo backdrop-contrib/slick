@@ -2,26 +2,23 @@
 
 /**
  * @file
- * Slick slider for Drupal.
+ * Slick carousel integration, the last carousel you'll ever need.
  */
 
 /**
  * Implements hook_theme().
  */
 function slick_theme() {
-  $base = array(
-    'file' => 'templates/slick.theme.inc',
-  );
-  return array(
-    // Slick display.
-    'slick' => $base + array(
-      'render element' => 'elements',
-    ),
-    // Individual slick item.
-    'slick_slide' => $base + array(
+  $themes = [];
+  $items  = ['slick', 'slide', 'grid', 'image', 'media', 'thumbnail', 'vanilla', 'wrapper'];
+  foreach ($items as $item) {
+    $key = $item == 'slick' ? $item : "slick_$item";
+    $themes[$key] = [
       'render element' => 'element',
-    ),
-  );
+      'file' => 'templates/slick.theme.inc',
+    ];
+  }
+  return $themes;
 }
 
 /**

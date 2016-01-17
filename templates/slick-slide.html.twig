@@ -4,27 +4,76 @@
  * Default theme implementation for the individual Slick item/slide template.
  *
  * Available variables:
- * - $attributes: An array of attributes to apply to the element.
- * - $item: A renderable array of the main image/background.
+ * - attributes: An array of attributes to apply to the element.
+ * - item.slide: A renderable array of the main image/background.
+ * - item.caption: A renderable array containing caption fields if provided:
+ *   - title: The individual slide title.
+ *   - alt: The core Image field Alt as caption.
+ *   - link: The slide links or buttons.
+ *   - overlay: The image/audio/video overlay, or a nested slick.
+ *   - data: any possible field for more complex data if crazy enough.
+ * - settings: An array containing the given settings.
  *
  * @see template_preprocess_slick_slide()
  */
 #}
 {%
   set classes = [
-    'slick__slide',
-    css_name
+    'slick__slide', 'slide', 'slide--' ~ delta,
+    item.slide is empty ? 'slide--text',
+    settings.layout ? 'slide--caption--' ~ settings.layout|clean_class,
+    settings.class ? settings.class
   ]
 %}
 {%
   set content_classes = [
-    'slide__content'
+    settings.detroy ? 'slide',
+    not settings.detroy ? 'slide__content'
   ]
 %}
-<{{ tag }}{{ attributes.addClass(classes) }}>
-  <{{ content_tag }}{{ content_attributes.addClass(content_classes) }}>
 
-    {{ children }}
+{% spaceless %}
+{% if settings.wrapper %}
+  <div{{ attributes.addClass(classes) }}>
+  {% if settings.content_wrapper %}<div{{ content_attributes.addClass(content_classes) }}>{% endif %}
+{% endif %}
 
-  </{{ content_tag }}>
-</{{ tag }}>
+  {% if settings.split %}<div class="slide__media">{% endif %}
+    {{ item.slide }}
+    {% if settings.pattern %}<div class="slide__pattern"></div>{% endif %}
+  {% if settings.split %}</div>{% endif %}
+
+  {% if settings.caption %}
+    {% if settings.fullwidth %}<div class="slide__constrained">{% endif %}
+
+      <div class="slide__caption">
+      {% if item.caption.overlay %}
+        <div class="slide__overlay">{{ item.caption.overlay }}</div>
+        {% if settings.data %}<div class="slide__data">{% endif %}
+      {% endif %}
+
+      {% if item.caption.title %}
+        <h2 class="slide__title">{{ item.caption.title }}</h2>
+      {% endif %}
+
+      {% if item.caption.alt %}
+        <p class="slide__description">{{ item.caption.alt }}</p>
+      {% endif %}
+
+      {{ item.caption.data }}
+
+      {% if item.caption.link %}
+        <div class="slide__link">{{ item.caption.link }}</div>
+      {% endif %}
+
+      {% if item.caption.overlay and settings.data %}</div>{% endif %}
+      </div>
+
+    {% if settings.fullwidth %}</div>{% endif %}
+  {% endif %}
+
+{% if settings.wrapper %}
+  {% if settings.content_wrapper %}</div>{% endif %}
+  </div>
+{% endif %}
+{% endspaceless %}
