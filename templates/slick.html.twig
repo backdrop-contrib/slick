@@ -1,0 +1,24 @@
+{#
+/**
+ *
+ * @file Default theme implementation for the Slick carousel template.
+ * Available variables:
+ * - items: The array of items containing main
+ * image/video/audio, and optional image/video/audio overlay and captions.
+ * - attributes: The array of attributes to hold classes, id and optional
+ * data-config containing JSON object aka JS settings the Slick expects to
+ * override default options. We don't store these JS settings in the normal
+ * <head>, but inline within data-config attribute instead.
+ * - settings:
+ */
+#}
+{%
+  set classes = [
+    'slick',
+    'slick--slider',
+    'slick--' ~ attributes.id,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+    {{ content }}
+</div>

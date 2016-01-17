@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Slick slider for Drupal.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function slick_theme() {
+  $base = array(
+    'file' => 'templates/slick.theme.inc',
+  );
+  return array(
+    // Slick display.
+    'slick' => $base + array(
+      'render element' => 'elements',
+    ),
+    // Individual slick item.
+    'slick_slide' => $base + array(
+      'render element' => 'element',
+    ),
+  );
+}
