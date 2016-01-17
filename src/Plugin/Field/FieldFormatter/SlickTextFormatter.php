@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\slick\Plugin\Field\FieldFormatter\SlickTextFormatter.
+ */
+
+namespace Drupal\slick\Plugin\Field\FieldFormatter;
+
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\slick\SlickDefault;
+
+/**
+ * Plugin implementation of the 'slick_text' formatter.
+ *
+ * @FieldFormatter(
+ *   id = "slick_text",
+ *   label = @Translation("Slick carousel"),
+ *   field_types = {
+ *     "text",
+ *     "text_long",
+ *     "text_with_summary",
+ *   },
+ *   quickedit = {"editor" = "disabled"}
+ * )
+ */
+class SlickTextFormatter extends SlickFormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return SlickDefault::baseSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+    // Early opt-out if the field is empty.
+    if ($items->count() < 1) {
+      return [];
+    }
+
+    $build = $this->formatter->buildSettings($items, $langcode, $this->getSettings());
+    $build['settings']['vanilla'] = TRUE;
+
+    // The ProcessedText element already handles cache context & tag bubbling.
+    // @see \Drupal\filter\Element\ProcessedText::preRenderText()
+    foreach ($items as $key => $item) {
+      $build['items'][$key] = [
+        '#type'     => 'processed_text',
+        '#text'     => $item->value,
+        '#format'   => $item->format,
+        '#langcode' => $item->getLangcode(),
+      ];
+    }
+
+    return $this->manager()->build($build);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element    = [];
+    $definition = [
+      'current_view_mode' => $this->viewMode,
+      'settings'          => $this->getSettings(),
+    ];
+
+    $this->admin()->openingForm($element, $definition);
+    $this->admin()->closingForm($element, $definition);
+
+    foreach (['layout', 'pattern'] as $exclude) {
+      $element[$exclude]['#access'] = FALSE;
+    }
+
+    return $element;
+  }
+
+}

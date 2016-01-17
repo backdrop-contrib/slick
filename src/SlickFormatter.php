@@ -47,7 +47,7 @@ class SlickFormatter extends SlickImageBase implements SlickFormatterInterface {
     $settings += [
       'absolute_path'   => $absolute_path,
       'bundle'          => $entity->bundle(),
-      'caption'         => array_filter($settings['caption']),
+      'caption'         => empty($settings['caption']) ? [] : array_filter($settings['caption']),
       'count'           => $count,
       'entity_id'       => $entity_id,
       'entity_type_id'  => $entity_type_id,
