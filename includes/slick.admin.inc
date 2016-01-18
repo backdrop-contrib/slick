@@ -844,18 +844,14 @@ function slick_get_admin_assets(array &$elements, $settings = array()) {
  * Returns reusable summaries across Slick field formatters.
  */
 function slick_get_admin_summary($field, $instance, $view_mode, $module) {
-  $display = $instance['display'][$view_mode];
+  $display  = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  $form = call_user_func_array($module . '_field_formatter_settings_form', array(
-    $field,
-    $instance,
-    $view_mode,
-    array(),
-    array(),
-  ));
-  $summary = array();
+  $summary  = $form = $form_state = array();
+  $function = $module . '_field_formatter_settings_form';
+  $elements = $function($field, $instance, $view_mode, $form, $form_state);
+
   foreach ($settings as $key => $setting) {
-    $title = isset($form[$key]['#title']) ? $form[$key]['#title'] : '';
+    $title = isset($elements[$key]['#title']) ? $elements[$key]['#title'] : '';
     if (is_array($setting) || empty($title)) {
       continue;
     }
@@ -864,7 +860,7 @@ function slick_get_admin_summary($field, $instance, $view_mode, $module) {
       $setting = empty($setting) ? t('No') : t('Yes');
     }
     elseif (empty($setting)) {
-      $setting = t('None');
+      continue;
     }
     if (isset($settings[$key])) {
       $summary[] = t('@title: <strong>@setting</strong>', array(

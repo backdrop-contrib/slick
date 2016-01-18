@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2016-01-18
+-----------------------------
+- #2637470 by kyletaylored: Support PHP 7
+
 Slick 7.x-2.0-dev, 2015-12-19
 -----------------------------
 - #2637706 by kyletaylored: Support when using Slick as field in BEAN/Taxonomy.
