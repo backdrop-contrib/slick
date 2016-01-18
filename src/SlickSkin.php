@@ -95,17 +95,6 @@ class SlickSkin implements SlickSkinInterface {
           ],
         ],
       ],
-      'test' => [
-        'name' => t('Test'),
-        'group' => 'main',
-        'provider' => 'slick',
-        'description' => t('Test skin.'),
-        'css' => [
-          'theme' => [
-            'css/theme/slick.theme--split.css' => [],
-          ],
-        ],
-      ],
     ];
 
     return $skins;

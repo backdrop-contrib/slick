@@ -117,7 +117,7 @@ class SlickManager implements SlickManagerInterface {
   }
 
   /**
-   * Returns slick skins registered via hook_slick_skins_info().
+   * Returns slick skins registered via hook_slick_skins_info(), or defaults.
    */
   public function getSkins() {
     return $this->getDefinedSkins()['skins'];

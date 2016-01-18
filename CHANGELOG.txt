@@ -1,4 +1,10 @@
 
+Slick 8.x-2.0-dev, 2016-01-18
+-----------------------------
+- Updated descriptions here and there.
+- Removed skin Test from SlickSkin.php.
+- Fixed skin JS library.
+
 Slick 8.x-2.0-dev, 2016-01-17
 -----------------------------
 - Added the CHANGELOG.txt

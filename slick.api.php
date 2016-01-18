@@ -198,7 +198,7 @@
  *   - $build['settings']['id'] = 'slick-asnavfor';
  *     Only main display ID is needed. The thumbnail ID will be
  *     automatically created: 'slick-asnavfor-thumbnail', including the content
- *     attributes accordingly.
+ *     attributes accordingly. If none provided, will fallback to incremented ID.
  *
  *     See the HTML structure below to get a clear idea.
  *
@@ -236,7 +236,12 @@
     $build['items'][] = [
       'slide'   => '<img src="/sites/all/images/image-0' . $key . '.jpg" width="1140" />',
 
-      // Main caption contain: alt, data, link, overlay, title.
+      // Main caption contains: alt, data, link, overlay, title keys which serve
+      // the purpose to have consistent markups and skins without bothering much
+      // nor remembering what HTML tags and where to place to provide for each
+      // purpose cosnsitently. CSS will do layout regardless HTML composition.
+      // If having more complex caption data, use 'data' key instead.
+      // If the common layout doesn't satisfy the need, simply override the twig.
       'caption' => ['title' => 'Description #' . $key],
     ];
   }
@@ -269,9 +274,10 @@
     $build['thumb']['items'][] = [
       'slide'   => '<img src="/sites/all/images/image-0' . $key . '.jpg" width="210" />',
 
-      // Thumbnail caption only accepts 'data' to be simple as much as complex.
+      // Thumbnail caption accepts direct markup or custom renderable array
+      // without any special key to be simple as much as complex.
       // Think Youtube playlist with scrolling navigation: thumbnail, text, etc.
-      'caption' => ['data' => 'Description #' . $key],
+      'caption' => ['#markup' => 'Description #' . $key],
     ];
   }
 
@@ -300,7 +306,10 @@
 /**
  * Implements hook_slick_skins_info().
  *
- * @deprecated, will be removed anytime when a solution is available.
+ * Registers a class that should hold skin definitions and implements
+ * \Drupal\slick\SlickSkinInterface
+ *
+ * @deprecated, will be removed anytime when a core solution is available.
  * @see #2233261
  *
  * @see slick_hook_info()
@@ -315,7 +324,10 @@ function hook_slick_skins_info() {
 /**
  * Implements SlickSkinInterface as registered via hook_slick_skins_info().
  *
- * The class must implement \Drupal\slick\SlickSkinInterface.
+ * The class must implement \Drupal\slick\SlickSkinInterface, and it has 3
+ * supported methods: ::skins(), ::dots(), ::arrows() to have skin options for
+ * main/thumbnail/overlay/nested displays, dots, and arrows skins repectively.
+ * The declared skins will be available for custom coded, or UI selections.
  */
 class MyModuleSlickSkin implements SlickSkinInterface {
 
