@@ -63,6 +63,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       $link_options    = slick_get_fc_fields($instance, $link_fields);
       $thumb_captions  = slick_get_fc_fields($instance, array('text', 'text_long'));
       $caption_options = slick_get_fc_fields($instance, array(
+        'blockreference',
         'file',
         'image',
         'link_field',

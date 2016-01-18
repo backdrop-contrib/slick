@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2016-01-18
 -----------------------------
+- #2647968 by lardfw: Slick not showing block reference field as option for
+  caption
 - #2637470 by kyletaylored: Support PHP 7
 
 Slick 7.x-2.0-dev, 2015-12-19
