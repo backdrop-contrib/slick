@@ -1,4 +1,9 @@
 
+Slick 8.x-2.0-dev, 2016-01-19
+-----------------------------
+- A few cleanup here and there.
+- Fixed for Slick media 'overlay' option.
+
 Slick 8.x-2.0-dev, 2016-01-18
 -----------------------------
 - Updated descriptions here and there.

@@ -24,7 +24,8 @@ interface SlickSkinInterface {
   * Returns the Slick skins.
   *
   * This can be used to register skins for the Slick. Skins will be
-  * available when configuring the Optionset, Field formatter, or Views style.
+  * available when configuring the Optionset, Field formatter, or Views style,
+  * or custom coded slicks.
   *
   * Slick skins get a unique CSS class to use for styling, e.g.:
   * If your skin name is "my_module_slick_carousel_rounded", the CSS class is:
@@ -49,7 +50,7 @@ interface SlickSkinInterface {
   /**
    * Returns the Slick dot skins.
    *
-   * The provided dot skins will be available at sub-module interfaces.
+   * The provided dot skins will be available at sub-module UI form.
    * A skin dot named 'hop' will have a class 'slick-dots--hop' for the UL.
    *
    * The array is similar to the self::skins(), excluding group, JS.
@@ -62,7 +63,7 @@ interface SlickSkinInterface {
   /**
    * Returns the Slick arrow skins.
    *
-   * The provided arrow skins will be available at sub-module interfaces.
+   * The provided arrow skins will be available at sub-module UI form.
    * A skin arrow named 'slit' will have a class 'slick__arrow--slit' for the NAV.
    *
    * The array is similar to the self::skins(), excluding group, JS.

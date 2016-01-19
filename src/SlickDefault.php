@@ -69,7 +69,7 @@ class SlickDefault {
       'grid_small'     => '',
       'image'          => '',
       'link'           => '',
-      'overlay'        => [],
+      'overlay'        => '',
       'preserve_keys'  => FALSE,
       'title'          => '',
       'view_mode'      => '',

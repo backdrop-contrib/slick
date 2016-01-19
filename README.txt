@@ -64,9 +64,9 @@ The Slick module has several sub-modules:
 
 - slick_views [2], to get more complex slides.
 
-- slick_devel [3], if you want to help testing and developing the Slick.
-- slick_example [3], to get up and running quickly.
-  Both are included in slick_extras.
+- slick_devel, if you want to help testing and developing the Slick.
+- slick_example, to get up and running quickly.
+  Both are included in slick_extras [3].
 
 
 [1] http://dgo.to/slick_media
@@ -121,7 +121,7 @@ VIEWS AND FIELDS
 --------------------------------------------------------------------------------
 Slick works with Views and as field display formatters.
 Slick Views is available as a style plugin included at slick_views.module.
-Slick field formatter included as a plugin which supports core: Image.
+Slick field formatter included as a plugin which supports core: Image, Text.
 
 
 PROGRAMATICALLY
@@ -136,7 +136,7 @@ slick per slide. The child slicks are basically regular slide overlays like
 a single video over the large background image, only with nested slicks it can
 be many videos displayed as a slideshow as well.
 Use Views to build one.
-Supported multi-value fields for nested slicks: Image, Media entity.
+Supported multi-value fields for nested slicks: Image, Text, Media entity.
 
 
 SKINS
@@ -159,8 +159,9 @@ Optional skins:
 - None
   It is all about DIY.
   Doesn't load any extra CSS other than the basic styles required by slick.
-  Skins defined by sub-modules fallback to those defined at the optionset.
-  If you are using individual slide layout, do the layouts yourself.
+  Skins at the optionset are ignored, only useful to fetch description and
+  your own custom work when not using the sub-modules, nor plugins.
+  If using individual slide layout, do the layouts yourself.
 
 - Classic
   Adds dark background color over white caption, only good for slider (single
@@ -204,6 +205,7 @@ to register ones.
 See slick.api.php for more info on skins.
 See \Drupal\slick\SlickSkinInterface.
 Other skins are available at http://dgo.to/slick_extras
+Some extras skins are WIP which may not work as expected.
 
 
 GRID
@@ -253,7 +255,7 @@ After Slick 1.4 is the currently supported version:
 </div>
 
 The reason behind the change was the new Slick will make direct children as
-slides, meaning arrows are slides, not navigation anymore, which was unwanted.
+slides, meaning arrows are slides, not navigation anymore, which is unwanted.
 At both cases, asNavFor should target slick-initialized class/ID attributes.
 
 
@@ -298,7 +300,8 @@ TROUBLESHOOTING
   o admin/structure/views/view/VIEW_NAME
   only if trouble to see the new options, or when options don't apply properly.
   Most likely true when the library adds/changes options, or the module
-  does something new.
+  does something new. This is normal for any library even commercial ones, so
+  bear with it.
 
 - Always clear the cache, and re-generate JS (if aggregation is on) when
   updating the module to ensure things are picked up:
@@ -310,7 +313,7 @@ TROUBLESHOOTING
 
 KNOWN ISSUES
 --------------------------------------------------------------------------------
-- Slick admin CSS may not be compatible with your private or contrib admin
+- Slick admin CSS may not be compatible with private or contrib admin
   themes. Only if trouble with admin display, please disable it at:
   admin/config/media/slick/ui
 

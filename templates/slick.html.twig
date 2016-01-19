@@ -31,14 +31,10 @@
     settings.optionset ? 'slick--optionset--' ~ settings.optionset|clean_class,
     settings.downArrow ? 'slick--has-arrow-down',
     settings.asNavFor ? 'slick--' ~ display|clean_class,
+    display == 'main' and settings.slidesToShow > 1 ? 'slick--multiple-view',
     display == 'main' and settings.media_switch ? 'slick--' ~ settings.media_switch|clean_class,
     display == 'main' and settings.wrapper_class ? settings.wrapper_class|clean_class,
     display == 'thumbnail' and settings.thumbnail_caption ? 'slick--has-caption'
-  ]
-%}
-{%
-  set content_classes = [
-    'slick__slider',
   ]
 %}
 {%
@@ -47,16 +43,11 @@
     settings.skin_arrows ? 'slick__arrow--' ~ settings.skin_arrows|clean_class
   ]
 %}
-{%
-  set down_arrow_classes = [
-    'slick-down'
-  ]
-%}
 
 {% spaceless %}
 <div id="{{ attributes.id|clean_id }}"{{ attributes.addClass(classes)|without('id') }}>
   {% if not settings.unslick %}
-    <div id="{{ content_attributes.id|clean_id }}"{{ content_attributes.addClass(content_classes)|without('id') }}>
+    <div id="{{ content_attributes.id|clean_id }}"{{ content_attributes.addClass('slick__slider')|without('id') }}>
   {% endif %}
 
     {% for item in items %}
@@ -68,7 +59,7 @@
     <nav{{ settings.arrow.attributes.addClass(arrow_classes) }}>
       {{ settings.prevArrow|striptags('<a><em><span><strong><button><div>')|raw }}
       {% if settings.downArrow.attributes is defined %}
-        <button{{ settings.downArrow.attributes.addClass(down_arrow_classes)
+        <button{{ settings.downArrow.attributes.addClass('slick-down')
           .setAttribute('type', 'button')
           .setAttribute('data-target', settings.downArrowTarget)
           .setAttribute('data-offset', settings.downArrowOffset) }}></button>

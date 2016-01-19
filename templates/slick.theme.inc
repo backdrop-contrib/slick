@@ -37,10 +37,11 @@ function template_preprocess_slick(&$variables) {
     $attributes['id'] = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
   }
 
-  $settings['count']   = isset($settings['count']) ? $settings['count'] : count($element['#items']);
-  $settings['unslick'] = $settings['unslick'] || $settings['count'] == 1;
+  // @see SlickManager::buildGrid(), and this should make sense.
+  $settings['count']    = isset($settings['count']) ? $settings['count'] : count($element['#items']);
+  $settings['unslick']  = $settings['unslick'] || $settings['count'] == 1;
 
-  foreach (['asNavFor', 'nextArrow', 'prevArrow', 'downArrowTarget', 'downArrowOffset', 'rtl'] as $key) {
+  foreach (['asNavFor', 'nextArrow', 'prevArrow', 'downArrowTarget', 'downArrowOffset', 'slidesToShow'] as $key) {
     $settings[$key] = isset($js[$key]) ? $js[$key] : FALSE;
   }
 
@@ -138,10 +139,10 @@ function template_preprocess_slick_slide(&$variables) {
   $item     = $variables['item'];
   $settings = &$variables['settings'];
 
-  // split  : Split image from captions if we do have captions, and main image.
-  // data   : If full skins, add wrappers to hold caption and overlay.
+  // split: Split image from captions if we do have captions, and main image.
+  // fullwidth: If full skins, add wrappers to hold caption and overlay.
   // pattern: Exclude lightbox switcher as it has its pattern DIV within A tag.
-  // detroy : Remove .slide__content if it is an enforced unslick grid.
+  // detroy: Remove .slide__content if it is an enforced unslick grid.
   // wrapper: Don't add divities for a single item to have clean markups.
   $settings['caption']         = array_filter($item['caption']);
   $settings['split']           = !empty($item) && $settings['caption'];
@@ -227,7 +228,7 @@ function template_preprocess_slick_image(array &$variables) {
   $item       = $variables['item'];
   $settings   = &$variables['settings'];
   $attributes = $variables['attributes'];
-  $uri        = empty($item->uri) ? $item->entity->getFileUri() : $item->uri;
+  $uri        = ($entity = $item->entity) && empty($item->uri) ? $entity->getFileUri() : $item->uri;
 
   $variables['noscript']      = '';
   $variables['image']['#uri'] = $uri;
@@ -248,7 +249,7 @@ function template_preprocess_slick_image(array &$variables) {
     $variables['image']['#theme'] = 'image';
     if (!empty($settings['image_style'])) {
       $style = ImageStyle::load($settings['image_style']);
-      $image_url = $style->buildUrl($uri);
+      $settings['image_url'] = $style->buildUrl($uri);
       if (!isset($settings['dimensions'])) {
         $dimensions = array(
           'width' => isset($item->width) ? $item->width : '',
@@ -261,7 +262,7 @@ function template_preprocess_slick_image(array &$variables) {
       }
     }
     else {
-      $image_url = $item->entity->url();
+      $settings['image_url'] = $item->entity->url();
     }
 
     foreach (['width', 'height', 'alt'] as $key) {
@@ -271,7 +272,7 @@ function template_preprocess_slick_image(array &$variables) {
     // Provide lazyloaded image with noscript for the first slide only.
     if ($settings['count'] > 1 && $settings['lazy']) {
       $attributes['class'][]      = 'lazy';
-      $attributes['data-lazy']    = $image_url;
+      $attributes['data-lazy']    = $settings['image_url'];
       $variables['noscript']      = $settings['delta'] == 0 ? $variables['image'] : '';
       $variables['image']['#uri'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
@@ -287,6 +288,8 @@ function template_preprocess_slick_image(array &$variables) {
   }
 
   $variables['image']['#attributes'] = $attributes;
+
+  // URL can be entity or lightbox URL different from the content image URL.
   if (!empty($variables['url'])) {
     $settings['url']['attributes'] = isset($settings['url']['attributes']) ? new Attribute($settings['url']['attributes']) : [];
   }

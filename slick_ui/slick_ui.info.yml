@@ -7,5 +7,3 @@ package: Slick
 configure: entity.slick.collection
 dependencies:
   - slick
-  
-

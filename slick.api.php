@@ -318,7 +318,7 @@
  * @see \Drupal\slick\SlickSkinInterface
  */
 function hook_slick_skins_info() {
-  return '\Drupal\hook\HookSkin';
+  return '\Drupal\hook\HookSlickSkin';
 }
 
 /**
@@ -329,7 +329,7 @@ function hook_slick_skins_info() {
  * main/thumbnail/overlay/nested displays, dots, and arrows skins repectively.
  * The declared skins will be available for custom coded, or UI selections.
  */
-class MyModuleSlickSkin implements SlickSkinInterface {
+class HookSlickSkin implements SlickSkinInterface {
 
   /**
    * {@inheritdoc}

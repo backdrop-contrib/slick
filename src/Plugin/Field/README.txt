@@ -1,5 +1,4 @@
 ABOUT
-
 Adds a field display formatter to allow you to display field content using
 Slick carousel. The module doesn't require Field UI to be enabled by default
 (so you can leave it off once everything is configured) but it is recommended
@@ -7,21 +6,21 @@ to use to setup your display settings.
 
 
 SUPPORTED FIELDS
-
 - Image
-- Media entity via slick_media sub-modulw
+- Media entity via slick_media sub-module [1]
+
+[1] http://dgo.to/slick_media
 
 
 USAGE
-
 
 Manage the fields on any entity (e.g.: node of type Article):
 
 "admin/structure/types/manage/article/display"
 
-Select any field of type "Image", "Media file" and set the display options to
-"Slick carousel" under "Format".
-Adjust formatter options accordingly, including your option set.
+Select any field of type "Image", "Media entity" and set the display options to
+"Slick carousel" or "Slick media" accordingly under "Format".
+Adjust formatter options accordingly, including your optionset.
 
 The more complex is your slide, the more options are available.
 
@@ -30,14 +29,13 @@ and the fields are made visible at their own Manage display page.
 
 
 OPTIONSET
-
 To create your option sets, go to:
 
 "admin/config/media/slick"
 
 
 SLIDE LAYOUT
-
+The slide layout option depends on at least a skin selected. No skin, just DIY.
 Core image field support several caption placements/ layout that affect the
 entire slides.
 

@@ -13,4 +13,3 @@ slick.settings:
   route_name: slick.settings
   base_route: entity.slick.collection
   # parent_id: entity.slick.collection
-

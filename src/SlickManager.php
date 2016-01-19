@@ -139,9 +139,6 @@ class SlickManager implements SlickManagerInterface {
 
   /**
    * Returns defined slick skins as registered via hook_slick_skins_info().
-   *
-   * A clever workaround to just register class names and enjoy the OO world
-   * under the dominant procedural hook and its depreciation by #2233261.
    */
   public function getDefinedSkins() {
     $skins = &drupal_static(__METHOD__, NULL);
@@ -315,10 +312,8 @@ class SlickManager implements SlickManagerInterface {
     $cache['contexts'] = ['languages'];
     $cache['max-age']  = $settings['cache'];
     $cache['keys']     = isset($settings['cache_metadata']['keys']) ? $settings['cache_metadata']['keys'] : [$settings['id']];
+    $cache['keys'][]   = $settings['display'];
 
-    if ($settings['display'] != 'main') {
-      $cache['keys'][] = $settings['display'];
-    }
     $slick['#cache']   = $cache;
     return $slick;
   }
@@ -379,12 +374,12 @@ class SlickManager implements SlickManagerInterface {
    */
   public function buildGrid($build = [], array &$settings) {
     $grids = [];
+    // Display all items if unslick is enforced for plain grid to lightbox.
     if (!empty($settings['unslick'])) {
       $settings['display']      = 'main';
       $settings['current_item'] = 'grid';
       $settings['count']        = 2;
 
-      // Display all items if unslick is enforced for plain grid to lightbox.
       $slide['slide'] = [
         '#theme'    => 'slick_grid',
         '#items'    => $build,
@@ -396,7 +391,7 @@ class SlickManager implements SlickManagerInterface {
     }
     else {
       // Otherwise do chunks to have a grid carousel.
-      $preserve_keys     = !empty($settings['preserve_keys']) ? TRUE : FALSE;
+      $preserve_keys     = !empty($settings['preserve_keys']);
       $grid_items        = array_chunk($build, $settings['visible_slides'], $preserve_keys);
       $settings['count'] = count($grid_items);
       foreach ($grid_items as $delta => $grid_item) {

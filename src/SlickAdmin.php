@@ -211,7 +211,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#type'        => 'select',
       '#title'       => t('Image style'),
       '#options'     => $image_styles,
-      '#description' => t('The main image style. This allows more variants per view mode with a single optionset. If Media module installed, this also determines iframe sizes to have various iframe dimensions with just a single file entity view mode, relevant for a mix of image and multimedia to get a consistent display.'),
+      '#description' => t('The main image style. If Slick media module installed, this also determines iframe sizes to have various iframe dimensions with just a single file entity view mode, relevant for a mix of image and multimedia to get a consistent display.'),
     ];
 
     $form['thumbnail_style'] = [
@@ -781,7 +781,7 @@ class SlickAdmin implements SlickAdminInterface {
   public function getOptionsetGroupOptions() {
     $groups = ['main' => t('Main'), 'overlay' => t('Overlay'), 'thumbnail' => t('Thumbnail')];
 
-    $this->manager->getModuleHandler()->alter('slick_group_options_info', $groups);
+    $this->manager->getModuleHandler()->alter('slick_optionset_group_options_info', $groups);
     return $groups;
   }
 
