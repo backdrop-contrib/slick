@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_type_build().
@@ -41,17 +42,17 @@ function slick_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Usage as a field formatter') . '</dt>';
-      $output .= '<dd>' . t('At any fieldable entity, e.g. <a href="@content-type">Content types</a> -- click "Manage display". Under "Format" of the active view mode, choose "Slick carousel" or "Slick media" for any of the following supported fields: image, media entity.', array('@content-type' => \Drupal::url('entity.node_type.collection'))) . '</dd>';
+      $output .= '<dd>' . t('At any fieldable entity, e.g. <a href=":content-type">Content types</a> -- click "Manage display". Under "Format" of the active view mode, choose "Slick carousel" or "Slick media" for any of the following supported fields: image, media entity.', [':content-type' => Url::fromRoute('entity.node_type.collection')->toString()]) . '</dd>';
       $output .= '<dd>' . t('Click the "Configure" icon to have some extra options. Read more each option for more info.') . '</dd>';
       $output .= '<dt>' . t('Usage as a Views style plugin') . '</dt>';
-      $output .= '<dd>' . t('Create a new View at <a href="@list">Views list page</a>.', array('@list' => \Drupal::url('entity.view.collection', array('name' => 'views_ui')))) . '</dd>';
+      $output .= '<dd>' . t('Create a new View at <a href=":list">Views list page</a>.', [':list' => Url::fromRoute('entity.view.collection', ['name' => 'views_ui'])->toString()]) . '</dd>';
       $output .= '<dd>' . t('Add a <strong>Slick carousel</strong> style if you are aggregating multiple entity instances.') . '</dd>';
       $output .= '<dd>' . t('Or add an <strong>Unformatted list</strong> if you are targetting a single entity with a supported multi-value field, such as Image, and make it formatted as Slick carousel. Make sure to check "Use field formatter" under "Style settings".') . '</dd>';
       $output .= '</dl>';
-      $output .= '<p>' . t('See the <a href="@field">Field module help</a> and the <a href="@field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="@readme" target="_blank">Slick readme module</a>.', array(
-        '@field' => \Drupal::url('help.page', ['name' => 'field']),
-        '@field_ui' => \Drupal::url('help.page', ['name' => 'field_ui']),
-        '@readme' => \Drupal\Core\Url::fromUri('base:' . $path . '/README.txt')->toString())) . '</p>';
+      $output .= '<p>' . t('See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":readme" target="_blank">Slick readme module</a>.', [
+        ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(),
+        ':field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui'])->toString(),
+        ':readme' => Url::fromUri('base:' . $path . '/README.txt')->toString()]) . '</p>';
       return $output;
   }
 }

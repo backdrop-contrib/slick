@@ -201,7 +201,7 @@ skin. Be sure to add proper weight, if you are acting on existing slick events,
 normally < 0 (slick.load.min.js) is the one.
 
 Use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface
-to register ones.
+to register ones. Clear the cache once.
 See slick.api.php for more info on skins.
 See \Drupal\slick\SlickSkinInterface.
 Other skins are available at http://dgo.to/slick_extras

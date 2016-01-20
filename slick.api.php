@@ -81,9 +81,8 @@
 /**
  * 2. Detailed sample.
  *
- * The example is showing a customized views-view-unformatted--ticker.twig.html.
- * Practically any content-related .twig.html file where you have data to print.
- * Do preprocess, or here a direct PHP manipulation for quick illustration.
+ * This can go to some hook_preprocess() of a target html.twig, or any relevant
+ * PHP file.
  *
  * The goal is to create a vertical newsticker, or tweets, with pure text only.
  * First, create an unformatted Views block, says 'Ticker' containing ~ 10
@@ -326,7 +325,7 @@ function hook_slick_skins_info() {
  *
  * The class must implement \Drupal\slick\SlickSkinInterface, and it has 3
  * supported methods: ::skins(), ::dots(), ::arrows() to have skin options for
- * main/thumbnail/overlay/nested displays, dots, and arrows skins repectively.
+ * main/thumbnail/overlay/nested displays, dots, and arrows skins respectively.
  * The declared skins will be available for custom coded, or UI selections.
  */
 class HookSlickSkin implements SlickSkinInterface {

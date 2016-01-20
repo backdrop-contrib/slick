@@ -1,6 +1,9 @@
 
 Slick 8.x-2.0-dev, 2016-01-20
 -----------------------------
+- Fixed for Route "entity.responsive_image_style.collection" does not exist
+  error when responsive_image is not installed.
+- Updated deprecated \Drupal::url as per [#2605546]
 - Fixed for undefined index notice: current_view_mode.
 - Moved common functions to SlickFormatterTrait for slick formatters.
 - Removed trivial settings: pattern, wrapper class.

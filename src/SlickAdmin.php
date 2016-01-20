@@ -105,7 +105,7 @@ class SlickAdmin implements SlickAdminInterface {
     ];
 
     if ($this->manager->getModuleHandler()->moduleExists('slick_ui')) {
-      $form['optionset']['#description'] = t('Manage optionsets at <a href="@link" target="_blank">Slick carousel admin page</a>.', ['@link' => \Drupal::url('entity.slick.collection')]);
+      $form['optionset']['#description'] = t('Manage optionsets at <a href=":url" target="_blank">Slick carousel admin page</a>.', [':url' => Url::fromRoute('entity.slick.collection')->toString()]);
     }
 
     $form['skin'] = [
@@ -113,7 +113,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#title'       => t('Skin main'),
       '#options'     => $this->getSkinOptions('main'),
       '#enforced'    => TRUE,
-      '#description' => t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <a href="@url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', ['@url' => $readme]),
+      '#description' => t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <a href=":url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', [':url' => $readme]),
     ];
 
     $form['optionset_thumbnail'] = [
@@ -242,9 +242,13 @@ class SlickAdmin implements SlickAdminInterface {
       '#type'        => 'select',
       '#title'       => t('Responsive image'),
       '#options'     => $this->getResponsiveImageOptions(),
-      '#description' => t('Responsive image style for the main stage image is only reasonable for large images. Not compatible with aspect ratio, yet. Leave empty to disable. <a href="@url" target="_blank">Manage responsive image styles</a>.', ['@url' => \Drupal::url('entity.responsive_image_style.collection')]),
+      '#description' => t('Responsive image style for the main stage image is only reasonable for large images. Not compatible with aspect ratio, yet. Leave empty to disable.'),
       '#access'      => $is_responsive && $this->getResponsiveImageOptions(),
     ];
+
+    if ($this->manager->getModuleHandler()->moduleExists('responsive_image')) {
+      $form['optionset']['#description'] .= ' ' . t('<a href=":url" target="_blank">Manage responsive image styles</a>.', [':url' => Url::fromRoute('entity.responsive_image_style.collection')->toString()]);
+    }
 
     // http://en.wikipedia.org/wiki/List_of_common_resolutions
     $ratio = ['1:1', '4:3', '16:9', 'fluid'];
@@ -280,7 +284,7 @@ class SlickAdmin implements SlickAdminInterface {
         '#type'        => 'select',
         '#options'     => isset($definition['target_type']) ? $this->entityDisplayRepository->getViewModeOptions($definition['target_type']) : [],
         '#title'       => t('View mode'),
-        '#description' => t('Required to grab the fields. Be sure the selected "View mode" is enabled, and the enabled fields here are not hidden there. Manage view modes on the <a href=":view_modes">View modes page</a>.', [':view_modes' => \Drupal::url('entity.entity_view_mode.collection')]),
+        '#description' => t('Required to grab the fields. Be sure the selected "View mode" is enabled, and the enabled fields here are not hidden there. Manage view modes on the <a href=":view_modes">View modes page</a>.', [':view_modes' => Url::fromRoute('entity.entity_view_mode.collection')->toString()]),
         '#access'      => isset($definition['target_type']),
       ];
 
@@ -718,6 +722,9 @@ class SlickAdmin implements SlickAdminInterface {
    */
   public function getResponsiveImageOptions() {
     $options = [];
+    if (!$this->manager->getModuleHandler()->moduleExists('responsive_image')) {
+      return $options;
+    }
     $image_styles = $this->manager->loadMultiple('responsive_image_style');
     if (!empty($image_styles)) {
       foreach ($image_styles as $machine_name => $image_style) {

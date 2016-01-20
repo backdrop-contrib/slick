@@ -230,8 +230,12 @@ abstract class SlickImageBase {
    * Returns the Responsive image cache tags.
    */
   public function getResponsiveImageCacheTags($responsive_image_style = NULL) {
-    $image_styles_to_load = [];
     $cache_tags = [];
+    if (!$this->manager->getModuleHandler()->moduleExists('responsive_image')) {
+      return $cache_tags;
+    }
+
+    $image_styles_to_load = [];
     if ($responsive_image_style) {
       $cache_tags = Cache::mergeTags($cache_tags, $responsive_image_style->getCacheTags());
       $image_styles_to_load = $responsive_image_style->getImageStyleIds();

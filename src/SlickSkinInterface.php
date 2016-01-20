@@ -16,7 +16,7 @@ namespace Drupal\slick;
  *   #1509164: ... to entirely replace hooks is postponed to Drupal 9
  *   #1972304: Add a HookEvent
  *   #2233261: Deprecate hook_hook_info()
- *     Postponed till D9.
+ *     Postponed till D9
  */
 interface SlickSkinInterface {
 
