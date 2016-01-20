@@ -33,7 +33,6 @@ class SlickDefault {
       'skin_dots'           => '',
       'skin_thumbnail'      => '',
       'thumbnail_caption'   => '',
-      'wrapper_class'       => '',
     ];
   }
 
@@ -47,12 +46,10 @@ class SlickDefault {
       'image_style'            => '',
       'layout'                 => '',
       'media_switch'           => '',
-      'pattern'                => FALSE,
       'ratio'                  => '',
       'responsive_image_style' => '',
       'thumbnail_style'        => '',
       'thumbnail_hover'        => FALSE,
-      'use_ajax'               => FALSE,
       'vanilla'                => FALSE,
     ] + self::baseSettings();
   }

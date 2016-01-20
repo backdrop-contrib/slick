@@ -49,32 +49,4 @@ abstract class SlickFormatterBase extends FormatterBase implements ContainerFact
     );
   }
 
-  /**
-   * Returns the slick service.
-   */
-  public function manager() {
-    return $this->formatter->manager();
-  }
-
-  /**
-   * Returns the slick admin service.
-   */
-  public function admin() {
-    return \Drupal::service('slick.admin');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    return $this->admin()->settingsSummary($this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    return $field_definition->getFieldStorageDefinition()->isMultiple();
-  }
-
 }

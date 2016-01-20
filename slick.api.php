@@ -28,6 +28,7 @@
  * 1. Quick sample.
  *
  * @see \Drupal\slick\SlickManager::build()
+ * @see template_preprocess_slick_wrapper()
  * @see template_preprocess_slick()
  */
 
@@ -97,6 +98,7 @@
   // Optional $settings, can be removed.
   // Provides HTML settings with optionset name and ID, none of JS related.
   // To add JS key:value pairs, use #options below instead.
+  // @see \Drupal\slick\SlickDefault for most supported settings.
   $build['settings'] = [
     // Optional optionset name, otherwise fallback to default.
     // 'optionset' => 'blog',
@@ -109,14 +111,14 @@
     // Leave empty to be provided by the module.
     'id' => 'slick-ticker',
 
-    // Define the cache max-age, or use -1, or Cache::PERMANENT to permanently
+    // Define the cache max-age, default to -1 (Cache::PERMANENT) to permanently
     // cache the results. Hence a 1 hour is passed. Be sure it is an integer!
     'cache' => 3600,
   ];
 
   // 3.
-  // Obligatory $items, as otherwise empty slick.
-  // Prepare $items contents, note the 'slide' key is to hold the actual slide
+  // Obligatory #items, as otherwise empty slick.
+  // Prepare #items contents, note the 'slide' key is to hold the actual slide
   // which can be pure and simple text, or any image/media file.
   // Meaning $rows can be text only, or image/audio/video, or a combination
   // of both.
@@ -150,9 +152,6 @@
         // Optionally add a custom class, can be a static uniform class, or
         // dynamic one based on the relevant field value.
         'class' => 'slide--custom-class--' . $key,
-
-        // Optionally add CSS image pattern overlay over the main image.
-        'pattern' => TRUE,
       ],
     ];
   }
@@ -187,7 +186,7 @@
 /**
  * 3. AsNavFor sample.
  *
- * The only requirements for asNavFor are:
+ * The only requirement for asNavFor is:
  * - $build['settings']['optionset_thumbnail']
  *
  * The rest are optional, and will fallback to default:
@@ -254,6 +253,7 @@
   ];
 
   // Satisfy the asnavfor main settings.
+  // @see \Drupal\slick\SlickDefault for most supported settings.
   $build['settings'] = [
     // The only required is 'optionset_thumbnail'.
     // Define both main and thumbnail optionset names once at the main display.
@@ -294,7 +294,7 @@
   // Build the slick once.
   $element = $slick->build($build);
 
-  // Prepare $variables to pass into a .twig.html file.
+  // Prepare variables to pass into a .twig.html file.
   $variables['slick'] = $element;
 
   // Render the slick at a .twig.html file.

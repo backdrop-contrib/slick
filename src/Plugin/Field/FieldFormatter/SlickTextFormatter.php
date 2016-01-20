@@ -10,6 +10,7 @@ namespace Drupal\slick\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\slick\SlickDefault;
+use Drupal\slick\SlickFormatterTrait;
 
 /**
  * Plugin implementation of the 'slick_text' formatter.
@@ -26,6 +27,7 @@ use Drupal\slick\SlickDefault;
  * )
  */
 class SlickTextFormatter extends SlickFormatterBase {
+  use SlickFormatterTrait;
 
   /**
    * {@inheritdoc}
@@ -72,11 +74,7 @@ class SlickTextFormatter extends SlickFormatterBase {
 
     $this->admin()->openingForm($element, $definition);
     $this->admin()->closingForm($element, $definition);
-
-    foreach (['layout', 'pattern'] as $exclude) {
-      $element[$exclude]['#access'] = FALSE;
-    }
-
+    $element['layout']['#access'] = FALSE;
     return $element;
   }
 

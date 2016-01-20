@@ -276,9 +276,6 @@ slick_base:
     thumbnail_caption:
       type: string
       label: 'Thumbnail caption'
-    wrapper_class:
-      type: string
-      label: 'Wrapper class'
 
 # Slick image base settings.
 slick_image:
@@ -303,9 +300,6 @@ slick_image:
     media_switch:
       type: string
       label: 'Media switcher'
-    pattern:
-      type: boolean
-      label: 'Pattern overlay'
     ratio:
       type: string
       label: 'Aspect ratio'
@@ -318,9 +312,6 @@ slick_image:
     thumbnail_hover:
       type: boolean
       label: 'Thumbnail hover'
-    use_ajax:
-      type: boolean
-      label: 'Use AJAX'
     vanilla:
       type: boolean
       label: 'Vanilla slick'

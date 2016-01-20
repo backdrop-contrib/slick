@@ -33,7 +33,6 @@
     settings.asNavFor ? 'slick--' ~ display|clean_class,
     display == 'main' and settings.slidesToShow > 1 ? 'slick--multiple-view',
     display == 'main' and settings.media_switch ? 'slick--' ~ settings.media_switch|clean_class,
-    display == 'main' and settings.wrapper_class ? settings.wrapper_class|clean_class,
     display == 'thumbnail' and settings.thumbnail_caption ? 'slick--has-caption'
   ]
 %}

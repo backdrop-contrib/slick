@@ -7,7 +7,6 @@
 
 namespace Drupal\slick;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\slick\Entity\Slick;
 use Drupal\slick\SlickImageBase;
 
@@ -31,7 +30,6 @@ class SlickFormatter extends SlickImageBase implements SlickFormatterInterface {
     $unique         = empty($settings['skin']) ? $optionset : $optionset . '-' . $settings['skin'];
     $view_mode      = empty($settings['current_view_mode']) ? '_custom' : $settings['current_view_mode'];
     $id             = Slick::getHtmlId("slick-{$entity_type_id}-{$entity_id}-{$field_clean}-{$unique}");
-    $count          = $items->count();
     $internal_path  = $absolute_path = $url = NULL;
 
     // Deals with UndefinedLinkTemplateException such as paragraphs type.
@@ -48,14 +46,14 @@ class SlickFormatter extends SlickImageBase implements SlickFormatterInterface {
       'absolute_path'  => $absolute_path,
       'bundle'         => $entity->bundle(),
       'caption'        => empty($settings['caption']) ? [] : array_filter($settings['caption']),
-      'count'          => $count,
+      'count'          => $items->count(),
       'entity_id'      => $entity_id,
       'entity_type_id' => $entity_type_id,
       'field_type'     => $field->getType(),
       'field_name'     => $field_name,
       'id'             => $id,
       'internal_path'  => $internal_path,
-      'nav'            => !empty($settings['optionset_thumbnail']) && $count > 1,
+      'nav'            => !empty($settings['optionset_thumbnail']) && $items->count() > 1,
       'lightbox'       => !empty($settings['media_switch']) && strpos($settings['media_switch'], 'box') !== FALSE,
       'target_type'    => $target_type,
       'cache_metadata' => ['keys' => [$id, $view_mode, $optionset]],

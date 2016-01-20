@@ -8,10 +8,8 @@
 namespace Drupal\slick;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Component\Utility\NestedArray;
@@ -26,14 +24,47 @@ use Drupal\slick\Entity\Slick;
 class SlickManager implements SlickManagerInterface {
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface;
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
    * Constructs a SlickManager object
    */
-  public function __construct(EntityManagerInterface $entity_manager, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, TypedConfigManagerInterface $typed_config, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache) {
-    $this->entityManager     = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler     = $module_handler;
     $this->renderer          = $renderer;
-    $this->typedConfig       = $typed_config;
     $this->configFactory     = $config_factory;
     $this->cache             = $cache;
   }
@@ -43,35 +74,12 @@ class SlickManager implements SlickManagerInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
       $container->get('entity_type.manager'),
       $container->get('module_handler'),
       $container->get('renderer'),
-      $container->get('config.typed'),
       $container->get('config.factory'),
       $container->get('cache.default')
     );
-  }
-
-  /**
-   * Returns the slick config managed by Slick UI, or any.
-   */
-  public function getConfigFactory($setting_name, $settings = 'slick.settings') {
-    return $this->configFactory->get($settings)->get($setting_name);
-  }
-
-  /**
-   * Returns the typed config.
-   */
-  public function getTypedConfig() {
-    return $this->typedConfig;
-  }
-
-  /**
-   * Returns the entity manager.
-   */
-  public function getEntityManager() {
-    return $this->entityManager;
   }
 
   /**
@@ -93,6 +101,13 @@ class SlickManager implements SlickManagerInterface {
    */
   public function getRenderer() {
     return $this->renderer;
+  }
+
+  /**
+   * Returns the slick config managed by Slick UI, or any.
+   */
+  public function getConfigFactory($setting_name, $settings = 'slick.settings') {
+    return $this->configFactory->get($settings)->get($setting_name);
   }
 
   /**
@@ -415,6 +430,7 @@ class SlickManager implements SlickManagerInterface {
     foreach (['items', 'options', 'optionset', 'settings'] as $key) {
       $build[$key] = isset($build[$key]) ? $build[$key] : [];
     }
+
     return [
       '#theme'      => 'slick_wrapper',
       '#items'      => [],
@@ -445,7 +461,7 @@ class SlickManager implements SlickManagerInterface {
 
     // Additional settings.
     $build['optionset'] = $build['optionset'] ?: $this->load($settings['optionset']);
-    $settings['nav']    = !empty($settings['optionset_thumbnail']) && $count > 1;
+    $settings['nav']    = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && $count > 1);
     $mousewheel         = $build['optionset']->getSetting('mouseWheel');
 
     if ($settings['nav']) {

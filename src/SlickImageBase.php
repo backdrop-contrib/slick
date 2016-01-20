@@ -10,7 +10,6 @@ namespace Drupal\slick;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Component\Serialization\Json;
-use Drupal\image\Entity\ImageStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\slick\SlickManagerInterface;
 
@@ -50,11 +49,10 @@ abstract class SlickImageBase {
    * Gets the image based on the Responsive image mapping, or Slick image lazy.
    */
   public function getImage($build = []) {
-    $tags     = [];
-    $item     = $build['item'];
-    $settings = &$build['settings'];
-    $media    = &$build['media'];
-
+    $tags        = [];
+    $item        = $build['item'];
+    $settings    = &$build['settings'];
+    $media       = &$build['media'];
     $image_style = $settings['image_style'];
     $dimensions  = $this->setDimensions($item, $image_style, $media['uri']);
     $media       = array_merge($media, $dimensions);
@@ -63,7 +61,7 @@ abstract class SlickImageBase {
 
     // Collect cache tags to be added for each item in the field.
     if (!empty($image_style)) {
-      $style = ImageStyle::load($image_style);
+      $style = $this->manager->load($image_style, 'image_style');
       $tags  = $style->getCacheTags();
     }
 
@@ -124,7 +122,7 @@ abstract class SlickImageBase {
     }
 
     if (!empty($settings['thumbnail_style'])) {
-      $element['#attributes']['data-thumb'] = ImageStyle::load($settings['thumbnail_style'])->buildUrl($media['uri']);
+      $element['#attributes']['data-thumb'] = $this->manager->load($settings['thumbnail_style'], 'image_style')->buildUrl($media['uri']);
     }
 
     $element['#settings'] = $settings;
@@ -161,23 +159,15 @@ abstract class SlickImageBase {
         }
       }
       else {
-        $url = empty($settings['box_style']) ? file_create_url($uri) : ImageStyle::load($settings['box_style'])->buildUrl($uri);
+        $url = empty($settings['box_style']) ? file_create_url($uri) : $this->manager->load($settings['box_style'], 'image_style')->buildUrl($uri);
       }
 
-      $classes  = ['slick__' . $switch, 'slick__litebox'];
+      $classes = ['slick__' . $switch, 'slick__litebox'];
       if ($switch == 'colorbox' && $settings['count'] > 1) {
         $json['rel'] = $settings['id'];
       }
       elseif ($switch == 'photobox' && !empty($media['url'])) {
         $image['#settings']['url']['attributes']['rel'] = 'video';
-      }
-      elseif ($switch == 'slickbox') {
-        $classes = ['slick__box', 'slick__litebox'];
-        $json['entity_id'] = $settings['entity_id'];
-        if (!empty($settings['absolute_path']) && !empty($settings['use_ajax'])) {
-          $url = $settings['absolute_path'];
-          $json['ajax'] = TRUE;
-        }
       }
 
       if ($type != 'image' && !empty($settings['dimension'])) {
@@ -195,7 +185,6 @@ abstract class SlickImageBase {
       $image['#url'] = $settings['absolute_path'];
     }
 
-    $this->manager->getModuleHandler()->alter('slick_media_switch_info', $image, $settings);
     return $image;
   }
 
@@ -224,7 +213,7 @@ abstract class SlickImageBase {
   public function setDimensions($item, $image_style = '', $uri = '') {
     $media = [];
     if ($image_style && $uri) {
-      $style = ImageStyle::load($image_style);
+      $style = $this->manager->load($image_style, 'image_style');
       $dimensions = array(
         'width' => isset($item->width) ? $item->width : '',
         'height' => isset($item->height) ? $item->height : '',

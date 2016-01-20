@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 use Drupal\slick\SlickDefault;
 use Drupal\slick\SlickFormatterInterface;
+use Drupal\slick\SlickFormatterTrait;
 
 /**
  * Plugin implementation of the 'slick image' formatter.
@@ -29,6 +30,7 @@ use Drupal\slick\SlickFormatterInterface;
  * )
  */
 class SlickImageFormatter extends ImageFormatterBase implements ContainerFactoryPluginInterface {
+  use SlickFormatterTrait;
 
   /**
    * The slick field formatter manager.
@@ -66,20 +68,6 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
    */
   public static function defaultSettings() {
     return SlickDefault::extendedSettings();
-  }
-
-  /**
-   * Returns the slick service shortcut.
-   */
-  public function manager() {
-    return $this->formatter->manager();
-  }
-
-  /**
-   * Returns the slick admin service shortcut.
-   */
-  public function admin() {
-    return \Drupal::service('slick.admin');
   }
 
   /**
@@ -153,22 +141,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
     $this->admin()->openingForm($element, $definition);
     $this->admin()->imageForm($element, $definition);
     $this->admin()->closingForm($element, $definition);
-
     return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    return $this->admin()->settingsSummary($this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    return $field_definition->getFieldStorageDefinition()->isMultiple();
   }
 
 }

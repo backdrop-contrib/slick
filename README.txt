@@ -84,10 +84,10 @@ REQUIREMENTS
     /libraries/slick/slick/slick-theme.css (optional if a skin chosen)
     /libraries/slick/slick/slick.min.js
 
-- Download jqeasing from http://gsgd.co.uk/sandbox/jquery/easing
-  Rename jquery.easing.1.3.js to jquery.easing.min.js, so available at:
+- Download jqeasing from https://github.com/gdsmith/jquery.easing, so available
+  at:
   /libraries/easing/jquery.easing.min.js
-  This is a fallback for non-supporting browsers.
+  This is CSS easing fallback for non-supporting browsers.
 
 - A basic knowledge of Drupal site building.
 

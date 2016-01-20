@@ -2,7 +2,7 @@
 services:
   slick.manager:
     class: Drupal\slick\SlickManager
-    arguments: ['@entity.manager', '@entity_type.manager', '@module_handler', '@renderer', '@config.typed', '@config.factory', '@cache.default']
+    arguments: ['@entity_type.manager', '@module_handler', '@renderer', '@config.factory', '@cache.default']
 
   slick.skin:
     class: Drupal\slick\SlickSkin
@@ -18,4 +18,4 @@ services:
 
   slick.admin:
     class: Drupal\slick\SlickAdmin
-    arguments: ['@entity_display.repository', '@slick.manager']
+    arguments: ['@entity_display.repository', '@config.typed', '@slick.manager']

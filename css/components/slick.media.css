@@ -118,7 +118,6 @@
 
 .is-playing > img,
 .is-playing > .media__image,
-.is-playing.media--switch + .slide__pattern,
 .is-playing.media--switch .media__image,
 .is-playing .media-icon--play,
 .is-playing:hover .media-icon--play {
@@ -130,10 +129,6 @@
 
 .is-playing .media__iframe {
   z-index: 3;
-}
-
-.is-playing .slide__pattern {
-  display: none;
 }
 
 /**

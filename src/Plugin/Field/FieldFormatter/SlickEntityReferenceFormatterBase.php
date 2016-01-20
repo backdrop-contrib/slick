@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 use Drupal\slick\SlickDefault;
 use Drupal\slick\SlickFormatterInterface;
+use Drupal\slick\SlickFormatterTrait;
 
 /**
  * Base class for slick entity reference formatters.
@@ -23,6 +24,7 @@ use Drupal\slick\SlickFormatterInterface;
  * @see \Drupal\slick_media\Plugin\Field\FieldFormatter\SlickMediaFormatter.
  */
 abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatterBase implements ContainerFactoryPluginInterface {
+  use SlickFormatterTrait;
 
   /**
    * Constructs a SlickMediaFormatter instance.
@@ -58,27 +60,6 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
       'color_field' => '',
       'iframe_lazy' => FALSE,
     ] + SlickDefault::fieldableSettings();
-  }
-
-  /**
-   * Returns the slick field formatter service.
-   */
-  public function formatter() {
-    return $this->formatter;
-  }
-
-  /**
-   * Returns the slick service shortcut.
-   */
-  public function manager() {
-    return $this->formatter->manager();
-  }
-
-  /**
-   * Returns the slick admin service shortcut.
-   */
-  public function admin() {
-    return \Drupal::service('slick.admin');
   }
 
   /**
@@ -325,13 +306,6 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
     $element['caption']['#description'] = t('Check fields to be treated as captions.');
 
     return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    return $this->admin()->settingsSummary($this);
   }
 
 }

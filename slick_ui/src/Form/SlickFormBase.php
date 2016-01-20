@@ -23,16 +23,16 @@ abstract class SlickFormBase extends EntityForm {
   /**
    * The slick service.
    *
-   * @var \Drupal\slick\SlickManagerInterface.
+   * @var \Drupal\slick\SlickAdmin.
    */
-  protected $manager;
+  protected $admin;
 
   /**
    * The slick service.
    *
-   * @var \Drupal\slick\SlickAdmin.
+   * @var \Drupal\slick\SlickManagerInterface.
    */
-  protected $admin;
+  protected $manager;
 
   /**
    * Constructs a SlickForm object.
@@ -106,7 +106,7 @@ abstract class SlickFormBase extends EntityForm {
     $form['group'] = [
       '#type'          => 'select',
       '#title'         => $this->t('Group'),
-      '#options'       => $this->admin->getOptionsetGroupOptions(),
+      '#options'       => ['main' => t('Main'), 'overlay' => t('Overlay'), 'thumbnail' => t('Thumbnail')],
       '#empty_option'  => $this->t('- None -'),
       '#default_value' => $slick->getGroup(),
       '#description'   => $this->t('Group this optionset to avoid confusion for optionset selections. Leave empty to make it available for all.'),

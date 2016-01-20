@@ -14,6 +14,10 @@ body {
   overflow: hidden;
 }
 
+.slick-wrapper--fullscreen {
+  background: #000;
+}
+
 .slick-wrapper--fullscreen,
 .slick-wrapper--fullscreen .slick,
 .slick--skin--fullscreen {

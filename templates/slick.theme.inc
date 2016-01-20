@@ -38,8 +38,8 @@ function template_preprocess_slick(&$variables) {
   }
 
   // @see SlickManager::buildGrid(), and this should make sense.
-  $settings['count']    = isset($settings['count']) ? $settings['count'] : count($element['#items']);
-  $settings['unslick']  = $settings['unslick'] || $settings['count'] == 1;
+  $settings['count']   = isset($settings['count']) ? $settings['count'] : count($element['#items']);
+  $settings['unslick'] = $settings['unslick'] || $settings['count'] == 1;
 
   foreach (['asNavFor', 'nextArrow', 'prevArrow', 'downArrowTarget', 'downArrowOffset', 'slidesToShow'] as $key) {
     $settings[$key] = isset($js[$key]) ? $js[$key] : FALSE;
@@ -67,8 +67,8 @@ function template_preprocess_slick(&$variables) {
     $js['slide'] = empty($js['slide']) && $js['focusOnSelect'] ? '.slick__slide' : $js['slide'];
 
     // Add the configuration as JSON object into the slick container.
-    if ($js_data = $optionset->removeDefaultValues($js)) {
-      $content_attributes->setAttribute('data-slick', Json::encode($js_data));
+    if ($json = $optionset->removeDefaultValues($js)) {
+      $content_attributes->setAttribute('data-slick', Json::encode($json));
     }
   }
 
@@ -141,14 +141,12 @@ function template_preprocess_slick_slide(&$variables) {
 
   // split: Split image from captions if we do have captions, and main image.
   // fullwidth: If full skins, add wrappers to hold caption and overlay.
-  // pattern: Exclude lightbox switcher as it has its pattern DIV within A tag.
   // detroy: Remove .slide__content if it is an enforced unslick grid.
   // wrapper: Don't add divities for a single item to have clean markups.
   $settings['caption']         = array_filter($item['caption']);
   $settings['split']           = !empty($item) && $settings['caption'];
   $settings['data']            = !empty($item['caption']['alt']) || !empty($item['caption']['title']) || !empty($item['caption']['data']);
   $settings['fullwidth']       = !empty($settings['skin']) && strpos($settings['skin'], 'full') !== FALSE;
-  $settings['pattern']         = $settings['pattern'] && strpos($settings['media_switch'], 'box') === FALSE;
   $settings['detroy']          = $settings['current_item'] == 'main' && !empty($settings['grid']) && !empty($settings['unslick']);
   $settings['wrapper']         = $settings['count'] > 1 && $settings['current_item'] != 'grid';
   $settings['content_wrapper'] = empty($settings['grid']);
@@ -187,16 +185,12 @@ function template_preprocess_slick_media(&$variables) {
   _slick_preprocess_slick_item($variables);
 
   // Configure attributes for containing elements.
+  $content_attributes = [];
   $settings           = &$variables['settings'];
   $settings['player'] = $settings['ratio_clean'] = FALSE;
-  $content_attributes = [];
-  if (isset($settings['content_attributes']) && is_array($settings['content_attributes'])) {
-    $content_attributes = NestedArray::mergeDeep($content_attributes, $settings['content_attributes']);
-  }
 
   // Pure CSS responsive iframes/images based on aspect ratio.
   if (!empty($settings['ratio']) && empty($settings['responsive_image_style'])) {
-    // Correct clean_class, else fail: media--ratio--169 -> media--ratio--_69.
     $settings['ratio_clean'] = Html::cleanCssIdentifier('media--ratio--' . $settings['ratio']);
 
     if (!empty($settings['height']) && $settings['ratio'] == 'fluid') {

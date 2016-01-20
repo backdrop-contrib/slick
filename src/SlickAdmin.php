@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormState;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\slick\SlickManagerInterface;
@@ -30,6 +31,13 @@ class SlickAdmin implements SlickAdminInterface {
   protected $entityDisplayRepository;
 
   /**
+   * The typed config manager service.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface
+   */
+  protected $typedConfig;
+
+  /**
    * The slick manager service.
    *
    * @var \Drupal\slick\SlickManagerInterface.
@@ -41,11 +49,14 @@ class SlickAdmin implements SlickAdminInterface {
    *
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+   *   The typed config service.
    * @param \Drupal\slick\SlickManagerInterface $manager
    *   The slick manager service.
    */
-  public function __construct(EntityDisplayRepositoryInterface $entity_display_repository, SlickManagerInterface $manager) {
+  public function __construct(EntityDisplayRepositoryInterface $entity_display_repository, TypedConfigManagerInterface $typed_config, SlickManagerInterface $manager) {
     $this->entityDisplayRepository = $entity_display_repository;
+    $this->typedConfig = $typed_config;
     $this->manager = $manager;
   }
 
@@ -53,7 +64,7 @@ class SlickAdmin implements SlickAdminInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static ($container->get('entity_display.repository'), $container->get('slick.manager'));
+    return new static ($container->get('entity_display.repository'), $container->get('config.typed'), $container->get('slick.manager'));
   }
 
   /**
@@ -159,21 +170,6 @@ class SlickAdmin implements SlickAdminInterface {
         ],
       ],
       '#weight'      => 2,
-    ];
-
-    $form['pattern'] = [
-      '#type'        => 'checkbox',
-      '#title'       => t('Use pattern overlay'),
-      '#description' => t('Pattern overlay is background image with pattern placed over the main stage.'),
-      '#weight'      => 6,
-    ];
-
-    $form['wrapper_class'] = [
-      '#type'        => 'textfield',
-      '#title'       => t('Wrapper class'),
-      '#description' => t('Additional template wrapper classes separated by spaces, added to the .slick container. No need to prefix it with a dot (.).'),
-      '#weight'      => 7,
-      '#enforced'    => TRUE,
     ];
 
     $form['caption'] = [
@@ -499,7 +495,7 @@ class SlickAdmin implements SlickAdminInterface {
 
     $form['current_view_mode'] = [
       '#type'          => 'hidden',
-      '#default_value' => $definition['current_view_mode'],
+      '#default_value' => isset($definition['current_view_mode']) ? $definition['current_view_mode'] : '_custom',
       '#weight'        => 100,
     ];
 
@@ -742,7 +738,7 @@ class SlickAdmin implements SlickAdminInterface {
     $form_state = new FormState();
     $settings   = $plugin->getSettings();
     $elements   = $plugin->settingsForm($form, $form_state);
-    $definition = $this->manager->getTypedConfig()->getDefinition('field.formatter.settings.' . $plugin->getPluginId());
+    $definition = $this->typedConfig->getDefinition('field.formatter.settings.' . $plugin->getPluginId());
 
     foreach ($settings as $key => $setting) {
       $access  = isset($elements[$key]['#access']) ? $elements[$key]['#access'] : TRUE;
@@ -773,16 +769,6 @@ class SlickAdmin implements SlickAdminInterface {
       }
     }
     return $summary;
-  }
-
-  /**
-   * Defines optionset group options.
-   */
-  public function getOptionsetGroupOptions() {
-    $groups = ['main' => t('Main'), 'overlay' => t('Overlay'), 'thumbnail' => t('Thumbnail')];
-
-    $this->manager->getModuleHandler()->alter('slick_optionset_group_options_info', $groups);
-    return $groups;
   }
 
 }
