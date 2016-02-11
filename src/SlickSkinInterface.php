@@ -64,7 +64,7 @@ interface SlickSkinInterface {
    * Returns the Slick arrow skins.
    *
    * The provided arrow skins will be available at sub-module UI form.
-   * A skin arrow named 'slit' will have a class 'slick__arrow--slit' for the NAV.
+   * A skin arrow 'slit' will have a class 'slick__arrow--slit' for the NAV.
    *
    * The array is similar to the self::skins(), excluding group, JS.
    *

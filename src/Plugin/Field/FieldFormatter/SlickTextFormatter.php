@@ -41,7 +41,7 @@ class SlickTextFormatter extends SlickFormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     // Early opt-out if the field is empty.
-    if ($items->count() < 1) {
+    if (!isset($items[0])) {
       return [];
     }
 
@@ -51,12 +51,14 @@ class SlickTextFormatter extends SlickFormatterBase {
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $key => $item) {
-      $build['items'][$key] = [
+      $slide = [
         '#type'     => 'processed_text',
         '#text'     => $item->value,
         '#format'   => $item->format,
         '#langcode' => $item->getLangcode(),
       ];
+      $build['items'][$key] = $slide;
+      unset($slide);
     }
 
     return $this->manager()->build($build);

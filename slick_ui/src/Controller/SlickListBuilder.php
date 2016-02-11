@@ -80,7 +80,7 @@ class SlickListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $skins = $this->manager->getSkins();
+    $skins = $this->manager->getSkins()['skins'];
     $skin  = $entity->getSkin();
 
     $row['label'] = Html::escape($this->getLabel($entity));

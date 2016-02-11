@@ -25,17 +25,6 @@ class SlickForm extends SlickFormBase {
     $admin_css = $this->manager->getConfigFactory('admin_css');
     $tooltip   = ['class' => ['is-tooltip']];
 
-    // Change page title for the duplicate operation.
-    if ($this->operation == 'duplicate') {
-      $form['#title'] = $this->t('<em>Duplicate slick optionset</em>: @label', ['@label' => $slick->label()]);
-      $this->entity = $slick->createDuplicate();
-    }
-
-    // Change page title for the edit operation.
-    if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('<em>Edit slick optionset</em>: @label', ['@label' => $slick->label()]);
-    }
-
     // Options.
     $form['options'] = [
       '#type'    => 'vertical_tabs',
@@ -436,20 +425,17 @@ class SlickForm extends SlickFormBase {
       ];
 
       $elements['lazyLoad'] = [
-        'type'        => 'select',
-        'title'       => $this->t('Lazy load'),
-        'options'     => [
-          'ondemand'    => $this->t('On demand'),
-          'progressive' => $this->t('Progressive'),
-        ],
+        'type'         => 'select',
+        'title'        => $this->t('Lazy load'),
+        'options'      => $this->getLazyloadOptions(),
         'empty_option' => $this->t('- None -'),
-        'description'  => $this->t("Set lazy loading technique. 'ondemand' will load the image as soon as you slide to it, 'progressive' loads one image after the other when the page loads. Note: dummy image is no good for ondemand. If ondemand fails to generate images, try progressive instead. Or use <a href='@url' target='_blank'>imageinfo_cache</a>. To share images for Pinterest, leave empty, otherwise no way to read actual image src.", ['@url' => '//www.drupal.org/project/imageinfo_cache']),
+        'description'  => $this->t("Set lazy loading technique. 'ondemand' will load the image as soon as you slide to it, 'progressive' loads one image after the other when the page loads. To share images for Pinterest, leave empty, otherwise no way to read actual image src. It supports Blazy module if installed. Yet, Blazy is not compatible with infinite option.", ['@url' => '//www.drupal.org/project/imageinfo_cache']),
       ];
 
       $elements['mouseWheel'] = [
         'type'        => 'checkbox',
         'title'       => $this->t('Enable mousewheel'),
-        'description' => $this->t('Make sure to download the <a href="@mousewheel" target="_blank">mousewheel</a> library, and it is available at <em>/libraries/mousewheel/jquery.mousewheel.min.js</em>.', ['@mousewheel' => '//github.com/brandonaaron/jquery-mousewheel']),
+        'description' => $this->t('Be sure to download the <a href="@mousewheel" target="_blank">mousewheel</a> library, and it is available at <em>/libraries/mousewheel/jquery.mousewheel.min.js</em>.', ['@mousewheel' => '//github.com/brandonaaron/jquery-mousewheel']),
       ];
 
       $elements['randomize'] = [
@@ -707,6 +693,21 @@ class SlickForm extends SlickFormBase {
       }
     }
     return $elements;
+  }
+
+  /**
+   * Returns modifiable lazyload options.
+   */
+  public function getLazyloadOptions() {
+    $options = [
+      'ondemand'    => $this->t('On demand'),
+      'progressive' => $this->t('Progressive'),
+    ];
+    if ($this->manager->getModuleHandler()->moduleExists('blazy')) {
+      $options['blazy'] = $this->t('Blazy');
+    }
+    $this->manager->getModuleHandler()->alter('slick_lazyload_options_info', $options);
+    return $options;
   }
 
   /**

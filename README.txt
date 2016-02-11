@@ -114,6 +114,7 @@ To create optionsets, go to:
 
   admin/config/media/slick
 
+Be sure to enable Slick UI sub-module first.
 These will be available at field formatter "Manage display", and Views UI.
 
 

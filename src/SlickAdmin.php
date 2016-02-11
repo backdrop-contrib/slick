@@ -517,9 +517,10 @@ class SlickAdmin implements SlickAdminInterface {
   public function finalizeForm(array &$form, $definition = []) {
     $settings  = isset($definition['settings']) ? $definition['settings'] : [];
     $admin_css = $this->manager->getConfigFactory('admin_css');
+    $excludes  = ['container', 'details', 'item', 'hidden', 'submit'];
 
     foreach (Element::children($form) as $key) {
-      if (isset($form[$key]['#type']) && !in_array($form[$key]['#type'], ['item', 'hidden'])) {
+      if (isset($form[$key]['#type']) && !in_array($form[$key]['#type'], $excludes)) {
         if (!isset($form[$key]['#default_value']) && isset($settings[$key])) {
           $form[$key]['#default_value'] = $settings[$key];
         }
@@ -669,8 +670,10 @@ class SlickAdmin implements SlickAdminInterface {
 
     if (!isset($arrows)) {
       $arrows = [];
-      foreach ($this->manager->getArrows() as $key => $properties) {
-        $arrows[$key] = Html::escape($properties['name']);
+      if ($available_arrows = $this->manager->getSkins()['arrows']) {
+        foreach ($available_arrows as $key => $properties) {
+          $arrows[$key] = Html::escape($properties['name']);
+        }
       }
     }
     return $arrows;
@@ -684,8 +687,10 @@ class SlickAdmin implements SlickAdminInterface {
 
     if (!isset($dots)) {
       $dots = [];
-      foreach ($this->manager->getDots() as $key => $properties) {
-        $dots[$key] = Html::escape($properties['name']);
+      if ($available_dots = $this->manager->getSkins()['dots']) {
+        foreach ($available_dots as $key => $properties) {
+          $dots[$key] = Html::escape($properties['name']);
+        }
       }
     }
     return $dots;

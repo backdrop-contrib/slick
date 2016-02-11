@@ -52,7 +52,8 @@ function slick_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":readme" target="_blank">Slick readme module</a>.', [
         ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(),
         ':field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui'])->toString(),
-        ':readme' => Url::fromUri('base:' . $path . '/README.txt')->toString()]) . '</p>';
+        ':readme' => Url::fromUri('base:' . $path . '/README.txt')->toString(),
+      ]) . '</p>';
       return $output;
   }
 }

@@ -46,6 +46,7 @@ class SlickFormatter extends SlickImageBase implements SlickFormatterInterface {
       'absolute_path'  => $absolute_path,
       'bundle'         => $entity->bundle(),
       'caption'        => empty($settings['caption']) ? [] : array_filter($settings['caption']),
+      'overridables'   => empty($settings['overridables']) ? [] : array_filter($settings['overridables']),
       'count'          => $items->count(),
       'entity_id'      => $entity_id,
       'entity_type_id' => $entity_type_id,
@@ -53,7 +54,7 @@ class SlickFormatter extends SlickImageBase implements SlickFormatterInterface {
       'field_name'     => $field_name,
       'id'             => $id,
       'internal_path'  => $internal_path,
-      'nav'            => !empty($settings['optionset_thumbnail']) && $items->count() > 1,
+      'nav'            => !empty($settings['optionset_thumbnail']) && isset($items[1]),
       'lightbox'       => !empty($settings['media_switch']) && strpos($settings['media_switch'], 'box') !== FALSE,
       'target_type'    => $target_type,
       'cache_metadata' => ['keys' => [$id, $view_mode, $optionset]],
@@ -61,7 +62,11 @@ class SlickFormatter extends SlickImageBase implements SlickFormatterInterface {
 
     $build['optionset'] = $this->manager()->load($optionset);
     $build['settings']  = $settings;
-    $build['settings']['lazy'] = $build['optionset']->getSetting('lazyLoad');
+
+    if (empty($settings['responsive_image_style_id'])) {
+      $build['settings']['lazy'] = $build['optionset']->getSetting('lazyLoad');
+    }
+    unset($entity, $field);
     return $build;
   }
 

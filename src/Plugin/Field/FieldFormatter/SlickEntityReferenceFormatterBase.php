@@ -65,10 +65,11 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
   /**
    * Returns media contents.
    */
-  public function buildElements($entities, $langcode, $settings = [], $nav = FALSE) {
-    $build = [];
-    $slide['settings'] = $settings;
+  public function buildElements($entities, $langcode, $settings = []) {
+    $build     = [];
+    $view_mode = $settings['view_mode'] ?: 'full';
 
+    // $medium = $this->formatter->setDimensions($files[0]->_referringItem, $settings['image_style'], $files[0]->getFileUri());
     foreach ($entities as $delta => $entity) {
       // Protect ourselves from recursive rendering.
       static $depth = 0;
@@ -78,26 +79,25 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
         return $build;
       }
 
+      $slide = ['delta' => $delta, 'settings' => $settings];
       if ($entity->id()) {
-        $element = $this->buildElement($entity, $langcode, $slide, $delta, $nav);
+        if ($settings['vanilla']) {
+          $build['items'][$delta] = $this->manager()->getEntityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode);
+        }
+        else {
+          $this->buildElement($build, $entity, $langcode, $slide);
+        }
 
         // Add the entity to cache dependencies so to clear when it is updated.
-        $this->manager()->getRenderer()->addCacheableDependency($element, $entity);
-
-        // Add a resource attribute to set the mapping property's value to the
-        // entity's url. Since we don't know what the markup of the entity will
-        // be, we shouldn't rely on it for structured data such as RDFa.
-        if (!empty($items[$delta]->_attributes)) {
-          $items[$delta]->_attributes += array('resource' => $entity->url());
-        }
+        $this->manager()->getRenderer()->addCacheableDependency($build['items'][$delta], $entity);
       }
       else {
         $this->referencedEntities = NULL;
         // This is an "auto_create" item.
-        $element = array('#markup' => $entity->label());
+        $build[$delta] = array('#markup' => $entity->label());
       }
 
-      $build[$delta] = $element;
+      unset($slide);
       $depth = 0;
     }
 
@@ -107,13 +107,10 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
   /**
    * Returns slide contents.
    */
-  public function buildElement($entity, $langcode, $slide, $delta, $nav = FALSE) {
+  public function buildElement(array &$build, $entity, $langcode, $slide) {
+    $delta     = $slide['delta'];
     $settings  = $slide['settings'];
     $view_mode = $settings['view_mode'] ?: 'full';
-
-    if ($settings['vanilla']) {
-      return $this->manager()->getEntityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode);
-    }
 
     $image = [];
     $media = $this->buildMedia($entity, $langcode, $slide, $delta);
@@ -141,31 +138,31 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
       }
     }
 
-    if (!$nav) {
-      // Image with responsive image, lazyLoad, and lightbox supports.
-      $slide['slide'] = $image;
+    // Image with responsive image, lazyLoad, and lightbox supports.
+    $slide['slide'] = $image;
 
-      // Captions if so configured.
-      $this->getCaption($entity, $langcode, $settings, $slide);
+    // Captions if so configured.
+    $this->getCaption($entity, $langcode, $settings, $slide);
 
-      // Layouts can be builtin, or field, if so configured.
-      if ($layout = $settings['layout']) {
-        if (strpos($layout, 'field_') !== FALSE) {
-          $settings['layout'] = $this->getFieldString($entity, $layout, $langcode);
-        }
-        $slide['settings']['layout'] = strip_tags($settings['layout']);
+    // Layouts can be builtin, or field, if so configured.
+    if ($layout = $settings['layout']) {
+      if (strpos($layout, 'field_') !== FALSE) {
+        $settings['layout'] = $this->getFieldString($entity, $layout, $langcode);
       }
+      $slide['settings']['layout'] = strip_tags($settings['layout']);
+    }
 
-      // Classes, if so configured.
-      $class = $this->getFieldString($entity, $settings['class'], $langcode);
-      $slide['settings']['class'] = strip_tags($class);
-    }
-    else {
+    // Classes, if so configured.
+    $class = $this->getFieldString($entity, $settings['class'], $langcode);
+    $slide['settings']['class'] = strip_tags($class);
+    $build['items'][$delta] = $slide;
+
+    if ($settings['nav']) {
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-      $slide['slide'] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($slide);
+      $slide['slide']   = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($slide);
       $slide['caption'] = $this->getFieldRenderable($entity, $settings['thumbnail_caption'], $view_mode);
+      $build['thumb']['items'][$delta] = $slide;
     }
-    return $slide;
   }
 
   /**

@@ -135,27 +135,6 @@ class SlickManager implements SlickManagerInterface {
    * Returns slick skins registered via hook_slick_skins_info(), or defaults.
    */
   public function getSkins() {
-    return $this->getDefinedSkins()['skins'];
-  }
-
-  /**
-   * Returns slick skin arrows registered via hook_slick_skins_info().
-   */
-  public function getArrows() {
-    return isset($this->getDefinedSkins()['arrows']) ? $this->getDefinedSkins()['arrows'] : [];
-  }
-
-  /**
-   * Returns slick skin dots registered via hook_slick_skins_info().
-   */
-  public function getDots() {
-    return isset($this->getDefinedSkins()['dots']) ? $this->getDefinedSkins()['dots'] : [];
-  }
-
-  /**
-   * Returns defined slick skins as registered via hook_slick_skins_info().
-   */
-  public function getDefinedSkins() {
     $skins = &drupal_static(__METHOD__, NULL);
     if (!isset($skins)) {
       $cid = 'slick:skins';
@@ -195,8 +174,8 @@ class SlickManager implements SlickManagerInterface {
       $skins = [
         'skin'      => $this->getSkinsByGroup('main'),
         'thumbnail' => $this->getSkinsByGroup('thumbnail'),
-        'arrows'    => $this->getArrows(),
-        'dots'      => $this->getDots(),
+        'arrows'    => $this->getSkins()['arrows'],
+        'dots'      => $this->getSkins()['dots'],
       ];
       $skins = array_filter($skins);
     }
@@ -208,7 +187,7 @@ class SlickManager implements SlickManagerInterface {
    */
   public function getSkinsByGroup($group = '', $select = FALSE) {
     $skins = $groups = $ungroups = [];
-    foreach ($this->getSkins() as $skin => $properties) {
+    foreach ($this->getSkins()['skins'] as $skin => $properties) {
       $item = $select ? Html::escape($properties['name']) : $properties;
       if (!empty($group)) {
         if (isset($properties['group'])) {
@@ -242,6 +221,10 @@ class SlickManager implements SlickManagerInterface {
     $easing = \Drupal::root() . '/libraries/easing/jquery.easing.min.js';
     if (is_file($easing)) {
       $load['library'][] = 'slick/slick.easing';
+    }
+
+    if (!empty($attach['lazy']) && $attach['lazy'] == 'blazy') {
+      $load['library'][] = 'blazy/blazy';
     }
 
     $load['library'][] = 'slick/slick';
@@ -340,7 +323,7 @@ class SlickManager implements SlickManagerInterface {
     $build = $element['#build'];
     unset($element['#build']);
 
-    if (empty($build['items'])) {
+    if (!isset($build['items'][0])) {
       return [];
     }
 
@@ -394,7 +377,6 @@ class SlickManager implements SlickManagerInterface {
       $settings['display']      = 'main';
       $settings['current_item'] = 'grid';
       $settings['count']        = 2;
-
       $slide['slide'] = [
         '#theme'    => 'slick_grid',
         '#items'    => $build,
@@ -410,6 +392,7 @@ class SlickManager implements SlickManagerInterface {
       $grid_items        = array_chunk($build, $settings['visible_slides'], $preserve_keys);
       $settings['count'] = count($grid_items);
       foreach ($grid_items as $delta => $grid_item) {
+        $slide = [];
         $slide['slide'] = [
           '#theme'    => 'slick_grid',
           '#items'    => $grid_item,
@@ -418,6 +401,7 @@ class SlickManager implements SlickManagerInterface {
         ];
         $slide['settings'] = $settings;
         $grids[] = $slide;
+        unset($slide);
       }
     }
     return $grids;
@@ -446,7 +430,7 @@ class SlickManager implements SlickManagerInterface {
     $build = $element['#build'];
     unset($element['#build']);
 
-    if (empty($build['items'])) {
+    if (!isset($build['items'][0])) {
       return [];
     }
 
@@ -455,13 +439,12 @@ class SlickManager implements SlickManagerInterface {
     $settings = $build['settings'] ? array_merge($defaults, $build['settings']) : $defaults;
     $id       = Slick::getHtmlId('slick', $settings['id']);
     $thumb_id = $id . '-thumbnail';
-    $count    = count($build['items']);
     $options  = $build['options'];
     $switch   = isset($settings['media_switch']) ? $settings['media_switch'] : '';
 
     // Additional settings.
     $build['optionset'] = $build['optionset'] ?: $this->load($settings['optionset']);
-    $settings['nav']    = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && $count > 1);
+    $settings['nav']    = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
     $mousewheel         = $build['optionset']->getSetting('mouseWheel');
 
     if ($settings['nav']) {

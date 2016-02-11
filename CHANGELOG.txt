@@ -1,4 +1,11 @@
 
+Slick 8.x-2.0-dev, 2016-02-11
+-----------------------------
+- Updated useTransform to TRUE to reflect post v1.5.9.
+- Fixed for non-editable ID during Duplicate operation.
+- Removed focusOnSelect asnavfor failsafe.
+- Merged methods getArrows(), getDots(), getDefinedSkins() into getSkins().
+
 Slick 8.x-2.0-dev, 2016-01-20
 -----------------------------
 - Fixed for Route "entity.responsive_image_style.collection" does not exist

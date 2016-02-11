@@ -5,7 +5,6 @@
  * Hooks and preprocess functions for the Slick module.
  */
 
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Template\Attribute;
 use Drupal\image\Entity\ImageStyle;
@@ -58,11 +57,6 @@ function template_preprocess_slick(&$variables) {
       $content_attributes->setAttribute('dir', 'rtl');
     }
 
-    // Only if asNavFor, enforce clickable thumbnail, otherwise no joy.
-    if ($display == 'thumbnail' && $js['asNavFor']) {
-      $js['focusOnSelect'] = TRUE;
-    }
-
     // focusOnSelect won't work with empty slide value, so add proper selector.
     $js['slide'] = empty($js['slide']) && $js['focusOnSelect'] ? '.slick__slide' : $js['slide'];
 
@@ -81,16 +75,26 @@ function template_preprocess_slick(&$variables) {
   $variables['items'] = [];
   foreach ($element['#items'] as $delta => $item) {
     $settings['current_item'] = $display;
-    $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
-    unset($item['settings']);
 
-    $variables['items'][$delta] = [
-      '#theme'    => $settings['vanilla'] ? 'slick_vanilla' : ($display == 'thumbnail' ? 'slick_thumbnail' : 'slick_slide'),
-      '#item'     => $item,
-      '#settings' => $settings,
-      '#delta'    => $delta,
-    ];
+    $theme = $settings['vanilla'] ? 'slick_vanilla' : ($display == 'thumbnail' ? 'slick_thumbnail' : 'slick_slide');
+    $slide = _slick_build_slide($item, $delta, $settings, $theme);
+    $variables['items'][$delta] = $slide;
+    unset($slide);
   }
+}
+
+/**
+ * Re-uses individual slide building for grid, slide, thumbnail, vanilla.
+ */
+function _slick_build_slide($item, $delta = 0, $settings = array(), $theme = 'slick_slide') {
+  $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
+  unset($item['settings']);
+  return [
+    '#theme'    => $theme,
+    '#item'     => $item,
+    '#delta'    => $delta,
+    '#settings' => $settings,
+  ];
 }
 
 /**
@@ -136,46 +140,36 @@ function template_preprocess_slick_slide(&$variables) {
     $variables['item']['caption'][$key] = isset($variables['item']['caption'][$key]) ? $variables['item']['caption'][$key] : [];
   }
 
-  $item     = $variables['item'];
+  $item     = &$variables['item'];
   $settings = &$variables['settings'];
 
   // split: Split image from captions if we do have captions, and main image.
   // fullwidth: If full skins, add wrappers to hold caption and overlay.
   // detroy: Remove .slide__content if it is an enforced unslick grid.
   // wrapper: Don't add divities for a single item to have clean markups.
-  $settings['caption']         = array_filter($item['caption']);
-  $settings['split']           = !empty($item) && $settings['caption'];
-  $settings['data']            = !empty($item['caption']['alt']) || !empty($item['caption']['title']) || !empty($item['caption']['data']);
-  $settings['fullwidth']       = !empty($settings['skin']) && strpos($settings['skin'], 'full') !== FALSE;
-  $settings['detroy']          = $settings['current_item'] == 'main' && !empty($settings['grid']) && !empty($settings['unslick']);
-  $settings['wrapper']         = $settings['count'] > 1 && $settings['current_item'] != 'grid';
-  $settings['content_wrapper'] = empty($settings['grid']);
+  $item['caption']       = array_filter($item['caption']);
+  $settings['split']     = !empty($item) && $settings['caption'];
+  $settings['data']      = !empty($item['caption']['alt']) || !empty($item['caption']['title']) || !empty($item['caption']['data']);
+  $settings['fullwidth'] = !empty($settings['skin']) && strpos($settings['skin'], 'full') !== FALSE;
+  $settings['detroy']    = $settings['current_item'] == 'main' && !empty($settings['grid']) && !empty($settings['unslick']);
+  $settings['wrapper']   = $settings['count'] > 1 && $settings['current_item'] != 'grid';
 }
 
 /**
  * Prepares variables for slick-grid.html.twig templates.
  */
 function template_preprocess_slick_grid(&$variables) {
-  $settings = $variables['element']['#settings'];
+  $settings = $variables['settings'] = $variables['element']['#settings'];
 
   $variables['items'] = [];
   foreach ($variables['element']['#items'] as $delta => $item) {
     $settings['current_item'] = 'grid';
-    $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
-    unset($item['settings']);
 
-    $slide['slide'] = [
-      '#theme'    => 'slick_slide',
-      '#item'     => $item,
-      '#delta'    => $delta,
-      '#settings' => $settings,
-    ];
-
+    $slide['slide'] = _slick_build_slide($item, $delta, $settings);
     $slide['attributes'] = new Attribute();
     $variables['items'][$delta] = $slide;
+    unset($slide);
   }
-
-  $variables['settings'] = $settings;
 }
 
 /**
@@ -191,7 +185,7 @@ function template_preprocess_slick_media(&$variables) {
 
   // Pure CSS responsive iframes/images based on aspect ratio.
   if (!empty($settings['ratio']) && empty($settings['responsive_image_style'])) {
-    $settings['ratio_clean'] = Html::cleanCssIdentifier('media--ratio--' . $settings['ratio']);
+    $settings['ratio_clean'] = str_replace(':', '', 'media--ratio--' . $settings['ratio']);
 
     if (!empty($settings['height']) && $settings['ratio'] == 'fluid') {
       $variables['attributes']['data-ratio'] = round((($settings['height'] / $settings['width']) * 100), 2);
@@ -224,10 +218,9 @@ function template_preprocess_slick_image(array &$variables) {
   $attributes = $variables['attributes'];
   $uri        = ($entity = $item->entity) && empty($item->uri) ? $entity->getFileUri() : $item->uri;
 
-  $variables['noscript']      = '';
-  $variables['image']['#uri'] = $uri;
-  $variables['url']           = isset($variables['element']['#url']) ? $variables['element']['#url'] : '';
-  $attributes['class'][]      = 'media__image';
+  $variables['noscript'] = '';
+  $variables['url']      = isset($variables['element']['#url']) ? $variables['element']['#url'] : '';
+  $attributes['class'][] = 'media__image';
 
   // Do not output an empty 'title' attribute.
   if (Unicode::strlen($item->title) != 0) {
@@ -235,6 +228,7 @@ function template_preprocess_slick_image(array &$variables) {
   }
 
   // Check whether we have responsive image, or plain one.
+   $variables['image']['#uri'] = $uri;
   if (!empty($settings['responsive_image_style_id'])) {
     $variables['image']['#type'] = 'responsive_image';
     $variables['image']['#responsive_image_style_id'] = $settings['responsive_image_style_id'];
@@ -265,10 +259,12 @@ function template_preprocess_slick_image(array &$variables) {
 
     // Provide lazyloaded image with noscript for the first slide only.
     if ($settings['count'] > 1 && $settings['lazy']) {
-      $attributes['class'][]      = 'lazy';
-      $attributes['data-lazy']    = $settings['image_url'];
       $variables['noscript']      = $settings['delta'] == 0 ? $variables['image'] : '';
+      $attributes['class'][]      = 'lazy';
       $variables['image']['#uri'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+      $lazy_attribute = empty($settings['lazy_attribute']) ? 'lazy' : $settings['lazy_attribute'];
+      $attributes['data-' . $lazy_attribute] = $settings['image_url'];
     }
 
     if (!empty($settings['ratio'])) {

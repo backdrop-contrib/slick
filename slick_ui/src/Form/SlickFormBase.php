@@ -59,6 +59,17 @@ abstract class SlickFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+    // Change page title for the duplicate operation.
+    if ($this->operation == 'duplicate') {
+      $form['#title'] = $this->t('<em>Duplicate slick optionset</em>: @label', ['@label' => $this->entity->label()]);
+      $this->entity = $this->entity->createDuplicate();
+    }
+
+    // Change page title for the edit operation.
+    if ($this->operation == 'edit') {
+      $form['#title'] = $this->t('<em>Edit slick optionset</em>: @label', ['@label' => $this->entity->label()]);
+    }
+
     $slick   = $this->entity;
     $path    = drupal_get_path('module', 'slick');
     $tooltip = ['class' => ['is-tooltip']];
@@ -151,6 +162,7 @@ abstract class SlickFormBase extends EntityForm {
 
     // Prevent leading and trailing spaces in slick names.
     $slick->set('label', trim($slick->label()));
+    $slick->set('id', $slick->id());
 
     $status        = $slick->save();
     $label         = $slick->label();

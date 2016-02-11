@@ -77,14 +77,12 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
     $files = $this->getEntitiesToView($items, $langcode);
 
     // Early opt-out if the field is empty.
-    if (empty($files)) {
+    if (!isset($items[0])) {
       return [];
     }
 
-    $build          = $this->formatter->buildSettings($items, $langcode, $this->getSettings());
-    $settings       = $build['settings'];
-    $build['items'] = $this->buildElements($files, $settings);
-    $build['thumb'] = !$settings['nav'] ? [] : ['items' => $this->buildElements($files, $settings, TRUE)];
+    $build = $this->formatter->buildSettings($items, $langcode, $this->getSettings());
+    $build += $this->buildElements($files, $build['settings']);
 
     return $this->manager()->build($build);
   }
@@ -92,35 +90,38 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
   /**
    * Build the slick carousel elements.
    */
-  public function buildElements($files, $settings = [], $nav = FALSE) {
-    $build = [];
-    $slide['settings'] = $settings;
+  public function buildElements($files, $settings = []) {
+    $build  = [];
+    $medium = $this->formatter->setDimensions($files[0]->_referringItem, $settings['image_style'], $files[0]->getFileUri());
 
     foreach ($files as $key => $file) {
       /* @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
       $item = $file->_referringItem;
-      $slide['item']  = $item;
-      $slide['media'] = $media = ['delta' => $key, 'uri' => $file->getFileUri(), 'type' => 'image'];
+      $slide = array();
+      $media = ['delta' => $key, 'uri' => $file->getFileUri(), 'type' => 'image'];
+      $slide['item'] = $item;
+      $slide['settings'] = $settings;
+      $slide['media'] = array_merge($media, $medium);
 
-      if (!$nav) {
-        // Image with responsive image, lazyLoad, and lightbox supports.
-        $slide['slide'] = $this->formatter->getImage($slide);
-
-        if (!empty($settings['caption'])) {
-          foreach ($settings['caption'] as $caption) {
-            $slide['caption'][$caption] = empty($item->$caption) ? [] : ['#markup' => Xss::filterAdmin($item->$caption)];
-          }
+      if (!empty($settings['caption'])) {
+        foreach ($settings['caption'] as $caption) {
+          $slide['caption'][$caption] = empty($item->$caption) ? [] : ['#markup' => Xss::filterAdmin($item->$caption)];
         }
       }
-      else {
+
+      // Image with responsive image, lazyLoad, and lightbox supports.
+      $slide['slide'] = $this->formatter->getImage($slide);
+      $build['items'][$key] = $slide;
+
+      if ($settings['nav']) {
+        $caption = $settings['thumbnail_caption'];
+        $slide['caption'] = empty($item->$caption) ? [] : ['#markup' => Xss::filterAdmin($item->$caption)];
+
         // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
         $slide['slide'] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($slide);
-
-        if ($caption = $settings['thumbnail_caption']) {
-          $slide['caption'] = empty($item->$caption) ? [] : ['#markup' => Xss::filterAdmin($item->$caption)];
-        }
+        $build['thumb']['items'][$key] = $slide;
       }
-      $build[$key] = $slide;
+      unset($slide);
     }
     return $build;
   }

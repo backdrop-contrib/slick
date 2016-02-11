@@ -58,7 +58,7 @@ options:
     cssEase: ease
     cssEaseBezier: ''
     cssEaseOverride: ''
-    useTransform: false
+    useTransform: true
     easing: linear
     variableWidth: false
     vertical: false

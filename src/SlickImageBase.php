@@ -52,12 +52,15 @@ abstract class SlickImageBase {
     $tags        = [];
     $item        = $build['item'];
     $settings    = &$build['settings'];
-    $media       = &$build['media'];
+    $media       = $build['media'];
     $image_style = $settings['image_style'];
-    $dimensions  = $this->setDimensions($item, $image_style, $media['uri']);
-    $media       = array_merge($media, $dimensions);
-    $settings    = array_merge($settings, $media);
-    $delta       = $media['delta'];
+
+    if (!isset($media['dimensions'])) {
+      $dimensions = $this->setDimensions($item, $image_style, $media['uri']);
+      $media = array_merge($media, $dimensions);
+    }
+
+    $settings = array_merge($settings, $media);
 
     // Collect cache tags to be added for each item in the field.
     if (!empty($image_style)) {
@@ -68,17 +71,19 @@ abstract class SlickImageBase {
     $image = [
       '#theme'      => 'slick_image',
       '#item'       => [],
-      '#delta'      => $delta,
+      '#delta'      => $media['delta'],
       '#build'      => $build,
       '#pre_render' => [[$this, 'preRenderImage']],
       '#cache'      => ['tags' => $tags],
     ];
 
-    // Build the slide with picture, lightbox or multimedia supports.
+    $this->manager->getModuleHandler()->alter('slick_image_info', $image, $settings, $media);
+
+    // Build the slide with responsive image, lightbox or multimedia supports.
     return [
       '#theme'    => 'slick_media',
       '#item'     => $image,
-      '#delta'    => $delta,
+      '#delta'    => $media['delta'],
       '#settings' => $settings,
     ];
   }
@@ -99,13 +104,7 @@ abstract class SlickImageBase {
     $settings = $build['settings'];
     $resimage = function_exists('responsive_image_get_image_dimensions');
 
-    // Extract field item attributes for the theme function, and unset them
-    // from the $item so that the field template does not re-render them.
-    $item_attributes = $item->_attributes;
-    unset($item->_attributes);
-
     $element['#item'] = $item;
-    $element['#attributes'] = $item_attributes;
 
     // Responsive image integration.
     if ($resimage && !empty($settings['responsive_image_style'])) {
@@ -123,6 +122,11 @@ abstract class SlickImageBase {
 
     if (!empty($settings['thumbnail_style'])) {
       $element['#attributes']['data-thumb'] = $this->manager->load($settings['thumbnail_style'], 'image_style')->buildUrl($media['uri']);
+    }
+
+    if ($settings['lazy'] == 'blazy') {
+      $settings['lazy_attribute'] = 'src';
+      $element['#attributes']['class'][] = 'b-lazy';
     }
 
     $element['#settings'] = $settings;
@@ -208,7 +212,7 @@ abstract class SlickImageBase {
   }
 
   /**
-   * Transform image dimensions based on the given image style.
+   * Defines image dimensions once for the rest of images as it costs a bit.
    */
   public function setDimensions($item, $image_style = '', $uri = '') {
     $media = [];

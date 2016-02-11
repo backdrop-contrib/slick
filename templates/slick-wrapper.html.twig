@@ -21,9 +21,9 @@
 %}
 
 {% spaceless %}
-{% if items|length > 1 %}<div{{ attributes.addClass(classes)|without('id') }}>{% endif %}
+{% if settings.nav %}<div{{ attributes.addClass(classes)|without('id') }}>{% endif %}
   {% for item in items %}
     {{ item }}
   {% endfor %}
-{% if items|length > 1 %}</div>{% endif %}
+{% if settings.nav %}</div>{% endif %}
 {% endspaceless %}

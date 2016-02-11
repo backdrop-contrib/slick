@@ -131,7 +131,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
       if (is_array($group)) {
         return NestedArray::getValue($this->options, (array) $group);
       }
-      elseif ($property && isset($this->options[$group])) {
+      elseif (isset($property) && isset($this->options[$group])) {
         return isset($this->options[$group][$property]) ? $this->options[$group][$property] : NULL;
       }
       return $this->options[$group];
