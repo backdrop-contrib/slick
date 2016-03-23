@@ -136,10 +136,6 @@ function slick_get_options() {
  */
 function slick_hook_info() {
   $hooks['slick_skins_info']  = array('group' => 'slick');
-
-  // @todo drop and merge into slick_skins_info to simplify.
-  $hooks['slick_arrows_info'] = array('group' => 'slick');
-  $hooks['slick_dots_info']   = array('group' => 'slick');
   return $hooks;
 }
 
@@ -422,32 +418,4 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
   }
   unset($items, $optionset, $settings);
   return $slick;
-}
-
-/**
- * Returns an array of arrow skins registered via hook_slick_arrows_info().
- *
- * @todo drop for unified slick_skins() with 'group' property instead.
- */
-function slick_arrows() {
-  $arrows = &drupal_static(__FUNCTION__, NULL);
-  if (!isset($arrows)) {
-    $arrows = module_invoke_all('slick_arrows_info');
-    drupal_alter('slick_arrows_info', $arrows);
-  }
-  return $arrows;
-}
-
-/**
- * Returns an array of dot skins registered via hook_slick_dots_info().
- *
- * @todo drop for unified slick_skins() with 'group' property instead.
- */
-function slick_dots() {
-  $dots = &drupal_static(__FUNCTION__, NULL);
-  if (!isset($dots)) {
-    $dots = module_invoke_all('slick_dots_info');
-    drupal_alter('slick_dots_info', $dots);
-  }
-  return $dots;
 }

@@ -534,37 +534,3 @@ function hook_slick_skins_info_alter(array &$skins) {
   $skins['fullwidth']['name'] = t('My Theme: fullwidth');
   $skins['fullwidth']['css'] = array($path . '/css/slick.theme--fullwidth.css' => array());
 }
-
-/**
- * Registers Slick dot skins.
- *
- * The provided dot skins will be available at sub-module interfaces.
- * A skin dot named 'hop' will have a class 'slick-dots--hop' for the UL.
- *
- * The array is similar to the hook_slick_skins_info(), excluding JS.
- *
- * @deprecated Use 'group' directive instead to reduce extra logic.
- *
- * @see hook_slick_skins_info() above.
- */
-function hook_slick_dots_info() {
-  // Migrate this content into the 'group' property of hook_slick_skins_info().
-  // And add group 'dots'.
-}
-
-/**
- * Registers Slick arrow skins.
- *
- * The provided arrow skins will be available at sub-module interfaces.
- * A skin arrow named 'slit' will have a class 'slick__arrow--slit' for the NAV.
- *
- * The array is similar to the hook_slick_skins_info(), excluding JS.
- *
- * @deprecated Use 'group' directive instead to reduce extra logic.
- *
- * @see hook_slick_skins_info() above.
- */
-function hook_slick_arrows_info() {
-  // Migrate this content into the 'group' property of hook_slick_skins_info().
-  // And add group 'arrows'.
-}

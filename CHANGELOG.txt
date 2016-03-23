@@ -2,6 +2,7 @@
 
 Slick 7.x-2.0-dev, 2016-03-23
 -----------------------------
+- #2692569: Use grouping to simplify skins.
 - The following functions are moved out of slick.admin.inc to match D8 into
   SlickUi.php where they belong to:
   - _slick_css_easing_mapping() into SlickUi::getBezier().
