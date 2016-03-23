@@ -10,9 +10,6 @@
  */
 function slick_get_global_default_settings() {
   return array(
-    'asnavfor_main'       => '',
-    'asnavfor_thumbnail'  => '',
-    'asnavfor_auto'       => FALSE,
     'aspect_ratio'        => '',
     'current_view_mode'   => '',
     'image_style'         => '',

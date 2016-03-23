@@ -117,7 +117,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   }
 
   if ($settings['nav']) {
-    $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_main'] : "#{$thumb_id}-slider";
+    $settings['asnavfor_target'] = "#{$thumb_id}-slider";
   }
 
   // Build the single/main display Slick.
@@ -127,7 +127,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $optionset = slick_optionset_load($asnavfor);
     $settings['optionset'] = $asnavfor;
     $settings['current_display'] = 'thumbnail';
-    $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_thumbnail'] : "#{$id}-slider";
+    $settings['asnavfor_target'] = "#{$id}-slider";
 
     // Build the thumbnail+/text navigation Slick.
     $slick[1] = slick_build($build['thumb'], $array, $settings, $array, $thumb_id, $optionset);

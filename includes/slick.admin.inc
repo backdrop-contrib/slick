@@ -457,43 +457,6 @@ function slick_get_top_elements(array &$elements, $settings, &$form_state) {
     $elements['skin_dots']['#access'] = TRUE;
   }
 
-  $elements['asnavfor_main'] = array(
-    '#type'        => 'textfield',
-    '#title'       => t('asNavFor main'),
-    '#attributes'  => array('class' => array('is-tooltip', 'js-expandable')),
-    '#description' => t('Valid CSS selector (with "." or "#") for the main display. Target the thumbnail display class or ID attributes. See <a href="@url" target="_blank">HTML structure section at README.txt</a> for details on asNavFor targets.', array('@url' => $readme)),
-    '#states' => array(
-      'invisible' => array(
-        array('select[name*="[optionset_thumbnail]"]' => array('value' => '')),
-        array(':input[name*="[asnavfor_auto]"]' => array('checked' => TRUE)),
-      ),
-    ),
-  );
-
-  $elements['asnavfor_thumbnail'] = array(
-    '#type'        => 'textfield',
-    '#title'       => t('asNavFor thumbnail'),
-    '#attributes'  => array('class' => array('is-tooltip', 'js-expandable')),
-    '#description' => t('Valid CSS selector (with "." or "#") for the thumbnail display. Target the main display class or ID attributes.'),
-    '#states' => array(
-      'invisible' => array(
-        array('select[name*="[optionset_thumbnail]"]' => array('value' => '')),
-        array(':input[name*="[asnavfor_auto]"]' => array('checked' => TRUE)),
-      ),
-    ),
-  );
-
-  $elements['asnavfor_auto'] = array(
-    '#title'       => t('asNavFor auto selectors'),
-    '#type'        => 'checkbox',
-    '#description' => t('If checked, asNavFor selectors will be determined by the current field ID selectors automatically. Check if unsure with manual selectors, or needs dynamic selectors for dynamic slicks such as blog/taxonomy-based posts.'),
-    '#states' => array(
-      'invisible' => array(
-        'select[name*="[optionset_thumbnail]"]' => array('value' => ''),
-      ),
-    ),
-  );
-
   $weight = -99;
   foreach (element_children($elements) as $key) {
     if (!isset($elements[$key]['#weight'])) {
