@@ -3,8 +3,9 @@
  * Provides Slick loader.
  */
 
-/*jshint -W072 */
-/*eslint max-params: 0, consistent-this: [0, "_"] */
+/* global jQuery:false, Drupal:false */
+/* jshint -W072 */
+/* eslint max-params: 0, consistent-this: [0, "_"] */
 (function ($, Drupal) {
 
   "use strict";
@@ -31,7 +32,8 @@
     beforeSlick: function (t, a, o) {
       var _ = this,
         breakpoint;
-      _.randomize(t);
+
+      _.randomize(t, o);
 
       t.on("init.slick", function (e, slick) {
         // Populate defaults + globals into each breakpoint.
@@ -64,12 +66,12 @@
 
       // Arrow down jumper.
       t.parent().on("click.slick.load", ".slick-down", function (e) {
-          e.preventDefault();
-          var b = $(this);
-          $("html, body").stop().animate({
-            scrollTop: $(b.data("target")).offset().top - (b.data("offset") || 0)
-          }, 800, o.easing);
-        });
+        e.preventDefault();
+        var b = $(this);
+        $("html, body").stop().animate({
+          scrollTop: $(b.data("target")).offset().top - (b.data("offset") || 0)
+        }, 800, o.easing);
+      });
 
       if (o.mousewheel) {
         t.on("mousewheel.slick.load", function (e, delta) {
@@ -84,15 +86,14 @@
     /**
      * Randomize slide orders, for ads/products rotation within cached blocks.
      */
-    randomize: function (t) {
-      if (t.parent().hasClass("slick--random")
-        && !t.hasClass("slick-initiliazed")) {
+    randomize: function (t, o) {
+      if (o.randomize && !t.hasClass('slick-initiliazed')) {
         t.children().sort(function () {
-            return 0.5 - Math.random();
-          })
-          .each(function () {
-            t.append(this);
-          });
+          return 0.5 - Math.random();
+        })
+        .each(function () {
+          t.append(this);
+        });
       }
     },
 

@@ -20,9 +20,9 @@
           url = newIframe.data("lazy"),
           $nester = '';
 
-          if ($slick.closest(".slick__slider").length) {
-            $nester = $slick.closest(".slick__slider");
-          }
+        if ($slick.closest(".slick__slider").length) {
+          $nester = $slick.closest(".slick__slider");
+        }
 
         // Remove iframe to avoid browser requesting them till clicked.
         iframe.remove();

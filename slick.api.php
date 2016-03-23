@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Hooks and API provided by the Slick module.
@@ -12,6 +13,7 @@
  * However if you want to code it, use slick_build() for easy build.
  *
  * @see slick_fields or slick_views.
+ * @see slick_build().
  */
 
 /**
@@ -24,7 +26,7 @@
   // Add items.
   $items = array();
 
-  // Use theme_slick_image_lazy to have lazyLoad, or theme_image_style/theme_image.
+  // Use slick_get_image() to have lazyLoad, or theme_image_style/theme_image.
   // Caption contains: editor, overlay, title, alt, data, link.
   $items[] = array(
     'slide'   => '<img src="https://drupal.org/files/One.gif" />',
@@ -81,17 +83,11 @@
     // 'optionset' => 'blog',
 
     // Optional skin name fetched from hook_slick_skins_info(), otherwise none.
-   // 'skin' => 'fullwidth',
+    // 'skin' => 'fullwidth',
 
-    // Note we add attributes to the settings, not as theme key here, to allow
-    // various scenarios before being passed to the actual #attributes property.
-    // As ID can be used for lightbox group, cache ID, the asnavfor, etc.
-    // Or ignore this, if the only attribute is just $id, and the $id is set.
-    // @see README.txt for the HTML structure.
+    // ID can be used for lightbox group, cache ID, the asnavfor, etc.
     // Do not supply attributes to be provided by the module instead.
-    'attributes' => array(
-      'id' => $id,
-    ),
+    'id' => $id,
   );
 
   // 3.
@@ -206,7 +202,7 @@
   $settings['cid'] = 'my-extra-unique-id';
 
   // Build the slick with the arguments as described above:
-  $slick = slick_build($items, $options, $settings, $attachments, $id);
+  $slick = slick_build($items, $options, $settings, $attachments);
 
   // The following should also work as the only required is $items:
   $slick = slick_build($items);
@@ -259,7 +255,7 @@
   // Add items.
   $items = array();
 
-  // Use theme_slick_image_lazy to have lazyLoad, or theme_image_style/theme_image.
+  // Use slick_get_image() to have lazyLoad, or theme_image_style/theme_image.
   $images = array(1, 2, 3, 4, 6, 7);
   foreach ($images as $key) {
     $items[] = array(
@@ -283,10 +279,12 @@
     // If the main slick ID is "slick-for", the asNavfor target is
     // targetting the thumbnail slider ID, suffixed with "-slider" automatically.
     'asnavfor_target' => '#slick-nav-slider',
+    'id' => 'slick-for',
   );
 
   // Build the main slider.
-  $slick[0] = slick_build($items, $options, $settings, $attach = array(), $id = 'slick-for');
+  $attach = array();
+  $slick[0] = slick_build($items, $options, $settings, $attach);
 
   // 2. Thumbnail slider -------------------------------------------------------
   // Thumbnail caption only accepts: data.
@@ -322,7 +320,8 @@
   );
 
   // Build the thumbnail slider.
-  $slick[1] = slick_build($items, $options, $settings, $attach = array(), $id = 'slick-nav');
+  $attach = array();
+  $slick[1] = slick_build($items, $options, $settings, $attach);
 
   // Pass both slicks to theme_slick_wrapper() to get a wrapper.
   $element = array(
@@ -331,85 +330,6 @@
   );
 
   return $element;
-
-/**
- * Registers Slick skins.
- *
- * This function may live in module file, or my_module.slick.inc if you have
- * many skins.
- *
- * This hook can be used to register skins for the Slick. Skins will be
- * available when configuring the Optionset, Field formatter, or Views style.
- *
- * Slick skins get a unique CSS class to use for styling, e.g.:
- * If your skin name is "my_module_slick_carousel_rounded", the class is:
- * slick--skin--my-module-slick-carousel-rounded
- *
- * A skin can specify some CSS and JS files to include when Slick is displayed,
- * except for a thumbnail skin which accepts CSS only.
- *
- * Each skin supports 5 keys:
- * - name: The human readable name of the skin.
- * - description: The description about the skin, for help and manage pages.
- * - css: An array of CSS files to attach.
- * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
- * - inline css: An optional flag to determine whether the image is turned into
- *   CSS background rather than image with SRC, see fullscreen skin.
- *
- * @see hook_hook_info()
- * @see slick_example.module
- * @see slick.slick.inc
- */
-function hook_slick_skins_info() {
-  // The source can be theme or module.
-  $theme_path = drupal_get_path('theme', 'my_theme');
-
-  return array(
-    'skin_name' => array(
-  // Human readable skin name.
-      'name' => t('Skin name'),
-      // Description of the skin.
-      'description' => t('Skin description.'),
-      'css' => array(
-        // Full path to a CSS file to include with the skin.
-        $theme_path . '/css/my-theme.slick.theme--slider.css' => array('weight' => 10),
-        $theme_path . '/css/my-theme.slick.theme--carousel.css' => array('weight' => 11),
-      ),
-      'js' => array(
-        // Full path to a JS file to include with the skin.
-        $theme_path . '/js/my-theme.slick.theme--slider.js',
-        $theme_path . '/js/my-theme.slick.theme--carousel.js',
-        // If you want to act on afterSlick event, or any other slick events,
-        // put a lighter weight before slick.load.min.js (0).
-        $theme_path . '/js/slick.skin.menu.min.js' => array('weight' => -2),
-      ),
-    ),
-  );
-}
-
-/**
- * Registers Slick dot skins.
- *
- * The provided dot skins will be available at sub-module interfaces.
- * A skin dot named 'hop' will have a class 'slick-dots--hop' for the UL.
- *
- * The array is similar to the hook_slick_skins_info(), excluding JS.
- */
-function hook_slick_dots_info() {
-  // Create an array of dot skins.
-}
-
-/**
- * Registers Slick arrow skins.
- *
- * The provided arrow skins will be available at sub-module interfaces.
- * A skin arrow named 'slit' will have a class 'slick__arrow--slit' for the NAV.
- *
- * The array is similar to the hook_slick_skins_info(), excluding JS.
- */
-function hook_slick_arrows_info() {
-  // Create an array of arrow skins.
-}
 
 /**
  * Alter Slick attach information before they are called.
@@ -508,6 +428,71 @@ $my_module_theme = array(
 );
 
 /**
+ * Registers Slick skins.
+ *
+ * This function may live in module file, or my_module.slick.inc if you have
+ * many skins.
+ *
+ * This hook can be used to register skins for the Slick. Skins will be
+ * available when configuring the Optionset, Field formatter, or Views style.
+ * It should be used in relation to individual slide layout to get the most out
+ * of it, see README.txt on slick_fields.module for possible Slide layouts using
+ * a field with Field collection.
+ *
+ * Slick skins get a unique CSS class to use for styling, e.g.:
+ * If your skin name is "my_module_slick_carousel_rounded", the class is:
+ * slick--skin--my-module-slick-carousel-rounded
+ *
+ * A skin can specify some CSS and JS files to include when Slick is displayed,
+ * except for a thumbnail, arrows, or dots skin which accepts CSS only.
+ *
+ * Each skin supports 5 keys:
+ * - name: The human readable name of the skin.
+ * - group: The group the skin belongs to reduce confusing UI selection,
+ *    with the supported keys: arrows, dots, main, overlay, thumbnail.
+ * - description: The description about the skin, for help and manage pages.
+ * - css: An array of CSS files to attach.
+ * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
+ * - inline css: An optional flag to determine whether the image is turned into
+ *   CSS background rather than image with SRC, see fullscreen skin.
+ *
+ * @see hook_hook_info()
+ * @see slick_example.module
+ * @see slick.slick.inc
+ */
+function hook_slick_skins_info() {
+  // The source can be theme or module.
+  $theme_path = drupal_get_path('theme', 'my_theme');
+
+  return array(
+    'skin_name' => array(
+      // Human readable skin name.
+      'name' => t('Skin name'),
+      // Description of the skin.
+      'description' => t('Skin description.'),
+      // Not yet implemented by now, 3/5/16.
+      // Defines group for the skin to reduce selection confusion at UI.
+      // Accepted keys: arrows, dots, overlay, main, thumbnail.
+      // This is deprecating hook_slick_arrows_info(), hook_slick_dots_info().
+      'group' => 'main',
+      'css' => array(
+        // Full path to a CSS file to include with the skin.
+        $theme_path . '/css/my-theme.slick.theme--slider.css' => array(),
+        $theme_path . '/css/my-theme.slick.theme--carousel.css' => array(),
+      ),
+      'js' => array(
+        // Full path to a JS file to include with the skin.
+        $theme_path . '/js/my-theme.slick.theme--slider.js',
+        $theme_path . '/js/my-theme.slick.theme--carousel.js',
+        // If you want to act on afterSlick event, or any other slick events,
+        // put a lighter weight before slick.load.min.js (0).
+        $theme_path . '/js/slick.skin.menu.min.js' => array('weight' => -2),
+      ),
+    ),
+  );
+}
+
+/**
  * Alter Slick skins.
  *
  * This function lives in a module file, not my_module.slick.inc.
@@ -536,16 +521,50 @@ function hook_slick_skins_info_alter(array &$skins) {
   // This one won't work.
   // $skins['default']['css'][$path . '/css/slick.theme--base.css'] = array();
   // This one overrides slick.theme--default.css with slick.theme--base.css.
-  $skins['default']['css'] = array($path . '/css/slick.theme--base.css' => array('weight' => -22));
+  $skins['default']['css'] = array($path . '/css/slick.theme--base.css' => array());
 
   // Overrides skin asNavFor with theme CSS.
   $skins['asnavfor']['name'] = t('My Theme: asnavfor');
-  $skins['asnavfor']['css'] = array($path . '/css/slick.theme--asnavfor.css' => array('weight' => 21));
+  $skins['asnavfor']['css'] = array($path . '/css/slick.theme--asnavfor.css' => array());
 
   // Or with the new name.
-  $skins['asnavfor']['css'] = array($path . '/css/slick.theme--asnavfor-new.css' => array('weight' => 21));
+  $skins['asnavfor']['css'] = array($path . '/css/slick.theme--asnavfor-new.css' => array());
 
   // Overrides skin Fullwidth with theme CSS.
   $skins['fullwidth']['name'] = t('My Theme: fullwidth');
-  $skins['fullwidth']['css'] = array($path . '/css/slick.theme--fullwidth.css' => array('weight' => 22));
+  $skins['fullwidth']['css'] = array($path . '/css/slick.theme--fullwidth.css' => array());
+}
+
+/**
+ * Registers Slick dot skins.
+ *
+ * The provided dot skins will be available at sub-module interfaces.
+ * A skin dot named 'hop' will have a class 'slick-dots--hop' for the UL.
+ *
+ * The array is similar to the hook_slick_skins_info(), excluding JS.
+ *
+ * @deprecated Use 'group' directive instead to reduce extra logic.
+ *
+ * @see hook_slick_skins_info() above.
+ */
+function hook_slick_dots_info() {
+  // Migrate this content into the 'group' property of hook_slick_skins_info().
+  // And add group 'dots'.
+}
+
+/**
+ * Registers Slick arrow skins.
+ *
+ * The provided arrow skins will be available at sub-module interfaces.
+ * A skin arrow named 'slit' will have a class 'slick__arrow--slit' for the NAV.
+ *
+ * The array is similar to the hook_slick_skins_info(), excluding JS.
+ *
+ * @deprecated Use 'group' directive instead to reduce extra logic.
+ *
+ * @see hook_slick_skins_info() above.
+ */
+function hook_slick_arrows_info() {
+  // Migrate this content into the 'group' property of hook_slick_skins_info().
+  // And add group 'arrows'.
 }

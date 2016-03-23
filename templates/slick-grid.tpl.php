@@ -9,8 +9,6 @@
  * - $settings: A renderable array containing cherry-picked seetings.
  */
 ?>
-<?php print render($wrapper_prefix); ?>
 <?php foreach($items as $delta => $item): ?>
   <?php print render($item); ?>
 <?php endforeach; ?>
-<?php print render($wrapper_suffix); ?>

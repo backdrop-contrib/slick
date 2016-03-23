@@ -1071,13 +1071,14 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
     width: 200px;
   }
 
-  #overlay .form--slick .form-type-checkboxes > label  {
+  #overlay .form--slick .form-type-checkboxes > label {
     width: 100%;
   }
 
   .navbar-tray-open .form--slick .vertical-tabs .form-item {
     width: 49.8888%;
   }
+
   .navbar-tray-open .form--slick .vertical-tabs .form-type-checkboxes {
     width: 100%;
   }
@@ -1183,6 +1184,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   .form--slick .vertical-tabs .fieldset-wrapper {
     margin: 0;
   }
+
   .form--slick.form--compact .form-item,
   .form--slick .vertical-tabs-panes .form-item {
     border-left: 0;

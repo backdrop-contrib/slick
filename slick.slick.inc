@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Default skins for the Slick carousel.
@@ -12,20 +13,10 @@
  * All the skins are very basic, to perform possible variants. It doesn't care
  * about looking great, and other element stylings, but basic one and layouts.
  * Detailed styling is all yours to match your actual design.
- * It should be used in relation to individual slide layout to get the most out
- * of it, see README.txt on slick_fields.module for possible Slide layouts using
- * a field with Field collection.
- *
- * Each skin supports 5 keys:
- * - name: The human readable name of the skin.
- * - description: The description about the skin, for help and manage pages.
- * - css: An array of CSS files to attach.
- * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
- * - inline css: An optional flag to determine whether the image is turned into
- *   CSS background rather than image with SRC, see fullscreen skin.
  *
  * @see hook_hook_info()
  * @see https://drupal.org/node/1887922
+ * @see slick.api.php
  */
 function slick_slick_skins_info() {
   $path = drupal_get_path('module', 'slick');
@@ -46,11 +37,11 @@ function slick_slick_skins_info() {
     ),
     'asnavfor' => array(
       'name' => t('Thumbnail: asNavFor'),
+      'group' => 'thumbnail',
       'css' => array(
         $path . '/css/theme/slick.theme--asnavfor.css' => array('weight' => 2),
       ),
       'description' => t('Affected thumbnail navigation only.'),
-      'group' => 'thumbnail',
     ),
     'classic' => array(
       'name' => t('Classic'),
@@ -67,7 +58,6 @@ function slick_slick_skins_info() {
         $path . '/css/theme/slick.theme--full.css' => array('weight' => 5),
       ),
       'inline css' => TRUE,
-      'group' => 'full',
     ),
     'fullwidth' => array(
       'name' => t('Full width'),
@@ -76,11 +66,10 @@ function slick_slick_skins_info() {
         $path . '/css/theme/slick.theme--fullwidth.css' => array('weight' => 5),
         $path . '/css/theme/slick.theme--full.css' => array('weight' => 5),
       ),
-      'group' => 'full',
     ),
     'boxed' => array(
       'name' => t('Boxed'),
-      'description' => t('Adds margins to the sides of slick-list revealing arrows.'),
+      'description' => t('Adds margins to the sides of slick-list revealing arrows. Reasonable with captions.'),
       'css' => array(
         $path . '/css/theme/slick.theme--boxed.css' => array('weight' => 6),
       ),
@@ -91,7 +80,6 @@ function slick_slick_skins_info() {
       'css' => array(
         $path . '/css/theme/slick.theme--grid.css' => array('weight' => 7),
       ),
-      'group' => 'grid',
     ),
     'split' => array(
       'name' => t('Split'),
@@ -124,6 +112,12 @@ function slick_slick_skins_info() {
       ),
     ),
   );
+
+  foreach ($skins as $key => $skin) {
+    if ($key != 'default' && !isset($skins[$key]['group'])) {
+      $skins[$key]['group'] = 'main';
+    }
+  }
 
   return $skins;
 }

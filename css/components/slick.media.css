@@ -3,67 +3,12 @@
  * Provides media integration with pure CSS fluid video wrapper.
  */
 
-.media {
-  overflow: hidden;
-  position: relative;
-}
-
 .media__iframe,
 .slick__litebox,
 .slick__slide picture {
   border: 0 none;
   display: block;
   max-width: 100%;
-}
-
-.media--ratio--on {
-  height: 0;
-}
-
-/* 1:1 ratio */
-.media--ratio--11 {
-  padding-bottom: 100%;
-}
-
-/* 4:3 ratio */
-.media--ratio--43 {
-  padding-bottom: 75%;
-}
-
-/* 16:9 ratio */
-.media--ratio--169 {
-  padding-bottom: 56.25%;
-}
-
-.media--ratio--on > iframe {
-  /* background: rgba(0, 0, 0, 0.8); */
-  max-width: 100%;
-}
-
-/* Ensures not affecting iframe only without media swicther */
-.media--player.media--ratio--on > iframe {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.media--ratio--on > iframe,
-.media--ratio--on > img,
-.media--ratio--on > picture,
-.media--ratio--on > .slick__litebox {
-  border: 0 none;
-  display: block;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 0;
-}
-
-.media--ratio--on > picture img,
-.media--ratio--on > .slick__litebox img {
-  height: auto;
-  padding-bottom: 0;
 }
 
 .media--ratio--on iframe,
@@ -154,6 +99,12 @@
 .is-playing:hover .media-icon {
   -webkit-transition-delay: 0s;
   transition-delay: 0s;
+}
+
+/* Ensures not affecting iframe only without media swicther */
+.media--player.media--ratio--on > iframe {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .media--switch .slick__image,

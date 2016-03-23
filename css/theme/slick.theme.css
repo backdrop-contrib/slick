@@ -14,14 +14,18 @@
 }
 
 img {
-  border: 0;
   height: auto;
-  max-width: 100%;
   -ms-interpolation-mode: bicubic;
 }
 
+img,
+iframe {
+  border: 0;
+  max-width: 100%;
+}
+
 /* Prevents confusing white space with centerPadding */
-.slick__slide img {
+.slick__image {
   margin-left: auto;
   margin-right: auto;
 }
@@ -162,30 +166,6 @@ img {
 }
 
 /**
- * Slick center, depends on JS centerMode with partial view if visible ones > 2.
- */
-.slick--center .slick-track {
-  padding-bottom: 32px;
-  padding-top: 32px;
-}
-
-.slick--center.slick--skin--classic .slick-track,
-.slick--center.slick--display--thumbnail .slick-track {
-  padding-bottom: 0;
-  padding-top: 0;
-}
-
-.slick--center .slide__content {
-  overflow: hidden;
-  position: relative;
-}
-
-.slick--center .slick__slide {
-  -webkit-transition: all 300ms ease;
-  transition: all 300ms ease;
-}
-
-/**
  * Misc overrides core slick.
  */
 /* Hide non-js lazy-loaded image to show <noscript> one instead, if the theme
@@ -237,16 +217,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   -o-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-}
-
-.slide__media {
-  overflow: hidden;
-  position: relative;
-}
-
-/* Center the image to reduce gap at RHS with smaller image, larger container */
-.slick__image {
-  margin: 0 auto;
 }
 
 /**
@@ -305,12 +275,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   width: 100%;
 }
 
-/* Fix excessive height with ondemand lazyLoad prior to being visible */
-.slick--ondemand .slick__slide:not(.slick-active) img[data-lazy] {
-  width: 40px;
-  height: 40px;
-}
-
 /**
  * Complex layout needs custom refinement for mobile, hence it is reasonable
  * to apply for Desktop up. Adjust mobile version accordingly.
@@ -338,19 +302,66 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   width: 100%;
 }
 
+/* Media ratio */
+.media,
+.slide__media,
+.slick--center .slide__content {
+  overflow: hidden;
+  position: relative;
+}
+
+.media--ratio--on {
+  height: 0;
+  /* padding-top: 30px; IE7 fix */
+}
+
+/* 1:1 ratio */
+.media--ratio--11 {
+  padding-bottom: 100%;
+}
+
+/* 3:2 ratio */
+.media--ratio--32 {
+  padding-bottom: 66.66%;
+}
+
+/* 4:3 ratio */
+.media--ratio--43 {
+  padding-bottom: 75%;
+}
+
+/* 8:5 ratio */
+.media--ratio--85 {
+  padding-bottom: 62.5%;
+}
+
+/* 16:9 ratio */
+.media--ratio--169 {
+  padding-bottom: 56.25%;
+}
+
+.media--ratio--on > iframe,
+.media--ratio--on > img,
+.media--ratio--on > picture,
+.media--ratio--on > .slick__litebox,
+.media--ratio > .media__ratio {
+  border: 0 none;
+  display: block;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.media--ratio--on > picture img,
+.media--ratio--on > .slick__litebox img {
+  height: auto;
+  padding-bottom: 0;
+}
+
 @media (min-width: 64em) {
-  .unslick.slick--float::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-  .slick--float .slick__slide {
-    float: left;
-    /* Prevents overflowing width within smaller container */
-    max-width: 100%;
-  }
-
   /* Fixed FireFox draggable issue, avoid asNavFor thumbnails. */
   .slick--display--main .slick__slide img {
     pointer-events: none;
@@ -431,7 +442,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   }
 
   #overlay .slick-wrapper,
-  #overlay .slick  {
+  #overlay .slick {
     margin-left: auto;
     margin-right: auto;
     max-width: 1040px;

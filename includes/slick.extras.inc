@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains optional functions called by frontend Media, or Field collection.
@@ -40,30 +41,26 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
   if (!isset($renderables['#uri'])) {
     $formatter = 'media_' . $media['scheme'] . '_' . $media['type'];
     $renderables = array(
-      '#theme' => $formatter,
-      '#uri' => $file->uri,
+      '#theme'   => $formatter,
+      '#uri'     => $file->uri,
       '#options' => slick_load_media_settings($media['type'], $settings['view_mode'], $formatter),
     );
   }
 
   // Colorbox videos need the actual video dimensions independent from images.
   $media['media_height'] = $renderables['#options']['height'];
-  $media['media_width'] = $renderables['#options']['width'];
+  $media['media_width']  = $renderables['#options']['width'];
 
   // Allows various iframe dimensions based on the given image_style, good
   // to re-use a single file view mode for various file host entity view modes,
   // and a mix of image and media.
   if (!empty($settings['image_style'])) {
-    $dimensions = array(
-      'width' => empty($media['width']) ? NULL : $media['width'],
-      'height' => empty($media['height']) ? NULL : $media['height'],
-    );
+    if (!isset($media['_dimensions'])) {
+      slick_get_dimensions($media, $settings['image_style']);
+    }
 
-    image_style_transform_dimensions($settings['image_style'], $dimensions);
-
-    $media['width'] = $settings['content_attributes']['width'] = $dimensions['width'];
-    $media['height'] = $settings['content_attributes']['height'] = $dimensions['height'];
-    $media['dimensions'] = TRUE;
+    $settings['content_attributes']['width']  = $media['width'];
+    $settings['content_attributes']['height'] = $media['height'];
   }
 
   $rendered_media = drupal_render($renderables);
@@ -206,15 +203,17 @@ function slick_get_caption($settings, $entity_type, $entity, $view_mode, array &
     $caption_items = array();
     foreach ($settings['slide_caption'] as $i => $caption_field) {
       if (!empty($settings['markup'])) {
-        $caption_items[$i] = field_view_field($entity_type, $entity, $caption_field, $view_mode);
+        $rendereable = field_view_field($entity_type, $entity, $caption_field, $view_mode);
+        $caption_items[$i] = empty($rendereable) ? array() : $rendereable;
       }
       elseif ($captions = field_get_items($entity_type, $entity, $caption_field)) {
         foreach ($captions as $j => $caption) {
-          $caption_items[$i][$j] = field_view_value($entity_type, $entity, $caption_field, $caption, $view_mode);
+          $rendereable = field_view_value($entity_type, $entity, $caption_field, $caption, $view_mode);
+          $caption_items[$i][$j] = empty($rendereable) ? array() : $rendereable;
         }
       }
     }
-    if ($caption_items) {
+    if (array_filter($caption_items)) {
       $slide['caption']['data'] = $caption_items;
     }
   }

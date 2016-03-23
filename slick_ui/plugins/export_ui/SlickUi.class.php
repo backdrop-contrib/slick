@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains the CTools export UI integration code.
@@ -40,7 +41,7 @@ class SlickUi extends ctools_export_ui {
 
     // Skins. We don't provide skin_thumbnail as each optionset may be deployed
     // as main display, or thumbnail navigation.
-    $skins = slick_skins_options();
+    $skins = slick_get_skins_by_group('', TRUE);
     $form['skin'] = array(
       '#type' => 'select',
       '#title' => t('Skin'),
@@ -167,22 +168,26 @@ class SlickUi extends ctools_export_ui {
     );
 
     foreach ($slick_elements as $name => $element) {
+      $element['default'] = isset($element['default']) ? $element['default'] : '';
       $default_value = isset($options['settings'][$name]) ? $options['settings'][$name] : $element['default'];
       $form['options']['settings'][$name] = array(
         '#title' => isset($element['title']) ? $element['title'] : '',
         '#description' => isset($element['description']) ? $element['description'] : '',
-        '#type' => $element['type'],
         '#default_value' => $default_value,
         '#attributes' => array('class' => array('is-tooltip')),
       );
 
-      if (isset($element['field_suffix'])) {
-        $form['options']['settings'][$name]['#field_suffix'] = $element['field_suffix'];
+      if (isset($element['type'])) {
+        $form['options']['settings'][$name]['#type'] = $element['type'];
+
+        if ($element['type'] == 'textfield') {
+          $form['options']['settings'][$name]['#size'] = 20;
+          $form['options']['settings'][$name]['#maxlength'] = 255;
+        }
       }
 
-      if ($element['type'] == 'textfield') {
-        $form['options']['settings'][$name]['#size'] = 20;
-        $form['options']['settings'][$name]['#maxlength'] = 255;
+      if (isset($element['field_suffix'])) {
+        $form['options']['settings'][$name]['#field_suffix'] = $element['field_suffix'];
       }
 
       if (variable_get('slick_admin_css', TRUE)) {
@@ -319,13 +324,17 @@ class SlickUi extends ctools_export_ui {
                 if ($item && !is_array($item)) {
                   continue;
                 }
+                $item['default'] = isset($item['default']) ? $item['default'] : '';
                 $form['options']['responsives']['responsive'][$i][$key][$k] = array(
                   '#title' => isset($item['title']) ? $item['title'] : '',
                   '#description' => isset($item['description']) ? $item['description'] : '',
-                  '#type' => $item['type'],
                   '#attributes' => array('class' => array('is-tooltip')),
                   '#default_value' => isset($options['responsives']['responsive'][$i][$key][$k]) ? $options['responsives']['responsive'][$i][$key][$k] : $item['default'],
                 );
+
+                if (isset($item['type'])) {
+                  $form['options']['responsives']['responsive'][$i][$key][$k]['#type'] = $item['type'];
+                }
 
                 // Specify proper states for the breakpoint elements.
                 if (isset($item['states'])) {
@@ -411,7 +420,7 @@ class SlickUi extends ctools_export_ui {
     // Map and update the friendly CSS easing to its bezier equivalent.
     $override = '';
     if ($form_state['values']['options']['settings']['cssEaseOverride']) {
-      $override = _slick_css_easing_mapping($form_state['values']['options']['settings']['cssEaseOverride']);
+      $override = $this->getBezier($form_state['values']['options']['settings']['cssEaseOverride']);
     }
 
     $optionset->options['settings']['cssEaseBezier'] = $override;
@@ -419,7 +428,7 @@ class SlickUi extends ctools_export_ui {
     if (isset($options['responsives']['responsive'])) {
       foreach ($options['responsives']['responsive'] as $key => $responsive) {
         if (isset($responsive['settings']['cssEaseOverride'])) {
-          $responsive_override = $responsive['settings']['cssEaseOverride'] ? _slick_css_easing_mapping($responsive['settings']['cssEaseOverride']) : '';
+          $responsive_override = $responsive['settings']['cssEaseOverride'] ? $this->getBezier($responsive['settings']['cssEaseOverride']) : '';
           $optionset->options['responsives']['responsive'][$key]['settings']['cssEaseBezier'] = $responsive_override;
         }
       }
@@ -693,7 +702,7 @@ class SlickUi extends ctools_export_ui {
         'title' => t('CSS ease override'),
         'description' => t('If provided, this will override the CSS ease with the pre-defined CSS easings based on <a href="@ceaser">CSS Easing Animation Tool</a>. Leave it empty to use your own CSS ease.', array('@ceaser' => '//matthewlein.com/ceaser/')),
         'type' => 'select',
-        'options' => _slick_css_easing_options(),
+        'options' => $this->getCssEasingOptions(),
         'empty_option' => t('- None -'),
         'states' => array('visible' => array(':input[name*="options[settings][useCSS]"]' => array('checked' => TRUE))),
       );
@@ -708,7 +717,7 @@ class SlickUi extends ctools_export_ui {
         'title' => t('jQuery easing'),
         'description' => t('Add easing for jQuery animate as fallback. Use with <a href="@easing">easing</a> libraries or default easing methods. This will be ignored and replaced by CSS ease for supporting browsers, or effective if useCSS is disabled.', array('@easing' => '//gsgd.co.uk/sandbox/jquery/easing/')),
         'type' => 'select',
-        'options' => _slick_easing_options(),
+        'options' => $this->getJsEasingOptions(),
         'empty_option' => t('- None -'),
       );
 
@@ -740,9 +749,7 @@ class SlickUi extends ctools_export_ui {
       // Clone the default values.
       $slick_options = slick_get_options();
       foreach ($slick_options as $name => $value) {
-        if (isset($elements[$name])) {
-          $elements[$name]['default'] = $value;
-        }
+        $elements[$name]['default'] = isset($elements[$name]) ? $value : '';
       }
 
       // Allows form elements information to be altered.
@@ -846,6 +853,141 @@ class SlickUi extends ctools_export_ui {
     array_splice($headers, 3, 0, $skin_header);
 
     return $headers;
+  }
+
+  /**
+   * List of all easing methods available from jQuery Easing v1.3.
+   *
+   * @return array
+   *   An array of available jQuery Easing options as fallback for browsers that
+   *   don't support pure CSS easing methods.
+   */
+  public function getJsEasingOptions() {
+    $easings = &drupal_static(__METHOD__, NULL);
+
+    if (!isset($easings)) {
+      $easings = array(
+        'linear'           => 'Linear',
+        'swing'            => 'Swing',
+        'easeInQuad'       => 'easeInQuad',
+        'easeOutQuad'      => 'easeOutQuad',
+        'easeInOutQuad'    => 'easeInOutQuad',
+        'easeInCubic'      => 'easeInCubic',
+        'easeOutCubic'     => 'easeOutCubic',
+        'easeInOutCubic'   => 'easeInOutCubic',
+        'easeInQuart'      => 'easeInQuart',
+        'easeOutQuart'     => 'easeOutQuart',
+        'easeInOutQuart'   => 'easeInOutQuart',
+        'easeInQuint'      => 'easeInQuint',
+        'easeOutQuint'     => 'easeOutQuint',
+        'easeInOutQuint'   => 'easeInOutQuint',
+        'easeInSine'       => 'easeInSine',
+        'easeOutSine'      => 'easeOutSine',
+        'easeInOutSine'    => 'easeInOutSine',
+        'easeInExpo'       => 'easeInExpo',
+        'easeOutExpo'      => 'easeOutExpo',
+        'easeInOutExpo'    => 'easeInOutExpo',
+        'easeInCirc'       => 'easeInCirc',
+        'easeOutCirc'      => 'easeOutCirc',
+        'easeInOutCirc'    => 'easeInOutCirc',
+        'easeInElastic'    => 'easeInElastic',
+        'easeOutElastic'   => 'easeOutElastic',
+        'easeInOutElastic' => 'easeInOutElastic',
+        'easeInBack'       => 'easeInBack',
+        'easeOutBack'      => 'easeOutBack',
+        'easeInOutBack'    => 'easeInOutBack',
+        'easeInBounce'     => 'easeInBounce',
+        'easeOutBounce'    => 'easeOutBounce',
+        'easeInOutBounce'  => 'easeInOutBounce',
+      );
+    }
+
+    return $easings;
+  }
+
+  /**
+   * List of available pure CSS easing methods.
+   *
+   * @param bool $all
+   *   Flag to output the array as is for further processing.
+   *
+   * @return array
+   *   An array of CSS easings for select options, or all for the mappings.
+   *
+   * @see https://github.com/kenwheeler/slick/issues/118
+   * @see http://matthewlein.com/ceaser/
+   * @see http://www.w3.org/TR/css3-transitions/
+   */
+  public function getCssEasingOptions($all = FALSE) {
+    $css_easings = &drupal_static(__METHOD__, NULL);
+
+    if (!isset($css_easings)) {
+      $css_easings = array();
+      $available_easings = array(
+
+        // Defaults/ Native.
+        'ease'           => 'ease|ease',
+        'linear'         => 'linear|linear',
+        'ease-in'        => 'ease-in|ease-in',
+        'ease-out'       => 'ease-out|ease-out',
+        'swing'          => 'swing|ease-in-out',
+
+        // Penner Equations (approximated).
+        'easeInQuad'     => 'easeInQuad|cubic-bezier(0.550, 0.085, 0.680, 0.530)',
+        'easeInCubic'    => 'easeInCubic|cubic-bezier(0.550, 0.055, 0.675, 0.190)',
+        'easeInQuart'    => 'easeInQuart|cubic-bezier(0.895, 0.030, 0.685, 0.220)',
+        'easeInQuint'    => 'easeInQuint|cubic-bezier(0.755, 0.050, 0.855, 0.060)',
+        'easeInSine'     => 'easeInSine|cubic-bezier(0.470, 0.000, 0.745, 0.715)',
+        'easeInExpo'     => 'easeInExpo|cubic-bezier(0.950, 0.050, 0.795, 0.035)',
+        'easeInCirc'     => 'easeInCirc|cubic-bezier(0.600, 0.040, 0.980, 0.335)',
+        'easeInBack'     => 'easeInBack|cubic-bezier(0.600, -0.280, 0.735, 0.045)',
+        'easeOutQuad'    => 'easeOutQuad|cubic-bezier(0.250, 0.460, 0.450, 0.940)',
+        'easeOutCubic'   => 'easeOutCubic|cubic-bezier(0.215, 0.610, 0.355, 1.000)',
+        'easeOutQuart'   => 'easeOutQuart|cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+        'easeOutQuint'   => 'easeOutQuint|cubic-bezier(0.230, 1.000, 0.320, 1.000)',
+        'easeOutSine'    => 'easeOutSine|cubic-bezier(0.390, 0.575, 0.565, 1.000)',
+        'easeOutExpo'    => 'easeOutExpo|cubic-bezier(0.190, 1.000, 0.220, 1.000)',
+        'easeOutCirc'    => 'easeOutCirc|cubic-bezier(0.075, 0.820, 0.165, 1.000)',
+        'easeOutBack'    => 'easeOutBack|cubic-bezier(0.175, 0.885, 0.320, 1.275)',
+        'easeInOutQuad'  => 'easeInOutQuad|cubic-bezier(0.455, 0.030, 0.515, 0.955)',
+        'easeInOutCubic' => 'easeInOutCubic|cubic-bezier(0.645, 0.045, 0.355, 1.000)',
+        'easeInOutQuart' => 'easeInOutQuart|cubic-bezier(0.770, 0.000, 0.175, 1.000)',
+        'easeInOutQuint' => 'easeInOutQuint|cubic-bezier(0.860, 0.000, 0.070, 1.000)',
+        'easeInOutSine'  => 'easeInOutSine|cubic-bezier(0.445, 0.050, 0.550, 0.950)',
+        'easeInOutExpo'  => 'easeInOutExpo|cubic-bezier(1.000, 0.000, 0.000, 1.000)',
+        'easeInOutCirc'  => 'easeInOutCirc|cubic-bezier(0.785, 0.135, 0.150, 0.860)',
+        'easeInOutBack'  => 'easeInOutBack|cubic-bezier(0.680, -0.550, 0.265, 1.550)',
+      );
+
+      foreach ($available_easings as $key => $easing) {
+        list($readable_easing, $bezier) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
+        $css_easings[$key] = $all ? $easing : $readable_easing;
+        // Satisfy both phpcs and coder since no skip tolerated.
+        unset($bezier);
+      }
+    }
+
+    return $css_easings;
+  }
+
+  /**
+   * Maps existing jQuery easing value to equivalent CSS easing methods.
+   *
+   * @param string $easing
+   *   The name of the human readable easing.
+   *
+   * @return string
+   *   A string of unfriendly bezier equivalent for the Slick, or NULL.
+   */
+  public function getBezier($easing = NULL) {
+    $css_easing = '';
+
+    if ($easing) {
+      $easings = $this->getCssEasingOptions(TRUE);
+      list(, $css_easing) = array_pad(array_map('trim', explode("|", $easings[$easing], 2)), 2, NULL);
+    }
+
+    return $css_easing;
   }
 
 }

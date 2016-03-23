@@ -13,7 +13,6 @@
  *  - $settings: An array containing cherry-picked settings.
  */
 ?>
-<?php print render($item_prefix); ?>
 <div<?php print $attributes; ?>>
 <?php print render($item); ?>
 <?php if ($settings['is_media']): ?>
@@ -27,4 +26,3 @@
   <?php endif; ?>
 <?php endif; ?>
 </div>
-<?php print render($item_suffix); ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Off-loaded hooks for the Slick fields admin.
@@ -108,7 +109,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $elements['thumbnail_hover'] = array(
     '#title'       => t('Dots with thumbnail'),
     '#type'        => 'checkbox',
-    '#description' => t('Dependent on a skin, dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
+    '#description' => t('Dependent on a skin, dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider . With little CSS override, this allows a static grid of gallery-like thumbnail navigation.'),
     '#states' => array(
       'invisible' => array(
         'select[name*="[thumbnail_style]"]' => array('value' => ''),
@@ -278,24 +279,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       ),
     );
 
-    // http://en.wikipedia.org/wiki/List_of_common_resolutions
-    $elements['aspect_ratio'] = array(
-      '#type'        => 'select',
-      '#title'       => t('Aspect ratio'),
-      '#options'     => drupal_map_assoc(array('1:1', '4:3', '16:9')),
-      '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpectedly resized. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc.', array(
-        '@dimensions' => '//size43.com/jqueryVideoTool.html',
-        '@follow'     => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
-        '@link'       => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
-      )),
-      '#states' => array(
-        'visible' => array(
-          array('select[name*="[media_switch]"]' => array('value' => 'iframe-switch')),
-          array('select[name*="[media_switch]"]' => array('value' => '')),
-        ),
-      ),
-    );
-
     if ($field_entity_type == 'field_collection_item') {
       $elements['media_switch']['#title'] = t('Media overlay switcher');
       $elements['media_switch']['#description'] .= t('<br />Applied to overlay only.');
@@ -308,6 +291,23 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       );
     }
   }
+
+  // http://en.wikipedia.org/wiki/List_of_common_resolutions
+  $elements['aspect_ratio'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Aspect ratio'),
+    '#options'     => drupal_map_assoc(array('1:1', '3:2', '4:3', '8:5', '16:9', 'fluid')),
+    '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. This also fixes layout reflow and excessive height issues with lazyload ondemand. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpectedly distorted. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc. Choose fluid if unsure.', array(
+      '@dimensions' => '//size43.com/jqueryVideoTool.html',
+      '@follow'     => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
+      '@link'       => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
+    )),
+    '#states' => array(
+      'visible' => array(
+        ':input[name*="[picture]"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
 
   // Optional colorbox integration.
   if ($is_colorbox || $is_photobox) {
@@ -372,13 +372,13 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
       $elements['slide_caption']['#description'] = t('You need to <a href="@url" target="_blank">enable both title and alt fields</a> to use them as caption.', array(
         '@url' => url($bundle_path['field'],
-            array(
-              'fragment' => 'edit-instance-settings-alt-field',
-              'query' => array(
-                'destination' => $bundle_path['display'],
-              ),
-            )
-          ),
+          array(
+            'fragment' => 'edit-instance-settings-alt-field',
+            'query' => array(
+              'destination' => $bundle_path['display'],
+            ),
+          )
+        ),
       ));
     }
   }
@@ -401,7 +401,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     $elements['picture'] = array(
       '#type'        => 'checkbox',
       '#title'       => t('Picture mapping'),
-      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick lazyLoad and Media switchers are not supported with picture-enabled images. Slick only accommodates Picture to get in. The image formatting is taken over by Picture.'),
+      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick aspect ratio, lazyLoad and Media switchers are not supported with picture-enabled images. Slick only accommodates Picture to get in. The image formatting is taken over by Picture.'),
     );
 
     $picture_options = picture_get_mapping_options();
@@ -462,7 +462,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   return $elements;
 }
 
-/*
+/**
  * Helper function for getting correct bundle for manage field/display path.
  */
 function _slick_fields_get_bundle_path($instance) {

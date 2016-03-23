@@ -35,12 +35,12 @@
       <?php if ($caption): ?>
         <?php print render($title_prefix); ?>
         <div class="slide__caption">
-          <?php if (isset($caption['overlay'])): ?>
+          <?php if (!empty($caption['overlay'])): ?>
             <div class="slide__overlay"><?php print render($caption['overlay']); ?></div>
           <?php endif; ?>
 
-          <?php if (isset($caption['data']) || isset($caption['title']) || isset($caption['alt'])): ?>
-            <?php if (isset($caption['overlay'])): ?><div class="slide__data"><?php endif; ?>
+          <?php if (!empty($caption['data']) || !empty($caption['title']) || !empty($caption['alt'])): ?>
+            <?php if (!empty($caption['overlay'])): ?><div class="slide__data"><?php endif; ?>
 
             <?php if (!empty($caption['title'])): ?>
               <h2 class="slide__title"><?php print render($caption['title']); ?></h2>
@@ -54,16 +54,16 @@
               <div class="slide__description"><?php print render($caption['data']); ?></div>
             <?php endif; ?>
 
-            <?php if (isset($caption['link'])): ?>
+            <?php if (!empty($caption['link'])): ?>
               <div class="slide__link"><?php print render($caption['link']); ?></div>
             <?php endif; ?>
 
-            <?php if (isset($caption['overlay'])): ?></div><?php endif; ?>
+            <?php if (!empty($caption['overlay'])): ?></div><?php endif; ?>
           <?php endif; ?>
         </div>
         <?php print render($title_suffix); ?>
       <?php endif; ?>
-      <?php print render($editor); ?>
+
     <?php print render($content_suffix); ?>
   <?php endif; ?>
 <?php print render($wrapper_suffix); ?>

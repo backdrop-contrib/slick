@@ -99,10 +99,10 @@ REQUIREMENTS
 
 - jquery_update with jQuery > 1.7, perhaps 1.8 if trouble with the latest Slick.
 
-- Download jqeasing from http://gsgd.co.uk/sandbox/jquery/easing
-  Rename jquery.easing.1.3.js to jquery.easing.min.js, so available at:
+- Download jqeasing from https://github.com/gdsmith/jquery.easing, so available
+  at:
   sites/../libraries/easing/jquery.easing.min.js
-  This is a fallback for non-supporting browsers.
+  This is CSS easing fallback for non-supporting browsers.
 
 - A basic knowledge of Drupal site building is required.
   Please refer to the provided README on each sub-module, and each form item
@@ -140,6 +140,7 @@ To create your optionsets, go to:
 
   admin/config/media/slick
 
+Be sure to enable Slick UI sub-module first.
 These will be available at field formatter "Manage display", and Views UI.
 
 
@@ -387,7 +388,7 @@ KNOWN ISSUES
 
 - The following is not module related, but worth a note:
   o lazyLoad ondemand has issue with dummy image excessive height.
-    Added fixes to suppress it via CSS.
+    Added fixes to suppress it via "Aspect ratio" option.
   o If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
   o Fade option with slideToShow > 1 will screw up.

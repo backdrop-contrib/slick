@@ -1,4 +1,34 @@
 
+
+Slick 7.x-2.0-dev, 2016-03-23
+-----------------------------
+- The following functions are moved out of slick.admin.inc to match D8 into
+  SlickUi.php where they belong to:
+  - _slick_css_easing_mapping() into SlickUi::getBezier().
+  - _slick_css_easing_mapping() into SlickUi::getCssEasingOptions().
+  - _slick_easing_options() into SlickUi::getJsEasingOptions().
+- Updated useTransform to TRUE to reflect post v1.5.9.
+- Simplified thumbnail building to use a single function call instead.
+- Fixed for fullscreen inline css not being generated.
+- Updated slick.load.min.js.
+- Backported 'fluid' aspect ratio to fix lazyload ondemand excessive height.
+- Simplified slick_format_image(), slick_format_media(),
+  slick_format_field_collection() parameters.
+- Simplified theme_image_lazy() to use render element like the rest of themes.
+- Made aspect ratio available to all formatters to allow fixing ondemand
+  lazyload excessive height issue with a more elegant solution via aspect ratio
+  rather than using the now removed .slick--ondemand class.
+- Removed trivial slick_classes: .slick--center, .slick--float, .slick--ondemand
+  classes.
+- Simplified recommended ID addition to use $settings['id'] instead before
+  the rest are deprecated/removed:
+  - $settings['attributes']['id'],
+  - slick_build($items, $options, $settings, $attach, $id).
+- Removed a few fail safes, not all.
+- Added slick_html_id() to reduce DRY stuffs.
+- Moved a few DRY stuffs into slick.module.
+- Micro optimizations, be sure to clear cache if any issue.
+
 Slick 7.x-2.0-dev, 2016-01-18
 -----------------------------
 - #2647968 by lardfw: Slick not showing block reference field as option for
