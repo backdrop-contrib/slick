@@ -5,7 +5,10 @@
  * LM1.0:
  * - FF 23 CHROME 29.0.1547.57
  * - FF 40 CHROME 45.0.2454.85
+ *
+ * @todo move to Blazy for re-usablity across Blazy, Slick, Mason, GridStack...
  */
+
 /**
  * Typhography.
  */
@@ -75,7 +78,6 @@ body.path-admin .form--slick *,
 .form--slick .vertical-tabs {
   border: 1px solid #dbe1e9;
   background: #f9f9f9;
-  clear: both;
   overflow: visible;
   position: relative;
 }
@@ -573,7 +575,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   z-index: 8;
 }
 
-.form--slick__header .form-item .hint {
+.form__header .form-item .hint {
   top: 16px;
   right: -5px;
 }
@@ -694,6 +696,10 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   margin-left: 180px;
 }
 
+.form--half fieldset.form-item {
+  padding-left: 15px;
+}
+
 /**
  * Fixes for Adminimal gargantuan label.
  */
@@ -702,13 +708,13 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   font-weight: 400;
   font-size: 14px;
   font-size: 0.875rem;
-  line-height: 22px;
+  line-height: 14px;
 }
 
 .form--slick .form-item label {
   display: block;
   /* Overrides over-specified Seven */
-  padding: 2px 5px 2px 0 !important;
+  padding: 2px 5px 2px 5px !important;
   margin: 0;
   text-align: right;
   white-space: normal;
@@ -966,7 +972,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 .ui-dialog-content .form--views > .details-wrapper > .description,
 .form--views > .details-wrapper > .description,
 .form--slick .form-item.fieldgroup.form-composite > legend,
-.form--slick__title {
+.form__title {
   background: #fafafa;
   clear: both;
   display: block;
@@ -983,7 +989,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   width: 100%;
 }
 
-.form--vanilla .form--slick__header {
+.form--vanilla .form__header {
   left: 0;
   padding-left: 240px !important;
   position: absolute;
@@ -1004,7 +1010,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 
 .form--slick .form-item.fieldgroup.form-composite > legend,
 .form--slick .form-type-item,
-.form--slick__title {
+.form__title {
   background: #e7e7e7;
 }
 
@@ -1019,43 +1025,43 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 
 .ui-dialog-content .form--views > .details-wrapper > .description small,
 .form--slick .form-type-item small,
-.form--slick__title small {
+.form__title small {
   display: block;
   font-size: 14px;
   margin-top: -1px;
   text-transform: none;
 }
 
-.form--slick__header {
+.form__header {
   margin-bottom: 0;
 }
 
-.form--slick .form--slick__header .form-item {
+.form--slick .form__header .form-item {
   background: none;
   border: 0;
   float: none;
 }
 
-.form--slick .form--slick__header .form-item input {
+.form--slick .form__header .form-item input {
   width: 210px;
   max-width: 210px;
 }
 
-.form--slick .form--slick__header .form-item label {
+.form--slick .form__header .form-item label {
   float: none;
   text-align: left;
 }
 
-.form--slick .form--slick__header .form-item-skin label,
-.form--slick .form--slick__header .form-item-breakpoints label {
+.form--slick .form__header .form-item-skin label,
+.form--slick .form__header .form-item-breakpoints label {
   width: auto;
 }
 
-.form--slick .form--slick__header div[class*="-breakpoint"] input {
+.form--slick .form__header div[class*="-breakpoint"] input {
   width: 60px;
 }
 
-.form--slick .form--slick__header .form-item-skin .description {
+.form--slick .form__header .form-item-skin .description {
   bottom: 90% !important;
   max-width: 480px;
   width: 480px;
@@ -1152,8 +1158,17 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   width: 100%;
 }
 
-#field-display-overview .field-plugin-settings-edit-form  .form--slick  .form-item {
+#field-display-overview .field-plugin-settings-edit-form .form--slick .form-item {
   margin: 0;
+}
+
+.form--optionset #edit-options {
+  clear: both;
+}
+
+/* Prevents overlapping Views edit options */
+[data-drupal-selector="edit-options"] details {
+  clear: both;
 }
 
 @media screen and (min-width: 760px) {
@@ -1166,12 +1181,12 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 
   .form--optionset .form-item,
   .form--slick .vertical-tabs__menu-item,
-  .form--slick .vertical-tabs__menu-item.is-selected  {
+  .form--slick .vertical-tabs__menu-item.is-selected {
     width: 49.9999%;
   }
 
   .form--slick .vertical-tabs__menu-item,
-  .form--slick .vertical-tabs__menu-item.is-selected  {
+  .form--slick .vertical-tabs__menu-item.is-selected {
     float: left;
   }
 
@@ -1189,7 +1204,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
     max-width: 100%;
   }
 
-  .form--slick .form--slick__header .form-item {
+  .form--slick .form__header .form-item {
     display: inline-block;
     margin-right: -5px;
     vertical-align: top;
@@ -1201,8 +1216,8 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
     margin-right: -4px;
   }
 
-  .form--slick .form--slick__half-last .form-item,
-  .toolbar-vertical  .form--slick .form--slick__half-last .form-item {
+  .form--slick .form__half--last .form-item,
+  .toolbar-vertical .form--slick .form__half--last .form-item {
     float: right;
     width: auto;
   }
@@ -1217,22 +1232,22 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 
 @media screen and (min-width: 1280px) {
   .form--optionset .form-item,
-  .toolbar-tray-open .form--optionset .form-item  {
+  .toolbar-tray-open .form--optionset .form-item {
     width: 33.2666%;
   }
 
-  .form--slick__half,
+  .form__half,
   .form--half .form-item,
-  .toolbar-vertical.toolbar-tray-open .form--slick .form-item  {
+  .toolbar-vertical.toolbar-tray-open .form--slick .form-item {
     width: 49.9999%;
   }
 
-  .form--slick__half {
+  .form__half {
     float: left;
   }
 
   .form--slick .vertical-tabs__menu-item,
-  .form--slick .vertical-tabs__menu-item.is-selected  {
+  .form--slick .vertical-tabs__menu-item.is-selected {
     float: none;
     width: 100%;
   }
@@ -1242,7 +1257,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
     width: 100%;
   }
 
-  .toolbar-tray-open  .form--slick .form--slick__half-last .form-item {
+  .toolbar-tray-open .form--slick .form__half--last .form-item {
     float: right;
     width: auto;
   }

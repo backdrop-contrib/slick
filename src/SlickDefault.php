@@ -11,7 +11,7 @@ namespace Drupal\slick;
  * Defines shared plugin default settings for field formatter and Views style.
  *
  * @see FormatterBase::defaultSettings()
- * @see StylePluginBase::defineOptions().
+ * @see StylePluginBase::defineOptions()
  */
 class SlickDefault {
 
@@ -21,8 +21,8 @@ class SlickDefault {
   public static function baseSettings() {
     return [
       'cache'               => -1,
-      'display'             => 'main',
       'current_view_mode'   => '',
+      'display'             => 'main',
       'optionset'           => 'default',
       'optionset_thumbnail' => '',
       'override'            => FALSE,
@@ -37,10 +37,11 @@ class SlickDefault {
   }
 
   /**
-   * Returns extended field formatter and Views settings.
+   * Returns image-related field formatter and Views settings.
    */
-  public static function extendedSettings() {
+  public static function imageSettings() {
     return [
+      'background'          => FALSE,
       'box_style'              => '',
       'caption'                => [],
       'image_style'            => '',
@@ -57,13 +58,14 @@ class SlickDefault {
   /**
    * Returns fieldable entity formatter and Views settings.
    */
-  public static function fieldableSettings() {
+  public static function extendedSettings() {
     return [
       'class'          => '',
       'dimension'      => '',
       'grid'           => '',
       'grid_medium'    => '',
       'grid_small'     => '',
+      'iframe_lazy'    => FALSE,
       'image'          => '',
       'link'           => '',
       'overlay'        => '',
@@ -71,7 +73,7 @@ class SlickDefault {
       'title'          => '',
       'view_mode'      => '',
       'visible_slides' => '',
-    ] + self::extendedSettings();
+    ] + self::imageSettings();
   }
 
 }

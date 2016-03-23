@@ -60,6 +60,22 @@ slick.theme:
     - slick/slick
     - slick/slick.load
 
+slick.dots.thumbnail:
+  version: VERSION
+  css:
+    component:
+      css/components/slick.dots--thumbnail.css: {}
+  dependencies:
+    - slick/slick
+
+slick.arrow.down:
+  version: VERSION
+  css:
+    component:
+      css/components/slick.arrows--down.css: {}
+  dependencies:
+    - slick/slick
+
 slick.colorbox:
   version: VERSION
   js:
@@ -75,6 +91,20 @@ slick.colorbox:
     - core/jquery.once
     - colorbox/colorbox
 
+# @todo drop to re-use Blazy.
+slick.admin:
+  version: VERSION
+  js:
+    js/slick.admin.min.js: {}
+  css:
+    theme:
+      css/admin/slick.admin.css: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+
+# @todo drop to re-use Blazy.
 slick.photobox:
   remote: https://github.com/yairEO/photobox/
   version: 1.x
@@ -97,6 +127,7 @@ slick.photobox:
     - core/jquery.once
     # - photobox/photobox
 
+# @todo drop to re-use Blazy.
 slick.media:
   version: VERSION
   js:
@@ -109,31 +140,3 @@ slick.media:
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
-
-slick.dots.thumbnail:
-  version: VERSION
-  css:
-    component:
-      css/components/slick.dots--thumbnail.css: {}
-  dependencies:
-    - slick/slick
-
-slick.arrow.down:
-  version: VERSION
-  css:
-    component:
-      css/components/slick.arrows--down.css: {}
-  dependencies:
-    - slick/slick
-
-slick.admin:
-  version: VERSION
-  js:
-    js/slick.admin.min.js: {}
-  css:
-    theme:
-      css/admin/slick.admin.css: {}
-  dependencies:
-    - core/jquery
-    - core/jquery.once
-    - core/drupal

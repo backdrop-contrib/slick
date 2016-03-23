@@ -282,6 +282,12 @@ slick_image:
   type: slick_base
   label: 'Slick image display format settings'
   mapping:
+    background:
+      type: boolean
+      label: 'Use CSS background'
+    breakpoints:
+      type: mapping
+      label: 'Breakpoints'
     box_style:
       type: string
       label: 'Lightbox image style'
@@ -327,6 +333,8 @@ slick_extended:
     grid:
       type: integer
       label: 'Grid large'
+    grid_header:
+      type: string
     grid_medium:
       type: integer
       label: 'Grid medium'

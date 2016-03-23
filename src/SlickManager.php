@@ -17,9 +17,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\slick\Entity\Slick;
+// @todo enable, and move re-usable methods/services into BlazyManager.
+// use Drupal\blazy\BlazyManager;
 
 /**
  * Implements SlickManagerInterface.
+ *
+ * @todo extends \Drupal\blazy\BlazyManager.
  */
 class SlickManager implements SlickManagerInterface {
 
@@ -106,63 +110,29 @@ class SlickManager implements SlickManagerInterface {
   /**
    * Returns the slick config managed by Slick UI, or any.
    */
-  public function getConfigFactory($setting_name, $settings = 'slick.settings') {
+  public function configLoad($setting_name, $settings = 'slick.settings') {
     return $this->configFactory->get($settings)->get($setting_name);
   }
 
   /**
-   * Returns a shortcut for loading a configuration entity.
+   * Returns a shortcut for loading a config entity: slick, image_style, etc.
    */
-  public function load($id, $entity_type = 'slick') {
+  public function entityLoad($id, $entity_type = 'slick') {
     return $this->entityTypeManager->getStorage($entity_type)->load($id);
   }
 
   /**
    * Returns a shortcut for loading multiple configuration entities.
    */
-  public function loadMultiple($entity_type = 'slick', $ids = NULL) {
+  public function entityLoadMultiple($entity_type = 'slick', $ids = NULL) {
     return $this->entityTypeManager->getStorage($entity_type)->loadMultiple($ids);
   }
 
   /**
    * Returns available slick default options under group 'settings'.
    */
-  public function getDefaultSettings() {
-    return $this->load('default')->getOptions('settings');
-  }
-
-  /**
-   * Returns slick skins registered via hook_slick_skins_info(), or defaults.
-   */
-  public function getSkins() {
-    $skins = &drupal_static(__METHOD__, NULL);
-    if (!isset($skins)) {
-      $cid = 'slick:skins';
-      if ($cache = $this->cache->get($cid)) {
-        $skins = $cache->data;
-      }
-      else {
-        $classes = $this->moduleHandler->invokeAll('slick_skins_info');
-        $classes = array_merge(['\Drupal\slick\SlickSkin'], $classes);
-        $items   = $main = $skins = $dots = $arrows = [];
-        foreach ($classes as $class) {
-          if (class_exists($class)) {
-            $reflection = new \ReflectionClass($class);
-            if ($reflection->implementsInterface('\Drupal\slick\SlickSkinInterface')) {
-              $skin   = new $class;
-              $main   = $skin->skins();
-              $dots   = method_exists($skin, 'dots') ? $skin->dots() : [];
-              $arrows = method_exists($skin, 'arrows') ? $skin->arrows() : [];
-            }
-          }
-          $items = ['skins' => $main, 'dots' => $dots, 'arrows' => $arrows];
-          $skins = NestedArray::mergeDeep($skins, $items);
-        }
-        $tags = Cache::buildTags($cid, ['count:' . count($items['skins'])]);
-        $this->cache->set($cid, $skins, Cache::PERMANENT, $tags);
-      }
-    }
-    return $skins;
+  public function getDefaultSettings($group = 'settings') {
+    return Slick::load('default')->getOptions($group);
   }
 
   /**
@@ -211,8 +181,8 @@ class SlickManager implements SlickManagerInterface {
    */
   public function attach($attach = []) {
     $attach += [
-      'slick_css'  => $this->getConfigFactory('slick_css'),
-      'module_css' => $this->getConfigFactory('module_css'),
+      'slick_css'  => $this->configLoad('slick_css'),
+      'module_css' => $this->configLoad('module_css'),
       'skin'       => FALSE,
     ];
 
@@ -223,11 +193,10 @@ class SlickManager implements SlickManagerInterface {
       $load['library'][] = 'slick/slick.easing';
     }
 
-    if (!empty($attach['lazy']) && $attach['lazy'] == 'blazy') {
-      $load['library'][] = 'blazy/blazy';
+    if (!empty($attach['blazy'])) {
+      $load['library'][] = 'blazy/load';
     }
 
-    $load['library'][] = 'slick/slick';
     $load['library'][] = 'slick/slick.load';
 
     // @todo redo this when colorbox has JS loader again, or just array.
@@ -250,7 +219,7 @@ class SlickManager implements SlickManagerInterface {
     // excluding wasted/trouble options, e.g.: PHP string vs JS object.
     $excludes = explode(' ', 'mobileFirst appendArrows appendDots asNavFor prevArrow nextArrow cssEaseBezier cssEaseOverride respondTo');
     $excludes = array_combine($excludes, $excludes);
-    $load['drupalSettings']['slick'] = array_diff_key($this->getDefaultSettings(), $excludes);
+    $load['drupalSettings']['slick'] = array_diff_key($this->getDefaultSettings('settings'), $excludes);
 
     $this->moduleHandler->alter('slick_attach_load_info', $load, $attach);
     return $load;
@@ -323,11 +292,10 @@ class SlickManager implements SlickManagerInterface {
     $build = $element['#build'];
     unset($element['#build']);
 
-    if (!isset($build['items'][0])) {
+    $settings = $build['settings'];
+    if (empty($build['items'])) {
       return [];
     }
-
-    $settings = $build['settings'];
 
     // Adds helper class if thumbnail on dots hover provided.
     $dots_class = [];
@@ -348,7 +316,7 @@ class SlickManager implements SlickManagerInterface {
     // Overrides common options to re-use an optionset.
     if ($settings['display'] == 'main') {
       if (!empty($settings['override'])) {
-        foreach ($settings['overridables'] as $key => $override) {
+        foreach (array_filter($settings['overridables']) as $key => $override) {
           $js[$key] = empty($override) ? FALSE : TRUE;
         }
       }
@@ -430,7 +398,7 @@ class SlickManager implements SlickManagerInterface {
     $build = $element['#build'];
     unset($element['#build']);
 
-    if (!isset($build['items'][0])) {
+    if (empty($build['items'])) {
       return [];
     }
 
@@ -443,13 +411,14 @@ class SlickManager implements SlickManagerInterface {
     $switch   = isset($settings['media_switch']) ? $settings['media_switch'] : '';
 
     // Additional settings.
-    $build['optionset'] = $build['optionset'] ?: $this->load($settings['optionset']);
+    $build['optionset'] = $build['optionset'] ?: Slick::load($settings['optionset']);
     $settings['nav']    = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
+    $settings['cache']  = isset($settings['cache']) ? $settings['cache'] : -1;
     $mousewheel         = $build['optionset']->getSetting('mouseWheel');
 
     if ($settings['nav']) {
       $options['asNavFor'] = "#{$thumb_id}-slider";
-      $optionset_thumbnail = $this->load($settings['optionset_thumbnail']);
+      $optionset_thumbnail = Slick::load($settings['optionset_thumbnail']);
       $mousewheel          = $optionset_thumbnail->getSetting('mouseWheel');
     }
 
@@ -480,9 +449,9 @@ class SlickManager implements SlickManagerInterface {
       $settings['optionset']        = $settings['optionset_thumbnail'];
       $settings['skin']             = isset($settings['skin_thumbnail']) ? $settings['skin_thumbnail'] : '';
       $settings['display']          = 'thumbnail';
-      $build['options']['asNavFor'] = "#{$id}-slider";
       $build['optionset']           = $optionset_thumbnail;
       $build['settings']            = $settings;
+      $build['options']['asNavFor'] = "#{$id}-slider";
 
       unset($build['thumb']);
       $slick[1] = $this->slick($build);
@@ -491,6 +460,43 @@ class SlickManager implements SlickManagerInterface {
     // Collect the slick instances.
     $element['#items'] = $slick;
     return $element;
+  }
+
+  /**
+   * Returns slick skins registered via hook_slick_skins_info(), or defaults.
+   *
+   * @todo re-use \Drupal\blazy\BlazyManager::buildSkins().
+   */
+  public function getSkins() {
+    $skins = &drupal_static(__METHOD__, NULL);
+    if (!isset($skins)) {
+      // $skins = $this->blazyManager->buildSkins('slick', '\Drupal\slick\SlickSkin');
+      $cid = 'slick:skins';
+      if ($cache = $this->cache->get($cid)) {
+        $skins = $cache->data;
+      }
+      else {
+        $classes = $this->moduleHandler->invokeAll('slick_skins_info');
+        $classes = array_merge(['\Drupal\slick\SlickSkin'], $classes);
+        $items   = $main = $skins = $dots = $arrows = [];
+        foreach ($classes as $class) {
+          if (class_exists($class)) {
+            $reflection = new \ReflectionClass($class);
+            if ($reflection->implementsInterface('\Drupal\slick\SlickSkinInterface')) {
+              $skin   = new $class;
+              $main   = $skin->skins();
+              $dots   = method_exists($skin, 'dots') ? $skin->dots() : [];
+              $arrows = method_exists($skin, 'arrows') ? $skin->arrows() : [];
+            }
+          }
+          $items = ['skins' => $main, 'dots' => $dots, 'arrows' => $arrows];
+          $skins = NestedArray::mergeDeep($skins, $items);
+        }
+        $tags = Cache::buildTags($cid, ['count:' . count($items['skins'])]);
+        $this->cache->set($cid, $skins, Cache::PERMANENT, $tags);
+      }
+    }
+    return $skins;
   }
 
 }

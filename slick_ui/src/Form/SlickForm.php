@@ -22,7 +22,7 @@ class SlickForm extends SlickFormBase {
     $form      = parent::form($form, $form_state);
     $slick     = $this->entity;
     $options   = $slick->getOptions() ?: [];
-    $admin_css = $this->manager->getConfigFactory('admin_css');
+    $admin_css = $this->manager->configLoad('admin_css');
     $tooltip   = ['class' => ['is-tooltip']];
 
     // Options.
@@ -429,7 +429,7 @@ class SlickForm extends SlickFormBase {
         'title'        => $this->t('Lazy load'),
         'options'      => $this->getLazyloadOptions(),
         'empty_option' => $this->t('- None -'),
-        'description'  => $this->t("Set lazy loading technique. 'ondemand' will load the image as soon as you slide to it, 'progressive' loads one image after the other when the page loads. To share images for Pinterest, leave empty, otherwise no way to read actual image src. It supports Blazy module if installed. Yet, Blazy is not compatible with infinite option.", ['@url' => '//www.drupal.org/project/imageinfo_cache']),
+        'description'  => $this->t("Set lazy loading technique. 'ondemand' will load the image as soon as you slide to it, 'progressive' loads one image after the other when the page loads. To share images for Pinterest, leave empty, otherwise no way to read actual image src. It supports Blazy module if installed to delay loading below-fold images until 100px before they are visible at viewport, and/or have a bonus lazyLoadAhead when the beforeChange event fired.", ['@url' => '//www.drupal.org/project/imageinfo_cache']),
       ];
 
       $elements['mouseWheel'] = [
@@ -586,14 +586,13 @@ class SlickForm extends SlickFormBase {
         'description' => $this->t('Ignores requests to advance the slide while animating.'),
       ];
 
-      foreach ($this->manager->getDefaultSettings() as $name => $default) {
+      foreach ($this->manager->getDefaultSettings('settings') as $name => $default) {
         if (isset($elements[$name])) {
           $elements[$name]['default'] = $default;
         }
       }
 
-      $dependents = Slick::getDependentOptions();
-      foreach ($dependents as $parent => $items) {
+      foreach (Slick::getDependentOptions() as $parent => $items) {
         foreach ($items as $name) {
           if (isset($elements[$name])) {
             $states = ['visible' => [':input[name*="options[settings][' . $parent . ']"]' => ['checked' => TRUE]]];
@@ -732,7 +731,7 @@ class SlickForm extends SlickFormBase {
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
 
-    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }
 
 }

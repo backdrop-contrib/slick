@@ -3,9 +3,14 @@
  * @file
  * Default theme implementation for the Slick carousel template.
  *
+ * This template holds 3 displays: main, thumbnail and overlay slicks in one.
+ * Arrows are enforced, but toggled by JS accordingly. This allows responsive
+ * object to enable and disable it as needed without losing context.
+ *
  * Available variables:
- * - items: The array of items containing main image/video/audio, and optional
- *     image/video/audio overlay and captions.
+ * - items: The array of items containing main image/video/audio, optional
+ *     image/video/audio overlay and captions, and optional thumbnail
+ *     texts/images.
  * - settings: A cherry-picked settings that mostly defines the slide HTML or
  *     layout, and none of JS settings/options which are defined at data-slick.
  * - attributes: The array of attributes to hold classes, id and optional

@@ -1,6 +1,8 @@
 /**
  * @file
  * Provides colorbox integration.
+ *
+ * @todo move to Blazy for re-usability across Blazy, GridStack, Mason, Slick.
  */
 
 .colorbox-on--media #colorbox,

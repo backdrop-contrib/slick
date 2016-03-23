@@ -10,7 +10,6 @@ namespace Drupal\slick\Entity;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\slick\SlickInterface;
 
 /**
  * Defines the Slick configuration entity.
@@ -23,12 +22,14 @@ use Drupal\slick\SlickInterface;
  *   entity_keys = {
  *     "id" = "name",
  *     "label" = "label",
+ *     "status" = "status",
  *     "weight" = "weight",
  *   },
  *   config_export = {
  *     "id",
  *     "name",
  *     "label",
+ *     "status",
  *     "weight",
  *     "group",
  *     "skin",
@@ -58,7 +59,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    *
    * @var int
    */
-  protected $weight;
+  protected $weight = 0;
 
   /**
    * The optionset group for easy selections.

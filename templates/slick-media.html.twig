@@ -1,13 +1,15 @@
 {#
 /**
  * @file
- * Default theme implementation for the Slick media template.
+ * Default theme implementation for the slick-media template.
  *
- * The Slick media support core image, and media entity.
+ * The Slick media supports core image, and media entity.
  * If iframe switcher is enabled, audio/video iframe will be hidden below image
- * overlay, and only visible when toggled.
+ * overlay (content), and only visible when toggled. Otherwise iframe only, and
+ * content is emptied.
  *
  * Available variables:
+ *  - content: A renderable array of the main image/background.
  *  - attributes: An array of attributes.
  *  - content_attributes: An array of content attributes, including iframe SRC.
  *  - settings: An array containing the given settings.
@@ -16,6 +18,7 @@
 {%
   set classes = [
     'media',
+    settings.blazy ? 'media--loading',
     settings.type ? 'media--' ~ settings.type,
     settings.ratio_clean ? 'media--ratio ' ~ settings.ratio_clean,
     settings.media_switch ? 'media--switch media--switch--' ~ settings.media_switch|clean_class,
@@ -32,7 +35,7 @@
 
 {% spaceless %}
 <div{{ attributes.addClass(classes) }}>
-  {{ item }}
+  {{ content }}
   {% if settings.player %}
     <iframe{{ content_attributes.addClass(content_classes) }} allowfullscreen></iframe>
     {% if settings.media_switch %}

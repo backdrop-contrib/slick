@@ -11,10 +11,6 @@ namespace Drupal\slick;
  * Provides an interface defining Slick skins.
  *
  * The hook_hook_info() is deprecated, and no resolution by 1/16/16:
- *   #2237831: Allow module services to specify hooks
- *   #2616814: Use ModuleHandler->invoke() or ->invokeAll() for all hook invocations
- *   #1509164: ... to entirely replace hooks is postponed to Drupal 9
- *   #1972304: Add a HookEvent
  *   #2233261: Deprecate hook_hook_info()
  *     Postponed till D9
  */

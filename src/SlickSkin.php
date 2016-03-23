@@ -19,8 +19,6 @@ class SlickSkin implements SlickSkinInterface {
     $skins = [
       'default' => [
         'name' => t('Default'),
-        'group' => 'main',
-        'provider' => 'slick',
         'css' => [
           'theme' => [
             'css/theme/slick.theme--default.css' => [],
@@ -29,8 +27,6 @@ class SlickSkin implements SlickSkinInterface {
       ],
       'asnavfor' => [
         'name' => t('Thumbnail: asNavFor'),
-        'group' => 'thumbnail',
-        'provider' => 'slick',
         'css' => [
           'theme' => [
             'css/theme/slick.theme--asnavfor.css' => [],
@@ -40,8 +36,6 @@ class SlickSkin implements SlickSkinInterface {
       ],
       'classic' => [
         'name' => t('Classic'),
-        'group' => 'main',
-        'provider' => 'slick',
         'description' => t('Adds dark background color over white caption, only good for slider (single slide visible), not carousel (multiple slides visible), where small captions are placed over images.'),
         'css' => [
           'theme' => [
@@ -51,8 +45,6 @@ class SlickSkin implements SlickSkinInterface {
       ],
       'fullscreen' => [
         'name' => t('Full screen'),
-        'group' => 'main',
-        'provider' => 'slick',
         'description' => t('Adds full screen display, works best with 1 slidesToShow.'),
         'css' => [
           'theme' => [
@@ -63,8 +55,6 @@ class SlickSkin implements SlickSkinInterface {
       ],
       'fullwidth' => [
         'name' => t('Full width'),
-        'group' => 'main',
-        'provider' => 'slick',
         'description' => t('Adds .slide__constrained wrapper to hold caption overlay within the max-container.'),
         'css' => [
           'theme' => [
@@ -75,9 +65,7 @@ class SlickSkin implements SlickSkinInterface {
       ],
       'grid' => [
         'name' => t('Grid'),
-        'group' => 'main',
-        'provider' => 'slick',
-        'description' => t('The last grid carousel. Use slidesToShow > 1 to have more grid combination, only if you have considerable amount of grids, otherwise 1.'),
+        'description' => t('Use slidesToShow > 1 to have more grid combination, only if you have considerable amount of grids, otherwise 1.'),
         'css' => [
           'theme' => [
             'css/theme/slick.theme--grid.css' => [],
@@ -86,8 +74,6 @@ class SlickSkin implements SlickSkinInterface {
       ],
       'split' => [
         'name' => t('Split'),
-        'group' => 'main',
-        'provider' => 'slick',
         'description' => t('Puts image and caption side by side, related to slide layout options.'),
         'css' => [
           'theme' => [
@@ -96,6 +82,11 @@ class SlickSkin implements SlickSkinInterface {
         ],
       ],
     ];
+
+    foreach ($skins as $key => $skin) {
+      $skins[$key]['group'] = $key == 'asnavfor' ? 'thumbnail' : 'main';
+      $skins[$key]['provider'] = 'slick';
+    }
 
     return $skins;
   }

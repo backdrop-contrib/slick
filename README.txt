@@ -27,6 +27,29 @@ Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.
 [2] https://www.drupal.org/node/418616
 [3] http://dgo.to/slick_extras
 
+
+REQUIREMENTS
+--------------------------------------------------------------------------------
+- Slick library:
+  o Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/
+  o Extract it as is, rename "slick-master" to "slick", so the assets are at:
+
+    /libraries/slick/slick/slick.css
+    /libraries/slick/slick/slick-theme.css (optional if a skin chosen)
+    /libraries/slick/slick/slick.min.js
+
+- Download jqeasing from https://github.com/gdsmith/jquery.easing, so available
+  at:
+  /libraries/easing/jquery.easing.min.js
+  This is CSS easing fallback for non-supporting browsers.
+
+- Blazy.module, to reduce DRY stuffs, and as a bonus, advanced lazyloading
+  such as delay lazyloading for below-fold sliders, iframe, (fullscreen) CSS
+  background lazyloading, breakpoint dependent multi-serving images, lazyload
+  ahead for smoother UX.
+  Full integration will happen prior to Betas, or Full release.
+  http://dgo.to/blazy
+
 FEATURES
 --------------------------------------------------------------------------------
 o Fully responsive. Scales with its container.
@@ -74,29 +97,13 @@ The Slick module has several sub-modules:
 [3] http://dgo.to/slick_extras
 
 
-REQUIREMENTS
---------------------------------------------------------------------------------
-- Slick library:
-  o Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/
-  o Extract it as is, rename "slick-master" to "slick", so the assets are at:
-
-    /libraries/slick/slick/slick.css
-    /libraries/slick/slick/slick-theme.css (optional if a skin chosen)
-    /libraries/slick/slick/slick.min.js
-
-- Download jqeasing from https://github.com/gdsmith/jquery.easing, so available
-  at:
-  /libraries/easing/jquery.easing.min.js
-  This is CSS easing fallback for non-supporting browsers.
-
-- A basic knowledge of Drupal site building.
-
-
 
 OPTIONAL INTEGRATION
 --------------------------------------------------------------------------------
 Slick supports enhancements and more complex layouts.
 
+- Blazy, to delay loading below-fold images until 100px before visible at
+  viewport, and/or have a bonus lazyLoadAhead when the beforeChange event fired.
 - Colorbox, to have grids/slides that open up image/video in overlay.
 - Photobox, idem ditto.
 - Responsive image, in core, to get truly responsive image.
@@ -332,6 +339,7 @@ KNOWN ISSUES
 - The following is not module related, but worth a note:
   o lazyLoad ondemand has issue with dummy image excessive height.
     Added fixes to suppress it via option Aspect ratio (fluid).
+    Or use Blazy lazyload for more advanced options.
   o If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
   o Fade option with slideToShow > 1 will screw up.
@@ -351,7 +359,12 @@ CURRENT DEVELOPMENT STATUS
 --------------------------------------------------------------------------------
 A full release should be reasonable after proper feedbacks from the community,
 some code cleanup, and optimization where needed. Patches are very much welcome.
+
 Alpha and Beta releases are for developers only. Be aware of possible breakage.
+
+However if it is broken, unless an update is explicitly required, clearing cache
+should fix most issues durig DEV phases. Always visit prior to any update:
+/admin/config/development/performance
 
 
 ROADMAP

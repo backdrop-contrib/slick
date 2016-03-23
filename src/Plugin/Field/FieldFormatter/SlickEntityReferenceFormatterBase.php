@@ -8,15 +8,10 @@
 namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 use Drupal\slick\SlickDefault;
-use Drupal\slick\SlickFormatterInterface;
-use Drupal\slick\SlickFormatterTrait;
 
 /**
  * Base class for slick entity reference formatters.
@@ -24,52 +19,23 @@ use Drupal\slick\SlickFormatterTrait;
  * @see \Drupal\slick_media\Plugin\Field\FieldFormatter\SlickMediaFormatter.
  */
 abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatterBase implements ContainerFactoryPluginInterface {
-  use SlickFormatterTrait;
-
-  /**
-   * Constructs a SlickMediaFormatter instance.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, SlickFormatterInterface $formatter) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->loggerFactory = $logger_factory;
-    $this->formatter     = $formatter;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('logger.factory'),
-      $container->get('slick.formatter')
-    );
-  }
+  use SlickFormatterTrait, SlickConstructorTrait;
 
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return [
-      'color_field' => '',
-      'iframe_lazy' => FALSE,
-    ] + SlickDefault::fieldableSettings();
+    return ['color_field' => ''] + SlickDefault::extendedSettings();
   }
 
   /**
    * Returns media contents.
    */
-  public function buildElements($entities, $langcode, $settings = []) {
-    $build     = [];
+  public function buildElements(array &$build = [], $entities, $langcode) {
+    $settings = &$build['settings'];
+    $item_id  = $settings['item_id'];
     $view_mode = $settings['view_mode'] ?: 'full';
 
-    // $medium = $this->formatter->setDimensions($files[0]->_referringItem, $settings['image_style'], $files[0]->getFileUri());
     foreach ($entities as $delta => $entity) {
       // Protect ourselves from recursive rendering.
       static $depth = 0;
@@ -79,13 +45,13 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
         return $build;
       }
 
-      $slide = ['delta' => $delta, 'settings' => $settings];
+      $settings['delta'] = $delta;
       if ($entity->id()) {
         if ($settings['vanilla']) {
           $build['items'][$delta] = $this->manager()->getEntityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode);
         }
         else {
-          $this->buildElement($build, $entity, $langcode, $slide);
+          $this->buildElement($build, $entity, $langcode);
         }
 
         // Add the entity to cache dependencies so to clear when it is updated.
@@ -97,7 +63,6 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
         $build[$delta] = array('#markup' => $entity->label());
       }
 
-      unset($slide);
       $depth = 0;
     }
 
@@ -107,13 +72,14 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
   /**
    * Returns slide contents.
    */
-  public function buildElement(array &$build, $entity, $langcode, $slide) {
-    $delta     = $slide['delta'];
-    $settings  = $slide['settings'];
+  public function buildElement(array &$build = [], $entity, $langcode) {
+    $settings  = &$build['settings'];
+    $delta     = $settings['delta'];
+    $item_id   = $settings['item_id'];
     $view_mode = $settings['view_mode'] ?: 'full';
 
     $image = [];
-    $media = $this->buildMedia($entity, $langcode, $slide, $delta);
+    $this->buildMedia($settings, $entity, $langcode);
 
     // Main image can be separate image item from video thumbnail for highres.
     $field_image = $settings['image'];
@@ -122,69 +88,51 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
       /** @var \Drupal\file\Plugin\Field\FieldType\FileFieldItemList $file */
       $file = $entity->get($field_image);
 
+      // Collect cache tags to be added for each item in the field.
+      $settings['file_tags'] = $file->referencedEntities()[0]->getCacheTags();
+      $settings['uri']       = $file->referencedEntities()[0]->getFileUri();
+
       /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $item */
-      $item          = $file->get(0);
-      $slide['item'] = $item;
-      $media['uri']  = $file->referencedEntities()[0]->getFileUri();
+      $element['item']     = $file->get(0);
+      $element['settings'] = $settings;
 
-      // Only process if the media has the expected image.
-      if ($item) {
-        // Array contains: alt title width height target_id and loaded TRUE.
-        $translation = $entity->getTranslation($langcode)->get($field_image);
-        $media = array_merge($media, $translation->getValue()[0]);
-        $slide['media'] = $media;
-
-        $image = $this->formatter->getImage($slide);
-      }
+      $image = $this->formatter->getImage($element);
     }
 
-    // Image with responsive image, lazyLoad, and lightbox supports.
-    $slide['slide'] = $image;
+    // Optional image with responsive image, lazyLoad, and lightbox supports.
+    $element[$item_id] = $image;
+    $element['settings'] = $settings;
 
     // Captions if so configured.
-    $this->getCaption($entity, $langcode, $settings, $slide);
+    $this->getCaption($element, $entity, $langcode);
 
     // Layouts can be builtin, or field, if so configured.
     if ($layout = $settings['layout']) {
       if (strpos($layout, 'field_') !== FALSE) {
         $settings['layout'] = $this->getFieldString($entity, $layout, $langcode);
       }
-      $slide['settings']['layout'] = strip_tags($settings['layout']);
+      $element['settings']['layout'] = strip_tags($settings['layout']);
     }
 
     // Classes, if so configured.
     $class = $this->getFieldString($entity, $settings['class'], $langcode);
-    $slide['settings']['class'] = strip_tags($class);
-    $build['items'][$delta] = $slide;
+    $element['settings']['class'] = strip_tags($class);
+    $build['items'][$delta] = $element;
 
     if ($settings['nav']) {
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-      $slide['slide']   = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($slide);
-      $slide['caption'] = $this->getFieldRenderable($entity, $settings['thumbnail_caption'], $view_mode);
-      $build['thumb']['items'][$delta] = $slide;
+      $element[$item_id]  = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($element['settings']);
+      $element['caption'] = $this->getFieldRenderable($entity, $settings['thumbnail_caption'], $view_mode);
+
+      $build['thumb']['items'][$delta] = $element;
     }
-  }
-
-  /**
-   * Collects media definitions.
-   */
-  public function buildMedia($entity, $langcode, $slide, $delta) {
-    $media = [
-      'bundle'         => $entity->bundle(),
-      'delta'          => $delta,
-      'entity_url'     => $entity->url(),
-      'id'             => $entity->id(),
-      'target_bundles' => $this->getFieldSetting('handler_settings')['target_bundles'],
-      'type'           => $entity->bundle(),
-    ];
-
-    return $media;
   }
 
   /**
    * Builds slide captions with possible multi-value fields.
    */
-  public function getCaption($entity, $langcode, $settings = [], array &$slide) {
+  public function getCaption(array &$element = [], $entity, $langcode) {
+    $settings  = $element['settings'];
     $view_mode = $settings['view_mode'];
 
     // Title can be plain text, or link field.
@@ -193,10 +141,10 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
     if ($has_title && $title = $entity->getTranslation($langcode)->get($field_title)->getValue()) {
       if (!empty($title[0]['value']) && !isset($title[0]['uri'])) {
         // Prevents HTML-filter-enabled text from having bad markups (h2 > p).
-        $slide['caption']['title']['#markup'] = Xss::filterAdmin($title[0]['value']);
+        $element['caption']['title']['#markup'] = Xss::filterAdmin($title[0]['value']);
       }
       elseif (isset($title[0]['uri']) && !empty($title[0]['title'])) {
-        $slide['caption']['title'] = $this->getFieldRenderable($entity, $field_title, $view_mode)[0];
+        $element['caption']['title'] = $this->getFieldRenderable($entity, $field_title, $view_mode)[0];
       }
     }
 
@@ -210,7 +158,7 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
         $caption_items[$i] = $this->getFieldRenderable($entity, $field_caption, $view_mode);
       }
       if ($caption_items) {
-        $slide['caption']['data'] = $caption_items;
+        $element['caption']['data'] = $caption_items;
       }
     }
 
@@ -225,17 +173,30 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
           $links[$i] = $link->view($view_mode);
         }
       }
-      $slide['caption']['link'] = $links;
+      $element['caption']['link'] = $links;
     }
 
-    $slide['caption']['overlay'] = empty($settings['overlay']) ? [] : $this->getOverlay($entity, $langcode, $settings, $slide);
+    $element['caption']['overlay'] = empty($settings['overlay']) ? [] : $this->getOverlay($element, $entity, $langcode);
   }
 
   /**
    * Builds slide overlay placed within the caption.
    */
-  public function getOverlay($entity, $langcode, $settings = [], array &$slide) {
+  public function getOverlay(array &$element = [], $entity, $langcode) {
     return [];
+  }
+
+  /**
+   * Collects media definitions.
+   */
+  public function buildMedia(array &$settings = [], $entity, $langcode) {
+    $settings['bundle']         = $entity->bundle();
+    $settings['entity_url']     = $entity->url();
+    $settings['id']             = $entity->id();
+    $settings['target_bundles'] = $this->getFieldSetting('handler_settings')['target_bundles'];
+
+    // @todo get 'type' independent from bundle names: image, video, audio.
+    $settings['type']           = $entity->bundle();
   }
 
   /**
@@ -274,20 +235,21 @@ abstract class SlickEntityReferenceFormatterBase extends EntityReferenceFormatte
     $texts    = $admin->getFieldOptions($bundles, ['text', 'text_long', 'string', 'string_long', 'link']);
 
     $definition = [
+      'captions'          => $admin->getFieldOptions($bundles),
+      'classes'           => $strings,
       'current_view_mode' => $this->viewMode,
       'fieldable_form'    => TRUE,
-      'target_type'       => $this->getFieldSetting('target_type'),
-      'target_bundles'    => $bundles,
-      'classes'           => $strings,
-      'captions'          => $admin->getFieldOptions($bundles),
       'images'            => $admin->getFieldOptions($bundles, ['image']),
-      'links'             => $admin->getFieldOptions($bundles, ['text', 'string', 'link']),
       'layouts'           => $strings,
+      'links'             => $admin->getFieldOptions($bundles, ['text', 'string', 'link']),
+      'multimedia'        => TRUE,
+      'settings'          => $this->getSettings(),
+      'switchers'         => TRUE,
+      'target_bundles'    => $bundles,
+      'target_type'       => $this->getFieldSetting('target_type'),
       'thumb_captions'    => $texts,
       'titles'            => $texts,
       'vanilla'           => TRUE,
-      'multimedia'        => TRUE,
-      'settings'          => $this->getSettings(),
     ];
 
     $admin->openingForm($element, $definition);

@@ -20,12 +20,9 @@ iframe {
   max-width: 100%;
 }
 
-.slick-hidden {
-  display: none;
-}
-
 /* Hide non-js lazy-loaded image to show <noscript> one instead, if the theme
 supports no-js, otherwise IMG tag with dummy placeholder. */
+.slick-hidden,
 .no-js .slick img.lazy {
   display: none;
 }
@@ -97,7 +94,8 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   clear: both;
 }
 
-.slide__media {
+.slide__media,
+.media {
   overflow: hidden;
   position: relative;
 }
@@ -116,6 +114,17 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   margin: 30px auto;
 }
 
+/* Overrides .slick-slider to make caption text selectable. */
+.slide__caption {
+  cursor: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  -o-user-select: text;
+  -webkit-user-select: text;
+  user-select: text;
+  width: 100%;
+}
+
 .slick--main .slide__caption {
   min-height: 32%;
   padding: 20px 0;
@@ -132,11 +141,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 }
 
 /* Media ratio */
-.media {
-  overflow: hidden;
-  position: relative;
-}
-
 .media--ratio--on {
   height: 0;
   /* padding-top: 30px; IE7 fix */
@@ -147,9 +151,19 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   padding-bottom: 100%;
 }
 
+/* 3:2 ratio */
+.media--ratio--32 {
+  padding-bottom: 66.66%;
+}
+
 /* 4:3 ratio */
 .media--ratio--43 {
   padding-bottom: 75%;
+}
+
+/* 8:5 ratio */
+.media--ratio--85 {
+  padding-bottom: 62.5%;
 }
 
 /* 16:9 ratio */
@@ -246,15 +260,3 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   font-size: 12px;
   font-size: 0.75rem;
 }
-
-/* Overrides .slick-slider to make caption text selectable. */
-.slide__caption {
-  cursor: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  -o-user-select: text;
-  -webkit-user-select: text;
-  user-select: text;
-  width: 100%;
-}
-

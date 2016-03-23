@@ -1,6 +1,8 @@
 /**
  * @file
  * Provides shared lightbox stylings for both Colorbox and Photobox.
+ *
+ * @todo move to Blazy for re-usability across Blazy, GridStack, Mason, Slick.
  */
 
 .media-icon--lightbox {
@@ -68,5 +70,6 @@
 }
 
 .slick__litebox {
+  border: 0;
   display: block;
 }

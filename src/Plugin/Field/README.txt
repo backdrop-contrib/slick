@@ -6,7 +6,9 @@ to use to setup your display settings.
 
 
 SUPPORTED FIELDS
+All is applicable only to multi-value fields.
 - Image
+- Text, Text long, Text with summary
 - Media entity via slick_media sub-module [1]
 
 [1] http://dgo.to/slick_media

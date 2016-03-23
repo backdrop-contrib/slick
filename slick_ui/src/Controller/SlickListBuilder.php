@@ -109,11 +109,11 @@ class SlickListBuilder extends DraggableListBuilder {
     $operations['duplicate'] = array(
       'title'  => t('Duplicate'),
       'weight' => 15,
-      'url'    => $entity->urlInfo('duplicate-form'),
+      'url'    => $entity->toUrl('duplicate-form'),
     );
 
     if ($entity->id() == 'default') {
-      unset($operations['delete']);
+      unset($operations['delete'], $operations['edit']);
     }
 
     return $operations;
@@ -124,12 +124,10 @@ class SlickListBuilder extends DraggableListBuilder {
    *
    * @return array
    *   Renderable array.
-   *
-   * @see admin/config/development/configuration/single/export
    */
   public function render() {
     $build['description'] = array(
-      '#markup' => $this->t("<p>Manage the Slick optionsets. Optionsets are Config Entities.</p><p>By default, when this module is enabled, a single optionset is created from configuration. Install Slick example module to speed up by cloning them. Use the Operations column to edit, clone and delete optionsets.</p>"),
+      '#markup' => $this->t("<p>Manage the Slick optionsets. Optionsets are Config Entities.</p><p>By default, when this module is enabled, a single optionset is created from configuration. Install Slick example module to speed up by cloning them. Use the Operations column to edit, clone and delete optionsets.<br /><strong>Important!</strong> Avoid overriding Default optionset as it is meant for Default -- checking and cleaning. Use Duplicate instead. Otherwise messes are yours.</p>"),
     );
 
     $build[] = parent::render();

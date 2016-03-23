@@ -1,11 +1,12 @@
 {#
 /**
  * @file
- * Default theme implementation to display a lazyloaded image field.
+ * Default theme implementation to display a lazyloaded or responsive image.
  *
  * Available variables:
  * - image: A collection of image data.
- * - url: An optional URL the image can be linked to.
+ * - url: An optional URL the image can be linked to, can be any of audio/video,
+ *     or entity URLs, when using Colorbox/Photobox, or Link to content.
  * - settings: An array containing the given settings.
  *
  * @see template_preprocess_slick_image()
@@ -13,24 +14,16 @@
  * @ingroup themeable
  */
 #}
-{% spaceless %}
-{% if url %}
-  <a href="{{ url }}"{{ settings.url.attributes }}>
-    {{ image }}
-
-    {% if settings.lightbox is defined %}
-      {% if settings.icon is defined %}
-        {{ settings.icon }}
-      {% else %}
-        <span class="media-icon media-icon--lightbox"></span>
-      {% endif %}
-    {% endif %}
-
-    {% if noscript %}<noscript>{{ noscript }}</noscript>{% endif %}
-  </a>
-{% else %}
+{% set media %}
   {{ image }}
   {% if settings.icon is defined %} {{ settings.icon }} {% endif %}
   {% if noscript %}<noscript>{{ noscript }}</noscript>{% endif %}
-{% endif %}
+{% endset %}
+
+{% spaceless %}
+  {% if url and not settings.player %}
+    <a href="{{ url }}"{{ url_attributes }}>{{ media }}</a>
+  {% else %}
+    {{ media }}
+  {% endif %}
 {% endspaceless %}

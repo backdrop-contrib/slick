@@ -16,10 +16,13 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\slick\SlickManagerInterface;
+// @todo entends, and re-use methods from BlazyAdminExtendedBase.
+// use Drupal\blazy\Form\BlazyAdminExtendedBase;
 
 /**
  * Provides resusable admin functions or form elements.
+ *
+ * @todo re-use some of Blazy admin instead.
  */
 class SlickAdmin implements SlickAdminInterface {
 
@@ -77,15 +80,6 @@ class SlickAdmin implements SlickAdminInterface {
     $arrows       = $this->getArrowOptions();
     $dots         = $this->getDotOptions();
 
-    $vanilla = '';
-    if (isset($definition['vanilla'])) {
-      $vanilla = ' form--vanilla';
-    }
-    $form['opening'] = [
-      '#markup' => '<div class="form--slick form--half has-tooltip' . $vanilla . '">',
-      '#weight' => -110,
-    ];
-
     $form['vanilla'] = [
       '#type'        => 'checkbox',
       '#title'       => t('Vanilla slick'),
@@ -111,7 +105,7 @@ class SlickAdmin implements SlickAdminInterface {
     $form['skin'] = [
       '#type'        => 'select',
       '#title'       => t('Skin main'),
-      '#options'     => $this->getSkinOptions('main'),
+      '#options'     => $this->getSkinsByGroupOptions('main'),
       '#enforced'    => TRUE,
       '#description' => t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <a href=":url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', [':url' => $readme]),
     ];
@@ -127,7 +121,7 @@ class SlickAdmin implements SlickAdminInterface {
     $form['skin_thumbnail'] = [
       '#type'        => 'select',
       '#title'       => t('Skin thumbnail'),
-      '#options'     => $this->getSkinOptions('thumbnail'),
+      '#options'     => $this->getSkinsByGroupOptions('thumbnail'),
       '#description' => t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', ['@url' => $readme]),
       '#access'      => isset($definition['thumb_captions']),
     ];
@@ -220,7 +214,7 @@ class SlickAdmin implements SlickAdminInterface {
     $form['thumbnail_hover'] = [
       '#type'        => 'checkbox',
       '#title'       => t('Dots with thumbnail'),
-      '#description' => t('Dependent on a skin, dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider.'),
+      '#description' => t('Dependent on a skin, dots option enabled, and Thumbnail style. If checked, dots pager are kept, and thumbnail will be hidden and only visible on mouseover, default to min-width 120px. Alternative to asNavFor aka separate thumbnails as slider. With little CSS override, this allows a static grid of gallery-like thumbnail navigation.'),
       '#states' => [
         'visible' => [
           'select[name*="[thumbnail_style]"]' => ['!value' => ''],
@@ -235,7 +229,7 @@ class SlickAdmin implements SlickAdminInterface {
         'content' => t('Image linked to content'),
       ],
       '#description' => t('Depends on the enabled supported modules, or has known integration with Slick.<ol><li>Link to content: for aggregated small slicks.</li><li>Image to iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li><li>Intense: image to fullscreen intense image.</li></ol>'),
-      '#prefix' => '<h3 class="form--slick__title">' . t('Fields') . '</h3>',
+      '#prefix' => '<h3 class="form__title">' . t('Fields') . '</h3>',
     ];
 
     $form['responsive_image_style'] = [
@@ -247,16 +241,16 @@ class SlickAdmin implements SlickAdminInterface {
     ];
 
     if ($this->manager->getModuleHandler()->moduleExists('responsive_image')) {
-      $form['optionset']['#description'] .= ' ' . t('<a href=":url" target="_blank">Manage responsive image styles</a>.', [':url' => Url::fromRoute('entity.responsive_image_style.collection')->toString()]);
+      $form['responsive_image_style']['#description'] .= ' ' . t('<a href=":url" target="_blank">Manage responsive image styles</a>.', [':url' => Url::fromRoute('entity.responsive_image_style.collection')->toString()]);
     }
 
     // http://en.wikipedia.org/wiki/List_of_common_resolutions
-    $ratio = ['1:1', '4:3', '16:9', 'fluid'];
+    $ratio = ['1:1', '3:2', '4:3', '8:5', '16:9', 'fluid'];
     $form['ratio'] = [
       '#type'        => 'select',
       '#title'       => t('Aspect ratio'),
       '#options'     => array_combine($ratio, $ratio),
-      '#description' => t('Aspect ratio to get consistently responsive images and iframes. Required if using media entity to switch between iframe and overlay image, otherwise DIY. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the aspect ratio</a>. If not, images will be unexpectedly resized. Choose <strong>fluid</strong> if unsure, or want to fix lazyLoad ondemand reflow and excessive height issues. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY. ', [
+      '#description' => t('Aspect ratio to get consistently responsive images and iframes. Required if using media entity to switch between iframe and overlay image, otherwise DIY. This also fixes layout reflow and excessive height issues with lazyload ondemand. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the aspect ratio</a>. If not, images will be unexpectedly resized. Choose <strong>fluid</strong> if unsure. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY.', [
         '@dimensions' => '//size43.com/jqueryVideoTool.html',
         '@follow'     => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
         '@link'       => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
@@ -376,7 +370,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#type'        => 'select',
       '#title'       => t('Slide class'),
       '#options'     => isset($definition['classes']) ? $definition['classes'] : [],
-      '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split. Be sure its formatter is Key.'),
+      '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split. Be sure its formatter is Key if a select list.'),
       '#access'      => isset($definition['classes']),
       '#weight'      => 6,
     ];
@@ -406,7 +400,7 @@ class SlickAdmin implements SlickAdminInterface {
     $header = t('Group individual slide as block grid?<small>An older alternative to core <strong>Rows</strong> option. Only works if the total items &gt; <strong>Visible slides</strong>. <br />block grid != slidesToShow option, yet both can work in tandem.<br />block grid = Rows option, yet the first is module feature, the later core.</small>');
     $form['grid_header'] = [
       '#type'   => 'item',
-      '#markup' => '<h3 class="form--slick__title">' . $header . '</h3>',
+      '#markup' => '<h3 class="form__title">' . $header . '</h3>',
     ];
 
     $form['grid'] = [
@@ -503,110 +497,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#weight'        => 100,
     ];
 
-    $form['closing'] = [
-      '#markup' => '</div>',
-      '#weight' => 110,
-    ];
-
     $this->finalizeForm($form, $definition);
-  }
-
-  /**
-   * Returns re-usable logic, styling and assets across Slick fields and Views.
-   */
-  public function finalizeForm(array &$form, $definition = []) {
-    $settings  = isset($definition['settings']) ? $definition['settings'] : [];
-    $admin_css = $this->manager->getConfigFactory('admin_css');
-    $excludes  = ['container', 'details', 'item', 'hidden', 'submit'];
-
-    foreach (Element::children($form) as $key) {
-      if (isset($form[$key]['#type']) && !in_array($form[$key]['#type'], $excludes)) {
-        if (!isset($form[$key]['#default_value']) && isset($settings[$key])) {
-          $form[$key]['#default_value'] = $settings[$key];
-        }
-        if (!isset($form[$key]['#attributes']) && isset($form[$key]['#description'])) {
-          $form[$key]['#attributes'] = ['class' => ['is-tooltip']];
-        }
-
-        if ($admin_css) {
-          if ($form[$key]['#type'] == 'checkbox' && $form[$key]['#type'] != 'checkboxes') {
-            $form[$key]['#field_suffix'] = '&nbsp;';
-            $form[$key]['#title_display'] = 'before';
-          }
-          elseif ($form[$key]['#type'] == 'checkboxes' && !empty($form[$key]['#options'])) {
-            foreach ($form[$key]['#options'] as $i => $option) {
-              $form[$key][$i]['#field_suffix'] = '&nbsp;';
-              $form[$key][$i]['#title_display'] = 'before';
-            }
-          }
-        }
-        if ($form[$key]['#type'] == 'select' && !in_array($key, ['cache', 'optionset', 'view_mode'])) {
-          if (!isset($form[$key]['#empty_option']) && !isset($form[$key]['#required'])) {
-            $form[$key]['#empty_option'] = t('- None -');
-          }
-        }
-
-        if (!isset($form[$key]['#enforced']) && isset($definition['vanilla'])) {
-          $states['visible'][':input[name*="[vanilla]"]'] = ['checked' => FALSE];
-          if (isset($form[$key]['#states'])) {
-            $form[$key]['#states']['visible'][':input[name*="[vanilla]"]'] = ['checked' => FALSE];
-          }
-          else {
-            $form[$key]['#states'] = $states;
-          }
-        }
-      }
-    }
-
-    if ($admin_css) {
-      $form['#attached']['library'][] = 'slick/slick.admin';
-    }
-  }
-
-  /**
-   * Returns time in interval for select options.
-   */
-  public function getCacheOptions() {
-    $period = [0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400];
-    $period = array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($period, $period));
-    $period[0] = '<' . t('No caching') . '>';
-    return $period + [Cache::PERMANENT => t('Permanent')];
-  }
-
-  /**
-   * Returns available fields for select options.
-   */
-  public function getFieldOptions($target_bundles = [], $allowed_field_types = [], $entity_type_id = 'media') {
-    $options = [];
-    $storage = $this->manager->getEntityTypeManager()->getStorage('field_config');
-
-    foreach ($target_bundles as $bundle) {
-      if ($fields = $storage->loadByProperties(['entity_type' => $entity_type_id, 'bundle' => $bundle])) {
-        foreach ((array) $fields as $field_name => $field) {
-          if (empty($allowed_field_types)) {
-            $options[$field->getName()] = $field->getLabel();
-          }
-          elseif (in_array($field->getType(), $allowed_field_types)) {
-            $options[$field->getName()] = $field->getLabel();
-          }
-        }
-      }
-    }
-
-    return $options;
-  }
-
-  /**
-   * Returns available slick optionsets for select options.
-   */
-  public function getOptionsetOptions() {
-    $optionsets = [];
-    $slicks = $this->manager->loadMultiple('slick');
-    foreach ((array) $slicks as $slick) {
-      $optionsets[$slick->id()] = Html::escape($slick->label());
-    }
-    asort($optionsets);
-    return $optionsets;
   }
 
   /**
@@ -614,7 +505,7 @@ class SlickAdmin implements SlickAdminInterface {
    */
   public function getOptionsetsByGroupOptions($group = '') {
     $optionsets = $groups = $ungroups = [];
-    $slicks = $this->manager->loadMultiple('slick');
+    $slicks = $this->manager->entityLoadMultiple('slick');
     foreach ($slicks as $slick) {
       $name = Html::escape($slick->label());
       $id = $slick->id();
@@ -658,7 +549,7 @@ class SlickAdmin implements SlickAdminInterface {
   /**
    * Returns available slick skins for select options.
    */
-  public function getSkinOptions($group = '') {
+  public function getSkinsByGroupOptions($group = '') {
     return $this->manager->getSkinsByGroup($group, TRUE);
   }
 
@@ -723,27 +614,80 @@ class SlickAdmin implements SlickAdminInterface {
   }
 
   /**
-   * Returns Responsive image for select options.
+   * Returns re-usable logic, styling and assets across fields and Views.
+   *
+   * @todo drop for \Drupal\blazy\Form\BlazyAdminBase instead.
    */
-  public function getResponsiveImageOptions() {
-    $options = [];
-    if (!$this->manager->getModuleHandler()->moduleExists('responsive_image')) {
-      return $options;
-    }
-    $image_styles = $this->manager->loadMultiple('responsive_image_style');
-    if (!empty($image_styles)) {
-      foreach ($image_styles as $machine_name => $image_style) {
-        if ($image_style->hasImageStyleMappings()) {
-          $options[$machine_name] = Html::escape($image_style->label());
+  public function finalizeForm(array &$form, $definition = []) {
+    $namespace = isset($definition['namespace']) ? $definition['namespace'] : 'slick';
+    $vanilla   = isset($definition['vanilla']) ? ' form--vanilla' : '';
+    $fallback  = $namespace == 'slick' ? 'form--slick' : 'form--' . $namespace . ' form--slick';
+    $classes   = isset($definition['form_opening_classes'])
+      ? $definition['form_opening_classes']
+      : $fallback . ' form--half has-tooltip' . $vanilla;
+
+    $form['opening'] = [
+      '#markup' => '<div class="' . $classes . '">',
+      '#weight' => -110,
+    ];
+
+    $form['closing'] = [
+      '#markup' => '</div>',
+      '#weight' => 110,
+    ];
+
+    $settings  = isset($definition['settings']) ? $definition['settings'] : [];
+    $admin_css = $this->manager->configLoad('admin_css');
+    $excludes  = ['container', 'details', 'item', 'hidden', 'submit'];
+
+    foreach (Element::children($form) as $key) {
+      if (isset($form[$key]['#type']) && !in_array($form[$key]['#type'], $excludes)) {
+        if (!isset($form[$key]['#default_value']) && isset($settings[$key])) {
+          $form[$key]['#default_value'] = $settings[$key];
+        }
+        if (!isset($form[$key]['#attributes']) && isset($form[$key]['#description'])) {
+          $form[$key]['#attributes'] = ['class' => ['is-tooltip']];
+        }
+
+        if ($admin_css) {
+          if ($form[$key]['#type'] == 'checkbox' && $form[$key]['#type'] != 'checkboxes') {
+            $form[$key]['#field_suffix'] = '&nbsp;';
+            $form[$key]['#title_display'] = 'before';
+          }
+          elseif ($form[$key]['#type'] == 'checkboxes' && !empty($form[$key]['#options'])) {
+            foreach ($form[$key]['#options'] as $i => $option) {
+              $form[$key][$i]['#field_suffix'] = '&nbsp;';
+              $form[$key][$i]['#title_display'] = 'before';
+            }
+          }
+        }
+        if ($form[$key]['#type'] == 'select' && !in_array($key, ['cache', 'optionset', 'view_mode'])) {
+          if (!isset($form[$key]['#empty_option']) && !isset($form[$key]['#required'])) {
+            $form[$key]['#empty_option'] = t('- None -');
+          }
+        }
+
+        if (!isset($form[$key]['#enforced']) && isset($definition['vanilla'])) {
+          $states['visible'][':input[name*="[vanilla]"]'] = ['checked' => FALSE];
+          if (isset($form[$key]['#states'])) {
+            $form[$key]['#states']['visible'][':input[name*="[vanilla]"]'] = ['checked' => FALSE];
+          }
+          else {
+            $form[$key]['#states'] = $states;
+          }
         }
       }
     }
-    return $options;
-  }
 
+    if ($admin_css) {
+      $form['#attached']['library'][] = 'slick/slick.admin';
+    }
+  }
 
   /**
    * Return the field formatter settings summary.
+   *
+   * @todo drop for \Drupal\blazy\Form\BlazyAdminBase instead.
    */
   public function settingsSummary($plugin) {
     $summary    = $form = [];
@@ -781,6 +725,64 @@ class SlickAdmin implements SlickAdminInterface {
       }
     }
     return $summary;
+  }
+
+  /**
+   * Returns available fields for select options.
+   *
+   * @todo drop for \Drupal\blazy\Form\BlazyAdminBase instead.
+   */
+  public function getFieldOptions($target_bundles = [], $allowed_field_types = [], $entity_type_id = 'media') {
+    $options = [];
+    $storage = $this->manager->getEntityTypeManager()->getStorage('field_config');
+
+    foreach ($target_bundles as $bundle) {
+      if ($fields = $storage->loadByProperties(['entity_type' => $entity_type_id, 'bundle' => $bundle])) {
+        foreach ((array) $fields as $field_name => $field) {
+          if (empty($allowed_field_types)) {
+            $options[$field->getName()] = $field->getLabel();
+          }
+          elseif (in_array($field->getType(), $allowed_field_types)) {
+            $options[$field->getName()] = $field->getLabel();
+          }
+        }
+      }
+    }
+
+    return $options;
+  }
+
+  /**
+   * Returns Responsive image for select options.
+   *
+   * @todo drop for \Drupal\blazy\Form\BlazyAdminBase instead.
+   */
+  public function getResponsiveImageOptions() {
+    $options = [];
+    if (!$this->manager->getModuleHandler()->moduleExists('responsive_image')) {
+      return $options;
+    }
+    $image_styles = $this->manager->entityLoadMultiple('responsive_image_style');
+    if (!empty($image_styles)) {
+      foreach ($image_styles as $machine_name => $image_style) {
+        if ($image_style->hasImageStyleMappings()) {
+          $options[$machine_name] = Html::escape($image_style->label());
+        }
+      }
+    }
+    return $options;
+  }
+
+  /**
+   * Returns time in interval for select options.
+   *
+   * @todo drop for \Drupal\blazy\Form\BlazyAdminBase instead.
+   */
+  public function getCacheOptions() {
+    $period = [0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400];
+    $period = array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($period, $period));
+    $period[0] = '<' . t('No caching') . '>';
+    return $period + [Cache::PERMANENT => t('Permanent')];
   }
 
 }

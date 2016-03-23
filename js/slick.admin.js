@@ -1,14 +1,16 @@
 /**
  * @file
  * Provides Slick admin utilities.
+ *
+ * @todo move to Blazy for re-usablity across Blazy, Slick, Mason, GridStack...
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
 
-  "use strict";
+  'use strict';
 
   Drupal.behaviors.slickAdmin = {
-    attach: function(context) {
+    attach: function () {
       var $form = $('.form--slick');
 
       $('.description', $form).once('slick-tooltip').each(function () {
@@ -47,7 +49,7 @@
         });
         t.on('focus', '.js-expandable', function () {
           $(this).parent().addClass('is-focused');
-        })
+        });
         t.on('blur', '.js-expandable', function () {
           $(this).parent().removeClass('is-focused');
         });

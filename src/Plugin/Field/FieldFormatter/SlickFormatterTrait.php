@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\slick\SlickFormatterTrait.
+ * Contains \Drupal\slick\Plugin\Field\FieldFormatter\SlickFormatterTrait.
  */
 
-namespace Drupal\slick;
+namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 
@@ -13,6 +13,13 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  * A Trait common for slick formatters.
  */
 trait SlickFormatterTrait {
+
+  /**
+   * The slick field formatter manager.
+   *
+   * @var \Drupal\slick\Plugin\Field\FieldFormatter\SlickFormatterInterface.
+   */
+  protected $formatter;
 
   /**
    * Returns the slick field formatter service.

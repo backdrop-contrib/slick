@@ -22,11 +22,10 @@
 
   .slide--caption--center .slide__caption,
   .slide--caption--center-top .slide__caption,
-  .slide--caption--right  .slide__caption {
+  .slide--caption--right .slide__caption {
     width: 42%;
   }
 
-  /* Here comes the price for nested slicks: over-specificity! */
   .slide--caption--center .slide__caption {
     margin-top: -16%;
     position: absolute;

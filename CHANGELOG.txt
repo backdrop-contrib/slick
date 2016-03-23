@@ -1,4 +1,22 @@
 
+Slick 8.x-2.0-dev, 2016-03-23
+-----------------------------
+- Made nice with ESLint.
+- Recommended dependency on Blazy module to reduce DRY stuffs shared across
+  Blazy, Mason, GridStack, Slick Views and Slick. Will require prior to Betas.
+- Simplified slick-image.html.twig.
+- Added entity_keys status to disable Default optionset.
+- Fixed for Blazy integration.
+- Renamed ::getSkinOptions() into ::getSkinsByGroupOptions() for clarity.
+- Removed image dimensions fail safe, and moved most logic to ::getImage(), so
+  using ::getImage() is a must than calling theme_slick_image() directly. This
+  prevented loading image_style objects multiple times, and dup lines.
+- Moved SlickFormatterTrait.php into FieldFormatter directory.
+- Deleted SlickFormatterBase.php, and merged it into SlickFormatterTrait.php
+- Moved aspect ratio fluid style attribute from JS into PHP, otherwise defeating
+  the purpose to solve the layout reflow before the images are actually loaded.
+- Moved SlickInterface.php into Entity.
+
 Slick 8.x-2.0-dev, 2016-02-11
 -----------------------------
 - Updated useTransform to TRUE to reflect post v1.5.9.

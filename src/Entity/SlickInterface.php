@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\slick\SlickInterface.
+ * Contains \Drupal\slick\Entity\SlickInterface.
  */
 
-namespace Drupal\slick;
+namespace Drupal\slick\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 

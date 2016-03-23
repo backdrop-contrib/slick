@@ -4,6 +4,7 @@
  *
  * Transform is more performed than positions.
  */
+
 .slick--skin--classic .slick__slide {
   overflow: hidden;
 }
