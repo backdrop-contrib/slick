@@ -271,15 +271,17 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    */
   public static function htmlSettings() {
     return [
-      'display'      => 'main',
-      'grid'         => '',
-      'id'           => '',
-      'nav'          => FALSE,
-      'media_switch' => '',
-      'optionset'    => 'default',
-      'skin'         => '',
-      'unslick'      => FALSE,
-      'vanilla'      => FALSE,
+      'current_view_mode' => '',
+      'display'           => 'main',
+      'grid'              => '',
+      'id'                => '',
+      'nav'               => FALSE,
+      'media_switch'      => '',
+      'optionset'         => 'default',
+      'skin'              => '',
+      'unslick'           => FALSE,
+      'vanilla'           => FALSE,
+      'view_name'         => '',
     ];
   }
 

@@ -30,13 +30,15 @@
   set classes = [
     'slick',
     settings.unslick ? 'unslick',
+    settings.blazy ? 'blazy',
+    settings.attributes.class ? settings.attributes.class|join(' '),
     settings.skin ? 'slick--skin--' ~ settings.skin|clean_class,
     'boxed' in settings.skin ? 'slick--skin--boxed',
     'split' in settings.skin ? 'slick--skin--split',
     settings.optionset ? 'slick--optionset--' ~ settings.optionset|clean_class,
     settings.downArrow ? 'slick--has-arrow-down',
     settings.asNavFor ? 'slick--' ~ display|clean_class,
-    display == 'main' and settings.slidesToShow > 1 ? 'slick--multiple-view',
+    settings.slidesToShow > 1 ? 'slick--multiple-view',
     display == 'main' and settings.media_switch ? 'slick--' ~ settings.media_switch|clean_class,
     display == 'thumbnail' and settings.thumbnail_caption ? 'slick--has-caption'
   ]

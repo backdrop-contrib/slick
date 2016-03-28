@@ -1,4 +1,14 @@
 
+Slick 8.x-2.0-dev, 2016-03-28
+-----------------------------
+- #2693089: Add dependency on Blazy.
+  Be sure to clear cache.
+- Renamed visible_slides into visible_items to allow re-usable by Blazy.
+- Changed thumbnail_hover option into thumbnail_effect to allow variant
+  thumbnail stylings: hoverable, static grid.
+- Moved Slick admin CSS into Blazy to re-use for a few related modules.
+- Moved slick.media.js, slick.photobox.js, and all re-usable stuffs into Blazy.
+
 Slick 8.x-2.0-dev, 2016-03-23
 -----------------------------
 - Made nice with ESLint.

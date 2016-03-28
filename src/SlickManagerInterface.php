@@ -25,7 +25,7 @@ interface SlickManagerInterface {
    * @return array
    *   The cacheable renderable array of a slick instance, or empty array.
    */
-  public function slick($build = []);
+  public static function slick($build = []);
 
   /**
    * Returns a renderable array of both main and thumbnail slick instances.

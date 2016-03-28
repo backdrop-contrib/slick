@@ -1,27 +1,12 @@
-# @see 2194463
 services:
   slick.manager:
     class: Drupal\slick\SlickManager
-    # @todo use Blazy prior to Betas.
-    # arguments: ['@cache.default', '@blazy.manager']
-    arguments: ['@entity_type.manager', '@module_handler', '@renderer', '@config.factory', '@cache.default']
-
-  slick.skin:
-    class: Drupal\slick\SlickSkin
-
-  # @todo move into Blazy prior to Betas.
-  slick.image:
-    abstract: true
-    class: Drupal\slick\SlickImageBase
-    arguments: ['@slick.manager']
+    parent: blazy.manager.base
 
   slick.formatter:
     class: Drupal\slick\SlickFormatter
-    # @todo use Blazy prior to Betas.
-    parent: slick.image
+    parent: blazy.formatter.manager
 
   slick.admin:
-    class: Drupal\slick\SlickAdmin
-    # @todo use Blazy prior to Betas.
-    # arguments: ['@blazy.admin', '@slick.manager']
-    arguments: ['@entity_display.repository', '@config.typed', '@slick.manager']
+    class: Drupal\slick\Form\SlickAdmin
+    arguments: ['@blazy.admin.extended', '@slick.manager']

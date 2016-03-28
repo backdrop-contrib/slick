@@ -60,13 +60,21 @@ slick.theme:
     - slick/slick
     - slick/slick.load
 
-slick.dots.thumbnail:
+slick.thumbnail.hover:
   version: VERSION
   css:
     component:
-      css/components/slick.dots--thumbnail.css: {}
+      css/components/slick.thumbnail--hover.css: {}
   dependencies:
-    - slick/slick
+    - slick/slick.theme
+
+slick.thumbnail.grid:
+  version: VERSION
+  css:
+    component:
+      css/components/slick.thumbnail--grid.css: {}
+  dependencies:
+    - slick/slick.theme
 
 slick.arrow.down:
   version: VERSION
@@ -74,69 +82,17 @@ slick.arrow.down:
     component:
       css/components/slick.arrows--down.css: {}
   dependencies:
-    - slick/slick
+    - slick/slick.theme
 
 slick.colorbox:
   version: VERSION
   js:
     js/slick.colorbox.min.js: {}
-  css:
-    component:
-      css/components/slick.colorbox.css: {}
-      css/components/slick.lightbox.css: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
     - colorbox/colorbox
-
-# @todo drop to re-use Blazy.
-slick.admin:
-  version: VERSION
-  js:
-    js/slick.admin.min.js: {}
-  css:
-    theme:
-      css/admin/slick.admin.css: {}
-  dependencies:
-    - core/jquery
-    - core/jquery.once
-    - core/drupal
-
-# @todo drop to re-use Blazy.
-slick.photobox:
-  remote: https://github.com/yairEO/photobox/
-  version: 1.x
-  license:
-    name: MIT
-    url: https://github.com/yairEO/photobox/issues/17
-    gpl-compatible: true
-  js:
-    /libraries/photobox/photobox/jquery.photobox.js: {}
-    js/slick.photobox.min.js: {}
-  css:
-    base:
-      /libraries/photobox/photobox/photobox.css: {}
-    component:
-      css/components/slick.lightbox.css: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupalSettings
-    - core/jquery.once
-    # - photobox/photobox
-
-# @todo drop to re-use Blazy.
-slick.media:
-  version: VERSION
-  js:
-    js/slick.media.min.js: {}
-  css:
-    component:
-      css/components/slick.media.css: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupalSettings
-    - core/jquery.once
+    - blazy/colorbox.skin
+    - slick/slick.load

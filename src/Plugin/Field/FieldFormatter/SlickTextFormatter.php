@@ -14,6 +14,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\slick\SlickFormatterInterface;
+use Drupal\slick\SlickManagerInterface;
 use Drupal\slick\SlickDefault;
 
 /**
@@ -36,9 +37,10 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
   /**
    * Constructs a SlickImageFormatter instance.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, SlickFormatterInterface $formatter) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, SlickFormatterInterface $formatter, SlickManagerInterface $manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->formatter = $formatter;
+    $this->manager   = $manager;
   }
 
   /**
@@ -53,7 +55,8 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('slick.formatter')
+      $container->get('slick.formatter'),
+      $container->get('slick.manager')
     );
   }
 
@@ -101,15 +104,21 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element    = [];
-    $definition = [
+    $definition = $this->getScopedFormElements();
+
+    $this->admin()->buildSettingsForm($element, $definition);
+    $element['layout']['#access'] = FALSE;
+    return $element;
+  }
+
+  /**
+   * Defines the scope for the form elements.
+   */
+  public function getScopedFormElements() {
+    return [
       'current_view_mode' => $this->viewMode,
       'settings'          => $this->getSettings(),
     ];
-
-    $this->admin()->openingForm($element, $definition);
-    $this->admin()->closingForm($element, $definition);
-    $element['layout']['#access'] = FALSE;
-    return $element;
   }
 
 }

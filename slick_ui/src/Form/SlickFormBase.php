@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\slick\SlickAdmin;
+use Drupal\slick\Form\SlickAdmin;
 use Drupal\slick\SlickManagerInterface;
 
 /**
@@ -23,25 +23,15 @@ abstract class SlickFormBase extends EntityForm {
   /**
    * The slick service.
    *
-   * @var \Drupal\slick\SlickAdmin.
+   * @var \Drupal\slick\Form\SlickAdmin.
    */
   protected $admin;
 
   /**
-   * The slick service.
-   *
-   * @var \Drupal\slick\SlickManagerInterface.
-   */
-  protected $manager;
-
-  /**
    * Constructs a SlickForm object.
-   *
-   * @param \Drupal\slick\SlickManagerInterface $manager
-   *   The slick manager.
    */
   public function __construct(SlickAdmin $admin, SlickManagerInterface $manager) {
-    $this->admin   = $admin;
+    $this->admin = $admin;
     $this->manager = $manager;
   }
 

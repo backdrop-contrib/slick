@@ -12,12 +12,14 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\slick\SlickFormatterInterface;
+use Drupal\slick\SlickManagerInterface;
 
 /**
  * A Trait common for slick contructor formatters.
  *
- * @see \Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter
- * @see \Drupal\slick\Plugin\Field\FieldFormatter\SlickEntityReferenceFormatterBase
+ * @see \Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter.
+ * @see \Drupal\slick_media\Plugin\Field\FieldFormatter\SlickMediaFormatter.
+ * @see \Drupal\slick\Plugin\Field\FieldFormatter\SlickEntityReferenceFormatterBase.
  */
 trait SlickConstructorTrait {
 
@@ -38,11 +40,12 @@ trait SlickConstructorTrait {
   /**
    * Constructs a SlickMediaFormatter instance.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, EntityStorageInterface $image_style_storage, SlickFormatterInterface $formatter) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, EntityStorageInterface $image_style_storage, SlickFormatterInterface $formatter, SlickManagerInterface $manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->loggerFactory     = $logger_factory;
     $this->imageStyleStorage = $image_style_storage;
     $this->formatter         = $formatter;
+    $this->manager           = $manager;
   }
 
   /**
@@ -59,7 +62,8 @@ trait SlickConstructorTrait {
       $configuration['third_party_settings'],
       $container->get('logger.factory'),
       $container->get('entity.manager')->getStorage('image_style'),
-      $container->get('slick.formatter')
+      $container->get('slick.formatter'),
+      $container->get('slick.manager')
     );
   }
 

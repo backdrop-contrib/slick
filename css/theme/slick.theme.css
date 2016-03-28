@@ -13,18 +13,10 @@
   box-sizing: border-box;
 }
 
-img,
 iframe {
   border: 0;
   height: auto;
   max-width: 100%;
-}
-
-/* Hide non-js lazy-loaded image to show <noscript> one instead, if the theme
-supports no-js, otherwise IMG tag with dummy placeholder. */
-.slick-hidden,
-.no-js .slick img.lazy {
-  display: none;
 }
 
 .slick-wrapper {
@@ -39,11 +31,37 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 }
 
 /* Prevents overflowing noscript, and nested slides. */
-.slick,
-.slick__slide,
-.slick__slide .slick__slide {
+.slick {
   max-width: 100%;
   position: relative;
+}
+
+/* FOUC and layout reflow preventions. Any betterment? */
+.slick__slider::before,
+.slick__slider::after {
+  display: table;
+  content: '';
+}
+
+.slick__slider::after {
+  clear: both;
+}
+
+.slick__slide {
+  max-width: 100%;
+  position: absolute;
+  visibility: hidden;
+}
+
+.slide--0,
+.slick-slide {
+  position: relative;
+  visibility: visible;
+}
+
+/* Prevent stacking oversized thumbnails/slides when/before JS is on. */
+.slick--multiple-view .slick__slide {
+  float: left;
 }
 
 /* Prevents collapsing slick when unslick like one item. */
@@ -94,17 +112,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   clear: both;
 }
 
-.slide__media,
-.media {
-  overflow: hidden;
-  position: relative;
-}
-
-/* Center the image to reduce gap at RHS with smaller image, larger container */
-.media__image {
-  margin: 0 auto;
-}
-
 .slide__title {
   margin: 10px 0 5px;
   line-height: 1.2;
@@ -122,6 +129,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   -o-user-select: text;
   -webkit-user-select: text;
   user-select: text;
+  visibility: hidden;
   width: 100%;
 }
 
@@ -133,53 +141,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 
 .slick--thumbnail .slide__caption {
   padding: 5px 6px;
-}
-
-/* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
-.slick--thumbnail .slick__slide img {
-  pointer-events: auto;
-}
-
-/* Media ratio */
-.media--ratio--on {
-  height: 0;
-  /* padding-top: 30px; IE7 fix */
-}
-
-/* 1:1 ratio */
-.media--ratio--11 {
-  padding-bottom: 100%;
-}
-
-/* 3:2 ratio */
-.media--ratio--32 {
-  padding-bottom: 66.66%;
-}
-
-/* 4:3 ratio */
-.media--ratio--43 {
-  padding-bottom: 75%;
-}
-
-/* 8:5 ratio */
-.media--ratio--85 {
-  padding-bottom: 62.5%;
-}
-
-/* 16:9 ratio */
-.media--ratio--169 {
-  padding-bottom: 56.25%;
-}
-
-.media--ratio > .media__ratio {
-  border: 0;
-  display: block;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 0;
 }
 
 /**
@@ -204,6 +165,7 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   position: absolute;
   top: 50%;
   width: 100%;
+  visibility: hidden;
   z-index: 2;
 }
 
@@ -215,7 +177,6 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 .slick-arrow {
   border: 0;
   border-radius: 50%;
-  display: block;
   font-size: 0;
   height: 42px;
   pointer-events: auto;
@@ -247,6 +208,20 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   color: #37465b;
 }
 
+/* Only display when JS is ready. */
+.slick-slide .slide__caption,
+.js .slick__arrow {
+  visibility: visible;
+}
+
+.slick__arrow button {
+  display: none;
+}
+
+.slick__arrow .slick-arrow {
+  display: block;
+}
+
 /**
  * Bullets.
  */
@@ -259,4 +234,27 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
 .slick-dots li button::before {
   font-size: 12px;
   font-size: 0.75rem;
+}
+
+/**
+ * Media.
+ */
+/* Hide lazyloaded image so that noscript is visible when JS is off.*/
+img[data-lazy] {
+  display: none;
+}
+
+.slide__media {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Center the image to reduce gap at RHS with smaller image, larger container */
+.media__image {
+  margin: 0 auto;
+}
+
+/* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
+.slick--thumbnail .slick__slide img {
+  pointer-events: auto;
 }

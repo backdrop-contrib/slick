@@ -5,4 +5,4 @@ slick.admin.vtabs:
       css/slick.admin--vertical-tabs.css: {}
   dependencies:
     - core/drupal.vertical-tabs
-    - slick/slick.admin
+    - blazy/admin

@@ -267,12 +267,6 @@ slides, meaning arrows are slides, not navigation anymore, which is unwanted.
 At both cases, asNavFor should target slick-initialized class/ID attributes.
 
 
-HOW CAN YOU HELP?
---------------------------------------------------------------------------------
-Please consider helping in the issue queue, provide improvement, or helping with
-documentation.
-
-
 BUG REPORTS OR SUPPORT REQUESTS
 --------------------------------------------------------------------------------
 A basic knowledge of Drupal site building is required. If you get stuck:
@@ -363,13 +357,21 @@ some code cleanup, and optimization where needed. Patches are very much welcome.
 Alpha and Beta releases are for developers only. Be aware of possible breakage.
 
 However if it is broken, unless an update is explicitly required, clearing cache
-should fix most issues durig DEV phases. Always visit prior to any update:
+should fix most issues durig DEV phases. Prior to any update, always visit:
 /admin/config/development/performance
 
 
 ROADMAP
 --------------------------------------------------------------------------------
 - Bug fixes, code cleanup, optimization, and full release.
+
+
+HOW CAN YOU HELP?
+--------------------------------------------------------------------------------
+Please consider helping in the issue queue, provide improvement, or helping with
+documentation.
+
+If you find this module helpful, please help back spread the love.
 
 
 AUTHOR/MAINTAINER/CREDITS

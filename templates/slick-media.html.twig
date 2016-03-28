@@ -22,14 +22,14 @@
     settings.type ? 'media--' ~ settings.type,
     settings.ratio_clean ? 'media--ratio ' ~ settings.ratio_clean,
     settings.media_switch ? 'media--switch media--switch--' ~ settings.media_switch|clean_class,
-    settings.player ? 'media--slick--player',
+    settings.player ? 'media--player',
     settings.responsive_image_style_id is defined ? 'media--responsive'
   ]
 %}
 {%
   set content_classes = [
     'media_iframe',
-    settings.ratio ? 'media__ratio'
+    settings.ratio ? 'media__element'
   ]
 %}
 
@@ -39,9 +39,9 @@
   {% if settings.player %}
     <iframe{{ content_attributes.addClass(content_classes) }} allowfullscreen></iframe>
     {% if settings.media_switch %}
-      <i class="media-icon media-icon--close"></i>
-      <i class="media-icon media-icon--play"></i>
-      <i class="media-icon media-icon--spinner"></i>
+      <i class="media__icon media__icon--close"></i>
+      <i class="media__icon media__icon--play"></i>
+      <i class="media__icon media__icon--spinner"></i>
     {% endif %}
   {% endif %}
 </div>

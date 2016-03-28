@@ -48,14 +48,8 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
 
     // Collects specific settings to this formatter.
     $settings = $this->getSettings();
-
-    // Prepare integration with Blazy.
-    $settings['item_id']                  = 'slide';
-    $settings['theme_hook_image']         = 'slick_image';
-    $settings['theme_hook_image_wrapper'] = 'slick_media';
-
-    // Build the settings.
     $build = ['settings' => $settings];
+
     $this->formatter->buildSettings($build, $items);
 
     // Build the elements.
@@ -103,6 +97,9 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
       }
       unset($element);
     }
+
+    // Supports Blazy formatter multi-breakpoint images if available.
+    // $this->formatter->isBlazy($settings, $build['items'][0]);
   }
 
   /**
@@ -110,19 +107,29 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element    = [];
-    $captions   = ['title' => t('Title'), 'alt' => t('Alt')];
-    $definition = [
+    $definition = $this->getScopedFormElements();
+
+    $definition['_views'] = isset($form['field_api_classes']);
+
+    $this->admin()->buildSettingsForm($element, $definition);
+    return $element;
+  }
+
+  /**
+   * Defines the scope for the form elements.
+   */
+  public function getScopedFormElements() {
+    $captions = ['title' => t('Title'), 'alt' => t('Alt')];
+    return [
+      'breakpoints'       => SlickDefault::getConstantBreakpoints(),
       'current_view_mode' => $this->viewMode,
       'captions'          => $captions,
+      'field_name'        => $this->fieldDefinition->getName(),
+      'image_style_form'  => TRUE,
+      'media_switch_form' => TRUE,
       'settings'          => $this->getSettings(),
       'thumb_captions'    => $captions,
-      'switchers'         => TRUE,
     ];
-
-    $this->admin()->openingForm($element, $definition);
-    $this->admin()->imageForm($element, $definition);
-    $this->admin()->closingForm($element, $definition);
-    return $element;
   }
 
 }

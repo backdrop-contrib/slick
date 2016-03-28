@@ -22,7 +22,7 @@ class SlickForm extends SlickFormBase {
     $form      = parent::form($form, $form_state);
     $slick     = $this->entity;
     $options   = $slick->getOptions() ?: [];
-    $admin_css = $this->manager->configLoad('admin_css');
+    $admin_css = $this->manager->configLoad('admin_css', 'blazy.settings');
     $tooltip   = ['class' => ['is-tooltip']];
 
     // Options.
@@ -43,11 +43,23 @@ class SlickForm extends SlickFormBase {
     ];
 
     foreach ($this->getFormElements() as $name => $element) {
+      $element['default'] = isset($element['default']) ? $element['default'] : '';
       $form['settings'][$name] = [
         '#title'         => isset($element['title']) ? $element['title'] : '',
-        '#type'          => $element['type'],
         '#default_value' => (NULL !== $slick->getSetting($name)) ? $slick->getSetting($name) : $element['default'],
       ];
+
+      if (isset($element['type'])) {
+        $form['settings'][$name]['#type'] = $element['type'];
+        if ($element['type'] != 'hidden') {
+          $form['settings'][$name]['#attributes'] = $tooltip;
+        }
+
+        if ($element['type'] == 'textfield') {
+          $form['settings'][$name]['#size'] = 20;
+          $form['settings'][$name]['#maxlength'] = 255;
+        }
+      }
 
       if (isset($element['options'])) {
         $form['settings'][$name]['#options'] = $element['options'];
@@ -61,20 +73,6 @@ class SlickForm extends SlickFormBase {
         $form['settings'][$name]['#description'] = $element['description'];
       }
 
-      if ($element['type'] != 'hidden') {
-        $form['settings'][$name]['#attributes'] = $tooltip;
-      }
-
-      if ($element['type'] == 'textfield') {
-        $form['settings'][$name]['#size'] = 20;
-        $form['settings'][$name]['#maxlength'] = 255;
-      }
-
-      if (is_int($element['default'])) {
-        $form['settings'][$name]['#maxlength'] = 60;
-        $form['settings'][$name]['#attributes']['class'][] = 'form-text--int';
-      }
-
       if (isset($element['states'])) {
         $form['settings'][$name]['#states'] = $element['states'];
       }
@@ -86,6 +84,11 @@ class SlickForm extends SlickFormBase {
 
       if (isset($element['field_suffix'])) {
         $form['settings'][$name]['#field_suffix'] = $element['field_suffix'];
+      }
+
+      if (is_int($element['default'])) {
+        $form['settings'][$name]['#maxlength'] = 60;
+        $form['settings'][$name]['#attributes']['class'][] = 'form-text--int';
       }
 
       if ($admin_css && !isset($element['field_suffix']) && is_bool($element['default'])) {
@@ -191,13 +194,17 @@ class SlickForm extends SlickFormBase {
 
               // @fixme, boolean default is ignored at index 0 only.
               foreach ($responsive as $k => $item) {
+                $item['default'] = isset($item['default']) ? $item['default'] : '';
                 $form['responsives']['responsive'][$i][$key][$k] = [
-                  '#type'          => $item['type'],
-                  '#title'         => $item['title'],
+                  '#title'         => isset($item['title']) ? $item['title'] : '',
                   '#default_value' => isset($options['responsives']['responsive'][$i][$key][$k]) ? $options['responsives']['responsive'][$i][$key][$k] : $item['default'],
                   '#description'   => isset($item['description']) ? $item['description'] : '',
                   '#attributes'    => $tooltip,
                 ];
+
+                if (isset($item['type'])) {
+                  $form['responsives']['responsive'][$i][$key][$k]['#type'] = $item['type'];
+                }
 
                 // Specify proper states for the breakpoint form elements.
                 if (isset($item['states'])) {
@@ -259,7 +266,6 @@ class SlickForm extends SlickFormBase {
 
     // Attach Slick admin library.
     if ($admin_css) {
-      $form['#attached']['library'][] = 'slick/slick.admin';
       $form['#attached']['library'][] = 'slick_ui/slick.admin.vtabs';
     }
     return $form;
@@ -586,10 +592,11 @@ class SlickForm extends SlickFormBase {
         'description' => $this->t('Ignores requests to advance the slide while animating.'),
       ];
 
-      foreach ($this->manager->getDefaultSettings('settings') as $name => $default) {
-        if (isset($elements[$name])) {
-          $elements[$name]['default'] = $default;
-        }
+      // Defines the default values if available.
+      $defaults = $this->manager->getDefaultSettings('settings');
+      foreach ($elements as $name => $element) {
+        $default = $element['type'] == 'checkbox' ? FALSE : '';
+        $elements[$name]['default'] = isset($defaults[$name]) ? $defaults[$name] : $default;
       }
 
       foreach (Slick::getDependentOptions() as $parent => $items) {

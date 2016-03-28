@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\slick\SlickAdminInterface.
+ * Contains \Drupal\slick\Form\SlickAdminInterface.
  */
 
-namespace Drupal\slick;
+namespace Drupal\slick\Form;
 
 /**
  * Provides resusable admin functions or form elements.

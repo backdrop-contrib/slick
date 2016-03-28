@@ -35,13 +35,6 @@ class SlickSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('slick.settings');
 
-    $form['admin_css'] = [
-      '#type'          => 'checkbox',
-      '#title'         => $this->t('Enable Slick admin CSS'),
-      '#description'   => $this->t('Uncheck if slick admin CSS has compatibility issues against your admin theme.'),
-      '#default_value' => $config->get('admin_css'),
-    ];
-
     $form['module_css'] = [
       '#type'          => 'checkbox',
       '#title'         => $this->t('Enable Slick module slick.theme.css'),
@@ -64,7 +57,6 @@ class SlickSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('slick.settings')
-      ->set('admin_css', $form_state->getValue('admin_css'))
       ->set('slick_css', $form_state->getValue('slick_css'))
       ->set('module_css', $form_state->getValue('module_css'))
       ->save();

@@ -17,9 +17,16 @@ trait SlickFormatterTrait {
   /**
    * The slick field formatter manager.
    *
-   * @var \Drupal\slick\Plugin\Field\FieldFormatter\SlickFormatterInterface.
+   * @var \Drupal\slick\SlickFormatterInterface.
    */
   protected $formatter;
+
+  /**
+   * The slick field formatter manager.
+   *
+   * @var \Drupal\slick\SlickManagerInterface.
+   */
+  protected $manager;
 
   /**
    * Returns the slick field formatter service.
@@ -29,10 +36,10 @@ trait SlickFormatterTrait {
   }
 
   /**
-   * Returns the slick service shortcut.
+   * Returns the slick service.
    */
   public function manager() {
-    return $this->formatter->manager();
+    return $this->manager;
   }
 
   /**

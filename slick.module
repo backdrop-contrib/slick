@@ -5,6 +5,9 @@
  * Slick carousel integration, the last carousel you'll ever need.
  */
 
+use Drupal\blazy\Blazy;
+use Drupal\slick\SlickDefault;
+
 /**
  * Implements hook_theme().
  */
@@ -48,11 +51,15 @@ function slick_library_info_build() {
 }
 
 /**
+ * Implements hook_config_schema_info_alter().
+ */
+function slick_config_schema_info_alter(array &$definitions) {
+  $settings = SlickDefault::extendedSettings();
+  Blazy::configSchemaInfoAlter($definitions, 'slick_base', $settings);
+}
+
+/**
  * Implements hook_hook_info().
- *
- * @deprecated, will be removed anytime when a core solution is available.
- *
- * @see https://drupal.org/node/2233261
  */
 function slick_hook_info() {
   $hooks['slick_skins_info'] = ['group' => 'slick'];

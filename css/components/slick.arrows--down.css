@@ -1,7 +1,7 @@
 /**
  * @file
  */
- 
+
 .slick--has-arrow-down > .slick__arrow {
   bottom: 20px;
   height: 62px;
@@ -12,17 +12,25 @@
 }
 
 .slick-down {
+  background: #ff6d2c;
   border: 0;
   border-radius: 50%;
-  display: block;
+  cursor: pointer;
+  display: none;
   font-size: 0;
-  height: 42px;
+  height: 48px;
+  left: 50%;
+  margin-left: -24px;  
   pointer-events: auto;
   position: absolute;
   top: 50%;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
-  width: 42px;
+  width: 48px;  
+}
+
+.slick-initialized ~ .slick__arrow .slick-down {
+  display: block;
 }
 
 .slick-down:active,
@@ -37,16 +45,6 @@
 }
 
 /* Pure CSS arrow down, override by icon font accordingly */
-.slick-down {
-  background: #ff6d2c;
-  cursor: pointer;
-  height: 48px;
-  left: 50%;
-  margin-left: -24px;
-  top: 50%;
-  width: 48px;
-}
-
 .slick-down:hover {
   background: #37465b;
 }

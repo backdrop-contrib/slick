@@ -143,7 +143,7 @@
 
         if ($iframe.length) {
           $container.addClass('media media--ratio');
-          $iframe.attr('width', o.maxWidth).attr('height', o.maxHeight).addClass('media__ratio');
+          $iframe.attr('width', o.maxWidth).attr('height', o.maxHeight).addClass('media__element');
           // if (resize && $window.width() < o.maxWidth && $window.width() < 640) {
           // o.maxHeight = $iframe.height();
           // o.maxWidth = $window.width();
@@ -152,7 +152,7 @@
         }
         else {
           $container.removeClass('media media--ratio');
-          $container.css({paddingBottom: '', height: o.maxHeight}).removeClass('media__ratio');
+          $container.css({paddingBottom: '', height: o.maxHeight}).removeClass('media__element');
         }
 
         $.colorbox.resize({

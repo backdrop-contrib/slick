@@ -5,10 +5,11 @@
  * Hooks and preprocess functions for the Slick module.
  */
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Template\Attribute;
-use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Serialization\Json;
+use Drupal\blazy\Blazy;
 use Drupal\slick\Entity\Slick;
 
 /**
@@ -24,15 +25,18 @@ function template_preprocess_slick(&$variables) {
   $display   = $variables['display'] = $settings['display'];
 
   // Prepare attributes.
-  $attributes = [];
+  $attributes = &$variables['attributes'];
   $content_attributes = new Attribute();
-  if (!empty($settings['attributes']) && is_array($settings['attributes'])) {
-    $attributes = NestedArray::mergeDeep($attributes, $settings['attributes']);
-  }
 
   if (!isset($attributes['id'])) {
     $id = Slick::getHtmlId('slick', $settings['id']);
     $attributes['id'] = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
+  }
+
+  // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
+  if ($settings['view_name'] && $settings['current_view_mode']) {
+    $settings['attributes']['class'][] = Html::cleanCssIdentifier('slick--view--' . $settings['view_name']);
+    $settings['attributes']['class'][] = Html::cleanCssIdentifier('slick--view--' . $settings['view_name'] . '--' . $settings['current_view_mode']);
   }
 
   // @see SlickManager::buildGrid(), and this should make sense.
@@ -41,6 +45,19 @@ function template_preprocess_slick(&$variables) {
 
   foreach (['asNavFor', 'nextArrow', 'prevArrow', 'downArrowTarget', 'downArrowOffset', 'slidesToShow'] as $key) {
     $settings[$key] = isset($js[$key]) ? $js[$key] : FALSE;
+  }
+
+  $settings['lazy'] = isset($settings['lazy']) ? $settings['lazy'] : $js['lazyLoad'];
+
+  // Blazy can still lazyload an unslick.
+  if ($display != 'thumbnail' && $settings['lazy'] == 'blazy') {
+    $js['lazyLoad'] = 'blazy';
+    $blazy = empty($settings['blazy_data']) ? [] : $settings['blazy_data'];
+    $blazy['ratio'] = $settings['ratio'];
+    if (!empty($settings['width']) && !$blazy['ratio']) {
+      $blazy['max'] = [$settings['width'], $settings['height']];
+    }
+    $attributes['data-blazy'] = Json::encode($blazy);
   }
 
   // Prevents broken slick when only one item given, or an enforced unslick.
@@ -52,16 +69,9 @@ function template_preprocess_slick(&$variables) {
       $settings['downArrow']['attributes'] = new Attribute();
     }
 
-    if ($display != 'thumbnail' && ($js['lazyLoad'] == 'blazy' || !empty($settings['blazy']))) {
-      // @todo fetch some relevant Blazy settings.
-      $content_attributes->setAttribute('data-blazy', '');
-      // A fail safe during transition to drop later when dependent on Blazy.
-      $js['lazyLoad'] = function_exists('blazy_help') ? 'blazy' : 'ondemand';
-    }
-
     // focusOnSelect won't work with empty slide value, so add proper selector.
     if (empty($js['slide']) && $js['focusOnSelect']) {
-      $js['slide'] = $js['rows'] == 1 && $js['slidesPerRow'] == 1 ? '.slick__slide' : $js['slide'];
+      $js['slide'] = ($js['rows'] == 1 && $js['slidesPerRow'] == 1) ? '.slick__slide' : $js['slide'];
     }
 
     if ($js['rtl']) {
@@ -76,7 +86,6 @@ function template_preprocess_slick(&$variables) {
 
   // Pass settings and attributes to twig.
   $variables['settings'] = $settings;
-  $variables['attributes'] = $attributes;
   $variables['content_attributes'] = $content_attributes;
 
   // Process individual item.
@@ -183,6 +192,8 @@ function template_preprocess_slick_grid(&$variables) {
 
 /**
  * Prepares variables for slick-media.html.twig templates.
+ *
+ * @todo merge with slick_image?
  */
 function template_preprocess_slick_media(&$variables) {
   _slick_preprocess_slick_item($variables);
@@ -193,10 +204,10 @@ function template_preprocess_slick_media(&$variables) {
   $settings['player'] = $settings['ratio_clean'] = FALSE;
 
   // Pure CSS responsive iframes/images based on aspect ratio.
-  if (!empty($settings['ratio']) && empty($settings['responsive_image_style'])) {
+  if (!empty($settings['ratio'])) {
     $settings['ratio_clean'] = str_replace(':', '', 'media--ratio--' . $settings['ratio']);
 
-    if (!empty($settings['height']) && $settings['ratio'] == 'fluid') {
+    if (!empty($settings['height']) && in_array($settings['ratio'], ['enforced', 'fluid'])) {
       $variables['attributes']['style'] = 'padding-bottom: ' . round((($settings['height'] / $settings['width']) * 100), 2) . '%';
     }
   }
@@ -257,20 +268,20 @@ function template_preprocess_slick_image(array &$variables) {
     // Provide lazyloaded image with noscript for the first slide only.
     // Slick is unslick when count = 1, otherwise broken.
     // This is a bit problematic, unless using Blazy.
-    if ($settings['count'] > 1 && $settings['lazy']) {
+    if (($settings['count'] > 1 && $settings['lazy']) || !empty($settings['blazy'])) {
       $variables['noscript']      = $settings['delta'] == 0 ? $variables['image'] : '';
       $attributes['class'][]      = 'lazy';
       $variables['image']['#uri'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-      $lazy_attribute = empty($settings['lazy_attribute']) ? 'lazy' : $settings['lazy_attribute'];
-      $attributes['data-' . $lazy_attribute] = $settings['image_url'];
+      // Build multi-serving images based on breakpoints if provided.
+      Blazy::buildBreakpointAttributes($attributes, $settings);
     }
 
     // @todo drop if extending Blazy::buildAttributes().
     if (!empty($settings['ratio'])) {
-      $attributes['class'][] = 'media__ratio';
+      $attributes['class'][] = 'media__element';
       if (!empty($variables['url'])) {
-        $url_attributes['class'][] = 'media__ratio';
+        $url_attributes['class'][] = 'media__element';
       }
     }
   }
@@ -280,7 +291,7 @@ function template_preprocess_slick_image(array &$variables) {
   $settings['player'] = isset($settings['player']) ? $settings['player'] : FALSE;
   $settings['icon']   = isset($settings['icon']) ? $settings['icon'] : [];
   if (empty($settings['icon']) && !empty($settings['lightbox'])) {
-    $settings['icon']['#markup'] = '<span class="media-icon media-icon--lightbox"></span>';
+    $settings['icon']['#markup'] = '<span class="media__icon media__icon--litebox"></span>';
   }
 
   // URL can be entity, or lightbox URL different from the content image URL.

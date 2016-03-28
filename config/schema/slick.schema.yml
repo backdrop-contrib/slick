@@ -14,9 +14,6 @@ slick.settings:
     slick_css:
       type: boolean
       label: 'Enable Slick library slick-theme.css'
-    optimize_optionset:
-      type: boolean
-      label: 'Optimize optionset'
 
 # Slick JS settings managed by UI.
 slick_optionset:
@@ -233,135 +230,25 @@ slick.optionset.*:
 
 # HTML content/layout-related settings managed by Slick formatters and Views.
 slick_base:
-  type: mapping
+  type: blazy_base
   label: 'Slick display format base settings'
   mapping:
-    cache:
-      type: integer
-      label: 'Cache max-age'
-    display:
-      type: string
-    current_view_mode:
-      type: string
-    optionset:
-      type: string
-      label: 'Optionset main'
-    optionset_thumbnail:
-      type: string
-      label: 'Optionset thumbnail'
-    override:
-      type: boolean
-      label: 'Override optionset'
     overridables:
       type: sequence
       label: 'Overridable options'
       sequence:
         - type: string
           label: 'Overridable'
-    preloader:
-      type: boolean
-      label: 'Preloader'
-    skin:
-      type: string
-      label: 'Skin main'
-    skin_thumbnail:
-      type: string
-      label: 'Skin thumbnail'
-    skin_arrows:
-      type: string
-      label: 'Skin arrows'
-    skin_dots:
-      type: string
-      label: 'Skin dots'
-    thumbnail_caption:
-      type: string
-      label: 'Thumbnail caption'
 
 # Slick image base settings.
 slick_image:
   type: slick_base
   label: 'Slick image display format settings'
-  mapping:
-    background:
-      type: boolean
-      label: 'Use CSS background'
-    breakpoints:
-      type: mapping
-      label: 'Breakpoints'
-    box_style:
-      type: string
-      label: 'Lightbox image style'
-    caption:
-      type: sequence
-      label: 'Caption fields'
-      sequence:
-        - type: string
-          label: 'Caption'
-    image_style:
-      type: string
-      label: 'Image style'
-    layout:
-      type: string
-      label: 'Slide layout'
-    media_switch:
-      type: string
-      label: 'Media switcher'
-    ratio:
-      type: string
-      label: 'Aspect ratio'
-    responsive_image_style:
-      type: string
-      label: 'Responsive image style'
-    thumbnail_style:
-      type: string
-      label: 'Thumbnail style'
-    thumbnail_hover:
-      type: boolean
-      label: 'Thumbnail hover'
-    vanilla:
-      type: boolean
-      label: 'Vanilla slick'
 
 # Slick fieldable entity or Views settings.
 slick_extended:
   type: slick_image
   label: 'Slick fieldable display format extended settings'
-  mapping:
-    class:
-      type: string
-      label: 'Slide classes'
-    grid:
-      type: integer
-      label: 'Grid large'
-    grid_header:
-      type: string
-    grid_medium:
-      type: integer
-      label: 'Grid medium'
-    grid_small:
-      type: integer
-      label: 'Grid small'
-    image:
-      type: string
-      label: 'Main image'
-    link:
-      type: string
-      label: 'Link'
-    overlay:
-      type: string
-      label: 'Overlay'
-    preserve_keys:
-      type: boolean
-      label: 'Preserve keys'
-    title:
-      type: string
-      label: 'Title'
-    view_mode:
-      type: string
-      label: 'View mode'
-    visible_slides:
-      type: integer
-      label: 'Visible slides'
 
 # The Slick text formatter settings.
 field.formatter.settings.slick_text:

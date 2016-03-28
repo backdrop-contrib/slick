@@ -8,67 +8,64 @@
 namespace Drupal\slick;
 
 use Drupal\slick\Entity\Slick;
-// @todo enable
-// use Drupal\blazy\BlazyFormatterManager;
+use Drupal\blazy\BlazyFormatterManager;
 
 /**
  * Implements SlickFormatterInterface.
- *
- * @todo drop or extend \Drupal\blazy\BlazyFormatterManager.
  */
-class SlickFormatter extends SlickImageBase implements SlickFormatterInterface {
+class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInterface {
 
   /**
    * {@inheritdoc}
    */
   public function buildSettings(array &$build = [], $items) {
-    $settings       = &$build['settings'];
-    $field          = $items->getFieldDefinition();
-    $entity         = $items->getEntity();
-    $entity_type_id = $entity->getEntityTypeId();
-    $entity_id      = $entity->id();
-    $field_name     = $field->getName();
-    $field_clean    = str_replace("field_", '', $field_name);
-    $target_type    = $field->getFieldStorageDefinition()->getSetting('target_type');
-    $optionset_name = $settings['optionset'] ?: 'default';
-    $unique         = empty($settings['skin']) ? $optionset_name : $optionset_name . '-' . $settings['skin'];
-    $view_mode      = empty($settings['current_view_mode']) ? '_custom' : $settings['current_view_mode'];
-    $id             = Slick::getHtmlId("slick-{$entity_type_id}-{$entity_id}-{$field_clean}-{$unique}");
-    $internal_path  = $absolute_path = $url = NULL;
+    parent::buildSettings($build, $items);
 
-    // Deals with UndefinedLinkTemplateException such as paragraphs type.
-    // @see #2596385, or fetch the host entity.
-    if (!$entity->isNew() && method_exists($entity, 'hasLinkTemplate')) {
-      if ($entity->hasLinkTemplate('canonical')) {
-        $url = $entity->toUrl();
-        $internal_path = $url->getInternalPath();
-        $absolute_path = $url->setAbsolute()->toString();
-      }
+    $settings                   = &$build['settings'];
+    $optionset_name             = $settings['optionset'] ?: 'default';
+    $build['optionset']         = Slick::load($optionset_name);
+    $settings['nav']            = !empty($settings['optionset_thumbnail']) && isset($items[1]);
+    $settings['lazy']           = empty($settings['responsive_image_style_id']) ? $build['optionset']->getSetting('lazyLoad') : FALSE;
+    $settings['blazy']          = $settings['lazy'] == 'blazy' || !empty($settings['blazy']);
+    $settings['lazy']           = $settings['blazy'] ? 'blazy' : $settings['lazy'];
+    $settings['lazy_attribute'] = $settings['blazy'] ? 'src' : 'lazy';
+
+    // Prepare integration with Blazy.
+    $settings['item_id']                  = 'slide';
+    $settings['namespace']                = 'slick';
+    $settings['theme_hook_image']         = 'slick_image';
+    $settings['theme_hook_image_wrapper'] = 'slick_media';
+  }
+
+  /**
+   * Gets the thumbnail image.
+   */
+  public function getThumbnail($settings = []) {
+    if (empty($settings['uri'])) {
+      return [];
     }
-
-    $settings += [
-      'absolute_path'    => $absolute_path,
-      'bundle'           => $entity->bundle(),
-      'count'            => $items->count(),
-      'entity_id'        => $entity_id,
-      'entity_type_id'   => $entity_type_id,
-      'field_type'       => $field->getType(),
-      'field_name'       => $field_name,
-      'id'               => $id,
-      'internal_path'    => $internal_path,
-      'lightbox'         => !empty($settings['media_switch']) && strpos($settings['media_switch'], 'box') !== FALSE,
-      'nav'              => !empty($settings['optionset_thumbnail']) && isset($items[1]),
-      'target_type'      => $target_type,
-      'cache_metadata'   => ['keys' => [$id, $view_mode, $optionset_name]],
+    $thumbnail = [
+      '#theme'      => 'image_style',
+      '#style_name' => $settings['thumbnail_style'],
+      '#uri'        => $settings['uri'],
     ];
 
-    $build['optionset']   = Slick::load($optionset_name);
-    $settings['caption']  = empty($settings['caption']) ? [] : array_filter($settings['caption']);
-    $settings['lazy']     = empty($settings['responsive_image_style_id']) ? $build['optionset']->getSetting('lazyLoad') : FALSE;
-    $settings['blazy']    = function_exists('blazy_help') && ($settings['lazy'] == 'blazy' || !empty($settings['blazy']));
-    $settings['resimage'] = function_exists('responsive_image_get_image_dimensions');
+    foreach (['height', 'width', 'alt', 'title'] as $data) {
+      $thumbnail["#$data"] = isset($settings[$data]) ? $settings[$data] : NULL;
+    }
+    return $thumbnail;
+  }
 
-    unset($entity, $field);
+  /**
+   * Gets the media switch options.
+   */
+  public function getMediaSwitch(array &$element = [], $settings = []) {
+    parent::getMediaSwitch($element, $settings);
+    $switch = $settings['media_switch'];
+
+    if (isset($element['#url_attributes'])) {
+      $element['#url_attributes']['class'] = ['slick__' . $switch, 'litebox'];
+    }
   }
 
 }
