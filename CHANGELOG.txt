@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2016-03-28
+-----------------------------
+- Cleaned up arrows and dots skins from the Slick UI form Skin selection.
+- A few more cleanups.
 
 Slick 7.x-2.0-dev, 2016-03-23
 -----------------------------

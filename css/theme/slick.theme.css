@@ -24,14 +24,48 @@ iframe {
   max-width: 100%;
 }
 
-/* Prevents confusing white space with centerPadding */
-.slick__image {
-  margin-left: auto;
-  margin-right: auto;
+.slick-initialized {
+  overflow: visible;
 }
 
-.slick-hidden {
-  display: none;
+.slick,
+.slick__slide {
+  max-width: 100%;
+  position: relative;
+}
+
+/* Prevents collapsing slick when unslick like one item. */
+.unslick .slide {
+  width: 100%;
+}
+
+.slick__slide.slick-center {
+  z-index: 1;
+}
+
+.slick__slide.slick-current {
+  z-index: 4;
+}
+
+.draggable {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+.draggable:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.draggable:active a,
+.draggable:active .slide__caption {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /**
@@ -55,11 +89,7 @@ iframe {
   pointer-events: auto;
 }
 
-.slick-initialized ~ .slick__arrow {
-  display: block;
-}
-
-.slick-initialized ~ .slick__arrow.element-hidden {
+.slick__arrow button {
   display: none;
 }
 
@@ -76,7 +106,6 @@ iframe {
 .slick-down {
   border: 0;
   border-radius: 50%;
-  display: block;
   font-size: 0;
   height: 42px;
   pointer-events: auto;
@@ -165,58 +194,14 @@ iframe {
   color: #fff;
 }
 
-/**
- * Misc overrides core slick.
- */
-/* Hide non-js lazy-loaded image to show <noscript> one instead, if the theme
-supports no-js, otherwise IMG tag with dummy placeholder. */
-.no-js .slick img.lazy {
+.slick__arrow .slick-arrow,
+.slick-initialized ~ .slick__arrow,
+.slick-initialized ~ .slick__arrow .slick-down {
+  display: block;
+}
+
+.slick-initialized ~ .slick__arrow.element-hidden {
   display: none;
-}
-
-/* Prevents overflowing noscript, and nested slides. */
-.no-js .slick__slide,
-.slick__slide .slick__slide {
-  max-width: 100%;
-}
-
-.slick-initialized {
-  overflow: visible;
-}
-
-.slick,
-.slick__slide {
-  max-width: 100%;
-  position: relative;
-}
-
-.slick__slide.slick-center {
-  z-index: 1;
-}
-
-.slick__slide.slick-current {
-  z-index: 4;
-}
-
-.draggable {
-  cursor: grab;
-  cursor: -webkit-grab;
-}
-
-.draggable:active {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
-}
-
-.draggable:active a,
-.draggable:active .slide__caption {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 /**
@@ -292,20 +277,33 @@ supports no-js, otherwise IMG tag with dummy placeholder. */
   padding: 5px 6px;
 }
 
+/* Prevent stacking oversized thumbnails when/before JS is on. */
+.slick--display--thumbnail .slick__slide {
+  float: left;
+}
+
+/**
+ * Media
+ */
+/* Hide lazyloaded image so that noscript is visible when JS is off.*/
+img[data-lazy] {
+  display: none;
+}
+
+/* Prevents confusing white space with centerPadding */
+.slick__image {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
 .slick--display--thumbnail .slick__slide img {
   pointer-events: auto;
 }
 
-/* Prevents collapsing slick when unslick like one item. */
-.unslick .slide {
-  width: 100%;
-}
-
 /* Media ratio */
 .media,
-.slide__media,
-.slick--center .slide__content {
+.slide__media {
   overflow: hidden;
   position: relative;
 }

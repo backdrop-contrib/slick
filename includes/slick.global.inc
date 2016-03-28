@@ -200,7 +200,7 @@ function slick_extract_image_data($settings, array &$media, array &$slide, $item
       'ratio'        => !empty($settings['aspect_ratio']) && empty($settings['picture']) ? $settings['aspect_ratio'] : FALSE,
     ),
   );
-  $media['bundle'] = !empty($settings['bundle']) ? $settings['bundle'] : '';
+  $media['bundle'] = empty($settings['bundle']) ? '' : $settings['bundle'];
   foreach (array('fid', 'alt', 'title', 'uri', 'type') as $data) {
     $media[$data] = isset($item[$data]) ? $item[$data] : NULL;
   }

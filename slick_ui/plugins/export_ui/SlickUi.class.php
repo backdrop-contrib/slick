@@ -41,7 +41,9 @@ class SlickUi extends ctools_export_ui {
 
     // Skins. We don't provide skin_thumbnail as each optionset may be deployed
     // as main display, or thumbnail navigation.
-    $skins = slick_get_skins_by_group('', TRUE);
+    $skins_main = slick_get_skins_by_group('main', TRUE);
+    $skins_thumbnail = slick_get_skins_by_group('thumbnail', TRUE);
+    $skins = array_merge($skins_main, $skins_thumbnail);
     $form['skin'] = array(
       '#type' => 'select',
       '#title' => t('Skin'),
@@ -746,10 +748,11 @@ class SlickUi extends ctools_export_ui {
         'type' => 'checkbox',
       );
 
-      // Clone the default values.
-      $slick_options = slick_get_options();
-      foreach ($slick_options as $name => $value) {
-        $elements[$name]['default'] = isset($elements[$name]) ? $value : '';
+      // Defines the default values if available.
+      $defaults = slick_get_options();
+      foreach ($elements as $name => $element) {
+        $default = $element['type'] == 'checkbox' ? FALSE : '';
+        $elements[$name]['default'] = isset($defaults[$name]) ? $defaults[$name] : $default;
       }
 
       // Allows form elements information to be altered.

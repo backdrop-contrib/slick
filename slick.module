@@ -189,6 +189,7 @@ function slick_get_skins_by_group($group = '', $select = FALSE) {
 function slick_get_available_skins() {
   $skins = &drupal_static(__FUNCTION__, NULL);
   if (!isset($skins)) {
+    $skins = array();
     foreach (array('arrows', 'dots', 'main', 'overlay', 'thumbnail') as $key) {
       $skins[$key] = slick_get_skins_by_group($key);
     }
@@ -319,7 +320,7 @@ function slick_attach(array $attach, $settings = array()) {
     $navs = array('thumbnail', 'arrows', 'dots');
     foreach ($navs as $nav) {
       if (isset($settings['skin_' . $nav]) && $skin = $settings['skin_' . $nav]) {
-        $nav_skins = $nav == 'arrows' ? $skins['arrows'] : ($nav == 'dots' ? $skins['dots'] : $skins['thumbnail']);
+        $nav_skins = $skins[$nav];
         if (!empty($nav_skins) && isset($nav_skins[$skin]['css']) && is_array($nav_skins[$skin]['css'])) {
           $load['css'] += $nav_skins[$skin]['css'];
         }
@@ -366,7 +367,7 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
     return array();
   }
 
-  // Simplify ID without breaking changes till the other two dropped.
+  // Simplify ID without breaking changes till the first two dropped.
   $id             = isset($settings['attributes']['id']) ? $settings['attributes']['id'] : $id;
   $display        = empty($settings['current_display']) ? 'main' : $settings['current_display'];
   $settings['id'] = empty($settings['id']) ? slick_html_id('slick', $id) : $settings['id'];

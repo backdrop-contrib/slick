@@ -390,7 +390,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
   font-size: 13px;
   line-height: 1.2;
   min-height: 40px;
-  max-width: 320px;
+  max-width: 100%;
   min-width: 210px;
   position: absolute !important;
   padding: 12px !important;

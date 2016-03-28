@@ -303,12 +303,6 @@ After Slick 1.4:
 At both cases, asNavFor should target slick-initialized class/ID attributes.
 
 
-HOW CAN YOU HELP?
---------------------------------------------------------------------------------
-Please consider helping in the issue queue, provide improvement, or helping with
-documentation.
-
-
 BUG REPORTS OR SUPPORT REQUESTS
 --------------------------------------------------------------------------------
 A basic knowledge of Drupal site building is required. If you get stuck:
@@ -404,6 +398,20 @@ UNKNOWN ISSUES
   Please report if you find one. Your report and help is any module QA. Thanks.
 
 
+CURRENT DEVELOPMENT STATUS
+--------------------------------------------------------------------------------
+A full release should be reasonable after proper feedbacks from the community,
+some code cleanup, and optimization where needed. Patches are very much welcome.
+
+
+ROADMAP
+--------------------------------------------------------------------------------
+- Bug fixes, code cleanup, optimization, and full release.
+- Get 1.x out of dev.
+- Slick 2.x
+- Drupal 8 port.
+
+
 PERFORMANCE
 --------------------------------------------------------------------------------
 Any module, even the most innocent one, that provides settings in the UI needs
@@ -434,19 +442,21 @@ Be sure to have a working cron job to clear stale cache, so that slick is loaded
 from the correct cached version. At any rate, cached contents will be refreshed
 regardless of the expiration time after the cron hits due to the nature of cron.
 
+Note: Slick is already faster, lighter and less memory than similar[1]
+solutions[2] for anonymous users with just Drupal cache. The builtin Slick Cache
+option is more useful for authenticated traffic, best with Authcache.
+Leave empty to disable caching, or if traffics are mostly anonymous.
 
-CURRENT DEVELOPMENT STATUS
+[1] https://www.drupal.org/node/2313461#comment-10817842
+[2] https://www.drupal.org/node/2463305#comment-10850288
+
+
+HOW CAN YOU HELP?
 --------------------------------------------------------------------------------
-A full release should be reasonable after proper feedbacks from the community,
-some code cleanup, and optimization where needed. Patches are very much welcome.
+Please consider helping in the issue queue, provide improvement, or helping with
+documentation.
 
-
-ROADMAP
---------------------------------------------------------------------------------
-- Bug fixes, code cleanup, optimization, and full release.
-- Get 1.x out of dev.
-- Slick 2.x
-- Drupal 8 port.
+If you find this module helpful, please help back spread the love.
 
 
 AUTHOR/MAINTAINER/CREDITS
