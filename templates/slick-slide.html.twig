@@ -31,6 +31,13 @@
     not settings.detroy ? 'slide__content'
   ]
 %}
+{% set slide %}
+  {% if settings.split %}
+    <div class="slide__media">{{ item.slide }}</div>
+  {% else %}
+    {{ item.slide }}
+  {% endif %}
+{% endset %}
 
 {% spaceless %}
 {% if settings.wrapper %}
@@ -38,9 +45,7 @@
   {% if settings.grid is empty %}<div{{ content_attributes.addClass(content_classes) }}>{% endif %}
 {% endif %}
 
-  {% if settings.split %}<div class="slide__media">{% endif %}
-    {{ item.slide }}
-  {% if settings.split %}</div>{% endif %}
+  {{ slide }}
 
   {% if item.caption %}
     {% if settings.fullwidth %}<div class="slide__constrained">{% endif %}

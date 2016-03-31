@@ -54,7 +54,8 @@ function template_preprocess_slick(&$variables) {
     $js['lazyLoad'] = 'blazy';
     $blazy = empty($settings['blazy_data']) ? [] : $settings['blazy_data'];
     $blazy['ratio'] = $settings['ratio'];
-    if (!empty($settings['width']) && !$blazy['ratio']) {
+    $blazy['container'] = '#' . $attributes['id'];
+    if (!empty($settings['width']) && empty($blazy['ratio'])) {
       $blazy['max'] = [$settings['width'], $settings['height']];
     }
     $attributes['data-blazy'] = Json::encode($blazy);

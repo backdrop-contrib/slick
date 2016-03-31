@@ -706,12 +706,11 @@ class SlickForm extends SlickFormBase {
    */
   public function getLazyloadOptions() {
     $options = [
+      'blazy'       => $this->t('Blazy'),
       'ondemand'    => $this->t('On demand'),
       'progressive' => $this->t('Progressive'),
     ];
-    if ($this->manager->getModuleHandler()->moduleExists('blazy')) {
-      $options['blazy'] = $this->t('Blazy');
-    }
+
     $this->manager->getModuleHandler()->alter('slick_lazyload_options_info', $options);
     return $options;
   }

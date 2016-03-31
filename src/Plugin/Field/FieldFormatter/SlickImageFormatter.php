@@ -97,9 +97,6 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
       }
       unset($element);
     }
-
-    // Supports Blazy formatter multi-breakpoint images if available.
-    // $this->formatter->isBlazy($settings, $build['items'][0]);
   }
 
   /**

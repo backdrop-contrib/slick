@@ -1,4 +1,8 @@
 
+Slick 8.x-2.0-dev, 2016-03-30
+-----------------------------
+- A few cleanups, Blazy option at Slick UI, skins, composer.json, etc.
+
 Slick 8.x-2.0-dev, 2016-03-28
 -----------------------------
 - #2693089: Add dependency on Blazy.

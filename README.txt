@@ -156,7 +156,8 @@ do. But more often CSS will do.
 
 Skins allow swappable layouts like next/prev links, split image or caption, etc.
 with just CSS. However a combination of skins and options may lead to
-unpredictable layouts, get yourself dirty.
+unpredictable layouts, get yourself dirty. Use the provided samples to see
+the working skins.
 
 Some default complex layout skins applied to desktop only, adjust for the mobile
 accordingly. The provided skins are very basic to support the necessary layouts.
@@ -322,7 +323,7 @@ KNOWN ISSUES
 - The Slick lazyLoad is not supported with Responsive image. Slick only
   facilitates Responsive image to get in. The image formatting is taken over by
   Responsive image.
-  Some other options such as Media switchers are currently not supported either.
+  Some other options such as Aspect ratio is currently not supported either.
 
 - Photobox is best for:
   - infinite true + slidesToShow 1
@@ -332,8 +333,12 @@ KNOWN ISSUES
 
 - The following is not module related, but worth a note:
   o lazyLoad ondemand has issue with dummy image excessive height.
-    Added fixes to suppress it via option Aspect ratio (fluid).
+    Added fixes to suppress it via option Aspect ratio (fluid | enforced).
     Or use Blazy lazyload for more advanced options.
+  o Aspect ratio is not compatible with Responsive image or multi-serving
+    images.
+    However if you can stick to one Aspect ratio, choose 'enforced' instead.
+    Otherwise disable Aspect ratio for multi-serving images.
   o If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
   o Fade option with slideToShow > 1 will screw up.

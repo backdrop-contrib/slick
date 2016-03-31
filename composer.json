@@ -10,7 +10,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url":  "http://git.drupal.org/project/slick.git"
+      "url": "https://git.drupal.org/project/slick.git"
     }
   ],
   "require": { }

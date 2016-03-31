@@ -40,17 +40,15 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
   }
 
   /**
-   * Returns all available skins registered via hook_slick_skins_info().
+   * Returns all supported skins registered via hook_slick_skins_info().
    */
   public function getAvailableSkins() {
     $skins = &drupal_static(__METHOD__, NULL);
     if (!isset($skins)) {
-      $skins = [
-        'skin'      => $this->getSkinsByGroup('main'),
-        'thumbnail' => $this->getSkinsByGroup('thumbnail'),
-        'arrows'    => $this->getSkins()['arrows'],
-        'dots'      => $this->getSkins()['dots'],
-      ];
+      $skins = [];
+      foreach (['main', 'thumbnail', 'arrows', 'dots'] as $key) {
+        $skins[$key] = $this->getSkinsByGroup($key);
+      }
       $skins = array_filter($skins);
     }
     return $skins;
@@ -59,10 +57,13 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
   /**
    * Returns available slick skins by group.
    */
-  public function getSkinsByGroup($group = '', $select = FALSE) {
-    $skins = $groups = $ungroups = [];
-    foreach ($this->getSkins()['skins'] as $skin => $properties) {
-      $item = $select ? Html::escape($properties['name']) : $properties;
+  public function getSkinsByGroup($group = '', $option = FALSE) {
+    $skins         = $groups = $ungroups = [];
+    $nav_skins     = in_array($group, ['arrows', 'dots']);
+    $defines_skins = $nav_skins ? $this->getSkins()[$group] : $this->getSkins()['skins'];
+
+    foreach ($defines_skins as $skin => $properties) {
+      $item = $option ? Html::escape($properties['name']) : $properties;
       if (!empty($group)) {
         if (isset($properties['group'])) {
           if ($properties['group'] != $group) {
@@ -70,7 +71,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
           }
           $groups[$skin] = $item;
         }
-        elseif (!in_array($group, array('arrows', 'dots'))) {
+        elseif (!$nav_skins) {
           $ungroups[$skin] = $item;
         }
       }
@@ -85,9 +86,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    */
   public function attach($attach = []) {
     $attach += [
-      'slick_css'      => $this->configLoad('slick_css', 'slick.settings'),
-      'module_css'     => $this->configLoad('module_css', 'slick.settings'),
-      'skin'           => FALSE,
+      'slick_css'  => $this->configLoad('slick_css', 'slick.settings'),
+      'module_css' => $this->configLoad('module_css', 'slick.settings'),
     ];
 
     $this->moduleHandler->alter('slick_attach_info', $attach);
@@ -125,7 +125,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    * Provides skins if required.
    */
   public function attachSkin(array &$load, $attach = []) {
-    if (!$attach['skin']) {
+    if (empty($attach['skin'])) {
       return;
     }
 
@@ -147,7 +147,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     }
 
     foreach ($this->getAvailableSkins() as $group => $skins) {
-      $skin = $group == 'skin' ? $attach['skin'] : (isset($attach['skin_' . $group]) ? $attach['skin_' . $group] : '');
+      $skin = $group == 'main' ? $attach['skin'] : (isset($attach['skin_' . $group]) ? $attach['skin_' . $group] : '');
       if (!empty($skin)) {
         $provider = isset($skins[$skin]['provider']) ? $skins[$skin]['provider'] : 'slick';
         $load['library'][] = 'slick/' . $provider . '.' . $group . '.' . $skin;

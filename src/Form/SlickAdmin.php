@@ -75,10 +75,10 @@ class SlickAdmin implements SlickAdminInterface {
    */
   public function buildSettingsForm(array &$form, $definition = []) {
     $definition += [
-      'caches'         => TRUE,
-      'namespace'      => 'slick',
-      'optionsets'     => $this->getOptionsetsByGroupOptions('main'),
-      'skins'          => $this->getSkinsByGroupOptions('main'),
+      'caches'     => TRUE,
+      'namespace'  => 'slick',
+      'optionsets' => $this->getOptionsetsByGroupOptions('main'),
+      'skins'      => $this->getSkinsByGroupOptions('main'),
     ];
 
     $definition['layouts'] = isset($definition['layouts']) ? array_merge($this->getLayoutOptions(), $definition['layouts']) : $this->getLayoutOptions();
@@ -357,16 +357,7 @@ class SlickAdmin implements SlickAdminInterface {
    * Returns available slick skins for select options.
    */
   public function getSkinsByGroupOptions($group = '') {
-    $skins = $this->manager->getSkinsByGroup($group, TRUE);
-    if ($group && in_array($group, ['arrows', 'dots'])) {
-      if ($available_skins = $this->manager->getSkins()[$group]) {
-        $skins = [];
-        foreach ($available_skins as $key => $properties) {
-          $skins[$key] = Html::escape($properties['name']);
-        }
-      }
-    }
-    return $skins;
+    return $this->manager->getSkinsByGroup($group, TRUE);
   }
 
   /**
