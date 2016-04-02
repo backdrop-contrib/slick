@@ -30,7 +30,7 @@ iframe {
   overflow: visible;
 }
 
-/* Prevents overflowing noscript, and nested slides. */
+/* Prevents overflowing nested slides. */
 .slick {
   max-width: 100%;
   position: relative;
@@ -239,7 +239,7 @@ iframe {
 /**
  * Media.
  */
-/* Hide lazyloaded image so that noscript is visible when JS is off.*/
+/* Hide lazyloaded image when JS is off.*/
 img[data-lazy] {
   display: none;
 }
@@ -257,4 +257,12 @@ img[data-lazy] {
 /* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
 .slick--thumbnail .slick__slide img {
   pointer-events: auto;
+}
+
+/**
+ * @todo remove prior to betas for blazy.ratio.css.
+ */
+/* Allows JS to work with hidden elements, see slick.load.js. */
+.js-media--ratio {
+  height: auto;
 }

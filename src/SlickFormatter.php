@@ -20,21 +20,22 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
    */
   public function buildSettings(array &$build = [], $items) {
     $settings = &$build['settings'];
-    
+
     // Prepare integration with Blazy.
-    $settings['item_id']                  = 'slide';
-    $settings['namespace']                = 'slide';
-    $settings['theme_hook_image']         = 'slick_image';
-    $settings['theme_hook_image_wrapper'] = 'slick_media';
-    
+    $settings['item_id']          = 'slide';
+    $settings['namespace']        = 'slick';
+    $settings['theme_hook_image'] = 'slick_image';
+
     parent::buildSettings($build, $items);
 
     $optionset_name             = $settings['optionset'] ?: 'default';
     $build['optionset']         = Slick::load($optionset_name);
     $settings['nav']            = !empty($settings['optionset_thumbnail']) && isset($items[1]);
-    $settings['lazy']           = empty($settings['responsive_image_style_id']) ? $build['optionset']->getSetting('lazyLoad') : FALSE;
-    $settings['blazy']          = $settings['lazy'] == 'blazy' || !empty($settings['blazy']);
-    $settings['lazy']           = $settings['blazy'] ? 'blazy' : $settings['lazy'];
+    $lazy                       = empty($settings['responsive_image_style']) ? $build['optionset']->getSetting('lazyLoad') : '';
+    $blazy                      = $lazy == 'blazy';
+    $settings['lazy']           = !$blazy && $settings['count'] == 1 ? '' : $lazy;
+    $settings['blazy']          = $blazy || !empty($settings['blazy']);
+    $settings['lazy']           = $settings['blazy'] ? 'blazy' : $lazy;
     $settings['lazy_attribute'] = $settings['blazy'] ? 'src' : 'lazy';
   }
 

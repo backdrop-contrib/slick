@@ -14,8 +14,6 @@ use Drupal\blazy\Dejavu\BlazyDefault;
  *
  * @see FormatterBase::defaultSettings()
  * @see StylePluginBase::defineOptions()
- *
- * @todo drop: thumbnail_hover, visible_slides.
  */
 class SlickDefault extends BlazyDefault {
 
@@ -42,7 +40,6 @@ class SlickDefault extends BlazyDefault {
   public static function imageSettings() {
     return [
       'thumbnail_effect' => '',
-      'thumbnail_hover'  => FALSE,
     ] + self::baseSettings() + parent::imageSettings();
   }
 
@@ -58,7 +55,6 @@ class SlickDefault extends BlazyDefault {
       'preserve_keys'  => FALSE,
       'thumbnail'      => '',
       'visible_items'  => 0,
-      'visible_slides' => '',
     ] + self::imageSettings() + parent::extendedSettings();
   }
 

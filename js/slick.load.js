@@ -20,6 +20,12 @@
         var t = $('> .slick__slider', that);
         var a = $('> .slick__arrow', that);
         var o = $.extend({}, drupalSettings.slick, t.data('slick'));
+        var r = $('.slide--0 .media--ratio', t);
+
+        // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
+        if (r.length && r.is(':hidden')) {
+          r.removeClass('media--ratio').addClass('js-media--ratio');
+        }
 
         // Build the Slick.
         me.beforeSlick(t, a, o);
@@ -92,6 +98,7 @@
     afterSlick: function (t, o) {
       var me = this;
       var slick = t.slick('getSlick');
+      var $ratio = $('.js-media--ratio', t);
 
       // Arrow down jumper.
       t.parent().on('click.slick.load', '.slick-down', function (e) {
@@ -107,6 +114,13 @@
           e.preventDefault();
           return (delta < 0) ? t.slick('slickNext') : t.slick('slickPrev');
         });
+      }
+
+      // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
+      if ($ratio.length) {
+        // t[0].slick.refresh();
+        t.trigger('resize');
+        $ratio.addClass('media--ratio').removeClass('js-media--ratio');
       }
 
       t.trigger('afterSlick', [me, slick, slick.currentSlide]);

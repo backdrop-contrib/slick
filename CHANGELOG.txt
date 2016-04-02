@@ -1,4 +1,19 @@
 
+Slick 8.x-2.0-dev, 2016-04-02
+-----------------------------
+- Removed noscript fallback, see:
+  http://goo.gl/FQLFQ6
+  https://goo.gl/f78pMl
+- Removed theme_slick_media(), and merged it into theme_slick_image() to get
+  along well with Blazy::buildAttributes(), and reduce complication with aspect
+  ratio when IMG, IFRAME and lightbox/image link A tags are _all optional.
+- Fixed for broken slick with Blazy, aspect ratio and hidden containers, e.g.:
+  - Hidden Slick containers such as within hidden Ultimenu regions.
+  - Blazy lazyload, not Slick own builtin lazyload.
+  - Aspect ratio enabled.
+  - Blazied images are large enough to render too late when Slick kicks in.
+  - Blazied small images are not affected.
+
 Slick 8.x-2.0-dev, 2016-03-30
 -----------------------------
 - A few cleanups, Blazy option at Slick UI, skins, composer.json, etc.

@@ -313,6 +313,8 @@ TROUBLESHOOTING
 - If you are customizing template files, or theme functions, be sure to re-check
   against the latest.
 
+- Be sure Slick release is similar, or later than Blazy.
+
 
 KNOWN ISSUES
 --------------------------------------------------------------------------------
