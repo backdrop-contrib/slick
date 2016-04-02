@@ -1,4 +1,9 @@
 
+Slick 8.x-2.0-dev, 2016-04-03
+-----------------------------
+- Removed media iframe stuffs out of slick-image.html.twig, and moved to which
+  they belong: slick_media.module. Be sure to clear cache.
+
 Slick 8.x-2.0-dev, 2016-04-02
 -----------------------------
 - Removed noscript fallback, see:
