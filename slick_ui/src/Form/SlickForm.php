@@ -593,7 +593,7 @@ class SlickForm extends SlickFormBase {
       ];
 
       // Defines the default values if available.
-      $defaults = $this->manager->getDefaultSettings('settings');
+      $defaults = Slick::defaultSettings();
       foreach ($elements as $name => $element) {
         $default = $element['type'] == 'checkbox' ? FALSE : '';
         $elements[$name]['default'] = isset($defaults[$name]) ? $defaults[$name] : $default;

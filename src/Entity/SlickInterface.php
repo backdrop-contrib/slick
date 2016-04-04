@@ -52,6 +52,14 @@ interface SlickInterface extends ConfigEntityInterface {
   public function getSettings();
 
   /**
+   * Sets the array of slick settings.
+   *
+   * @param array $settings
+   *   The new array of settings.
+   */
+  public function setSettings($settings);
+
+  /**
    * Returns the value of a slick setting.
    *
    * @param string $setting_name

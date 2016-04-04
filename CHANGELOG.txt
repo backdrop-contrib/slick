@@ -1,4 +1,9 @@
 
+Slick 8.x-2.0-dev, 2016-04-04
+-----------------------------
+- Fixed for overridables.
+- Added support to turn images into CSS background images.
+
 Slick 8.x-2.0-dev, 2016-04-03
 -----------------------------
 - Removed media iframe stuffs out of slick-image.html.twig, and moved to which

@@ -137,6 +137,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
       }
       return $this->options[$group];
     }
+
     return $this->options;
   }
 
@@ -150,8 +151,32 @@ class Slick extends ConfigEntityBase implements SlickInterface {
   /**
    * {@inheritdoc}
    */
+  public function setSettings($settings) {
+    $this->options['settings'] = $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSetting($setting_name) {
     return isset($this->options['settings'][$setting_name]) ? $this->options['settings'][$setting_name] : NULL;
+  }
+
+  /**
+   * Returns available slick default options under group 'settings'.
+   */
+  public static function defaultSettings($group = 'settings') {
+    return self::load('default')->getOptions($group);
+  }
+
+  /**
+   * Overrides Drupal\Core\Entity\Entity::create().
+   */
+  public static function create(array $values = []) {
+    $optionset = parent::create($values);
+
+    $optionset->setSettings($optionset->getSettings() + self::defaultSettings());
+    return $optionset;
   }
 
   /**

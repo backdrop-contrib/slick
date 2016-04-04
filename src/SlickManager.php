@@ -20,13 +20,6 @@ use Drupal\blazy\BlazyManagerInterface;
 class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, SlickManagerInterface {
 
   /**
-   * Returns available slick default options under group 'settings'.
-   */
-  public function getDefaultSettings($group = 'settings') {
-    return Slick::load('default')->getOptions($group);
-  }
-
-  /**
    * Returns slick skins registered via hook_slick_skins_info(), or defaults.
    *
    * @see \Drupal\blazy\BlazyManagerBase::buildSkins().
@@ -115,7 +108,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     // excluding wasted/trouble options, e.g.: PHP string vs JS object.
     $excludes = explode(' ', 'mobileFirst appendArrows appendDots asNavFor prevArrow nextArrow cssEaseBezier cssEaseOverride respondTo');
     $excludes = array_combine($excludes, $excludes);
-    $load['drupalSettings']['slick'] = array_diff_key($this->getDefaultSettings('settings'), $excludes);
+    $load['drupalSettings']['slick'] = array_diff_key(Slick::defaultSettings(), $excludes);
 
     $this->moduleHandler->alter('slick_attach_load_info', $load, $attach);
     return $load;
@@ -191,7 +184,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $build = $element['#build'];
     unset($element['#build']);
 
-    $settings = $build['settings'];
+    $settings = &$build['settings'];
     if (empty($build['items'])) {
       return [];
     }
@@ -215,7 +208,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     // Overrides common options to re-use an optionset.
     if ($settings['display'] == 'main') {
       if (!empty($settings['override'])) {
-        foreach (array_filter($settings['overridables']) as $key => $override) {
+        foreach ($settings['overridables'] as $key => $override) {
           $js[$key] = empty($override) ? FALSE : TRUE;
         }
       }

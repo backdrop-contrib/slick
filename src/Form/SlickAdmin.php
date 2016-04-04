@@ -221,6 +221,8 @@ class SlickAdmin implements SlickAdminInterface {
     $form['thumbnail_style']['#description'] = t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>If <em>Dots with thumbnail</em> selected, displayed when hovering over dots.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.');
 
     $form['thumbnail_effect']['#description'] = t('Dependent on a Skin, Dots and Thumbnail style options. <ol><li><strong>Hoverable</strong>: Dots pager are kept, and thumbnail will be hidden and only visible on dot mouseover, default to min-width 120px.</li><li><strong>Static grid</strong>: Dots are hidden, and thumbnails are displayed as a static grid acting like dots pager.</li></ol>Alternative to asNavFor aka separate thumbnails as slider.');
+
+    $form['background']['#description'] .= '' . t(' This opens up the goodness of CSS, such as background cover, fixed attachment, etc. Blazy lazyload applies. Works best with a  single visible slide, skins full width/screen. <br /><strong>Important!</strong> Requires a consistent Aspect ratio, otherwise collapsed containers. Unless a min-height is added manually to <strong>.media</strong> selector.');
   }
 
   /**

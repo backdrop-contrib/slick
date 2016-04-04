@@ -31,7 +31,8 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     $optionset_name             = $settings['optionset'] ?: 'default';
     $build['optionset']         = Slick::load($optionset_name);
     $settings['nav']            = !empty($settings['optionset_thumbnail']) && isset($items[1]);
-    $lazy                       = empty($settings['responsive_image_style']) ? $build['optionset']->getSetting('lazyLoad') : '';
+    $noresimage                 = empty($settings['responsive_image_style']);
+    $lazy                       = $noresimage ? $build['optionset']->getSetting('lazyLoad') : '';
     $blazy                      = $lazy == 'blazy';
     $settings['lazy']           = !$blazy && $settings['count'] == 1 ? '' : $lazy;
     $settings['blazy']          = $blazy || !empty($settings['blazy']);

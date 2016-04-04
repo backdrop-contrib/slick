@@ -118,6 +118,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
   public function getScopedFormElements() {
     $captions = ['title' => t('Title'), 'alt' => t('Alt')];
     return [
+      'background'        => TRUE,
       'breakpoints'       => SlickDefault::getConstantBreakpoints(),
       'current_view_mode' => $this->viewMode,
       'captions'          => $captions,
