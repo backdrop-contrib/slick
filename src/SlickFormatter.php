@@ -24,7 +24,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     // Prepare integration with Blazy.
     $settings['item_id']          = 'slide';
     $settings['namespace']        = 'slick';
-    $settings['theme_hook_image'] = 'slick_image';
+    $settings['theme_hook_image'] = isset($settings['theme_hook_image']) ? $settings['theme_hook_image'] : 'slick_image';
 
     parent::buildSettings($build, $items);
 
@@ -33,7 +33,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     $settings['nav']            = !empty($settings['optionset_thumbnail']) && isset($items[1]);
     $noresimage                 = empty($settings['responsive_image_style']);
     $lazy                       = $noresimage ? $build['optionset']->getSetting('lazyLoad') : '';
-    $blazy                      = $lazy == 'blazy';
+    $blazy                      = $lazy == 'blazy' || $settings['theme_hook_image'] == 'blazy';
     $settings['lazy']           = !$blazy && $settings['count'] == 1 ? '' : $lazy;
     $settings['blazy']          = $blazy || !empty($settings['blazy']);
     $settings['lazy']           = $settings['blazy'] ? 'blazy' : $lazy;

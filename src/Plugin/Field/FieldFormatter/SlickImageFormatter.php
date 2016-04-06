@@ -127,6 +127,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
       'media_switch_form' => TRUE,
       'settings'          => $this->getSettings(),
       'thumb_captions'    => $captions,
+      'nav'               => TRUE,
     ];
   }
 

@@ -129,7 +129,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#title'       => t('Optionset thumbnail'),
       '#options'     => $this->getOptionsetsByGroupOptions('thumbnail'),
       '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Leave empty to not use thumbnail navigation.'),
-      '#access'      => isset($definition['thumb_captions']),
+      '#access'      => isset($definition['nav']) || isset($definition['thumbnails']),
       '#weight'      => -108,
     ];
 
@@ -138,7 +138,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#title'       => t('Skin thumbnail'),
       '#options'     => $this->getSkinsByGroupOptions('thumbnail'),
       '#description' => t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', ['@url' => $readme]),
-      '#access'      => isset($definition['thumb_captions']),
+      '#access'      => isset($definition['nav']) || isset($definition['thumbnails']),
       '#weight'      => -106,
     ];
 

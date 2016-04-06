@@ -72,7 +72,7 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     // Early opt-out if the field is empty.
-    if ($items->count() < 1) {
+    if ($items->isEmpty()) {
       return [];
     }
 

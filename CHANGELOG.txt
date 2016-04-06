@@ -1,4 +1,10 @@
 
+Slick 8.x-2.0-dev, 2016-04-06
+-----------------------------
+- Allowed modules to not use slick_image at module level.
+- Refined form elements for thumbnails vs. thumb_captions selections to allow
+  supporting VEF which has no captions but may have thumbnails.
+
 Slick 8.x-2.0-dev, 2016-04-04
 -----------------------------
 - Fixed for overridables.
