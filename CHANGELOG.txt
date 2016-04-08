@@ -1,4 +1,8 @@
 
+Slick 8.x-2.0-dev, 2016-04-08
+-----------------------------
+- Cleaned up thumbnails leftovers.
+
 Slick 8.x-2.0-dev, 2016-04-06
 -----------------------------
 - Allowed modules to not use slick_image at module level.

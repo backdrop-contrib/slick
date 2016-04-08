@@ -363,6 +363,7 @@ some code cleanup, and optimization where needed. Patches are very much welcome.
 
 Alpha and Beta releases are for developers only. Be aware of possible breakage.
 
+Be sure to first update Blazy.
 However if it is broken, unless an update is explicitly required, clearing cache
 should fix most issues durig DEV phases. Prior to any update, always visit:
 /admin/config/development/performance

@@ -231,7 +231,7 @@ class SlickAdmin implements SlickAdminInterface {
   public function fieldableForm(array &$form, $definition = []) {
     $this->blazyAdmin->fieldableForm($form, $definition);
 
-    $form['thumbnail']['#description'] = t("Only needed if <em>Optionset thumbnail</em> is provided. Maybe the same field as the main image, only different instance. Leave empty to not use thumbnail pager.");
+    $form['thumbnail']['#description'] = t("Only needed if <em>Optionset thumbnail</em> is provided. Maybe the same field as the main image, only different instance and image style. Leave empty to not use thumbnail pager.");
 
     $form['overlay']['#title'] = t('Overlay media/slicks');
     $form['overlay']['#description'] = t('For audio/video, be sure the display is not image. For nested slicks, use the Slick carousel formatter for this field. Zebra layout is reasonable for overlay and captions.');
