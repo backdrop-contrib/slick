@@ -50,11 +50,13 @@ iframe {
 .slick__slide {
   max-width: 100%;
   position: absolute;
+  vertical-align: top;
   visibility: hidden;
 }
 
 .slide--0,
-.slick-slide {
+.slick-slide,
+.slick-slide .slick__slide {
   position: relative;
   visibility: visible;
 }

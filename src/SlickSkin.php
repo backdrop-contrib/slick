@@ -64,7 +64,7 @@ class SlickSkin implements SlickSkinInterface {
         ],
       ],
       'grid' => [
-        'name' => t('Grid'),
+        'name' => t('Grid Foundation'),
         'description' => t('Use slidesToShow > 1 to have more grid combination, only if you have considerable amount of grids, otherwise 1.'),
         'css' => [
           'theme' => [

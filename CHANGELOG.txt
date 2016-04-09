@@ -1,4 +1,8 @@
 
+Slick 8.x-2.0-dev, 2016-04-09
+-----------------------------
+- Fixed for broken core library grid Rows.
+
 Slick 8.x-2.0-dev, 2016-04-08
 -----------------------------
 - Cleaned up thumbnails leftovers.
