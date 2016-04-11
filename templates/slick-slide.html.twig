@@ -32,7 +32,7 @@
   ]
 %}
 {% set slide %}
-  {% if settings.split %}
+  {% if settings.split and not settings.unslick %}
     <div class="slide__media">{{ item.slide }}</div>
   {% else %}
     {{ item.slide }}

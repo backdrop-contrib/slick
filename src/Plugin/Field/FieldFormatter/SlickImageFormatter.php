@@ -69,10 +69,10 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
       /* @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
       $item = $file->_referringItem;
 
-      $settings['uri']       = ($entity = $item->entity) && empty($item->uri) ? $entity->getFileUri() : $item->uri;
       $settings['delta']     = $delta;
       $settings['file_tags'] = $file->getCacheTags();
       $settings['type']      = 'image';
+      $settings['uri']       = ($entity = $item->entity) && empty($item->uri) ? $entity->getFileUri() : $item->uri;
 
       $element = ['item' => $item, 'settings' => $settings];
 

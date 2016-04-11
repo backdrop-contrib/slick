@@ -37,16 +37,15 @@ slick:
       /libraries/slick/slick/slick.css: {}
   dependencies:
     - core/jquery
+    - core/jquery.once
 
 slick.load:
   version: VERSION
   js:
     js/slick.load.min.js: { weight: 0 }
   dependencies:
-    - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
     - slick/slick
 
 slick.theme:
@@ -57,7 +56,6 @@ slick.theme:
     theme:
       css/theme/slick.theme.css: {}
   dependencies:
-    - slick/slick
     - slick/slick.load
 
 slick.thumbnail.hover:
@@ -89,10 +87,5 @@ slick.colorbox:
   js:
     js/slick.colorbox.min.js: {}
   dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupalSettings
-    - core/jquery.once
-    - colorbox/colorbox
     - blazy/colorbox.skin
     - slick/slick.load

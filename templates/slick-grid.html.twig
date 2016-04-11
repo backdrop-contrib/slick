@@ -11,7 +11,7 @@
 #}
 {%
   set classes = [
-    'slide__content',
+    settings.unslick ? 'slick__grid' : 'slide__content',
     'block-grid',
     settings.grid_small ? 'small-block-grid-' ~ settings.grid_small,
     settings.grid_medium ? 'medium-block-grid-' ~ settings.grid_medium,
@@ -20,11 +20,11 @@
 %}
 {%
   set item_classes = [
-    setting.unslick ? 'slick__grid' : 'slide__grid',
+    not settings.unslick ? 'slide__grid',
     'grid'
   ]
 %}
-
+{{ kint(settings) }}
 {% spaceless %}
 <ul{{ attributes.addClass(classes) }}>
   {% for delta, item in items %}

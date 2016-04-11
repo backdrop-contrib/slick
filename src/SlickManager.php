@@ -88,17 +88,16 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $attach['blazy_colorbox'] = FALSE;
     $load = parent::attach($attach);
 
-    $easing = \Drupal::root() . '/libraries/easing/jquery.easing.min.js';
-    if (is_file($easing)) {
+    if (is_file('libraries/easing/jquery.easing.min.js')) {
       $load['library'][] = 'slick/slick.easing';
     }
 
     $load['library'][] = 'slick/slick.load';
 
-    $components = ['colorbox', 'media', 'mousewheel'];
+    $components = ['colorbox', 'mousewheel'];
     foreach ($components as $component) {
       if (!empty($attach[$component])) {
-        $load['library'][] = $component == 'media' ? 'blazy/media' : 'slick/slick.' . $component;
+        $load['library'][] = 'slick/slick.' . $component;
       }
     }
 
@@ -106,7 +105,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
     // Attach default JS settings to allow responsive displays have a lookup,
     // excluding wasted/trouble options, e.g.: PHP string vs JS object.
-    $excludes = explode(' ', 'mobileFirst appendArrows appendDots asNavFor prevArrow nextArrow cssEaseBezier cssEaseOverride respondTo');
+    $excludes = explode(' ', 'mobileFirst appendArrows appendDots asNavFor prevArrow nextArrow respondTo');
     $excludes = array_combine($excludes, $excludes);
     $load['drupalSettings']['slick'] = array_diff_key(Slick::defaultSettings(), $excludes);
 

@@ -289,9 +289,8 @@
   foreach ($images as $key) {
     // Each item has keys: slide, caption, settings.
     $build['thumb']['items'][] = [
-      // Use $formatter->getImage($element) to have lazyLoad where $element
-      // contains:
-      // item: Drupal\image\Plugin\Field\FieldType\ImageItem
+      // Use $formatter->getThumbnail($settings) where $settings contain:
+      // uri, image_style, height, width, alt, title.
       'slide'   => '<img src="/sites/all/images/image-0' . $key . '.jpg" width="210" />',
 
       // Thumbnail caption accepts direct markup or custom renderable array
@@ -368,9 +367,11 @@ class HookSlickSkin implements SlickSkinInterface {
         // Optional module name to prefix the library name.
         'provider' => 'my_module',
         'css' => [
-          // Full path to a CSS file to include with the skin.
-          $theme_path . '/css/my-theme--slider.css' => [],
-          $theme_path . '/css/my-theme--carousel.css' => [],
+          'theme' => [
+            // Full path to a CSS file to include with the skin.
+            $theme_path . '/css/my-theme--slider.css' => [],
+            $theme_path . '/css/my-theme--carousel.css' => [],
+          ],
         ],
         'js' => [
           // Full path to a JS file to include with the skin.

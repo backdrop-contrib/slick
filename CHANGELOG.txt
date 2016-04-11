@@ -1,4 +1,9 @@
 
+Slick 8.x-2.0-dev, 2016-04-11
+-----------------------------
+- Ported hook_requirements().
+- A couple of cleanups.
+
 Slick 8.x-2.0-dev, 2016-04-09
 -----------------------------
 - Fixed for broken core library grid Rows.

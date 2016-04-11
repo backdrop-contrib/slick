@@ -60,7 +60,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
   }
 
   /**
-   * Gets the media switch options.
+   * Overrides BlazyFormatterManager::getMediaSwitch().
    */
   public function getMediaSwitch(array &$element = [], $settings = []) {
     parent::getMediaSwitch($element, $settings);

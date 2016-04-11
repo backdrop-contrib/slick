@@ -49,16 +49,8 @@ iframe {
 
 .slick__slide {
   max-width: 100%;
-  position: absolute;
-  vertical-align: top;
-  visibility: hidden;
-}
-
-.slide--0,
-.slick-slide,
-.slick-slide .slick__slide {
   position: relative;
-  visibility: visible;
+  vertical-align: top;
 }
 
 /* Prevent stacking oversized thumbnails/slides when/before JS is on. */
@@ -108,6 +100,11 @@ iframe {
 /**
  * Slide layouts, adjust accordingly per actual container slide.
  */
+.slide__content,
+.grid__content {
+  position: relative;
+}
+
 .slide__content::after {
   content: "";
   display: table;
@@ -212,6 +209,7 @@ iframe {
 
 /* Only display when JS is ready. */
 .slick-slide .slide__caption,
+.block-grid .slide__caption,
 .js .slick__arrow {
   visibility: visible;
 }
