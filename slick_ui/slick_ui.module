@@ -99,13 +99,12 @@ function slick_ui_help($path, $arg) {
   $slick         = url(drupal_get_path('module', 'slick') . '/README.txt');
   $slick_fields  = url(drupal_get_path('module', 'slick_fields') . '/README.txt');
   $slick_views   = url(drupal_get_path('module', 'slick_views') . '/README.txt');
-  $slick_example = url(drupal_get_path('module', 'slick_example') . '/README.txt');
+
   switch ($path) {
     case 'admin/help#slick_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t("The Slick carousel module is a field formatter to create carousels. Also available as Views style plugin. <br />To get up running quickly, <a href='@url'>enable Slick example</a> module.", array('@url' => url('admin/modules', array('fragment' => 'edit-modules-slick')))) . '</p>';
-      $output .= '<p>' . t('Read <a href="@url">more info about Slick example</a> before you proceed.', array('@url' => $slick_example)) . '</p>';
       $output .= '<p>' . t('Read <a href="@url">more info about Slick</a> in general, including troubleshootings.', array('@url' => $slick)) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl><dt>' . t('Optionsets') . '</dt>';

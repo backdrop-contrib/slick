@@ -1,6 +1,8 @@
 
 Slick 7.x-2.0-dev, 2016-04-20
 -----------------------------
+- #2709519 by slefevre1: slick_ui help references slick_example, which is part
+  of slick_extras.
 - Various description cleanup.
 - Added (assumed) "Slideshow" file type support like Media Entity Slideshow.
 
