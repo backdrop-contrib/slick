@@ -15,8 +15,8 @@ Performant: Slick is stored as plain HTML the first time it is requested, and
 then reused on subsequent requests. Carousels with cacheability and lazyload
 are lighter and faster than those without.
 
-Slick has a gazillion of options, please start with the very basic working
-samples from slick_example [3] only if trouble to build slicks. Be sure to read
+Slick has gazillion options, please start with the very basic working samples
+from slick_example [3] only if trouble to build slicks. Be sure to read
 its README.txt. Spending 5 minutes or so will save you hours in building more
 complex slideshows.
 
@@ -36,7 +36,8 @@ o Random, autoplay, pagers, arrows, dots/text/tabs/thumbnail pagers etc...
 o Supports pure text, responsive image, iframe, video, and audio carousels with
   aspect ratio. No extra jQuery plugin FitVids is required. Just CSS.
 o Exportable via CTools.
-o Works with Views, core and contrib fields: Image, Media or Field collection.
+o Works with Views, core and contrib fields: Image, Media or Field collection,
+  or none of them.
 o Optional and modular skins, e.g.: Carousel, Classic, Fullscreen, Fullwidth,
   Split, Grid or a multi row carousel.
 o Various slide layouts are built with pure CSS goodness.
@@ -234,15 +235,15 @@ Optional skins:
   not named Grid. Otherwise overrides skin Grid accordingly.
 
   Requires:
-  Visible slides, Skin Grid for starter, A reasonable amount of slides,
-  Optionset with Rows and slidesPerRow = 1.
-  Avoid variableWidth and adaptiveHeight. Use consistent dimensions.
+  "Visible slides", Skin "Grid" for starter, A reasonable amount of slides,
+  Optionset with "Rows" and "slidesPerRow = 1".
+  Avoid "variableWidth" and "adaptiveHeight". Use consistent dimensions.
   This is module feature, older than core Rows, and offers more flexibility.
   Available at slick_views, and configurable via Views UI.
 
 - Rounded, should be named circle
   This will circle the main image display, reasonable for small carousels, maybe
-  with a small caption below to make it nice. Use slidesToShow option > 2.
+  with a small caption below to make it nice. Use "slidesToShow" option > 2.
   Expecting square images.
 
 If you want to attach extra 3rd libraries, e.g.: image reflection, image zoomer,
@@ -259,17 +260,17 @@ GRID
 To create Slick grid or multiple rows carousel, there are 3 options:
 
 1. One row grid managed by library:
-   Visit admin/config/media/slick,
+   Visit "admin/config/media/slick",
    Edit current optionset, and set
    slidesToShow > 1, and Rows and slidesperRow = 1
 
 2. Multiple rows grid managed by library:
-   Visit admin/config/media/slick,
+   Visit "admin/config/media/slick",
    Edit current optionset, and set
    slidesToShow = 1, Rows > 1 and slidesPerRow > 1
 
 3. Multiple rows grid managed by Module:
-   Visit admin/structure/views/view/slick_x/edit/block_grid from slick_example,
+   Visit "admin/structure/views/view/slick_x/edit/block_grid" at slick_example,
    Be sure to install the Slick example sub-module first.
    Requires skin "Grid", and set
    slidesToShow, Rows and slidesPerRow = 1.
@@ -301,6 +302,7 @@ After Slick 1.4:
 </div>
 
 At both cases, asNavFor should target slick-initialized class/ID attributes.
+The reason for the change was arrows would act as slides which is unwanted.
 
 
 BUG REPORTS OR SUPPORT REQUESTS
