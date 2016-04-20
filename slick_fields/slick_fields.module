@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Provides fields integration for the Slick carousel.
@@ -50,7 +51,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $cid      = $instance['id'] . $settings['current_view_mode'] . $settings['image_style'] . $langcode;
 
   // Sniffs for Views to allow block__no_wrapper, views_view__no_wrapper, etc.
-  $view = empty($display['views_view']) ? NULL : $display['views_view'];
+  $view = empty($display['views_view']) ? FALSE : $display['views_view'];
   if ($view) {
     $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
     $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name . '--' . $view->current_display);

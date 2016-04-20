@@ -135,7 +135,7 @@ function slick_get_options() {
  * Implements hook_hook_info().
  */
 function slick_hook_info() {
-  $hooks['slick_skins_info']  = array('group' => 'slick');
+  $hooks['slick_skins_info'] = array('group' => 'slick');
   return $hooks;
 }
 
@@ -163,7 +163,7 @@ function slick_skins() {
  *   The associative array of available skins grouped by $group, else all skins.
  */
 function slick_get_skins_by_group($group = '', $select = FALSE) {
-  $skins = $groups = $ungroups = [];
+  $skins = $groups = $ungroups = array();
   foreach (slick_skins() as $skin => $properties) {
     $item = $select ? check_plain($properties['name']) : $properties;
     if (!empty($group)) {
