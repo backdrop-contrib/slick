@@ -35,7 +35,7 @@
   // Invoke the plugin class, or use a DI service container accordingly.
   $slick = \Drupal::service('slick.manager');
 
-  // Access the formatter service for image related methods:
+  // Access the formatter service for image-related methods:
   $formatter = \Drupal::service('slick.formatter');
 
   $build = [];
@@ -330,6 +330,7 @@
  *
  * @deprecated, will be removed anytime when a core solution is available.
  * @see #2233261
+ * Postponed till D9.
  *
  * @see slick_hook_info()
  * @see slick_example.module

@@ -97,7 +97,7 @@
       });
 
       $window.on('resize', function () {
-        Drupal.slickColorbox.resize(true);
+        Drupal.slickColorbox.resize();
       });
 
       $(context).on('cbox_complete', function () {
@@ -144,10 +144,6 @@
         if ($iframe.length) {
           $container.addClass('media media--ratio');
           $iframe.attr('width', o.maxWidth).attr('height', o.maxHeight).addClass('media__element');
-          // if (resize && $window.width() < o.maxWidth && $window.width() < 640) {
-          // o.maxHeight = $iframe.height();
-          // o.maxWidth = $window.width();
-          // }
           $container.css({paddingBottom: (o.maxHeight / o.maxWidth) * 100 + '%', height: 0});
         }
         else {

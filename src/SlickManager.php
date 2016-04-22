@@ -39,7 +39,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $skins = &drupal_static(__METHOD__, NULL);
     if (!isset($skins)) {
       $skins = [];
-      foreach (['main', 'thumbnail', 'arrows', 'dots'] as $key) {
+      foreach (['overlay', 'main', 'thumbnail', 'arrows', 'dots'] as $key) {
         $skins[$key] = $this->getSkinsByGroup($key);
       }
       $skins = array_filter($skins);

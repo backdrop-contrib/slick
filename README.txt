@@ -379,7 +379,7 @@ HOW CAN YOU HELP?
 Please consider helping in the issue queue, provide improvement, or helping with
 documentation.
 
-If you find this module helpful, please help back spread the love.
+If you find this module helpful, please help back spread the love. Thanks.
 
 
 AUTHOR/MAINTAINER/CREDITS

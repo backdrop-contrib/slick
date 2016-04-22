@@ -1,4 +1,9 @@
 
+Slick 8.x-2.0-dev, 2016-04-22
+-----------------------------
+- A couple of cleanups.
+- #2710221 by xanterax: Fatal error by colliding constructor traits.
+
 Slick 8.x-2.0-dev, 2016-04-11
 -----------------------------
 - Ported hook_requirements().
