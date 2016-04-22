@@ -215,36 +215,40 @@ function slick_extract_image_data($settings, array &$media, array &$slide, $item
  */
 function slick_build_grids(array $build, &$settings) {
   $grids = array();
+
+  // Display all items if unslick is enforced for plain grid to lightbox.
   if (!empty($settings['unslick'])) {
     $settings['current_display'] = 'main';
-    $settings['current_item'] = 'grid';
+    $settings['current_item']    = 'grid';
+    $settings['count']           = 2;
 
     // Displays all items if unslick is enforced such as plain grid to lightbox.
-    $grids[0] = array(
-      '#theme' => 'slick_grid',
-      '#items' => $build,
-      '#delta' => 0,
-      '#settings' => array(
-        'count'   => 2,
-        'skin'    => $settings['skin'],
-        'unslick' => TRUE,
-      ),
+    $slide['slide'] = array(
+      '#theme'    => 'slick_grid',
+      '#items'    => $build,
+      '#delta'    => 0,
+      '#settings' => $settings,
     );
+    $slide['settings'] = $settings;
+    $grids[0] = $slide;
   }
   else {
     // Otherwise do chunks to have a grid carousel.
-    $preserve_keys = !empty($settings['preserve_keys']) ? TRUE : FALSE;
-    $grid_items = array_chunk($build, $settings['visible_slides'], $preserve_keys);
+    $preserve_keys     = !empty($settings['preserve_keys']);
+    $grid_items        = array_chunk($build, $settings['visible_slides'], $preserve_keys);
+    $settings['count'] = count($grid_items);
+
     foreach ($grid_items as $delta => $grid_item) {
-      $grids[] = array(
-        '#theme' => 'slick_grid',
-        '#items' => $grid_item,
-        '#delta' => $delta,
-        '#settings' => array(
-          'count' => count($grid_items),
-          'skin'  => $settings['skin'],
-        ),
+      $slide = array();
+      $slide['slide'] = array(
+        '#theme'    => 'slick_grid',
+        '#items'    => $grid_item,
+        '#delta'    => $delta,
+        '#settings' => $settings,
       );
+      $slide['settings'] = $settings;
+      $grids[] = $slide;
+      unset($slide);
     }
   }
 

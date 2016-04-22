@@ -9,6 +9,10 @@
  * - $settings: A renderable array containing cherry-picked seetings.
  */
 ?>
-<?php foreach($items as $delta => $item): ?>
-  <?php print render($item); ?>
-<?php endforeach; ?>
+<ul<?php print $attributes; ?>>
+  <?php foreach($items as $delta => $item): ?>
+    <li<?php print $item_attributes[$delta]; ?>>
+      <div class="grid__content"><?php print render($item); ?></div>
+    </li>
+  <?php endforeach; ?>
+</ul>

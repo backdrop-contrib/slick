@@ -1,4 +1,7 @@
 
+Slick 7.x-2.0-dev, 2016-04-23
+-----------------------------
+- #2711809: Move slick grid logic out of slide into grid.
 
 Slick 7.x-2.0-dev, 2016-04-20
 -----------------------------

@@ -67,7 +67,7 @@ function template_preprocess_slick(&$variables) {
 
   // Allows manipulating markups with an enforced unslick.
   $settings['count']   = !empty($settings['count']) ? $settings['count'] : $count;
-  $settings['unslick'] = !empty($settings['unslick']) || $settings['count'] == 1 ? TRUE : FALSE;
+  $settings['unslick'] = !empty($settings['unslick']) || $settings['count'] == 1;
 
   if ($display == 'thumbnail') {
     $skin = !empty($settings['skin_thumbnail']) ? $settings['skin_thumbnail'] : $optionset->skin;
@@ -217,8 +217,8 @@ function _slick_build_slide($item, $delta = 0, $settings = array()) {
   $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
   return array(
     '#theme'    => 'slick_item',
-    '#item'     => isset($item['slide']) ? $item['slide'] : ($settings['current_item'] == 'grid' ? array() : $item),
-    '#caption'  => !empty($item['caption']) ? array_filter($item['caption']) : array(),
+    '#item'     => isset($item['slide']) ? $item['slide'] : $item,
+    '#caption'  => empty($item['caption']) ? array() : array_filter($item['caption']),
     '#delta'    => $delta,
     '#settings' => $settings,
   );
@@ -232,6 +232,9 @@ function template_preprocess_slick_item(&$variables) {
   $item     = $variables['item'] = $element['#item'];
   $settings = $element['#settings'];
 
+  // Thumbnail may not have settings as it just prints the image.
+  $settings = isset($item['#settings']) && is_array($item['#settings']) ? array_merge($settings, $item['#settings']) : $settings;
+
   // Prepare variables, and remove non-BEM default class.
   $variables['classes_array']  = array_diff($variables['classes_array'], array('slick-item'));
   $variables['wrapper_prefix'] = $variables['wrapper_suffix'] = array();
@@ -241,45 +244,11 @@ function template_preprocess_slick_item(&$variables) {
   // Configure attributes for containing elements.
   $attributes          = $content_attributes = array();
   $attributes['class'] = $variables['classes_array'];
-  $variables['tag']    = $variables['content_tag'] = 'div';
-
-  // @todo backport D8 move grid logic out into theme_slick_grid() if you can.
-  if ($settings['current_item'] == 'grid') {
-    $one                      = !empty($settings['unslick']) ? 'slick__grid' : 'slide__grid';
-    $two                      = 'grid';
-    $three                    = 'grid--' . $element['#delta'];
-    $variables['tag']         = 'li';
-    $variables['content_tag'] = 'div';
-    $content_attributes['class'][] = 'grid__content';
-  }
-  else {
-    $one              = 'slick__slide';
-    $two              = 'slide';
-    $three            = 'slide--' . $element['#delta'];
-    $variables['tag'] = 'div';
-    $content_attributes['class'][] = 'slide__content';
-    // Thumbnail may not have settings as it just prints the image.
-    $settings = isset($item['#settings']) && is_array($item['#settings']) ? array_merge($settings, $item['#settings']) : $settings;
-  }
+  $settings['detroy']  = $settings['current_item'] == 'main' && !empty($settings['grid']) && !empty($settings['unslick']);
+  $settings['wrapper'] = $settings['count'] > 1 && $settings['current_item'] != 'grid';
 
   // 1, 2, 3, 1, 2, 3, drink.
-  $attributes['class'] += array($one, $two, $three);
-
-  // Only add relevant Foundation block-grid classes if the skin is Grid.
-  if (!empty($settings['grid']) && $settings['current_item'] == 'main') {
-    $settings['grid_large'] = $settings['grid'];
-    if (!empty($settings['skin']) && $settings['skin'] == 'grid') {
-      $grids = array('small', 'medium', 'large');
-      $content_attributes['class'][] = 'block-grid';
-      foreach ($grids as $grid) {
-        if ($column = $settings['grid_' . $grid]) {
-          $content_attributes['class'][] = $grid . '-block-grid-' . $column;
-        }
-      }
-    }
-    $attributes['class'][] = 'slide--grid';
-    $variables['content_tag'] = 'ul';
-  }
+  $attributes['class'] += array('slick__slide', 'slide', 'slide--' . $element['#delta']);
 
   // Media module has type: image, audio, video, as opposed to field_type.
   if (!empty($settings['type']) && $settings['type'] != 'image') {
@@ -321,17 +290,15 @@ function template_preprocess_slick_item(&$variables) {
   }
 
   // Do not add divities for a single slick (unslick) to have clean markups.
-  if ($settings['count'] > 1) {
-    $variables['wrapper_prefix'] = '<' . $variables['tag'] . drupal_attributes($attributes) . '>';
-    $variables['wrapper_suffix'] = '</' . $variables['tag'] . '>';
-    $variables['content_prefix'] = '<' . $variables['content_tag'] . drupal_attributes($content_attributes) . '>';
-    $variables['content_suffix'] = '</' . $variables['content_tag'] . '>';
-  }
+  if ($settings['wrapper']) {
+    $variables['wrapper_prefix'] = '<div' . drupal_attributes($attributes) . '>';
+    $variables['wrapper_suffix'] = '</div>';
 
-  // Removes useless .slick__slide DIV if it is an enforced unslick grid.
-  if ($settings['current_item'] == 'main' && $variables['content_tag'] == 'ul' && !empty($settings['unslick'])) {
-    $variables['wrapper_prefix'] = $variables['wrapper_suffix'] = array();
-    $variables['content_prefix'] = str_replace("slide__content", "slide", $variables['content_prefix']);
+    if (empty($settings['grid'])) {
+      $content_attributes['class'][] = 'slide__content';
+      $variables['content_prefix'] = '<div' . drupal_attributes($content_attributes) . '>';
+      $variables['content_suffix'] = '</div>';
+    }
   }
 
   $variables['settings'] = $settings;
@@ -344,13 +311,45 @@ function template_preprocess_slick_grid(&$variables) {
   $element  = $variables['element'];
   $settings = $element['#settings'];
 
+  $variables['classes_array'] = array_diff($variables['classes_array'], array('slick-grid'));
+  $attributes                 = &$variables['attributes_array'];
+  $attributes['class']        = $variables['classes_array'];
+
+  if (empty($settings['unslick'])) {
+    $attributes['class'][] = 'slide__content';
+  }
+
+  $attributes['class'][] = 'slick__grid';
+  $attributes['class'][] = 'block-grid';
+
+  $settings['grid_large'] = $settings['grid'];
+  foreach (array('small', 'medium', 'large') as $grid) {
+    if ($column = $settings['grid_' . $grid]) {
+      $attributes['class'][] = $grid . '-block-grid-' . $column;
+    }
+  }
+
   $variables['items'] = array();
   foreach ($element['#items'] as $delta => $item) {
     $settings['current_item'] = 'grid';
 
-    $slide = _slick_build_slide($item, $delta, $settings);
+    $variables['item_attributes_array'][$delta]['class'] = array('slide__grid', 'grid', 'grid--' . $delta);
+
+    $slide['slide'] = _slick_build_slide($item, $delta, $settings);
     $variables['items'][$delta] = $slide;
     unset($slide);
+  }
+
+  $variables['classes_array'] = $attributes['class'];
+}
+
+/**
+ * Implements hook_process_slick_grid().
+ */
+function template_process_slick_grid(&$variables) {
+  $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
+  foreach ($variables['items'] as $delta => $item) {
+    $variables['item_attributes'][$delta] = empty($variables['item_attributes_array'][$delta]) ? '' : drupal_attributes($variables['item_attributes_array'][$delta]);
   }
 }
 
@@ -527,9 +526,11 @@ function theme_slick_image_lazy(array $variables) {
 function slick_get_element_default_settings() {
   $settings = array(
     'current_display' => 'main',
+    'grid'            => '',
     'has_pattern'     => FALSE,
     'id'              => '',
     'media_switch'    => '',
+    'nav'             => FALSE,
     'optionset'       => 'default',
     'skin'            => '',
   );
