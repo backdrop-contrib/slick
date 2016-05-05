@@ -20,7 +20,7 @@ samples from slick_example [3] only if trouble to build slicks. Be sure to read
 its README.txt. Spending 5 minutes or so will save you hours in building more
 complex slideshows.
 
-The module supports Slick 1.5 above, and dropped supporting Slick 1.4.x below.
+The module supports Slick 1.5 above.
 Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.
 
 [1] https://groups.drupal.org/node/20384
@@ -47,8 +47,9 @@ REQUIREMENTS
   such as delay lazyloading for below-fold sliders, iframe, (fullscreen) CSS
   background lazyloading, breakpoint dependent multi-serving images, lazyload
   ahead for smoother UX.
-  Full integration will happen prior to Betas, or Full release.
-  http://dgo.to/blazy
+
+  Important! Be sure to enable Blazy first before updating Slick Alphas,
+  otherwise a requirements error.
 
 FEATURES
 --------------------------------------------------------------------------------
@@ -85,16 +86,19 @@ The Slick module has several sub-modules:
 
 - slick_media [1], to get richer contents using Media entity.
 
-- slick_views [2], to get more complex slides.
+- slick_video [2], to get video carousels using Video Embed Field.
+
+- slick_views [3], to get more complex slides.
 
 - slick_devel, if you want to help testing and developing the Slick.
 - slick_example, to get up and running quickly.
-  Both are included in slick_extras [3].
+  Both are included in slick_extras [4].
 
 
 [1] http://dgo.to/slick_media
-[2] http://dgo.to/slick_views
-[3] http://dgo.to/slick_extras
+[2] http://dgo.to/slick_media
+[3] http://dgo.to/slick_views
+[4] http://dgo.to/slick_extras
 
 
 
@@ -102,8 +106,6 @@ OPTIONAL INTEGRATION
 --------------------------------------------------------------------------------
 Slick supports enhancements and more complex layouts.
 
-- Blazy, to delay loading below-fold images until 100px before visible at
-  viewport, and/or have a bonus lazyLoadAhead when the beforeChange event fired.
 - Colorbox, to have grids/slides that open up image/video in overlay.
 - Photobox, idem ditto.
 - Responsive image, in core, to get truly responsive image.
@@ -121,7 +123,7 @@ To create optionsets, go to:
 
   admin/config/media/slick
 
-Be sure to enable Slick UI sub-module first.
+Be sure to enable Slick UI sub-module first, otherwise regular "Access denied".
 These will be available at field formatter "Manage display", and Views UI.
 
 
@@ -213,8 +215,9 @@ Use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface
 to register ones. Clear the cache once.
 See slick.api.php for more info on skins.
 See \Drupal\slick\SlickSkinInterface.
+
 Other skins are available at http://dgo.to/slick_extras
-Some extras skins are WIP which may not work as expected.
+Some extra skins are WIP which may not work as expected.
 
 
 GRID
@@ -246,16 +249,7 @@ broken Grid, see skin Grid above for more details.
 HTML STRUCTURE
 --------------------------------------------------------------------------------
 Note, non-BEM classes are added by JS.
-Before Slick 1.4, no longer supported:
--------------------------------------
-<div class="slick slick-processed slick-initialized slick-slider">
-  <div class="slick__slide"></div>
-  <nav class="slick__arrow"></nav>
-</div>
 
-
-After Slick 1.4 is the currently supported version:
---------------------------------------------------
 <div class="slick slick-processed">
   <div class="slick__slider slick-initialized slick-slider">
     <div class="slick__slide"></div>
@@ -263,9 +257,7 @@ After Slick 1.4 is the currently supported version:
   <nav class="slick__arrow"></nav>
 </div>
 
-The reason behind the change was the new Slick will make direct children as
-slides, meaning arrows are slides, not navigation anymore, which is unwanted.
-At both cases, asNavFor should target slick-initialized class/ID attributes.
+asNavFor should target slick-initialized class/ID attributes.
 
 
 BUG REPORTS OR SUPPORT REQUESTS
@@ -350,12 +342,6 @@ KNOWN ISSUES
     obvious if slidesToShow > 1. Simply disable it if not desired.
 
 
-UNKNOWN ISSUES
---------------------------------------------------------------------------------
-- Anything the maintainers are not aware of.
-  Please report if you find one. Your report and help is any module QA. Thanks.
-
-
 CURRENT DEVELOPMENT STATUS
 --------------------------------------------------------------------------------
 A full release should be reasonable after proper feedbacks from the community,
@@ -388,7 +374,6 @@ Slick 8.x-1.x by gausarts, and other authors below.
 Slick 7.x-2.x by gausarts, inspired by Flexslider with CTools integration.
 Slick 7.x-1.x by arshadcn, the original author.
 
-With the help from the community:
 - https://www.drupal.org/node/2232779/committers
 - CHANGELOG.txt for helpful souls with their patches, suggestions and reports.
 

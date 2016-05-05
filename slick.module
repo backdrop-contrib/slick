@@ -35,15 +35,18 @@ function slick_library_info_build() {
     ],
   ];
 
-  foreach (\Drupal::service('slick.manager')->getAvailableSkins() as $group => $skins) {
-    foreach ($skins as $key => $skin) {
-      $provider = isset($skin['provider']) ? $skin['provider'] : 'slick';
-      $id = $provider . '.' . $group . '.' . $key;
-      if (isset($skin['css']) && is_array($skin['css'])) {
-        $libraries[$id]['css'] = $skin['css'];
-      }
-      if (isset($skin['js']) && is_array($skin['js'])) {
-        $libraries[$id]['js'] = $skin['js'];
+  $manager = \Drupal::service('slick.manager');
+  foreach ($manager::getConstantSkins() as $group) {
+    if ($skins = $manager->getSkinsByGroup($group)) {
+      foreach ($skins as $key => $skin) {
+        $provider = isset($skin['provider']) ? $skin['provider'] : 'slick';
+        $id = $provider . '.' . $group . '.' . $key;
+        if (isset($skin['css']) && is_array($skin['css'])) {
+          $libraries[$id]['css'] = $skin['css'];
+        }
+        if (isset($skin['js']) && is_array($skin['js'])) {
+          $libraries[$id]['js'] = $skin['js'];
+        }
       }
     }
   }

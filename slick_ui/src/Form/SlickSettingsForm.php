@@ -56,7 +56,8 @@ class SlickSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('slick.settings')
+
+    $this->configFactory->getEditable('slick.settings')
       ->set('slick_css', $form_state->getValue('slick_css'))
       ->set('module_css', $form_state->getValue('module_css'))
       ->save();

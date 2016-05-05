@@ -165,6 +165,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
       'field_name'        => $this->fieldDefinition->getName(),
       'image_style_form'  => TRUE,
       'media_switch_form' => TRUE,
+      'preloaders'        => TRUE,
       'settings'          => $this->getSettings(),
       'thumb_captions'    => $captions,
       'nav'               => TRUE,

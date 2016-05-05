@@ -1,4 +1,12 @@
 
+Slick 8.x-2.0-dev, 2016-05-05
+-----------------------------
+- Updated JS to Blazy JS v1.6.0 as per [#2716765].
+- Added option Preloader for Slick > 1.5.9 which is unfortunately still broken.
+- Removed _slick_build_slide() to reduce function calls.
+- Removed expensive SlickManager::getAvailableSkins().
+- More cleanups.
+
 Slick 8.x-2.0-dev, 2016-04-22
 -----------------------------
 - A couple of cleanups.

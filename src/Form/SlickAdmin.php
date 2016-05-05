@@ -216,7 +216,7 @@ class SlickAdmin implements SlickAdminInterface {
       $this->blazyAdmin->imageStyleForm($form, $definition);
     }
 
-    $form['image_style']['#description'] = t('The main image style. If Slick media module installed, this also determines iframe sizes to have various iframe dimensions with just a single file entity view mode, relevant for a mix of image and multimedia to get a consistent display.');
+    $form['image_style']['#description'] = t('The main image style. Ignored if Breakpoints are provided, use smaller image style here instead. Otherwise this is the only image displayed. If Slick media module installed, this determines iframe sizes to have various iframe dimensions with just a single file entity view mode, relevant for a mix of image and multimedia to get a consistent display.');
 
     $form['thumbnail_style']['#description'] = t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>If <em>Dots with thumbnail</em> selected, displayed when hovering over dots.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.');
 
@@ -260,7 +260,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#title'       => t('Override main optionset'),
       '#type'        => 'checkbox',
       '#description' => t('If checked, the following options will override the main optionset. Useful to re-use one optionset for several different displays.'),
-      '#weight'      => 99,
+      '#weight'      => 113,
       '#enforced'    => TRUE,
     ];
 
@@ -269,7 +269,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#title'         => t('Overridable options'),
       '#description'   => t("Override the main optionset to re-use one. Anything dictated here will override the current main optionset. Unchecked means FALSE"),
       '#options'       => $this->getOverridableOptions(),
-      '#weight'        => 100,
+      '#weight'        => 114,
       '#enforced'      => TRUE,
       '#states' => [
         'visible' => [
@@ -277,6 +277,10 @@ class SlickAdmin implements SlickAdminInterface {
         ],
       ],
     ];
+
+    if (isset($definition['preloaders'])) {
+      $form['preloader']['#description'] .= ' ' . t('Depends on a lazyLoad. <strong>Important!</strong> Required Slick > 1.5.9.');
+    }
 
     if (!isset($form['cache'])) {
       $this->blazyAdmin->closingForm($form, $definition);
@@ -365,8 +369,8 @@ class SlickAdmin implements SlickAdminInterface {
   /**
    * Return the field formatter settings summary.
    */
-  public function settingsSummary($plugin, array &$summary = []) {
-    return $this->blazyAdmin->settingsSummary($plugin, $summary);
+  public function settingsSummary($plugin) {
+    return $this->blazyAdmin->settingsSummary($plugin);
   }
 
   /**

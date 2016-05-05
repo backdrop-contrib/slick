@@ -73,15 +73,11 @@
 
       if (o.lazyLoad === 'blazy' && typeof Drupal.blazy !== 'undefined') {
         t.on('beforeChange.slick', function () {
-          var $src = $('[data-src]', t);
-          var $srcset = $('[data-srcset]', t);
+          var $src = $('.media--loading .b-lazy', t);
 
           // Enforces lazyload ahead to smoothen the UX.
           if ($src.length) {
             Drupal.blazy.init.load($src);
-          }
-          if ($srcset.length) {
-            Drupal.blazy.loadSrcset($srcset);
           }
         });
       }
@@ -122,6 +118,10 @@
         t.trigger('resize');
         $ratio.addClass('media--ratio').removeClass('js-media--ratio');
       }
+
+      t.on('lazyLoaded lazyLoadError', function (e, slick, img) {
+        $(img).closest('.media--loading').removeClass('media--loading');
+      });
 
       t.trigger('afterSlick', [me, slick, slick.currentSlide]);
     },

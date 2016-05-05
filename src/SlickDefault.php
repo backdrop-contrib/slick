@@ -26,7 +26,6 @@ class SlickDefault extends BlazyDefault {
       'optionset_thumbnail' => '',
       'override'            => FALSE,
       'overridables'        => [],
-      'preloader'           => FALSE,
       'skin_arrows'         => '',
       'skin_dots'           => '',
       'skin_thumbnail'      => '',
@@ -39,6 +38,7 @@ class SlickDefault extends BlazyDefault {
    */
   public static function imageSettings() {
     return [
+      'preloader'        => FALSE,
       'thumbnail_effect' => '',
     ] + self::baseSettings() + parent::imageSettings();
   }

@@ -6,10 +6,7 @@
  */
 
 use Drupal\Core\Template\Attribute;
-use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Serialization\Json;
-use Drupal\blazy\Blazy;
 use Drupal\slick\Entity\Slick;
 
 /**
@@ -29,14 +26,14 @@ function template_preprocess_slick(&$variables) {
   $content_attributes = new Attribute();
 
   if (!isset($attributes['id'])) {
-    $id = Slick::getHtmlId('slick', $settings['id']);
+    $id = empty($settings['id']) ? Slick::getHtmlId('slick') : $settings['id'];
     $attributes['id'] = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
   }
 
   // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
   if ($settings['view_name'] && $settings['current_view_mode']) {
-    $settings['attributes']['class'][] = Html::cleanCssIdentifier('slick--view--' . $settings['view_name']);
-    $settings['attributes']['class'][] = Html::cleanCssIdentifier('slick--view--' . $settings['view_name'] . '--' . $settings['current_view_mode']);
+    $settings['attributes']['class'][] = str_replace('_', '-', 'slick--view--' . $settings['view_name']);
+    $settings['attributes']['class'][] = str_replace('_', '-', 'slick--view--' . $settings['view_name'] . '--' . $settings['current_view_mode']);
   }
 
   // @see SlickManager::buildGrid(), and this should make sense.
@@ -54,9 +51,8 @@ function template_preprocess_slick(&$variables) {
     $js['lazyLoad'] = 'blazy';
     $blazy = empty($settings['blazy_data']) ? [] : $settings['blazy_data'];
     $blazy['ratio'] = $settings['ratio'];
-    $blazy['container'] = '#' . $attributes['id'];
     if (!empty($settings['width']) && empty($blazy['ratio'])) {
-      $blazy['max'] = [$settings['width'], $settings['height']];
+      $blazy['default'] = [$settings['width'], $settings['height']];
     }
     $attributes['data-blazy'] = Json::encode($blazy);
   }
@@ -93,26 +89,20 @@ function template_preprocess_slick(&$variables) {
   $variables['items'] = [];
   foreach ($element['#items'] as $delta => $item) {
     $settings['current_item'] = $display;
+    $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
+    unset($item['settings']);
 
     $theme = $settings['vanilla'] ? 'vanilla' : ($display == 'thumbnail' ? 'thumbnail' : 'slide');
-    $slide = _slick_build_slide($item, $delta, $settings, 'slick_' . $theme);
+
+    $slide = [
+      '#theme'    => 'slick_' . $theme,
+      '#item'     => $item,
+      '#delta'    => $delta,
+      '#settings' => $settings,
+    ];
     $variables['items'][$delta] = $slide;
     unset($slide);
   }
-}
-
-/**
- * Re-uses individual slide building for grid, slide, thumbnail, vanilla.
- */
-function _slick_build_slide($item, $delta = 0, $settings = array(), $theme = 'slick_slide') {
-  $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
-  unset($item['settings']);
-  return [
-    '#theme'    => $theme,
-    '#item'     => $item,
-    '#delta'    => $delta,
-    '#settings' => $settings,
-  ];
 }
 
 /**
@@ -183,8 +173,16 @@ function template_preprocess_slick_grid(&$variables) {
   $variables['items'] = [];
   foreach ($variables['element']['#items'] as $delta => $item) {
     $variables['settings']['current_item'] = 'grid';
+    $variables['settings'] = isset($item['settings']) ? array_merge($variables['settings'], $item['settings']) : $variables['settings'];
+    unset($item['settings']);
 
-    $slide['slide'] = _slick_build_slide($item, $delta, $variables['settings']);
+    $slide['slide'] = [
+      '#theme'    => 'slick_slide',
+      '#item'     => $item,
+      '#delta'    => $delta,
+      '#settings' => $variables['settings'],
+    ];
+
     $slide['attributes'] = new Attribute();
     $variables['items'][$delta] = $slide;
     unset($slide);
@@ -194,6 +192,6 @@ function template_preprocess_slick_grid(&$variables) {
 /**
  * Prepares variables for slick-image.html.twig template.
  */
-function template_preprocess_slick_image(array &$variables) {
-  Blazy::buildAttributes($variables);
+function template_preprocess_slick_image(&$variables) {
+  template_preprocess_blazy($variables);
 }

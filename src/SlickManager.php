@@ -20,6 +20,20 @@ use Drupal\blazy\BlazyManagerInterface;
 class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, SlickManagerInterface {
 
   /**
+   * The supported $skins.
+   *
+   * @const $skins.
+   */
+  private static $skins = ['overlay', 'main', 'thumbnail', 'arrows', 'dots'];
+
+  /**
+   * Returns the supported skins.
+   */
+  public static function getConstantSkins() {
+    return self::$skins;
+  }
+
+  /**
    * Returns slick skins registered via hook_slick_skins_info(), or defaults.
    *
    * @see \Drupal\blazy\BlazyManagerBase::buildSkins().
@@ -28,21 +42,6 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $skins = &drupal_static(__METHOD__, NULL);
     if (!isset($skins)) {
       $skins = $this->buildSkins('slick', '\Drupal\slick\SlickSkin', ['skins', 'arrows', 'dots']);
-    }
-    return $skins;
-  }
-
-  /**
-   * Returns all supported skins registered via hook_slick_skins_info().
-   */
-  public function getAvailableSkins() {
-    $skins = &drupal_static(__METHOD__, NULL);
-    if (!isset($skins)) {
-      $skins = [];
-      foreach (['overlay', 'main', 'thumbnail', 'arrows', 'dots'] as $key) {
-        $skins[$key] = $this->getSkinsByGroup($key);
-      }
-      $skins = array_filter($skins);
     }
     return $skins;
   }
@@ -83,8 +82,6 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       'module_css' => $this->configLoad('module_css', 'slick.settings'),
     ];
 
-    $this->moduleHandler->alter('slick_attach_info', $attach);
-
     $attach['blazy_colorbox'] = FALSE;
     $load = parent::attach($attach);
 
@@ -99,6 +96,10 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       if (!empty($attach[$component])) {
         $load['library'][] = 'slick/slick.' . $component;
       }
+    }
+
+    if (!empty($attach['preloader'])) {
+      $load['library'][] = 'blazy/loading';
     }
 
     $this->attachSkin($load, $attach);
@@ -138,9 +139,10 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $load['library'][] = 'slick/slick.arrow.down';
     }
 
-    foreach ($this->getAvailableSkins() as $group => $skins) {
+    foreach (self::getConstantSkins() as $group) {
       $skin = $group == 'main' ? $attach['skin'] : (isset($attach['skin_' . $group]) ? $attach['skin_' . $group] : '');
       if (!empty($skin)) {
+        $skins = $this->getSkinsByGroup($group);
         $provider = isset($skins[$skin]['provider']) ? $skins[$skin]['provider'] : 'slick';
         $load['library'][] = 'slick/' . $provider . '.' . $group . '.' . $skin;
       }
