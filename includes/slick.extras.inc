@@ -190,7 +190,7 @@ function slick_get_caption($settings, $entity_type, $entity, $view_mode, array &
   if (!empty($settings['slide_title']) && $slide_title = field_get_items($entity_type, $entity, $settings['slide_title'])) {
     if (isset($slide_title[0]['value']) && !empty($slide_title[0]['value'])) {
       // Prevents HTML-filter-enabled text from having bad markups (h2 > p).
-      $slide['caption']['title']['#markup'] = filter_xss($slide_title[0]['value']);
+      $slide['caption']['title']['#markup'] = strip_tags($slide_title[0]['value']);
     }
     elseif (isset($slide_title[0]['url']) && !empty($slide_title[0]['title'])) {
       // The $item paramater expected here is $slide_title[0].

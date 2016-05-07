@@ -85,7 +85,7 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
       // Layout field as opposed from the builtin layout options.
       if (!empty($settings['slide_layout']) && strpos($settings['slide_layout'], 'field_') !== FALSE) {
         if ($layout = $wrapper->$settings['slide_layout']->value()) {
-          $slide['settings']['layout'] = check_plain($layout);
+          $slide['settings']['layout'] = strip_tags($layout);
         }
       }
 

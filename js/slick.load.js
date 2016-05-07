@@ -17,7 +17,13 @@
         var me = $(this),
           t = $("> .slick__slider", me),
           a = $("> .slick__arrow", me),
-          o = $.extend({}, settings.slick, t.data("slick"));
+          o = $.extend({}, settings.slick, t.data("slick")),
+          r = $('.slide--0 .media--ratio', t);
+
+        // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
+        if (r.length && r.is(':hidden')) {
+          r.removeClass('media--ratio').addClass('js-media--ratio');
+        }
 
         // Build the Slick.
         _.beforeSlick(t, a, o);
@@ -62,7 +68,8 @@
      */
     afterSlick: function (t, o) {
       var _ = this,
-        slick = t.slick("getSlick");
+        slick = t.slick("getSlick"),
+        $ratio = $('.js-media--ratio', t);
 
       // Arrow down jumper.
       t.parent().on("click.slick.load", ".slick-down", function (e) {
@@ -79,6 +86,17 @@
           return (delta < 0) ? t.slick("slickNext") : t.slick("slickPrev");
         });
       }
+
+      // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
+      if ($ratio.length) {
+        // t[0].slick.refresh();
+        t.trigger('resize');
+        $ratio.addClass('media--ratio').removeClass('js-media--ratio');
+      }
+
+      t.on('lazyLoaded lazyLoadError', function (e, slick, img) {
+        $(img).closest('.media--loading').removeClass('media--loading');
+      });
 
       t.trigger("afterSlick", [_, slick, slick.currentSlide]);
     },
@@ -151,7 +169,7 @@
             img = "<img alt='" + alt + "' src='" + tn.data("thumb") + "'>",
             dotsThumb = tn.length && o.dotsClass.indexOf("thumbnail") > 0 ?
               "<div class='slick-dots__thumbnail'>" + img + "</div>" : "";
-          return dotsThumb + slick.defaults.customPaging(slick, i);
+          return slick.defaults.customPaging(slick, i).add(dotsThumb);
         }
       };
     }

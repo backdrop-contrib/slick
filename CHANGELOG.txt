@@ -1,4 +1,22 @@
 
+Slick 7.x-2.0-dev, 2016-05-07
+-----------------------------
+- Fixed for broken dots.
+- Update arrows defaults values.
+- Updated slick.load.min.js to v1.6.0.
+- Fixed for slick_get_dimensions() to execute once.
+- Removed _slick_build_slide() to reduce function calls.
+- Removed slick_get_available_skins() for slick_get_skins_by_group().
+- Removed trivial iframe $alternative_content for old browsers.
+- Removed a few trivial drupal_alters which can be done via theme/preprocess or
+  UI, or core drupal_alters, or has no real benefit:
+  - slick_image_info_alter()
+  - slick_inline_css_info_alter()
+  - slick_element_default_settings_info_alter()
+  - slick_attach_info_alter()
+  - slick_options_info_alter()
+- Micro optimization.
+
 Slick 7.x-2.0-dev, 2016-04-23
 -----------------------------
 - #2711809: Move slick grid logic out of slide into grid.

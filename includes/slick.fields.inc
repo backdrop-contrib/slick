@@ -36,7 +36,7 @@ function slick_get_inline_css_skins($skin = NULL) {
 /**
  * Builds the inline CSS output for skins with explicit 'inline css' key.
  *
- * @todo supports Blazy CSS background lazyload when available for D7.
+ * @todo use Blazy CSS background lazyload when available for D7.
  */
 function slick_get_inline_css(array &$settings, array &$items) {
   $css = array();

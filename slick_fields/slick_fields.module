@@ -12,7 +12,7 @@ function slick_fields_field_formatter_info() {
   $formatters['slick'] = array(
     'label'       => t('Slick carousel'),
     'field types' => array('image', 'file', 'field_collection'),
-    'settings'    => slick_get_fields_default_settings(),
+    'settings'    => slick_fields_default_settings(),
   );
   return $formatters;
 }
@@ -44,7 +44,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     'entity_type' => $entity_type,
     'entity_uri'  => $entity_uri['path'],
     'id'          => $id,
-  ) + slick_get_fields_default_settings();
+    'inline_css'  => FALSE,
+  ) + slick_fields_default_settings();
 
   $settings = array_merge($settings, $display['settings']);
   $asnavfor = $settings['optionset_thumbnail'];
@@ -53,8 +54,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   // Sniffs for Views to allow block__no_wrapper, views_view__no_wrapper, etc.
   $view = empty($display['views_view']) ? FALSE : $display['views_view'];
   if ($view) {
-    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
-    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name . '--' . $view->current_display);
+    $settings['attributes']['class'][] = str_replace('_', '-', 'slick--view--' . $view->name);
+    $settings['attributes']['class'][] = str_replace('_', '-', 'slick--view--' . $view->name . '--' . $view->current_display);
     $cid .= $view->name . $view->current_display;
     $view = TRUE;
   }
@@ -63,7 +64,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $settings['nav'] = $asnavfor && isset($items[1]);
 
   // Renders slicks quickly from cache if any, as render cache is just cache.
-  if (!empty($settings['cache']) && $cache = slick_render_cache($settings)) {
+  $cached = !empty($settings['cache']) && $cache = slick_render_cache($settings);
+  if ($cached) {
     return array(
       '#theme'    => 'slick_wrapper',
       '#items'    => $cache,
@@ -103,18 +105,22 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   if (!isset($build['items'])) {
     return $element;
   }
+
+  if (!empty($settings['mousewheel'])) {
+    if ($mousewheel = libraries_get_path('mousewheel')) {
+      $js['mousewheel'] = TRUE;
+      $attachments['js'] += array($mousewheel . '/jquery.mousewheel.min.js' => array('group' => JS_LIBRARY, 'weight' => -5));
+    }
+  }
+
   // Inline CSS is to colorize FC individual slide, or Fullscreen skin.
-  if (!empty($settings['inline_css']) && !empty($settings['skin'])) {
-    $attachments['css'][] = slick_get_inline_css($settings, $build['items']);
-  }
-
-  if ($settings['mousewheel'] && $mousewheel = libraries_get_path('mousewheel')) {
-    $js['mousewheel'] = TRUE;
-    $attachments['js'] += array($mousewheel . '/jquery.mousewheel.min.js' => array('group' => JS_LIBRARY, 'weight' => -5));
-  }
-
-  if ($settings['skin'] && $settings['thumbnail_hover']) {
-    $attachments['css'] += array($slick_path . '/css/components/slick.dots--thumbnail.css' => array('weight' => -98));
+  if ($settings['skin']) {
+    if (!empty($settings['inline_css'])) {
+      $attachments['css'][] = slick_get_inline_css($settings, $build['items']);
+    }
+    if ($settings['thumbnail_hover']) {
+      $attachments['css'] += array($slick_path . '/css/components/slick.dots--thumbnail.css' => array('weight' => -98));
+    }
   }
 
   if ($settings['nav']) {
@@ -183,7 +189,7 @@ function slick_fields_entity_info_alter(&$entity_info) {
 /**
  * Defines default field formatter settings to avoid notices.
  */
-function slick_get_fields_default_settings() {
+function slick_fields_default_settings() {
   module_load_include('inc', 'slick', 'includes/slick.global');
   $settings = array(
     'color_field'       => '',
@@ -205,6 +211,5 @@ function slick_get_fields_default_settings() {
     'use_ajax'          => FALSE,
   ) + slick_get_global_default_settings();
 
-  drupal_alter('slick_fields_default_settings_info', $settings);
   return $settings;
 }

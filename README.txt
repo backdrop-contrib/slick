@@ -57,10 +57,7 @@ VERSIONS
 7.x-2.x supports exportable optionsets via CTools.
 Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x.
 
-As a CTools plugin, which is future-proof D8 CMI, Slick is easy to customize
-either via UI or code, and can be stored at database, or codebase.
-
-7.x-2.x supports Slick 1.5 above, and dropped supporting Slick 1.4.x and below.
+7.x-2.x supports Slick 1.5 above.
 Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.
 
 
@@ -94,7 +91,7 @@ REQUIREMENTS
     sites/../libraries/slick/slick/slick.min.js
 
 - CTools, for exportable optionsets -- only the main "Chaos tools" is needed.
-  If you have Views installed, CTools is already enabled.
+  If Panels or Views is installed, CTools is already enabled.
 
 - libraries (>=2.x)
 
@@ -104,11 +101,6 @@ REQUIREMENTS
   at:
   sites/../libraries/easing/jquery.easing.min.js
   This is CSS easing fallback for non-supporting browsers.
-
-- A basic knowledge of Drupal site building is required.
-  Please refer to the provided README on each sub-module, and each form item
-  description for more info.
-  Also refer to the supported modules guidelines to be useful for Slick.
 
 
 
@@ -141,7 +133,7 @@ To create your optionsets, go to:
 
   admin/config/media/slick
 
-Be sure to enable Slick UI sub-module first.
+Be sure to enable Slick UI sub-module first, otherwise regular "Access denied".
 These will be available at field formatter "Manage display", and Views UI.
 
 
@@ -180,10 +172,6 @@ with just CSS. Be sure to enable slick_fields.module and provide a dedicated
 slide layout per field to get more control over caption placements. However a
 combination of skins and options may lead to unpredictable layouts, get
 yourself dirty.
-
-Some default complex layout skins applied to desktop only, adjust for the mobile
-accordingly. The provided skins are very basic to support the necessary layouts.
-It is not the module job to match your awesome design requirements.
 
 Optional skins:
 --------------
@@ -284,16 +272,6 @@ broken Grid, see skin Grid above for more details.
 HTML STRUCTURE
 --------------------------------------------------------------------------------
 Note, non-BEM classes are added by JS.
-Before Slick 1.4:
------------------
-<div class="slick slick-processed slick-initialized slick-slider">
-  <div class="slick__slide"></div>
-  <nav class="slick__arrow"></nav>
-</div>
-
-
-After Slick 1.4:
------------------
 <div class="slick slick-processed">
   <div class="slick__slider slick-initialized slick-slider">
     <div class="slick__slide"></div>
@@ -301,8 +279,7 @@ After Slick 1.4:
   <nav class="slick__arrow"></nav>
 </div>
 
-At both cases, asNavFor should target slick-initialized class/ID attributes.
-The reason for the change was arrows would act as slides which is unwanted.
+asNavFor should target slick-initialized class/ID attributes.
 
 
 BUG REPORTS OR SUPPORT REQUESTS
@@ -394,26 +371,6 @@ KNOWN ISSUES
     obvious if slidesToShow > 1. Simply disable it if not desired.
 
 
-UNKNOWN ISSUES
---------------------------------------------------------------------------------
-- Anything the maintainers are not aware of.
-  Please report if you find one. Your report and help is any module QA. Thanks.
-
-
-CURRENT DEVELOPMENT STATUS
---------------------------------------------------------------------------------
-A full release should be reasonable after proper feedbacks from the community,
-some code cleanup, and optimization where needed. Patches are very much welcome.
-
-
-ROADMAP
---------------------------------------------------------------------------------
-- Bug fixes, code cleanup, optimization, and full release.
-- Get 1.x out of dev.
-- Slick 2.x
-- Drupal 8 port.
-
-
 PERFORMANCE
 --------------------------------------------------------------------------------
 Any module, even the most innocent one, that provides settings in the UI needs
@@ -432,18 +389,6 @@ they are always available.
 Most heavy logic were already moved to backend, however slick can be optimized
 more by configuring the "Cache" value per slick instance.
 
-Ditch all the slick logic to cached bare HTML:
-1. Persistent: the cached content will persist (be displayed) till the next
-   cron runs, best for static contents where freshness is no use, such as logo,
-   team, profile video, more permanent home slideshows, etc.
-2. Any number: slick is expired (detached from cached contents) by the selected
-   expiration time, and fetches fresh contents till the next cache rebuilt.
-   If stale cache is not cleared, slick will keep fetching fresh contents.
-
-Be sure to have a working cron job to clear stale cache, so that slick is loaded
-from the correct cached version. At any rate, cached contents will be refreshed
-regardless of the expiration time after the cron hits due to the nature of cron.
-
 Note: Slick is already faster, lighter and less memory than similar[1]
 solutions[2] for anonymous users with just Drupal cache. The builtin Slick Cache
 option is more useful for authenticated traffic, best with Authcache.
@@ -458,15 +403,14 @@ HOW CAN YOU HELP?
 Please consider helping in the issue queue, provide improvement, or helping with
 documentation.
 
-If you find this module helpful, please help back spread the love.
+If you find this module helpful, please help back spread the love. Thanks.
 
 
 AUTHOR/MAINTAINER/CREDITS
 --------------------------------------------------------------------------------
-Slick 7.x-2.x-dev by gausarts, inspired by Flexslider with CTools integration.
-Slick 7.x-1.x-dev by arshadcn, the original author.
+Slick 7.x-2.x by gausarts, inspired by Flexslider with CTools integration.
+Slick 7.x-1.x by arshadcn, the original author.
 
-With the help from the community:
 - https://www.drupal.org/node/2232779/committers
 - CHANGELOG.txt for helpful souls with their patches, suggestions and reports.
 

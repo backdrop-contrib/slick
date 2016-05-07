@@ -46,7 +46,7 @@ function slick_format_media($items, $langcode, array &$settings) {
     // Layout field as opposed from builtin layout above if so configured.
     if (!empty($settings['slide_layout']) && strpos($settings['slide_layout'], 'field_') !== FALSE) {
       $layout = field_get_items('file', $file, $settings['slide_layout']);
-      $slide['settings']['layout'] = check_plain($layout[0]['value']);
+      $slide['settings']['layout'] = strip_tags($layout[0]['value']);
     }
 
     // Slide classes, if so configured.

@@ -11,7 +11,7 @@
   max-width: 100%;
 }
 
-.media--ratio--on iframe,
+.media--ratio iframe,
 .media-icon {
   -webkit-transition: visibility 0s linear 0.5s, opacity 0.5s linear;
   transition: visibility 0s linear 0.5s, opacity 0.5s linear;
@@ -102,7 +102,7 @@
 }
 
 /* Ensures not affecting iframe only without media swicther */
-.media--player.media--ratio--on > iframe {
+.media--player.media--ratio > iframe {
   opacity: 0;
   visibility: hidden;
 }
@@ -110,7 +110,7 @@
 .media--switch .slick__image,
 .media-icon--play,
 .is-playing .media__iframe,
-.is-playing.media--ratio--on > iframe,
+.is-playing.media--ratio > iframe,
 .is-playing:hover .media-icon--close {
   opacity: 1;
   visibility: visible;

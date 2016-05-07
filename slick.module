@@ -12,12 +12,13 @@ function slick_theme($existing, $type, $theme, $path) {
   $themes = array();
   foreach (array('slick', 'item', 'grid', 'image_lazy', 'media', 'wrapper') as $item) {
     $key = $item == 'slick' ? $item : 'slick_' . $item;
+    $funtions = in_array($item, array('image_lazy', 'wrapper'));
     $themes[$key] = array(
       'render element' => 'element',
       'file' => 'slick.theme.inc',
       'path' => $path . '/templates',
     );
-    if (!in_array($item, array('image_lazy', 'wrapper'))) {
+    if (!$funtions) {
       $themes[$key]['template'] = strtr($key, '_', '-');
     }
   }
@@ -126,7 +127,6 @@ function slick_get_options() {
       'verticalSwiping'  => FALSE,
       'waitForAnimate'   => TRUE,
     );
-    drupal_alter('slick_options_info', $options);
   }
   return $options;
 }
@@ -184,20 +184,6 @@ function slick_get_skins_by_group($group = '', $select = FALSE) {
 }
 
 /**
- * Returns the cached supported skin groups.
- */
-function slick_get_available_skins() {
-  $skins = &drupal_static(__FUNCTION__, NULL);
-  if (!isset($skins)) {
-    $skins = array();
-    foreach (array('arrows', 'dots', 'main', 'overlay', 'thumbnail') as $key) {
-      $skins[$key] = slick_get_skins_by_group($key);
-    }
-  }
-  return $skins;
-}
-
-/**
  * Returns the Slick HTML ID.
  *
  * @param string $string
@@ -206,11 +192,11 @@ function slick_get_available_skins() {
  *   The given trusted HTML ID.
  *
  * @return string
- *   Returns the trusted HTML ID for a given Slick instance.
+ *   Returns the trusted HTML ID for a given Slick instance, otherwise dynamic.
  */
 function slick_html_id($string = 'slick', $id = '') {
   $slick_id = &drupal_static('slick_id', 0);
-  return empty($id) ? drupal_clean_css_identifier($string . '-' . ++$slick_id) : $id;
+  return empty($id) ? str_replace('_', '-', $string . '-' . ++$slick_id) : $id;
 }
 
 /**
@@ -273,15 +259,12 @@ function slick_optionset_create($values = array()) {
  */
 function slick_attach(array $attach, $settings = array()) {
   $path   = drupal_get_path('module', 'slick');
-  $skins  = slick_get_available_skins();
-  $main   = $skins['main'];
+  $main   = slick_get_skins_by_group('main');
   $load   = array();
   $attach += array(
     'attach_slick_css'  => variable_get('slick_css', TRUE),
     'attach_module_css' => variable_get('slick_module_css', TRUE),
   );
-
-  drupal_alter('slick_attach_info', $attach, $settings);
 
   $load['css'] = $load['js'] = array();
   if ($easing = libraries_get_path('easing')) {
@@ -320,7 +303,7 @@ function slick_attach(array $attach, $settings = array()) {
     $navs = array('thumbnail', 'arrows', 'dots');
     foreach ($navs as $nav) {
       if (isset($settings['skin_' . $nav]) && $skin = $settings['skin_' . $nav]) {
-        $nav_skins = $skins[$nav];
+        $nav_skins = slick_get_skins_by_group($nav);
         if (!empty($nav_skins) && isset($nav_skins[$skin]['css']) && is_array($nav_skins[$skin]['css'])) {
           $load['css'] += $nav_skins[$skin]['css'];
         }
@@ -339,7 +322,7 @@ function slick_attach(array $attach, $settings = array()) {
     'type' => 'setting',
   );
 
-  drupal_alter('slick_attach_load_info', $load, $attach, $skins, $settings);
+  drupal_alter('slick_attach_load_info', $load, $attach, $main, $settings);
   return $load;
 }
 
@@ -417,6 +400,6 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
       );
     }
   }
-  unset($items, $optionset, $settings);
+  unset($attachments, $items, $optionset, $settings);
   return $slick;
 }

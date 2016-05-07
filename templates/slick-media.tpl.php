@@ -8,8 +8,6 @@
  * overlay, and only visible when toggled.
  *
  * Available variables:
- *  - $alternative_content: Text to display for browsers that don't support
- *      iframes.
  *  - $settings: An array containing cherry-picked settings.
  */
 ?>
@@ -17,7 +15,7 @@
 <?php print render($item); ?>
 <?php if ($settings['is_media']): ?>
   <?php if (!$is_lightbox): ?>
-    <iframe<?php print $content_attributes; ?> allowfullscreen><?php print $alternative_content; ?></iframe>
+    <iframe<?php print $content_attributes; ?> allowfullscreen></iframe>
   <?php endif; ?>
   <?php if ($settings['media_switch'] == 'iframe-switch'): ?>
     <i class="media-icon media-icon--close"></i>

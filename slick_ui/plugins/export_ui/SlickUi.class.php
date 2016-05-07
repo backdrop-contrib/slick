@@ -601,6 +601,10 @@ class SlickUi extends ctools_export_ui {
         'empty_option' => t('- None -'),
       );
 
+      if (module_exists('blazy')) {
+        $elements['lazyLoad']['options']['blazy'] = 'Blazy';
+      }
+
       $elements['respondTo'] = array(
         'title' => t('Respond to'),
         'description' => t("Width that responsive object responds to. Can be 'window', 'slider' or 'min' (the smaller of the two)."),
@@ -823,7 +827,7 @@ class SlickUi extends ctools_export_ui {
     $skin_name = $skin ? check_plain($skin) : t('None');
 
     if ($skin) {
-      $description = isset($skins[$skin]['description']) && $skins[$skin]['description'] ? filter_xss_admin($skins[$skin]['description']) : '';
+      $description = isset($skins[$skin]['description']) && $skins[$skin]['description'] ? filter_xss($skins[$skin]['description']) : '';
       if ($description) {
         $skin_name .= '<br /><em>' . $description . '</em>';
       }

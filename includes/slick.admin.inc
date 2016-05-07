@@ -164,7 +164,7 @@ function slick_optionset_load_all($reset = FALSE) {
   ctools_include('export');
   $optionsets = ctools_export_crud_load_all('slick_optionset', $reset);
   foreach ($optionsets as $optionset) {
-    // Ensure the optionset is typecast after being loaded from storage.
+    // Ensures the optionset is typecast after being loaded from storage.
     $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
     _slick_typecast_optionset($optionset->options, $breakpoints);
   }
@@ -349,7 +349,7 @@ function slick_get_view_modes($entity_type, $exclude = TRUE) {
  * Gets a list of fields in the Field collection item.
  */
 function slick_get_fc_fields($instance, $field_types) {
-  $fc_options = array();
+  $options = array();
   $fields = field_info_fields();
   $bundle = 'field_collection_item';
   $bundle_instance = $instance['field_name'];
@@ -357,25 +357,25 @@ function slick_get_fc_fields($instance, $field_types) {
   foreach ($fields as $name => $field) {
     $infos = field_info_instance($bundle, $name, $bundle_instance);
     if ($field_types == '_all') {
-      $fc_options[$name] = $infos['label'];
+      $options[$name] = $infos['label'];
     }
     else {
       if (in_array($bundle, array_keys($field['bundles']))
           && in_array($bundle_instance, $field['bundles'][$bundle])
           && in_array($field['type'], $field_types)) {
-        $fc_options[$name] = $infos['label'];
+        $options[$name] = $infos['label'];
       }
     }
   }
 
-  return $fc_options;
+  return $options;
 }
 
 /**
  * Gets a list of fields in the Media file field.
  */
 function slick_get_media_fields($instance, $widget_types = NULL) {
-  $media_options = array();
+  $options = array();
   $types = drupal_map_assoc(array('audio', 'image', 'slideshow', 'video'));
 
   // Expose all media sub-fields, and merge them as available options.
@@ -384,15 +384,15 @@ function slick_get_media_fields($instance, $widget_types = NULL) {
     foreach ($fields as $key => $media_field) {
       $type = $media_field['widget']['type'];
       if ($widget_types && in_array($type, $widget_types)) {
-        $media_options[$key] = $media_field['label'];
+        $options[$key] = $media_field['label'];
       }
       else {
-        $media_options[$key] = $media_field['label'];
+        $options[$key] = $media_field['label'];
       }
     }
   }
 
-  return $media_options;
+  return $options;
 }
 
 /**
@@ -465,7 +465,6 @@ function slick_get_top_elements(array &$elements, $settings, &$form_state) {
   }
 
   drupal_alter('slick_top_elements_info', $elements, $settings, $form_state);
-  return $elements;
 }
 
 /**
@@ -507,7 +506,6 @@ function slick_get_elements(array &$elements, $settings, &$form_state) {
   );
 
   drupal_alter('slick_elements_info', $elements, $settings, $form_state);
-  return $elements;
 }
 
 /**
@@ -551,7 +549,6 @@ function slick_get_grid_elements(array &$elements, $settings, &$form_state) {
   );
 
   drupal_alter('slick_grid_elements_info', $elements, $settings, $form_state);
-  return $elements;
 }
 
 /**
@@ -603,7 +600,6 @@ function slick_get_admin_assets(array &$elements, $settings = array()) {
   }
 
   drupal_alter('slick_admin_assets_info', $elements, $settings);
-  return $elements;
 }
 
 /**

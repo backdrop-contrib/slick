@@ -285,7 +285,7 @@ iframe {
 /**
  * Media
  */
-/* Hide lazyloaded image so that noscript is visible when JS is off.*/
+/* Hide broken lazyloaded image for non-JS. */
 img[data-lazy] {
   display: none;
 }
@@ -308,9 +308,14 @@ img[data-lazy] {
   position: relative;
 }
 
-.media--ratio--on {
+.media--ratio {
   height: 0;
   /* padding-top: 30px; IE7 fix */
+}
+
+/* Allows to fix broken images with hidden elements, see slick.load.js. */
+.js-media--ratio {
+  height: auto;
 }
 
 /* 1:1 ratio */
@@ -338,10 +343,10 @@ img[data-lazy] {
   padding-bottom: 56.25%;
 }
 
-.media--ratio--on > iframe,
-.media--ratio--on > img,
-.media--ratio--on > picture,
-.media--ratio--on > .slick__litebox,
+.media--ratio > iframe,
+.media--ratio > img,
+.media--ratio > picture,
+.media--ratio > .slick__litebox,
 .media--ratio > .media__ratio {
   border: 0 none;
   display: block;
@@ -353,10 +358,15 @@ img[data-lazy] {
   z-index: 0;
 }
 
-.media--ratio--on > picture img,
-.media--ratio--on > .slick__litebox img {
+.media--ratio > picture img,
+.media--ratio > .slick__litebox img {
   height: auto;
   padding-bottom: 0;
+}
+
+/* Needed to display preloader with CSS BG image, otherwise hidden. */
+.media--loading.media--background {
+  opacity: 1;
 }
 
 @media (min-width: 64em) {

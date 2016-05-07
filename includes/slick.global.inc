@@ -44,19 +44,20 @@ function slick_get_global_default_settings() {
 /**
  * Gets the image based on the Picture mapping, or Slick image lazy.
  */
-function slick_get_image($settings = array(), $media = array(), $key = 0, $media_settings = array()) {
+function slick_get_image($settings = array(), &$media = array(), $key = 0, $media_settings = array()) {
   $image = array();
 
   // Ensures disabling Picture while being used doesn't screw up.
   $is_picture = function_exists('picture_mapping_load') && !empty($settings['picture_ready']);
-  if ($is_picture && !empty($settings['picture']) && !empty($settings['picture_style'])) {
-    $fallback    = $settings['picture_fallback'];
-    $mappings    = picture_mapping_load($settings['picture_style']);
-    $breakpoints = picture_get_mapping_breakpoints($mappings, $fallback);
+  if ($is_picture && !empty($settings['picture'])) {
+    $picture_style = empty($settings['picture_style']) ? 'large' : $settings['picture_style'];
+    $fallback      = $settings['picture_fallback'];
+    $mappings      = picture_mapping_load($picture_style);
+    $breakpoints   = picture_get_mapping_breakpoints($mappings, $fallback);
 
     $slide = array(
       '#theme'       => 'picture',
-      '#style_name'  => $settings['picture_style'],
+      '#style_name'  => $picture_style,
       '#breakpoints' => $breakpoints,
       '#attached'    => array(
         'library' => array(
@@ -72,27 +73,31 @@ function slick_get_image($settings = array(), $media = array(), $key = 0, $media
     $image = drupal_render($slide);
   }
   else {
-    $attributes = array();
+    $item_attributes = array();
     $media['delta'] = $key;
+
     if (!empty($settings['image_style']) && !isset($media['_dimensions'])) {
       slick_get_dimensions($media, $settings['image_style']);
     }
 
-    $attributes['height'] = $media['height'];
-    $attributes['width']  = $media['width'];
+    $item_attributes['height'] = $media['height'];
+    $item_attributes['width']  = $media['width'];
 
+    // @todo move to the container when Blazy CSS background landed.
     if (!empty($settings['thumbnail_style'])) {
-      $attributes['data-thumb'] = image_style_url($settings['thumbnail_style'], $media['uri']);
+      $item_attributes['data-thumb'] = image_style_url($settings['thumbnail_style'], $media['uri']);
     }
 
+    // Blazy can lazyload a single image, Slick not, here comes the trouble.
     $lazy  = empty($settings['lazy']) || !empty($settings['unslick']) || $settings['count'] == 1 ? '' : $settings['lazy'];
     $blazy = !empty($settings['lazy']) && $settings['lazy'] == 'blazy';
+
     $image = array(
       '#theme'       => 'slick_image_lazy',
       '#item'        => $media,
       '#image_style' => $settings['image_style'],
       '#lazy'        => $blazy ? 'blazy' : $lazy,
-      '#attributes'  => $attributes,
+      '#attributes'  => $item_attributes,
       '#options'         => array(
         'count'          => $settings['count'],
         'delta'          => $key,
@@ -108,8 +113,6 @@ function slick_get_image($settings = array(), $media = array(), $key = 0, $media
       slick_get_media_switch($image, $media, $settings);
     }
   }
-
-  drupal_alter('slick_image_info', $image, $settings, $media, $key);
 
   // Build the slide with picture, lightbox or multimedia supports.
   return array(
@@ -195,12 +198,12 @@ function slick_extract_image_data($settings, array &$media, array &$slide, $item
       'count'        => $settings['count'],
       'has_pattern'  => !empty($settings['has_pattern']),
       'image_style'  => $settings['image_style'],
-      'layout'       => !empty($settings['slide_layout']) ? $settings['slide_layout'] : '',
-      'media_switch' => !empty($settings['media_switch']) ? $settings['media_switch'] : '',
+      'layout'       => empty($settings['slide_layout']) ? '' : $settings['slide_layout'],
+      'media_switch' => empty($settings['media_switch']) ? '' : $settings['media_switch'],
       'ratio'        => !empty($settings['aspect_ratio']) && empty($settings['picture']) ? $settings['aspect_ratio'] : FALSE,
     ),
   );
-  $media['bundle'] = empty($settings['bundle']) ? '' : $settings['bundle'];
+  // $media['bundle'] = empty($settings['bundle']) ? '' : $settings['bundle'];
   foreach (array('fid', 'alt', 'title', 'uri', 'type') as $data) {
     $media[$data] = isset($item[$data]) ? $item[$data] : NULL;
   }

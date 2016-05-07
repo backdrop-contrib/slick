@@ -53,6 +53,9 @@
   // Build the slick.
   $element = slick_build($items, $options);
 
+  // The following should also work for defaults as the only required is $items:
+  $element = slick_build($items);
+
   // Render the $element, such as found normally at a .tpl file.
   print render($element);
 
@@ -204,7 +207,7 @@
   // Build the slick with the arguments as described above:
   $slick = slick_build($items, $options, $settings, $attachments);
 
-  // The following should also work as the only required is $items:
+  // The following should also work for defaults as the only required is $items:
   $slick = slick_build($items);
 
   // All is set, render the Slick.
@@ -319,7 +322,7 @@
     'asnavfor_target' => '#slick-for-slider',
   );
 
-  // Build the thumbnail slider.
+  // Build the thumbnail slider, empty $attach means basic libraries only.
   $attach = array();
   $slick[1] = slick_build($items, $options, $settings, $attach);
 
@@ -461,29 +464,36 @@ $my_module_theme = array(
  * @see slick.slick.inc
  */
 function hook_slick_skins_info() {
-  // The source can be theme or module.
+  // The source can be theme, or module.
   $theme_path = drupal_get_path('theme', 'my_theme');
 
   return array(
     'skin_name' => array(
+
       // Human readable skin name.
       'name' => t('Skin name'),
+
       // Description of the skin.
       'description' => t('Skin description.'),
+
       // Not yet implemented by now, 3/5/16.
       // Defines group for the skin to reduce selection confusion at UI.
       // Accepted keys: arrows, dots, overlay, main, thumbnail.
       // This is deprecating hook_slick_arrows_info(), hook_slick_dots_info().
       'group' => 'main',
+
       'css' => array(
         // Full path to a CSS file to include with the skin.
         $theme_path . '/css/my-theme.slick.theme--slider.css' => array(),
         $theme_path . '/css/my-theme.slick.theme--carousel.css' => array(),
       ),
+
       'js' => array(
+
         // Full path to a JS file to include with the skin.
         $theme_path . '/js/my-theme.slick.theme--slider.js',
         $theme_path . '/js/my-theme.slick.theme--carousel.js',
+
         // If you want to act on afterSlick event, or any other slick events,
         // put a lighter weight before slick.load.min.js (0).
         $theme_path . '/js/slick.skin.menu.min.js' => array('weight' => -2),
@@ -497,7 +507,7 @@ function hook_slick_skins_info() {
  *
  * This function lives in a module file, not my_module.slick.inc.
  * Overriding skin CSS can be done via theme.info, hook_css_alter(), or below
- * before anything passed to drupal_process_attached().
+ * before anything passed before being passed to drupal_process_attached().
  *
  * @param array $skins
  *   The associative array of skin information from hook_slick_skins_info().
