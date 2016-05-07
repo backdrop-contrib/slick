@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2016-05-07
 -----------------------------
+- Updated arrows defaults values which was letfover.
 - Fixed for broken dots.
 - Update arrows defaults values.
 - Updated slick.load.min.js to v1.6.0.
