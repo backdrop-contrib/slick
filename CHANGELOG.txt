@@ -1,4 +1,10 @@
 
+Slick 8.x-2.0-dev, 2016-05-07
+-----------------------------
+- Fixed for broken dots.
+- Update arrows defaults values.
+- Updated slick.load.min.js to v1.6.0.
+
 Slick 8.x-2.0-dev, 2016-05-05
 -----------------------------
 - Updated JS to Blazy JS v1.6.0 as per [#2716765].

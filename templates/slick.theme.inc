@@ -119,7 +119,8 @@ function template_preprocess_slick_wrapper(&$variables) {
  */
 function _slick_preprocess_slick_item(&$variables) {
   foreach (['attributes', 'delta', 'item', 'settings'] as $key) {
-    $variables[$key] = isset($variables['element']["#$key"]) ? $variables['element']["#$key"] : [];
+    $default = $key == 'delta' ? NULL : [];
+    $variables[$key] = isset($variables['element']["#$key"]) ? $variables['element']["#$key"] : $default;
   }
 }
 

@@ -219,7 +219,7 @@
           var img = '<img alt="' + alt + '" src="' + tn.data('thumb') + '">';
           var dotsThumb = tn.length && o.dotsClass.indexOf('thumbnail') > 0 ?
             '<div class="slick-dots__thumbnail">' + img + '</div>' : '';
-          return dotsThumb + slick.defaults.customPaging(slick, i);
+          return slick.defaults.customPaging(slick, i).add(dotsThumb);
         }
       };
     }

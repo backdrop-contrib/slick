@@ -166,7 +166,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    * Returns available slick default options under group 'settings'.
    */
   public static function defaultSettings($group = 'settings') {
-    return self::load('default')->getOptions($group);
+    return self::load('default')->options[$group];
   }
 
   /**
@@ -282,13 +282,13 @@ class Slick extends ConfigEntityBase implements SlickInterface {
   }
 
   /**
-   * Returns the HTML ID of a single slick instance.
+   * Returns the trusted HTML ID of a single slick instance.
    */
   public static function getHtmlId($string = 'slick', $id = '') {
     $slick_id = &drupal_static('slick_id', 0);
 
     // Do not use dynamic Html::getUniqueId, otherwise broken asnavfors.
-    return $id ?: Html::getId($string . '-' . ++$slick_id);
+    return empty($id) ? Html::getId($string . '-' . ++$slick_id) : $id;
   }
 
   /**
