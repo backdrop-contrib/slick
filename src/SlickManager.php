@@ -98,7 +98,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       }
     }
 
-    if (!empty($attach['preloader'])) {
+    if (!empty($attach['lazy'])) {
       $load['library'][] = 'blazy/loading';
     }
 

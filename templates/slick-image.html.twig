@@ -20,7 +20,7 @@
 {%
   set classes = [
     'media',
-    settings.lazy == 'blazy' or settings.preloader ? 'media--loading',
+    settings.lazy ? 'media--loading',
     settings.type ? 'media--' ~ settings.type,
     settings.ratio ? 'media--ratio media--ratio--' ~ settings.ratio,
     settings.media_switch ? 'media--switch media--switch--' ~ settings.media_switch|clean_class,

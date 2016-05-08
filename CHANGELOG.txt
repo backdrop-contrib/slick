@@ -1,4 +1,9 @@
 
+Slick 8.x-2.0-dev, 2016-05-09
+-----------------------------
+- Removed redundant Preloader option since the classes are within image
+  containers. Maybe more reasonable for Views later which can text, images, etc.
+
 Slick 8.x-2.0-dev, 2016-05-07
 -----------------------------
 - Fixed for broken dots.

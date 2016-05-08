@@ -120,7 +120,7 @@
       }
 
       t.on('lazyLoaded lazyLoadError', function (e, slick, img) {
-        $(img).closest('.media--loading').removeClass('media--loading');
+        $(img).closest('.media').removeClass('media--loading').addClass('media--loaded');
       });
 
       t.trigger('afterSlick', [me, slick, slick.currentSlide]);

@@ -278,10 +278,6 @@ class SlickAdmin implements SlickAdminInterface {
       ],
     ];
 
-    if (isset($definition['preloaders'])) {
-      $form['preloader']['#description'] .= ' ' . t('Depends on a lazyLoad. <strong>Important!</strong> Required Slick > 1.5.9.');
-    }
-
     if (!isset($form['cache'])) {
       $this->blazyAdmin->closingForm($form, $definition);
     }
