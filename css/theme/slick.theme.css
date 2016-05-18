@@ -257,3 +257,7 @@ img[data-lazy] {
 .slick--thumbnail .slick__slide img {
   pointer-events: auto;
 }
+
+.slide--loading .slide__caption {
+  visibility: hidden;
+}

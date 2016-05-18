@@ -20,12 +20,6 @@
         var t = $('> .slick__slider', that);
         var a = $('> .slick__arrow', that);
         var o = $.extend({}, drupalSettings.slick, t.data('slick'));
-        var r = $('.slide--0 .media--ratio', t);
-
-        // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
-        if (r.length && r.is(':hidden')) {
-          r.removeClass('media--ratio').addClass('js-media--ratio');
-        }
 
         // Build the Slick.
         me.beforeSlick(t, a, o);
@@ -47,6 +41,7 @@
     beforeSlick: function (t, a, o) {
       var me = this;
       var breakpoint;
+      var r = $('.slide--0 .media--ratio', t);
 
       me.randomize(t, o);
 
@@ -71,16 +66,12 @@
         me.setPosition(t, a, slick);
       });
 
-      if (o.lazyLoad === 'blazy' && typeof Drupal.blazy !== 'undefined') {
-        t.on('beforeChange.slick', function () {
-          var $src = $('.media--loading .b-lazy', t);
-
-          // Enforces lazyload ahead to smoothen the UX.
-          if ($src.length) {
-            Drupal.blazy.init.load($src);
-          }
-        });
+      // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
+      if (r.length && r.is(':hidden')) {
+        r.removeClass('media--ratio').addClass('js-media--ratio');
       }
+
+      $('.media--loading', t).closest('.slide').addClass('slide--loading');
     },
 
     /**
@@ -121,7 +112,28 @@
 
       t.on('lazyLoaded lazyLoadError', function (e, slick, img) {
         $(img).closest('.media').removeClass('media--loading').addClass('media--loaded');
+        $(img).closest('.slide').removeClass('slide--loading');
       });
+
+      if (o.lazyLoad === 'blazy' && typeof Drupal.blazy !== 'undefined') {
+        var $src = $('.media--loading .b-lazy', t);
+
+        Drupal.blazy.init.options.success = function () {
+          var $loaded = $('.b-loaded', t);
+          $loaded.closest('.slide').removeClass('slide--loading');
+          Drupal.blazy.clearing($loaded);
+        };
+
+        if ($src.length) {
+          t.on('beforeChange.slick', function () {
+            var $loaded = $('.b-loaded', t);
+            // Enforces lazyload ahead to smoothen the UX.
+            Drupal.blazy.init.load($src);
+            $loaded.closest('.slide').removeClass('slide--loading');
+            // Drupal.blazy.clearing($loaded);
+          });
+        }
+      }
 
       t.trigger('afterSlick', [me, slick, slick.currentSlide]);
     },
