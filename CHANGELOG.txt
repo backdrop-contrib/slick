@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2016-06-07
+-----------------------------
+- #2738711 by klausi: PHP7 - Uniform Variable Syntax.
+
 Slick 7.x-2.0-dev, 2016-05-07
 -----------------------------
 - Updated arrows defaults values which was letfover.

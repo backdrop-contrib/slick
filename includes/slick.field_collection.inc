@@ -29,7 +29,7 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
     $fields  = $view[$entity_type][$id];
 
     // Main background image can be core Image, or File entity, multi or single.
-    if (!empty($settings['slide_image']) && $slide_bg = $wrapper->$settings['slide_image']->value()) {
+    if (!empty($settings['slide_image']) && $slide_bg = $wrapper->{$settings['slide_image']}->value()) {
       $file  = isset($slide_bg['fid']) ? $slide_bg : (isset($slide_bg[0]) ? $slide_bg[0] : NULL);
       $media = array(
         'scheme'    => file_uri_scheme($file['uri']),
@@ -45,7 +45,7 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
       if ($settings['nav']) {
         // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
         $thumb['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $media);
-        if (!empty($settings['thumbnail_caption']) && $caption = $wrapper->$settings['thumbnail_caption']->value()) {
+        if (!empty($settings['thumbnail_caption']) && $caption = $wrapper->{$settings['thumbnail_caption']}->value()) {
           $thumb['caption']['data']['#markup'] = isset($caption['safe_value']) ? $caption['safe_value'] : filter_xss($caption);
         }
         $build['thumb'][$key] = $thumb;
@@ -57,7 +57,7 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
       // Nested slicks, or image/video/audio overlays applies to main display.
       // EMW fails to check empty for disabled fields, so use the fields.
       if (!empty($settings['slide_overlay']) && isset($fields[$settings['slide_overlay']])) {
-        $slides = $wrapper->$settings['slide_overlay']->value();
+        $slides = $wrapper->{$settings['slide_overlay']}->value();
         $renderables = $fields[$settings['slide_overlay']];
         $options = array(
           'id'          => $id,
@@ -84,13 +84,13 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
 
       // Layout field as opposed from the builtin layout options.
       if (!empty($settings['slide_layout']) && strpos($settings['slide_layout'], 'field_') !== FALSE) {
-        if ($layout = $wrapper->$settings['slide_layout']->value()) {
+        if ($layout = $wrapper->{$settings['slide_layout']}->value()) {
           $slide['settings']['layout'] = strip_tags($layout);
         }
       }
 
       // Color can be plain text, or color_field.module.
-      if (!empty($settings['color_field']) && $colors = $wrapper->$settings['color_field']->value()) {
+      if (!empty($settings['color_field']) && $colors = $wrapper->{$settings['color_field']}->value()) {
         $color = is_string($colors) ? $colors : (!empty($colors['rgb']) ? $colors['rgb'] : '');
         if (!empty($color)) {
           // @see http://tympanus.net/Development/CreativeLinkEffects/
@@ -127,7 +127,7 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
 function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
   $elements     = array();
   $key          = $options['key'];
-  $items        = $wrapper->$settings['slide_overlay']->value();
+  $items        = $wrapper->{$settings['slide_overlay']}->value();
   $renderables  = $options['fields'][$settings['slide_overlay']];
   $entity_id    = $settings['entity_id'];
   $entity_type  = $renderables['#entity_type'];
