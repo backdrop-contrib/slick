@@ -57,7 +57,7 @@ function slick_get_image($settings = array(), &$media = array(), $key = 0, $medi
 
     $slide = array(
       '#theme'       => 'picture',
-      '#style_name'  => $picture_style,
+      '#style_name'  => $fallback,
       '#breakpoints' => $breakpoints,
       '#attached'    => array(
         'library' => array(
