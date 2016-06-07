@@ -373,7 +373,7 @@ function theme_slick_image($variables) {
 
   $build  = '';
   $type   = empty($item['type']) ? 'image' : $item['type'];
-  $media  = !empty($item['embed_url']) && in_array($type, array('video', 'audio'));
+  $media  = !empty($item['embed_url']) && $type != 'image';
   $switch = $settings['media_switch'];
   $uri    = $item['uri'];
 

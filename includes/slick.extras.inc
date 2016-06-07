@@ -46,18 +46,17 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
     );
   }
 
-  // Colorbox videos need the actual video dimensions independent from images.
-  $media['media_height'] = $renderables['#options']['height'];
-  $media['media_width']  = $renderables['#options']['width'];
+  // Are we dealing with INLINE or LIGHTBOX audio/video dimensions?
+  // LIGHTBOX videos need the actual video dimensions independent from images,
+  // hence we put them into box_height and box_width taken from the active file
+  // entity view mode as no custom settings for lightbox video dimensions, yet.
+  $media['box_height'] = $renderables['#options']['height'];
+  $media['box_width']  = $renderables['#options']['width'];
 
-  // Allows various iframe dimensions based on the given image_style, good
-  // to re-use a single file view mode for various file host entity view modes,
-  // and a mix of image and media.
+  // On the contrary, allows various INLINE iframe dimensions based on the given
+  // image_style, good to re-use a single file view mode for various file host
+  // entity view modes, and a mix of image and media with consistent dimensions.
   if (!empty($settings['image_style'])) {
-    if (!isset($media['_dimensions'])) {
-      slick_get_dimensions($media, $settings['image_style']);
-    }
-
     $settings['content_attributes']['width']  = $media['width'];
     $settings['content_attributes']['height'] = $media['height'];
   }

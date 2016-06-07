@@ -11,17 +11,12 @@ function slick_format_media($items, $langcode, array &$settings) {
   $view_mode = $settings['view_mode'] ? $settings['view_mode'] : 'full';
   $settings['lightbox_ready'] = $settings['picture_ready'] = TRUE;
 
-  $build = $media = array();
+  $build = array();
 
   foreach ($items as $key => $item) {
-    // Prevents edge case error with broken data_export_import.
-    if (!isset($item['uri'])) {
-      continue;
-    }
-
     $file  = (object) $item;
     $uri   = $file->uri;
-    $slide = array();
+    $slide = $media = array();
     $media['scheme'] = file_uri_scheme($uri);
     $media['media_uri'] = $uri;
 

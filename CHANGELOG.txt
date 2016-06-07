@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2016-06-07
 ------------------------------
+- Fixed for regression with a mix of image/video/audio with lightboxes.
 - #2719051 by gausarts: Merge theme_slick_media() and theme_slick_image_lazy().
 - #2726913 by usdv, tyler.frankenstein: FireFox throws a 404 on default img src.
 - #2738711 by klausi: PHP7 - Uniform Variable Syntax.

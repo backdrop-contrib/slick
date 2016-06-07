@@ -72,11 +72,6 @@ function slick_get_image($settings = array(), &$media = array(), $key = 0, $slid
     $item_attributes['style_name']  = $fallback;
   }
   else {
-    // Do this once for the rest of images as it costs a bit.
-    if (!empty($settings['image_style']) && !isset($media['_dimensions'])) {
-      slick_get_dimensions($media, $settings['image_style']);
-    }
-
     $item_attributes['height'] = $media['height'];
     $item_attributes['width']  = $media['width'];
 
@@ -108,7 +103,7 @@ function slick_get_image($settings = array(), &$media = array(), $key = 0, $slid
 /**
  * Returns the media switch: colorbox/photobox, content, excluding iframe.
  */
-function slick_get_media_switch(&$image = array(), &$settings = array()) {
+function slick_get_media_switch(&$image = array(), $settings = array()) {
   $switch = str_replace('-switch', '', $settings['media_switch']);
 
   // Provide relevant file URL if it is a lightbox.
@@ -154,8 +149,8 @@ function slick_get_media_switch(&$image = array(), &$settings = array()) {
     // Video/audio has special attributes for JS interaction.
     if ($settings['type'] != 'image') {
       $json['player'] = TRUE;
-      $json['height'] = empty($settings['media_height']) ? $settings['height'] : $settings['media_height'];
-      $json['width']  = empty($settings['media_width'])  ? $settings['width']  : $settings['media_width'];
+      $json['height'] = empty($settings['box_height']) ? $settings['height'] : $settings['box_height'];
+      $json['width']  = empty($settings['box_width'])  ? $settings['width']  : $settings['box_width'];
     }
 
     $image['#url'] = $url;
@@ -177,6 +172,10 @@ function slick_extract_image_data($settings, array &$media, array &$slide, $item
     'caption'  => array(),
     'settings' => $settings,
   );
+
+  if (!empty($settings['image_style']) && !isset($media['_dimensions'])) {
+    slick_get_dimensions($media, $settings['image_style']);
+  }
 
   foreach (array('fid', 'alt', 'title', 'uri', 'type') as $data) {
     $media[$data] = isset($item[$data]) ? $item[$data] : NULL;
