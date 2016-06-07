@@ -25,8 +25,9 @@ function slick_format_media($items, $langcode, array &$settings) {
     $media['scheme'] = file_uri_scheme($uri);
     $media['media_uri'] = $uri;
 
-    // Build settings for both theme_slick_item() and theme_slick_media().
+    // Build settings for theme_slick_item().
     slick_extract_image_data($settings, $media, $slide, $item);
+
     $slide['settings'] += array(
       'type'        => $file->type,
       'view_mode'   => $view_mode,
@@ -34,7 +35,7 @@ function slick_format_media($items, $langcode, array &$settings) {
     );
 
     // Needed settings: type scheme image_style uri view_mode.
-    $media['url'] = slick_get_media_url($slide['settings'], $media, $file);
+    slick_get_media_url($slide['settings'], $media, $file);
 
     // Get audio/video thumbnail uri as opposed to the actual video uri.
     if ($media_image_uri = slick_get_media_thumbnail($slide['settings'], $media)) {
@@ -43,10 +44,11 @@ function slick_format_media($items, $langcode, array &$settings) {
 
     slick_get_caption($settings, 'file', $file, $view_mode, $slide);
 
-    // Layout field as opposed from builtin layout above if so configured.
-    if (!empty($settings['slide_layout']) && strpos($settings['slide_layout'], 'field_') !== FALSE) {
-      $layout = field_get_items('file', $file, $settings['slide_layout']);
-      $slide['settings']['layout'] = strip_tags($layout[0]['value']);
+    // Layout field as opposed to the builtin layout options.
+    if (!empty($settings['layout']) && strpos($settings['layout'], 'field_') !== FALSE) {
+      if ($slide_layout = field_get_items('file', $file, $settings['layout'])) {
+        $slide['settings']['layout'] = strip_tags($slide_layout[0]['value']);
+      }
     }
 
     // Slide classes, if so configured.
@@ -64,18 +66,23 @@ function slick_format_media($items, $langcode, array &$settings) {
         $slide['caption']['overlay'] = slick_get_media_overlay($url, $media_id);
       }
     }
+
     $build['items'][$key] = $slide;
 
     if (!empty($settings['nav'])) {
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
       $slide['slide']   = slick_get_thumbnail($settings['thumbnail_style'], $media);
       $slide['caption'] = array();
+
       if (!empty($settings['thumbnail_caption']) && $caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
         $slide['caption']['data']['#markup'] = filter_xss($caption[0]['value']);
       }
+
       $build['thumb'][$key] = $slide;
     }
+
     unset($file, $slide);
   }
+
   return $build;
 }

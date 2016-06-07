@@ -37,7 +37,7 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
       );
 
       slick_extract_image_data($settings, $media, $slide, $file);
-      $slide['settings']['type'] = isset($file['type']) ? $file['type'] : '';
+      $slide['settings']['type'] = isset($file['type']) ? $file['type'] : 'image';
 
       // Image with picture, lazyLoad, and lightbox supports.
       $slide['slide'] = slick_get_image($settings, $media, $key, $slide['settings']);
@@ -82,14 +82,15 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
 
       slick_get_caption($settings, $entity_type, $fc, $view_mode, $slide);
 
-      // Layout field as opposed from the builtin layout options.
-      if (!empty($settings['slide_layout']) && strpos($settings['slide_layout'], 'field_') !== FALSE) {
-        if ($layout = $wrapper->{$settings['slide_layout']}->value()) {
-          $slide['settings']['layout'] = strip_tags($layout);
+      // Layout field as opposed to the builtin layout options.
+      if (!empty($settings['layout'])) {
+        if (strpos($settings['layout'], 'field_') !== FALSE && $slide_layout = $wrapper->{$settings['layout']}->value()) {
+          $slide['settings']['layout'] = strip_tags($slide_layout);
         }
       }
 
       // Color can be plain text, or color_field.module.
+      // @todo CSS background lazyload when Blazy landed instead.
       if (!empty($settings['color_field']) && $colors = $wrapper->{$settings['color_field']}->value()) {
         $color = is_string($colors) ? $colors : (!empty($colors['rgb']) ? $colors['rgb'] : '');
         if (!empty($color)) {
@@ -134,10 +135,9 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
   $bundle       = $renderables['#bundle'];
   $field_name   = $renderables['#field_name'];
   $nested_style = !empty($settings['nested_style']) ? $settings['nested_style'] : $settings['image_style'];
-  $is_ratio     = !empty($settings['aspect_ratio']) && empty($settings['picture']);
   $css_id       = slick_html_id("slick-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}");
 
-  $settings['is_media'] = $settings['picture_ready'] = FALSE;
+  $settings['picture_ready'] = FALSE;
 
   $overlays = $slide = $media = array();
 
@@ -147,11 +147,13 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
     'current_display' => 'overlay',
     'has_pattern'     => $settings['has_pattern'],
     'image_style'     => $nested_style,
+    'lazy'            => $settings['lazy'],
     'media_switch'    => $settings['media_switch'],
-    'ratio'           => $is_ratio ? $settings['aspect_ratio'] : FALSE,
+    'ratio'           => empty($settings['aspect_ratio']) ? FALSE : $settings['aspect_ratio'],
     'view_mode'       => $options['view_mode'],
     'iframe_lazy'     => !empty($settings['iframe_lazy']),
   );
+
   switch ($renderables['#field_type']) {
     case 'image':
     case 'file':
@@ -162,7 +164,7 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
           $file = (object) $item;
           $media['scheme'] = file_uri_scheme($file->uri);
           $media['media_uri'] = $file->uri;
-          $media['url'] = slick_get_media_url($overset, $media, $file);
+          slick_get_media_url($overset, $media, $file);
 
           // Get audio/video thumbnail uri.
           $media_image_uri = slick_get_media_thumbnail($overset, $media);
@@ -189,30 +191,28 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
           'video',
         );
         if (in_array($atom->provider, $providers)) {
-          // We do have iframe, set it to TRUE.
-          $overset['is_media'] = TRUE;
           $overset['media_id'] = $base_id;
           if (strpos($atom->provider, 'scald_') !== FALSE) {
             $media['scheme'] = substr($atom->provider, -6);
           }
         }
 
-        $media['url'] = '';
+        $media['embed_url'] = '';
         switch ($atom->provider) {
           case 'scald_youtube':
-            $media['url'] = '//www.youtube.com/embed/' . $base_id;
+            $media['embed_url'] = '//www.youtube.com/embed/' . $base_id;
             break;
 
           case 'scald_vimeo':
-            $media['url'] = '//player.vimeo.com/video/' . $base_id;
+            $media['embed_url'] = '//player.vimeo.com/video/' . $base_id;
             break;
 
           case 'scald_dailymotion':
-            $media['url'] = '//www.dailymotion.com/embed/video/' . $base_id;
+            $media['embed_url'] = '//www.dailymotion.com/embed/video/' . $base_id;
             break;
 
           case 'video':
-            $media['url'] = $atom->file_source;
+            $media['embed_url'] = $atom->file_source;
             break;
 
           default:

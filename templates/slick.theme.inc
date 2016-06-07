@@ -53,7 +53,6 @@ function theme_slick_wrapper(array $variables) {
  */
 function template_preprocess_slick(&$variables) {
   $element   = $variables['element'];
-  $count     = count($element['#items']);
   $defaults  = slick_get_element_default_settings();
   $settings  = isset($element['#settings']) ? array_merge($defaults, $element['#settings']) : $defaults;
   $customs   = isset($element['#options']) ? $element['#options'] : array();
@@ -66,7 +65,7 @@ function template_preprocess_slick(&$variables) {
   $display   = $settings['current_display'];
 
   // Allows manipulating markups with an enforced unslick.
-  $settings['count']   = empty($settings['count']) ? $count : $settings['count'];
+  $settings['count']   = empty($settings['count']) ? count($element['#items']) : $settings['count'];
   $settings['unslick'] = !empty($settings['unslick']) || $settings['count'] == 1;
 
   if ($display == 'thumbnail') {
@@ -121,9 +120,7 @@ function template_preprocess_slick(&$variables) {
     $js['randomize'] = !empty($goodies['random']);
 
     $content_attributes['class'][] = 'slick__slider';
-    if (!isset($content_attributes['id'])) {
-      $content_attributes['id'] = $attributes['id'] . '-slider';
-    }
+    $content_attributes['id'] = $attributes['id'] . '-slider';
 
     // The slider must have the attribute "dir" set to "rtl", if so configured.
     if (!empty($js['rtl'])) {
@@ -136,6 +133,7 @@ function template_preprocess_slick(&$variables) {
     $settings['next_arrow']      = filter_xss($js['nextArrow'], $tags);
     $arrow_attributes            = &$variables['arrow_attributes_array'];
     $arrow_attributes['class'][] = 'slick__arrow';
+
     if (!empty($settings['skin_arrows'])) {
       $skin_arrows = str_replace('_', '-', $settings['skin_arrows']);
       $arrow_attributes['class'][] = 'slick__arrow--' . $skin_arrows;
@@ -160,25 +158,19 @@ function template_preprocess_slick(&$variables) {
 
       $attributes['class'][] = 'slick--display--' . $display;
     }
-    // Prevents non-empty, but not-used, asNavFor from breaking the slide.
-    // @todo or @nottodo remove any babysitting or failsafe stuff like this one.
-    else {
-      $js['asNavFor'] = '';
-    }
 
     // focusOnSelect won't work with empty slide value, so add proper selector.
     if (empty($js['slide']) && $js['focusOnSelect']) {
-      $js['slide'] = $js['rows'] == 1 && $js['slidesPerRow'] == 1 ? '.slick__slide' : $js['slide'];
+      $js['slide'] = ($js['rows'] == 1 && $js['slidesPerRow'] == 1) ? '.slick__slide' : $js['slide'];
     }
 
-    if ($display == 'main') {
-      if (!empty($goodies['arrow-down']) && $general['arrow_down_target']) {
-        $attributes['class'][]     = 'slick--has-arrow-down';
-        $arrow_down['class']       = array('slick-down', 'jump-scroll');
-        $arrow_down['data-target'] = $general['arrow_down_target'];
-        $arrow_down['data-offset'] = $general['arrow_down_offset'];
-        $variables['arrow_down']   = '<button' . drupal_attributes($arrow_down) . '></button>';
-      }
+    $has_arrow_down = !empty($goodies['arrow-down']) && $general['arrow_down_target'];
+    if ($display == 'main' && $has_arrow_down) {
+      $attributes['class'][]     = 'slick--has-arrow-down';
+      $arrow_down['class']       = array('slick-down', 'jump-scroll');
+      $arrow_down['data-target'] = $general['arrow_down_target'];
+      $arrow_down['data-offset'] = $general['arrow_down_offset'];
+      $variables['arrow_down']   = '<button' . drupal_attributes($arrow_down) . '></button>';
     }
 
     // Add the configuration as JSON object into the slick container.
@@ -225,11 +217,7 @@ function template_preprocess_slick_item(&$variables) {
   $element  = $variables['element'];
   $item     = $variables['item'] = $element['#item'];
   $settings = $element['#settings'];
-
-  // Thumbnail may not have settings as it just prints the image.
   $settings = isset($item['#settings']) ? array_merge($settings, (array) $item['#settings']) : $settings;
-  $settings['detroy']  = $settings['current_item'] == 'main' && !empty($settings['grid']) && !empty($settings['unslick']);
-  $settings['wrapper'] = $settings['count'] > 1 && $settings['current_item'] != 'grid';
 
   // Prepare variables, and remove non-BEM default class.
   $variables['wrapper_prefix'] = $variables['wrapper_suffix'] = array();
@@ -269,7 +257,7 @@ function template_preprocess_slick_item(&$variables) {
     }
 
     // Exclude lightbox switcher as it has its own pattern DIV within A tag.
-    if (!empty($settings['has_pattern']) && strpos($settings['media_switch'], 'box') === FALSE) {
+    if (!empty($settings['has_pattern']) && empty($settings['lightbox'])) {
       $variables['slide_pattern'] = '<div class="slide__pattern"></div>';
     }
   }
@@ -280,6 +268,7 @@ function template_preprocess_slick_item(&$variables) {
   }
 
   // Do not add divities for a single slick (unslick) to have clean markups.
+  $settings['wrapper'] = $settings['count'] > 1 && $settings['current_item'] != 'grid';
   if ($settings['wrapper']) {
     $variables['wrapper_prefix'] = '<div' . drupal_attributes($attributes) . '>';
     $variables['wrapper_suffix'] = '</div>';
@@ -346,176 +335,190 @@ function template_process_slick_grid(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_slick_media().
- *
- * @todo consider merging with theme_slick_image_lazy() into theme_slick_image()
- * like D8, and drop them both? Or use theme_blazy() when available.
- * Things to work with: aspect ratio, image, lightbox, and iframe/multimedia.
- */
-function template_preprocess_slick_media(&$variables) {
-  $element    = $variables['element'];
-  $settings   = $element['#settings'];
-  $item       = $variables['item'] = $element['#item'];
-  $media      = isset($item['#item']) ? $item['#item'] : $settings;
-  $type       = isset($settings['type']) ? $settings['type'] : 'image';
-  $switcher   = $settings['media_switch'] = isset($settings['media_switch']) ? $settings['media_switch'] : '';
-  $multimedia = $type == 'video' || $type == 'audio';
-
-  // Prepare variables.
-  $variables['is_lightbox'] = strpos($switcher, 'box') !== FALSE;
-
-  // Configure attributes for containing elements.
-  $attributes          = &$variables['attributes_array'];
-  $content_attributes  = &$variables['content_attributes_array'];
-  $attributes['class'] = array('slick__media', 'media', 'media--' . $type);
-
-  if (isset($settings['content_attributes']) && is_array($settings['content_attributes'])) {
-    $content_attributes = drupal_array_merge_deep($content_attributes, $settings['content_attributes']);
-  }
-
-  // All media types: image/audio/video files.
-  if (!empty($switcher)) {
-    $attributes['class'][] = 'media--switch';
-    // Lightbox switcher applies to all media types, including core image field.
-    if ($variables['is_lightbox'] || $switcher == 'content') {
-      $switched = str_replace('-switch', '', $switcher);
-      $attributes['class'][] = 'media--switch--' . $switched;
-    }
-  }
-
-  // Pure CSS responsive iframes/images based on aspect ratio to get
-  // consistent display for a mix of image/audio/video at one slick.
-  if (!empty($settings['ratio'])) {
-    $attributes['class'][] = 'media--ratio';
-    // @todo drop for shorter media--ratio like D8.
-    $attributes['class'][] = 'media--ratio--on';
-    $attributes['class'][] = str_replace(':', '', 'media--ratio--' . $settings['ratio']);
-
-    if (!empty($media['height']) && $settings['ratio'] == 'fluid') {
-      $attributes['style'] = 'padding-bottom: ' . round((($media['height'] / $media['width']) * 100), 2) . '%';
-    }
-  }
-
-  // The media audio/video files.
-  $settings['is_media'] = isset($settings['is_media']) && $multimedia ? $settings['is_media'] : FALSE;
-  if ($settings['is_media'] && !empty($media['url'])) {
-    $content_attributes['class'][] = 'media__iframe';
-    $content_attributes['src'] = empty($settings['iframe_lazy']) ? $media['url'] : 'about:blank';
-
-    // If iframe switch disabled, fallback to just iframe, and remove overlay.
-    if (empty($switcher)) {
-      $variables['item'] = array();
-    }
-    else {
-      // If no colorbox/photobox, it is an image to iframe switcher.
-      if (!$variables['is_lightbox']) {
-        $attributes['class'][] = 'media--player media--switch--player';
-        $attributes['class'][] = str_replace('_', '-', 'media--' . $media['scheme'] . '-player');
-      }
-
-      // Gets consistent with colorbox to share JS manipulation.
-      $json = array(
-        'type'   => $type,
-        'player' => TRUE,
-        'scheme' => $media['scheme'],
-      );
-      $content_attributes['data-media'] = drupal_json_encode($json);
-      $content_attributes['data-lazy']  = $media['url'];
-    }
-  }
-
-  $variables['settings']      = $settings;
-  $variables['classes_array'] = $attributes['class'];
-}
-
-/**
- * Implements hook_process_slick_media().
- */
-function template_process_slick_media(&$variables) {
-  $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
-}
-
-/**
- * Overrides theme_image with Slick lazy loading.
+ * Returns HTML for a slick_image.
  *
  * @param array $variables
  *   An associative array containing:
  *   - item: Associative array of image data, which may include "uri", "alt",
  *     "width", "height", "title" and "attributes".
- *   - lazy: A flag whether to use the lazyload, or not.
  *   - image_style: The name of the style to alter the original image.
  *   - url: A string containing the link 'url'.
- *   - attributes: Associative array of attributes to be placed in the img tag.
- *   - options: An array of options, including the 'url' options.
+ *   - item_attributes: Associative array of attributes to be placed in the img.
+ *   - settings: An array of options.
  *
  * @ingroup themeable
  */
-function theme_slick_image_lazy(array $variables) {
-  foreach (array('attributes', 'item', 'image_style', 'lazy', 'options', 'url') as $key) {
-    $default = in_array($key, array('attributes', 'item', 'options')) ? array() : NULL;
-    $variables[$key] = isset($variables['element']["#$key"]) ? $variables['element']["#$key"] : $default;
+function theme_slick_image($variables) {
+  $element = $variables['element'];
+  foreach (array('item', 'item_attributes', 'image_style', 'settings', 'url', 'url_attributes') as $key) {
+    $variables[$key] = isset($element["#$key"]) ? $element["#$key"] : array();
   }
 
-  $build      = '';
-  $image      = $variables['item'];
-  $options    = &$variables['options'];
-  $attributes = $variables['attributes'];
+  // Load the supported formatter variables for the possesive blazy wrapper.
+  $settings          = &$variables['settings'];
+  $item              = $variables['item'];
+  $attributes        = array();
+  $image_attributes  = &$variables['item_attributes'];
+  $url_attributes    = &$variables['url_attributes'];
+  $iframe_attributes = array();
 
-  $attributes['class'][] = 'slick__image';
-
-  if ($variables['image_style']) {
-    $image_url = image_style_url($variables['image_style'], $image['uri']);
-    $image['path'] = $image_url;
-  }
-  else {
-    $image['path'] = $image['uri'];
-    $image_url = file_create_url($image['path']);
+  if (isset($settings['content_attributes'])) {
+    $iframe_attributes = &$settings['content_attributes'];
   }
 
-  $options['image_url'] = $image_url;
+  // Modifies variables.
+  foreach (array('icon', 'lightbox', 'media_switch') as $key) {
+    $settings[$key] = isset($settings[$key]) ? $settings[$key] : '';
+  }
 
-  // Be sure to avoid images with breakpoints, taken over by picture.module.
-  if (!isset($variables['breakpoints']) && $variables['lazy']) {
-    foreach (array('width', 'height', 'alt', 'title') as $key) {
-      if (isset($image[$key])) {
-        // If the property has already been defined in the attributes,
-        // do not override, including NULL.
-        if (array_key_exists($key, $attributes)) {
-          continue;
-        }
-        $attributes[$key] = $image[$key];
+  $build  = '';
+  $type   = empty($item['type']) ? 'image' : $item['type'];
+  $media  = !empty($item['embed_url']) && in_array($type, array('video', 'audio'));
+  $switch = $settings['media_switch'];
+  $uri    = $item['uri'];
+
+  $settings['image_url'] = empty($variables['image_style']) ? file_create_url($uri) : image_style_url($variables['image_style'], $uri);
+  $settings['ratio']     = empty($settings['ratio']) ? '' : str_replace(':', '', $settings['ratio']);
+
+  // Build attributes.
+  $attributes['class'][] = 'media';
+  $attributes['class'][] = 'media--' . $type;
+
+  if ($switch) {
+    $attributes['class'][] = 'media--switch';
+  }
+
+  foreach (array('width', 'height', 'alt', 'title') as $key) {
+    if (isset($item[$key])) {
+      if (array_key_exists($key, $image_attributes)) {
+        continue;
+      }
+      $image_attributes[$key] = $item[$key];
+    }
+  }
+
+  // Picture integration, else Slick lazyload, or regular image.
+  $params = $image_attributes;
+  if (empty($params['breakpoints'])) {
+    $image_attributes['class'][] = 'media__image media__element';
+
+    // Aspect ratio to fix layout reflow with lazyloaded images responsively.
+    if (!empty($settings['ratio'])) {
+      $attributes['class'][] = 'media--ratio media--ratio--' . $settings['ratio'];
+
+      if (!empty($image_attributes['height']) && in_array($settings['ratio'], array('enforced', 'fluid'))) {
+        $attributes['style'] = 'padding-bottom: ' . round((($image_attributes['height'] / $image_attributes['width']) * 100), 2) . '%';
       }
     }
 
-    // Allows advanced lazyloader to override this without full theme override.
-    $lazy_attribute = empty($options['lazy_attribute']) ? 'lazy' : $options['lazy_attribute'];
-    $attributes['class'][] = empty($options['lazy_class']) ? 'lazy' : $options['lazy_class'];
+    if (!empty($settings['background'])) {
+      // @todo Blazy integration with multi-serving bakground images.
+      // slick_build_breakpoint_attributes($attributes, $settings);
+      $attributes['class'][] = 'media--background';
+    }
 
-    $attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-    $attributes['data-' . $lazy_attribute] = $options['image_url'];
+    if (!empty($settings['lazy'])) {
+      $attributes['class'][] = 'media--loading';
 
-    // Do not pass to theme_image as D7 doesn't support data URI, yet.
-    $build .= '<img' . drupal_attributes($attributes) . ' />';
+      // Attach data-attributes to the either DIV or IMG container.
+      $image_attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+      slick_build_breakpoint_attributes($image_attributes, $settings);
+
+      // Do not pass to theme_image() as D7 doesn't support data URI, yet.
+      $build = '<img' . drupal_attributes($image_attributes) . ' />';
+    }
+    else {
+      $params['path'] = $settings['image_url'];
+      $build = theme('image', $params);
+    }
   }
   else {
-    $build = theme('image', $image);
+    $params['uri'] = $uri;
+    $build = theme('picture', $params);
   }
 
-  // The link url and link options are both optional.
+  // With CSS background, IMG may be emptied, so add to the container instead.
+  if (!empty($settings['thumbnail_style'])) {
+    $attributes['data-thumb'] = image_style_url($settings['thumbnail_style'], $uri);
+  }
+
+  // Prepares a media player.
+  // build : If iframe switch disabled, use iframe only, remove image.
+  // player: If no colorbox/photobox, it is an image to iframe switcher.
+  // data- : Gets consistent with colorbox to share JS manipulation.
+  // @todo re-check blazy 'data-src' IFRAME lazyload against blazy.media.js.
+  if ($media) {
+    $build                           = empty($switch) ? '' : $build;
+    $settings['player']              = empty($settings['lightbox']) && $switch != 'content';
+    $iframe_attributes['data-media'] = drupal_json_encode(array('type' => $type, 'scheme' => $item['scheme']));
+    $iframe_attributes['data-lazy']  = $item['embed_url'];
+    $iframe_attributes['src']        = empty($settings['iframe_lazy']) ? $item['embed_url'] : 'about:blank';
+    $iframe_attributes['class'][]    = 'media__iframe media__element';
+
+    if ($settings['player']) {
+      $attributes['class'][] = 'media--player';
+      $build .= '<iframe' . drupal_attributes($iframe_attributes) . ' allowfullscreen></iframe>';
+    }
+    if ($switch == 'iframe-switch') {
+      $build .= '<span class="media-icon media-icon--close"></span>';
+      $build .= '<span class="media-icon media-icon--play"></span>';
+    }
+  }
+
+  $build .= $settings['icon'];
+  $build = '<div' . drupal_attributes($attributes) . '>' . $build . '</div>';
+
+  // The link to content or lightboxes.
   if (!empty($variables['url'])) {
-    if (isset($options['lightbox']) && $switcher = $options['lightbox']) {
-      $build .= empty($options['icon']) ? '<i class="media-icon media-icon--lightbox media-icon--' . $switcher . '"></i>' : $options['icon'];
-      if (!empty($options['has_pattern'])) {
+    if (!empty($settings['lightbox'])) {
+      $icon = '<span class="media-icon media-icon--lightbox media-icon--' . $settings['lightbox'] . '"></span>';
+      $build .= empty($settings['icon']) ? $icon : $settings['icon'];
+      if (!empty($settings['has_pattern'])) {
         $build .= '<div class="slide__pattern"></div>';
       }
     }
 
-    $link_options = isset($options['url']) ? (array) $options['url'] : array();
+    $link_options = empty($url_attributes) ? array() : array('attributes' => $url_attributes);
     $link_options['html'] = TRUE;
     $build = l($build, $variables['url'], $link_options);
   }
 
   return $build;
+}
+
+/**
+ * Provides re-usable breakpoint data-attributes.
+ */
+function slick_build_breakpoint_attributes(array &$attributes = array(), $settings = array()) {
+  $lazy_class     = empty($settings['lazy_class']) ? 'lazy' : $settings['lazy_class'];
+  $lazy_attribute = empty($settings['lazy_attribute']) ? 'lazy' : $settings['lazy_attribute'];
+
+  // Defines attributes, builtin, or supported lazyload such as Slick.
+  $attributes['class'][] = $lazy_class;
+  $attributes['data-' . $lazy_attribute] = $settings['image_url'];
+
+  // @todo Blazy integration.
+  if (!empty($settings['breakpoints'])) {
+    if (!empty($settings['background'])) {
+      foreach ($settings['breakpoints'] as $key => $breakpoint) {
+        if (!empty($breakpoint['url'])) {
+          $attributes['data-src-' . $key] = $breakpoint['url'];
+        }
+      }
+    }
+    elseif (!empty($settings['srcset'])) {
+      $attributes['srcset'] = '';
+      $attributes['data-srcset'] = $settings['srcset'];
+      $attributes['sizes'] = '100w';
+
+      if (!empty($settings['sizes'])) {
+        $attributes['sizes'] = trim($settings['sizes']);
+        unset($attributes['width']);
+        unset($attributes['height']);
+      }
+    }
+  }
 }
 
 /**
@@ -609,6 +612,6 @@ function slick_remove_wasted_dependent_options(array &$config) {
 
   if ($config['useCSS'] && !empty($config['cssEaseBezier'])) {
     $config['cssEase'] = $config['cssEaseBezier'];
-    unset($config['cssEaseOverride'], $config['cssEaseBezier']);
   }
+  unset($config['cssEaseOverride'], $config['cssEaseBezier']);
 }

@@ -20,9 +20,8 @@ function slick_is_media($scheme) {
  * Gets a media URL from the rendered iframe already containing all the params.
  */
 function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
-  $url = '';
   if (!slick_is_media($media['scheme'])) {
-    return $url;
+    return;
   }
 
   // If a file has an invalid type, allow file_view_file() to work.
@@ -70,10 +69,8 @@ function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
     libxml_use_internal_errors(TRUE);
     $dom->loadHTML($rendered_media);
     $url = $dom->getElementsByTagName('iframe')->item(0)->getAttribute('src');
-    $media['url'] = $url;
-    $settings['is_media'] = TRUE;
+    $media['embed_url'] = $url;
   }
-  return $url;
 }
 
 /**
@@ -90,14 +87,14 @@ function slick_get_media_overlay($url, $media_id) {
   }
 
   return array(
-    '#theme'    => 'slick_media',
-    '#item'     => array(),
+    '#theme'    => 'slick_image',
+    '#item'     => array(
+      'embed_url' => $url,
+      'scheme'    => $scheme,
+      'type'      => 'video',
+    ),
     '#settings' => array(
-      'ratio'    => '16:9',
-      'type'     => 'video',
-      'is_media' => TRUE,
-      'scheme'   => $scheme,
-      'url'      => $url,
+      'ratio'              => '16:9',
       'current_display'    => 'overlay',
       'content_attributes' => array('width' => 640, 'height' => 360),
     ),

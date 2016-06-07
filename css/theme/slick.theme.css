@@ -3,6 +3,31 @@
  * Provided basic layout and styling for the Slick based on custom settings.
  */
 
+/* Credit: https://github.com/tobiasahlin/SpinKit */
+@-webkit-keyframes rotateplane {
+  0% {
+    -webkit-transform: perspective(120px);
+  }
+  50% {
+    -webkit-transform: perspective(120px) rotateY(180deg);
+  }
+  100% {
+    -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg);
+  }
+}
+
+@keyframes rotateplane {
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+
 .slick-wrapper,
 .slick,
 .slick * {
@@ -343,11 +368,7 @@ img[data-lazy] {
   padding-bottom: 56.25%;
 }
 
-.media--ratio > iframe,
-.media--ratio > img,
-.media--ratio > picture,
-.media--ratio > .slick__litebox,
-.media--ratio > .media__ratio {
+.media--ratio > .media__element {
   border: 0 none;
   display: block;
   height: 100%;
@@ -358,15 +379,59 @@ img[data-lazy] {
   z-index: 0;
 }
 
-.media--ratio > picture img,
-.media--ratio > .slick__litebox img {
-  height: auto;
-  padding-bottom: 0;
+/* The lazyloaded element: IMG, IFRAME, DIV */
+.media--loading .media__element {
+  display: block;
+  opacity: 0;
+  -webkit-transition: opacity 500ms ease-in-out;
+  transition: opacity 500ms ease-in-out;
+}
+
+.media--loaded .media__element {
+  opacity: 1;
 }
 
 /* Needed to display preloader with CSS BG image, otherwise hidden. */
 .media--loading.media--background {
   opacity: 1;
+}
+
+.media--loading {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  position: relative;
+}
+
+.media--loading::before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 30px;
+  max-width: 30px;
+  background: #2eaae0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -15px;
+  margin-top: -15px;
+  font-size: 0;
+  z-index: 9;
+  -webkit-animation: rotateplane 1.2s infinite ease-in-out;
+  animation: rotateplane 1.2s infinite ease-in-out;
+}
+
+.media--background {
+  background-size: cover;
+  background-position: center center;
+}
+
+.slide--loading .slide__caption {
+  visibility: hidden;
+}
+
+/* Prevents nested slicks from inheriting background images. */
+.slick--nested .media--background {
+  background-image: none;
 }
 
 @media (min-width: 64em) {

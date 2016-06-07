@@ -10,15 +10,15 @@
  */
 function slick_theme($existing, $type, $theme, $path) {
   $themes = array();
-  foreach (array('slick', 'item', 'grid', 'image_lazy', 'media', 'wrapper') as $item) {
+  foreach (array('slick', 'item', 'grid', 'image', 'wrapper') as $item) {
     $key = $item == 'slick' ? $item : 'slick_' . $item;
-    $funtions = in_array($item, array('image_lazy', 'wrapper'));
+    $functions = in_array($item, array('image', 'wrapper'));
     $themes[$key] = array(
       'render element' => 'element',
       'file' => 'slick.theme.inc',
       'path' => $path . '/templates',
     );
-    if (!$funtions) {
+    if (!$functions) {
       $themes[$key]['template'] = strtr($key, '_', '-');
     }
   }
@@ -152,7 +152,7 @@ function slick_skins() {
 }
 
 /**
- * Returns available skins by group with backwards compatibility.
+ * Returns available skins by group.
  *
  * @param string $group
  *   The skin group name: main, thumbnail, overlay, dots, arrows.
@@ -369,8 +369,8 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
       }
 
       // Build the Slick grid if provided.
-      if (!empty($settings['grid']) && !empty($settings['visible_slides'])) {
-        $items = function_exists('slick_build_grids') ? slick_build_grids($items, $settings) : $items;
+      if (!empty($settings['grid']) && !empty($settings['visible_slides']) && function_exists('slick_build_grids')) {
+        $items = slick_build_grids($items, $settings);
       }
     }
   }

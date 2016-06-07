@@ -20,7 +20,7 @@ function slick_format_image($items, $langcode, array &$settings) {
 
     if (!empty($settings['slide_caption'])) {
       foreach ($settings['slide_caption'] as $caption) {
-        $data = str_replace("_field", "", $caption);
+        $data = str_replace('_field', '', $caption);
         if (!empty($media[$data])) {
           $slide['caption'][$data]['#markup'] = filter_xss($media[$data]);
         }
@@ -35,15 +35,19 @@ function slick_format_image($items, $langcode, array &$settings) {
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
       $slide['slide']   = slick_get_thumbnail($settings['thumbnail_style'], $media);
       $slide['caption'] = array();
+
       if (!empty($settings['thumbnail_caption'])) {
-        $data = str_replace("_field", "", $settings['thumbnail_caption']);
+        $data = str_replace('_field', '', $settings['thumbnail_caption']);
         if (!empty($media[$data])) {
           $slide['caption']['data']['#markup'] = filter_xss($media[$data]);
         }
       }
+
       $build['thumb'][$key] = $slide;
     }
+
     unset($slide);
   }
+
   return $build;
 }

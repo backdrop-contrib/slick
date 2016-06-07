@@ -83,10 +83,10 @@
   $id = 'slick-ticker';
   $settings = array(
     // Optional optionset name, otherwise fallback to default.
-    // 'optionset' => 'blog',
+    'optionset' => 'blog',
 
     // Optional skin name fetched from hook_slick_skins_info(), otherwise none.
-    // 'skin' => 'fullwidth',
+    'skin' => 'fullwidth',
 
     // ID can be used for lightbox group, cache ID, the asnavfor, etc.
     // Do not supply attributes to be provided by the module instead.
@@ -177,8 +177,6 @@
     // The following 3 lines are optional, if needed, and can be removed.
     '#options'  => $options,
     '#settings' => $settings,
-
-    // Attach the Slick library, see slick_attach() for more options.
     '#attached' => $attachments,
   );
 

@@ -11,11 +11,17 @@
 function slick_get_global_default_settings() {
   return array(
     'aspect_ratio'        => '',
+    'background'          => FALSE,
+    'cache'               => 0,
+    'current_display'     => 'main',
     'current_view_mode'   => '',
     'image_style'         => '',
     'media_switch'        => '',
+    'mousewheel'          => FALSE,
     'optionset'           => 'default',
     'optionset_thumbnail' => '',
+    'override'            => FALSE,
+    'overridables'        => array(),
     'skin'                => '',
     'skin_thumbnail'      => '',
     'skin_arrows'         => '',
@@ -34,20 +40,27 @@ function slick_get_global_default_settings() {
     'grid_small'          => '',
     'visible_slides'      => '',
     'preserve_keys'       => FALSE,
-    'override'            => FALSE,
-    'overridables'        => array(),
-    'cache'               => 0,
-    'current_display'     => 'main',
+    'type'                => '',
   );
 }
 
 /**
  * Gets the image based on the Picture mapping, or Slick image lazy.
  */
-function slick_get_image($settings = array(), &$media = array(), $key = 0, $media_settings = array()) {
-  $image = array();
+function slick_get_image($settings = array(), &$media = array(), $key = 0, $slide_settings = array()) {
+  // @todo simplify arguments at Slick 3.x like everything else into settings.
+  $media['delta'] = $key;
+  $settings = array_merge($settings, $media);
+
+  $image = array(
+    '#theme'       => 'slick_image',
+    '#image_style' => $settings['image_style'],
+    '#url'         => '',
+    '#uri'         => $settings['uri'],
+  );
 
   // Ensures disabling Picture while being used doesn't screw up.
+  $item_attributes = array();
   $is_picture = function_exists('picture_mapping_load') && !empty($settings['picture_ready']);
   if ($is_picture && !empty($settings['picture'])) {
     $picture_style = empty($settings['picture_style']) ? 'large' : $settings['picture_style'];
@@ -55,27 +68,11 @@ function slick_get_image($settings = array(), &$media = array(), $key = 0, $medi
     $mappings      = picture_mapping_load($picture_style);
     $breakpoints   = picture_get_mapping_breakpoints($mappings, $fallback);
 
-    $slide = array(
-      '#theme'       => 'picture',
-      '#style_name'  => $fallback,
-      '#breakpoints' => $breakpoints,
-      '#attached'    => array(
-        'library' => array(
-          array('picture', 'picturefill'),
-          array('picture', 'picture.ajax'),
-        ),
-      ),
-    );
-
-    foreach (array('uri', 'width', 'height', 'alt', 'title') as $data) {
-      $slide["#$data"] = isset($media[$data]) ? $media[$data] : NULL;
-    }
-    $image = drupal_render($slide);
+    $item_attributes['breakpoints'] = $breakpoints;
+    $item_attributes['style_name']  = $fallback;
   }
   else {
-    $item_attributes = array();
-    $media['delta'] = $key;
-
+    // Do this once for the rest of images as it costs a bit.
     if (!empty($settings['image_style']) && !isset($media['_dimensions'])) {
       slick_get_dimensions($media, $settings['image_style']);
     }
@@ -83,56 +80,43 @@ function slick_get_image($settings = array(), &$media = array(), $key = 0, $medi
     $item_attributes['height'] = $media['height'];
     $item_attributes['width']  = $media['width'];
 
-    // @todo move to the container when Blazy CSS background landed.
-    if (!empty($settings['thumbnail_style'])) {
-      $item_attributes['data-thumb'] = image_style_url($settings['thumbnail_style'], $media['uri']);
+    // Blazy can lazyload a single image, Slick not, yet, here comes the trouble.
+    if (!empty($settings['blazy'])) {
+      $settings['lazy_attribute'] = 'src';
+      $settings['lazy_class'] = 'b-lazy';
     }
-
-    // Blazy can lazyload a single image, Slick not, here comes the trouble.
-    $lazy  = empty($settings['lazy']) || !empty($settings['unslick']) || $settings['count'] == 1 ? '' : $settings['lazy'];
-    $blazy = !empty($settings['lazy']) && $settings['lazy'] == 'blazy';
-
-    $image = array(
-      '#theme'       => 'slick_image_lazy',
-      '#item'        => $media,
-      '#image_style' => $settings['image_style'],
-      '#lazy'        => $blazy ? 'blazy' : $lazy,
-      '#attributes'  => $item_attributes,
-      '#options'         => array(
-        'count'          => $settings['count'],
-        'delta'          => $key,
-        'has_pattern'    => !empty($settings['has_pattern']),
-        'lazy_attribute' => $blazy ? 'src' : 'lazy',
-        'lazy_class'     => $blazy ? 'b-lazy' : 'lazy',
-        'type'           => empty($media['type']) ? 'image' : $media['type'],
-        'url'            => array(),
-      ),
-    );
-
-    if (!empty($settings['media_switch']) && $settings['media_switch'] != 'iframe') {
-      slick_get_media_switch($image, $media, $settings);
+    elseif (!empty($settings['lazy'])) {
+      $settings['lazy_attribute'] = $settings['lazy_class'] = 'lazy';
     }
   }
 
+  // Now that picture is inside theme_slick_image(), we can manipulate it.
+  if (!empty($settings['media_switch']) && $settings['media_switch'] != 'iframe-switch') {
+    slick_get_media_switch($image, $settings);
+  }
+
   // Build the slide with picture, lightbox or multimedia supports.
-  return array(
-    '#theme'    => 'slick_media',
-    '#item'     => $image,
-    '#settings' => $media_settings,
-    '#uri'      => $media['uri'],
-  );
+  $image['#item'] = $media;
+  $image['#item_attributes'] = $item_attributes;
+
+  // @todo remove $slide_settings when merged, and fully tested.
+  $image['#settings'] = array_merge($settings, $slide_settings);
+
+  return $image;
 }
 
 /**
  * Returns the media switch: colorbox/photobox, content, excluding iframe.
  */
-function slick_get_media_switch(array &$image = array(), $media = array(), $settings = array()) {
+function slick_get_media_switch(&$image = array(), &$settings = array()) {
+  $switch = str_replace('-switch', '', $settings['media_switch']);
+
   // Provide relevant file URL if it is a lightbox.
-  if (strpos($settings['media_switch'], 'box') !== FALSE && !empty($settings['lightbox_ready'])) {
-    $json = array('type' => $media['type']);
-    if (!empty($media['url'])) {
-      $url = $media['url'];
-      $json['scheme'] = $media['scheme'];
+  if (!empty($settings['lightbox']) && !empty($settings['lightbox_ready'])) {
+    $json = array('type' => $settings['type']);
+    if (!empty($settings['embed_url'])) {
+      $url = $settings['embed_url'];
+      $json['scheme'] = $settings['scheme'];
       // Force autoplay for media URL on lightboxes, saving another click.
       if ($json['scheme'] == 'soundcloud') {
         if (strpos($url, 'auto_play') === FALSE || strpos($url, 'auto_play=false') !== FALSE) {
@@ -144,22 +128,21 @@ function slick_get_media_switch(array &$image = array(), $media = array(), $sett
       }
     }
     else {
-      $url = !empty($settings['box_style']) ? image_style_url($settings['box_style'], $media['uri']) : file_create_url($media['uri']);
+      $url = !empty($settings['box_style']) ? image_style_url($settings['box_style'], $settings['uri']) : file_create_url($settings['uri']);
     }
 
-    $lightbox = str_replace('-switch', '', $settings['media_switch']);
-    $classes  = array('slick__' . $lightbox, 'slick__litebox');
-    if ($settings['media_switch'] == 'colorbox-switch') {
+    $classes  = array('slick__' . $switch, 'slick__litebox');
+    if ($switch == 'colorbox') {
       if ($settings['count'] > 1) {
         $json['rel'] = $settings['id'];
       }
     }
-    elseif ($settings['media_switch'] == 'photobox-switch') {
-      if (!empty($media['url'])) {
-        $image['#options']['url']['attributes']['rel'] = 'video';
+    elseif ($switch == 'photobox') {
+      if (!empty($settings['embed_url'])) {
+        $image['#url_attributes']['rel'] = 'video';
       }
     }
-    elseif ($settings['media_switch'] == 'slickbox-switch') {
+    elseif ($switch == 'slickbox') {
       $classes = array('slick__box', 'slick__litebox');
       $json['entity_id'] = $settings['entity_id'];
       if (!empty($settings['entity_uri']) && !empty($settings['use_ajax'])) {
@@ -169,19 +152,17 @@ function slick_get_media_switch(array &$image = array(), $media = array(), $sett
     }
 
     // Video/audio has special attributes for JS interaction.
-    if ($media['type'] != 'image') {
+    if ($settings['type'] != 'image') {
       $json['player'] = TRUE;
-      $json['height'] = empty($media['media_height']) ? $media['height'] : $media['media_height'];
-      $json['width']  = empty($media['media_width'])  ? $media['width']  : $media['media_width'];
-      $image['#options']['url']['external'] = TRUE;
+      $json['height'] = empty($settings['media_height']) ? $settings['height'] : $settings['media_height'];
+      $json['width']  = empty($settings['media_width'])  ? $settings['width']  : $settings['media_width'];
     }
 
     $image['#url'] = $url;
-    $image['#options']['url']['attributes']['class'] = $classes;
-    $image['#options']['url']['attributes']['data-media'] = drupal_json_encode($json);
-    $image['#options']['lightbox'] = $lightbox;
+    $image['#url_attributes']['class'] = $classes;
+    $image['#url_attributes']['data-media'] = drupal_json_encode($json);
   }
-  elseif (strpos($settings['media_switch'], 'content') !== FALSE && !empty($settings['entity_uri'])) {
+  elseif ($switch == 'content' && !empty($settings['entity_uri'])) {
     $image['#url'] = $settings['entity_uri'];
   }
 }
@@ -194,16 +175,9 @@ function slick_extract_image_data($settings, array &$media, array &$slide, $item
     'item'     => $item,
     'slide'    => array(),
     'caption'  => array(),
-    'settings' => array(
-      'count'        => $settings['count'],
-      'has_pattern'  => !empty($settings['has_pattern']),
-      'image_style'  => $settings['image_style'],
-      'layout'       => empty($settings['slide_layout']) ? '' : $settings['slide_layout'],
-      'media_switch' => empty($settings['media_switch']) ? '' : $settings['media_switch'],
-      'ratio'        => !empty($settings['aspect_ratio']) && empty($settings['picture']) ? $settings['aspect_ratio'] : FALSE,
-    ),
+    'settings' => $settings,
   );
-  // $media['bundle'] = empty($settings['bundle']) ? '' : $settings['bundle'];
+
   foreach (array('fid', 'alt', 'title', 'uri', 'type') as $data) {
     $media[$data] = isset($item[$data]) ? $item[$data] : NULL;
   }
@@ -290,5 +264,6 @@ function slick_render_cache($settings = array()) {
     }
     return $slick;
   }
+
   return $cached;
 }

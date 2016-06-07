@@ -10,7 +10,7 @@
   Drupal.behaviors.slickMedia = {
     attach: function (context) {
 
-      $(".media--switch--player", context).once("slick-media", function () {
+      $(".media--player", context).once("slick-media", function () {
         var t = $(this),
           $slider = t.closest(".slick__slider"),
           $slick = $slider.closest(".slick"),

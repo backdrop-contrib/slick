@@ -396,12 +396,10 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
 
   // Picture module integration.
   if ($is_picture) {
-    $elements['media_switch']['#description'] .= t('<br />Ignored if Picture mapping is enabled.');
-
     $elements['picture'] = array(
       '#type'        => 'checkbox',
       '#title'       => t('Picture mapping'),
-      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick aspect ratio, lazyLoad and Media switchers are not supported with picture-enabled images. Slick only accommodates Picture to get in. The image formatting is taken over by Picture.'),
+      '#description' => t('Picture mapping is only reasonable for large images. Note: The Slick aspect ratio, and lazyLoad are not supported with picture-enabled images. Slick only accommodates Picture to get in. The image formatting is taken over by Picture.'),
     );
 
     $picture_options = picture_get_mapping_options();
