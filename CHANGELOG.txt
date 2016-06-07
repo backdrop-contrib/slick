@@ -1,4 +1,10 @@
 
+Slick 8.x-2.0-dev, 2016-06-07
+-----------------------------
+- Added support to lazyload CSS background when unslick takes place.
+- Removed workaround with slick-current classes which is fixed at v1.6.0.
+- Fixed for broken responsive options.
+
 Slick 8.x-2.0-dev, 2016-05-09
 -----------------------------
 - Removed redundant Preloader option since the classes are within image
