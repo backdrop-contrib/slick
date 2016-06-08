@@ -89,6 +89,10 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $load['library'][] = 'slick/slick.easing';
     }
 
+    if (!empty($attach['lazy'])) {
+      $load['library'][] = 'blazy/loading';
+    }
+
     $load['library'][] = 'slick/slick.load';
 
     $components = ['colorbox', 'mousewheel'];
@@ -96,10 +100,6 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       if (!empty($attach[$component])) {
         $load['library'][] = 'slick/slick.' . $component;
       }
-    }
-
-    if (!empty($attach['lazy'])) {
-      $load['library'][] = 'blazy/loading';
     }
 
     $this->attachSkin($load, $attach);

@@ -123,12 +123,6 @@
       if (o.lazyLoad === 'blazy' && typeof Drupal.blazy !== 'undefined') {
         var $src = $('.media--loading .b-lazy', t);
 
-        Drupal.blazy.init.options.success = function () {
-          var $loaded = $('.b-loaded', t);
-          $loaded.closest('.slide').removeClass('slide--loading');
-          Drupal.blazy.clearing($loaded);
-        };
-
         if ($src.length) {
           t.on('beforeChange.slick', function () {
             var $loaded = $('.b-loaded', t);
@@ -138,6 +132,12 @@
             // Drupal.blazy.clearing($loaded);
           });
         }
+
+        Drupal.blazy.init.options.success = function () {
+          var $loaded = $('.b-loaded', t);
+          $loaded.closest('.slide').removeClass('slide--loading');
+          Drupal.blazy.clearing($loaded);
+        };
       }
 
       t.trigger('afterSlick', [me, slick, slick.currentSlide]);

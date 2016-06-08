@@ -47,7 +47,7 @@ function template_preprocess_slick(&$variables) {
   $settings['lazy'] = isset($settings['lazy']) ? $settings['lazy'] : $js['lazyLoad'];
 
   // Blazy can still lazyload an unslick.
-  if ($display != 'thumbnail' && $settings['lazy'] == 'blazy') {
+  if ($display != 'thumbnail' && ($settings['lazy'] == 'blazy' || !empty($settings['blazy']))) {
     $js['lazyLoad'] = 'blazy';
     $blazy = empty($settings['blazy_data']) ? [] : $settings['blazy_data'];
     $blazy['ratio'] = $settings['ratio'];

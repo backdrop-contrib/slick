@@ -1,4 +1,8 @@
 
+Slick 8.x-2.0-dev, 2016-06-08
+-----------------------------
+- #2744741 by federico.bebber: Issues with responsive image styles.
+
 Slick 8.x-2.0-dev, 2016-06-07
 -----------------------------
 - Added support to lazyload CSS background when unslick takes place.

@@ -32,14 +32,15 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     $build['optionset']         = Slick::load($optionset_name);
     $settings['nav']            = !empty($settings['optionset_thumbnail']) && isset($items[1]);
 
-    // Do not bother for SlickTextFormatter or when vanilla is on.
+    // Do not bother for SlickTextFormatter, or when vanilla is on.
     // @todo simplify this.
     if (empty($settings['vanilla'])) {
-      $noresimage             = empty($settings['responsive_image_style']);
-      $lazy                   = $noresimage ? $build['optionset']->getSetting('lazyLoad') : '';
-      $blazy                  = $lazy == 'blazy' || $settings['theme_hook_image'] == 'blazy';
-      $settings['lazy']       = !$blazy && $items->count() == 1 ? '' : $lazy;
-      $settings['blazy']      = $blazy || !empty($settings['blazy']);
+      $resimage               = !empty($settings['responsive_image_style']);
+      $lazy                   = $build['optionset']->getSetting('lazyLoad');
+      $lazy                   = ($this->configLoad('responsive_image') && $resimage) ? 'blazy' : $lazy;
+      $blazy                  = $lazy == 'blazy' || !empty($settings['blazy']);
+      $settings['lazy']       = (!$blazy && $items->count() == 1) ? '' : $lazy;
+      $settings['blazy']      = $blazy;
       $settings['lazy_class'] = $settings['lazy_attribute'] = 'lazy';
 
       if ($settings['blazy']) {
