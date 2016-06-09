@@ -21,7 +21,7 @@
           o = $.extend({}, settings.slick, t.data("slick"));
 
         // Populate defaults + globals into each breakpoint.
-        if ($.type(o.responsive) === 'array' && o.responsive.length) {
+        if ($.type(o.responsive) === "array" && o.responsive.length) {
           for (b in o.responsive) {
             if (o.responsive.hasOwnProperty(b)
               && o.responsive[b].settings !== "unslick") {

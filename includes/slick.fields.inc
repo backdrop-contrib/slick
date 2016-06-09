@@ -26,7 +26,7 @@ function slick_get_thumbnail($thumbnail_style = '', $media = array()) {
 /**
  * Checks whether a skin expecting inline CSS background, not images.
  *
- * @todo use UI with 'Use CSS background' option instead to reduce logic here.
+ * @deprecated
  */
 function slick_get_inline_css_skins($skin = NULL) {
   $skins = slick_skins();
@@ -40,8 +40,6 @@ function slick_get_inline_css(array &$settings, array &$items) {
   $css = $settings['inline_css'];
   $css = implode("\n", $css);
 
-  // Pass CSS background to theme_slick().
-  $settings['background'] = TRUE;
   drupal_alter('slick_inline_css_info', $css, $items, $settings);
 
   return array(

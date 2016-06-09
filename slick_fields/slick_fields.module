@@ -54,8 +54,8 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   // Sniffs for Views to allow block__no_wrapper, views_view__no_wrapper, etc.
   $view = empty($display['views_view']) ? FALSE : $display['views_view'];
   if ($view) {
-    $settings['attributes']['class'][] = str_replace('_', '-', 'slick--view--' . $view->name);
-    $settings['attributes']['class'][] = str_replace('_', '-', 'slick--view--' . $view->name . '--' . $view->current_display);
+    $settings['view_name'] = $view->name;
+    $settings['current_view_mode'] = $view->current_display;
     $cid .= $view->name . $view->current_display;
     $view = TRUE;
   }
@@ -89,9 +89,6 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $settings['ratio']         = !empty($settings['aspect_ratio']) && empty($settings['picture']) ? $settings['aspect_ratio'] : FALSE;
   $settings['box_style']     = $settings['colorbox_style'];
   $settings['lightbox']      = strpos($settings['media_switch'], 'box') !== FALSE;
-
-  // @todo use UI instead, drop extra logic.
-  $settings['background']    = empty($settings['background']) ? slick_get_inline_css_skins($settings['skin']) : $settings['background'];
 
   switch ($field['type']) {
     case 'image':
@@ -141,7 +138,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   // Build the single/main display Slick.
   $slick[0] = slick_build($build['items'], $js, $settings, $attachments, $id, $optionset);
 
-  if ($settings['nav'] && isset($build['thumb'])) {
+  if (isset($build['thumb'])) {
     $optionset = slick_optionset_load($asnavfor);
     $settings['optionset'] = $asnavfor;
     $settings['current_display'] = 'thumbnail';

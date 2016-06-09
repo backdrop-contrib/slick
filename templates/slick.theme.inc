@@ -81,6 +81,12 @@ function template_preprocess_slick(&$variables) {
     $attributes = drupal_array_merge_deep($attributes, $settings['attributes']);
   }
 
+  // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
+  if (!empty($settings['view_name']) && !empty($settings['current_view_mode'])) {
+    $attributes['class'][] = str_replace('_', '-', 'slick--view--' . $settings['view_name']);
+    $attributes['class'][] = str_replace('_', '-', 'slick--view--' . $settings['view_name'] . '--' . $settings['current_view_mode']);
+  }
+
   if (!isset($attributes['id'])) {
     $id = empty($settings['id']) ? slick_html_id('slick') : $settings['id'];
     $attributes['id'] = $display == 'thumbnail' ? $id . '-thumbnail' : $id;

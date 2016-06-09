@@ -139,7 +139,7 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
 
   $settings['picture_ready'] = FALSE;
 
-  $overlays = $slide = $media = array();
+  $overlays = array();
 
   // @todo refine more to $slide['settings'] and match Media/Image formatters.
   $overset = array(
@@ -158,6 +158,7 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
     case 'image':
     case 'file':
       foreach ($items as $i => $item) {
+        $slide = $media = array();
         slick_extract_image_data($settings, $media, $slide, $item);
 
         if ($renderables['#field_type'] == 'file') {

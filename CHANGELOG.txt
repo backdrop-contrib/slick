@@ -1,4 +1,11 @@
 
+Slick 7.x-2.0-dev, 2016-06-10
+------------------------------
+- Added "Use CSS background" option to simplify the cumbersome "inline css"
+  normally provided via hook_slick_skins_info(), and fully lazyloaded as well.
+  Be sure to re-save the formatter and enable "Use CSS background" if previously
+  using "inline css".
+
 Slick 7.x-2.0-dev, 2016-06-07
 ------------------------------
 - Fixed for regression with a mix of image/video/audio with lightboxes.

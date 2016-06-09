@@ -11,10 +11,10 @@
 function slick_format_image($items, $langcode, array &$settings) {
   $settings['picture_ready'] = $settings['lightbox_ready'] = TRUE;
 
-  $build = $media = array();
+  $build = array();
 
   foreach ($items as $key => $item) {
-    $slide = array();
+    $slide = $media = array();
     $item['type'] = !isset($item['type']) ? 'image' : $item['type'];
     slick_extract_image_data($settings, $media, $slide, $item);
 

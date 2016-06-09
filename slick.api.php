@@ -347,12 +347,11 @@
  */
 function hook_slick_attach_info_alter(array &$attach, $settings) {
   // Disable inline CSS after copying the output to theme at final stage.
-  // Inline CSS are only used for 2 cases: Fullscreen and Field collection
-  // individual slide color, only if your clients don't change mind much.
-  // Use key 'inline css' to register skin that wants inline CSS rather than
-  // images when declaring the skins, see fullscreen skin.
-  // Use hook_slick_inline_css_info_alter() to modify the output.
-  // @see cssInlineSkin()
+  // Inline CSS are only used for 1 case now: Field collection
+  // individual slide color.
+  // If you need to turn images into CSS background, use 'Use CSS background'
+  // option instead, be sure to have Aspect ratio enabled, or min-height, to
+  // selector .media--background accordingly, otherwise collapsed container.
   // @see slick_slick_skins_info()
   $attach['attach_inline_css'] = NULL;
 

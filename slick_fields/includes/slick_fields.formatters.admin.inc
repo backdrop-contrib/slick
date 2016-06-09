@@ -138,6 +138,12 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     ),
   );
 
+  $elements['background'] = array(
+    '#type'        => 'checkbox',
+    '#title'       => t('Use CSS background'),
+    '#description' => t('Check this to turn the image into CSS background instead. This opens up the goodness of CSS, such as background cover, fixed attachment, etc. Works best with a single visible slide, skins full width/screen. <br /><strong>Important!</strong> Requires a consistent Aspect ratio, otherwise collapsed containers. Unless a min-height is added manually to <strong>.media--background</strong> selector. Not compatible with Picture, of course.'),
+  );
+
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
     $elements['slide_layout']['#prefix'] = '<h3 class="form--slick__title">' . t('Fields') . '</h3>';
 

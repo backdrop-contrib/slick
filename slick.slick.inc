@@ -57,6 +57,7 @@ function slick_slick_skins_info() {
         $path . '/css/theme/slick.theme--fullscreen.css' => array('weight' => 4),
         $path . '/css/theme/slick.theme--full.css' => array('weight' => 5),
       ),
+      // Deprecated in favor of "Use CSS background" option via UI.
       'inline css' => TRUE,
     ),
     'fullwidth' => array(

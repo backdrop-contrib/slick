@@ -34,6 +34,7 @@ function slick_get_global_default_settings() {
     'slide_link'          => '',
     'slide_title'         => '',
     'thumbnail_caption'   => '',
+    'thumbnail_effect'    => '',
     'view_mode'           => '',
     'grid'                => '',
     'grid_medium'         => '',
@@ -127,15 +128,11 @@ function slick_get_media_switch(&$image = array(), $settings = array()) {
     }
 
     $classes  = array('slick__' . $switch, 'slick__litebox');
-    if ($switch == 'colorbox') {
-      if ($settings['count'] > 1) {
-        $json['rel'] = $settings['id'];
-      }
+    if ($switch == 'colorbox' && $settings['count'] > 1) {
+      $json['rel'] = $settings['id'];
     }
-    elseif ($switch == 'photobox') {
-      if (!empty($settings['embed_url'])) {
-        $image['#url_attributes']['rel'] = 'video';
-      }
+    elseif ($switch == 'photobox' && !empty($settings['embed_url'])) {
+      $image['#url_attributes']['rel'] = 'video';
     }
     elseif ($switch == 'slickbox') {
       $classes = array('slick__box', 'slick__litebox');
