@@ -1,4 +1,8 @@
 
+Slick 8.x-2.0-dev, 2016-06-10
+-----------------------------
+- Simplified SlickFormatter::buildSettings() a bit, and clarified descriptions.
+
 Slick 8.x-2.0-dev, 2016-06-08
 -----------------------------
 - #2744741 by federico.bebber: Issues with responsive image styles.
