@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2016-06-10
 ------------------------------
+- #2745803 by 3blake7: Undefined index: path in slick_fields_field_formatter_view().
 - Added "Use CSS background" option to simplify the cumbersome "inline css"
   normally provided via hook_slick_skins_info(), and fully lazyloaded as well.
   Be sure to re-save the formatter and enable "Use CSS background" if previously

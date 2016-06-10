@@ -42,7 +42,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     'field_name'  => $field_name,
     'entity_id'   => $entity_id,
     'entity_type' => $entity_type,
-    'entity_uri'  => $entity_uri['path'],
+    'entity_uri'  => isset($entity_uri['path']) ? $entity_uri['path'] : '',
     'id'          => $id,
     'inline_css'  => FALSE,
   ) + slick_fields_default_settings();
