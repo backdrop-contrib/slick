@@ -1,4 +1,9 @@
 
+Slick 8.x-2.0-dev, 2016-06-13
+-----------------------------
+- Added lightbox caption option.
+- Fixed for Blazy integration with hidden captions.
+
 Slick 8.x-2.0-dev, 2016-06-10
 -----------------------------
 - Simplified SlickFormatter::buildSettings() a bit, and clarified descriptions.

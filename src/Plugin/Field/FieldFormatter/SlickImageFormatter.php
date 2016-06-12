@@ -118,7 +118,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
 
       if (!empty($settings['caption'])) {
         foreach ($settings['caption'] as $caption) {
-          $element['caption'][$caption] = empty($item->$caption) ? [] : ['#markup' => Xss::filterAdmin($item->$caption)];
+          $element['caption'][$caption] = empty($item->{$caption}) ? [] : ['#markup' => Xss::filterAdmin($item->{$caption})];
         }
       }
 
@@ -131,7 +131,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
         $element[$item_id] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($element['settings']);
 
         $caption = $settings['thumbnail_caption'];
-        $element['caption'] = empty($item->$caption) ? [] : ['#markup' => Xss::filterAdmin($item->$caption)];
+      $element['caption'] = empty($item->{$caption}) ? [] : ['#markup' => Xss::filterAdmin($item->{$caption})];
 
         $build['thumb']['items'][$delta] = $element;
       }
@@ -156,13 +156,18 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
    * Defines the scope for the form elements.
    */
   public function getScopedFormElements() {
-    $captions = ['title' => t('Title'), 'alt' => t('Alt')];
+    $captions    = ['title' => t('Title'), 'alt' => t('Alt')];
+    $field       = $this->fieldDefinition;
+    $entity_type = $field->getTargetEntityTypeId();
+
     return [
       'background'        => TRUE,
+      'box_captions'      => TRUE,
       'breakpoints'       => SlickDefault::getConstantBreakpoints(),
       'current_view_mode' => $this->viewMode,
       'captions'          => $captions,
-      'field_name'        => $this->fieldDefinition->getName(),
+      'entity_type'       => $entity_type,
+      'field_name'        => $field->getName(),
       'image_style_form'  => TRUE,
       'media_switch_form' => TRUE,
       'settings'          => $this->getSettings(),

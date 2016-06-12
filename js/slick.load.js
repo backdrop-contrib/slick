@@ -78,6 +78,27 @@
       }
 
       $('.media--loading', t).closest('.slide').addClass('slide--loading');
+
+      // Blazy integration.
+      if (o.lazyLoad === 'blazy' && Drupal.blazy) {
+        t.on('beforeChange.slick', function () {
+          // .b-lazy can be attached to IMG, or DIV as CSS background.
+          var $src = $('.slide--loading .b-lazy', t);
+          var $loaded = $('.b-loaded', t);
+
+          if ($src.length) {
+            // Enforces lazyload ahead to smoothen the UX.
+            Drupal.blazy.init.load($src);
+          }
+
+          $loaded.closest('.slide').removeClass('slide--loading');
+        });
+
+        Drupal.blazy.init.options.success = function (elm) {
+          $(elm).closest('.slide').removeClass('slide--loading');
+          Drupal.blazy.clearing(elm);
+        };
+      }
     },
 
     /**
@@ -119,26 +140,6 @@
       t.on('lazyLoaded lazyLoadError', function (e, slick, img) {
         me.setBackground(img);
       });
-
-      if (o.lazyLoad === 'blazy' && typeof Drupal.blazy !== 'undefined') {
-        var $src = $('.media--loading .b-lazy', t);
-
-        if ($src.length) {
-          t.on('beforeChange.slick', function () {
-            var $loaded = $('.b-loaded', t);
-            // Enforces lazyload ahead to smoothen the UX.
-            Drupal.blazy.init.load($src);
-            $loaded.closest('.slide').removeClass('slide--loading');
-            // Drupal.blazy.clearing($loaded);
-          });
-        }
-
-        Drupal.blazy.init.options.success = function () {
-          var $loaded = $('.b-loaded', t);
-          $loaded.closest('.slide').removeClass('slide--loading');
-          Drupal.blazy.clearing($loaded);
-        };
-      }
 
       t.trigger('afterSlick', [me, slick, slick.currentSlide]);
     },

@@ -102,7 +102,9 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       }
     }
 
-    $this->attachSkin($load, $attach);
+    if (!empty($attach['skin'])) {
+      $this->attachSkin($load, $attach);
+    }
 
     // Attach default JS settings to allow responsive displays have a lookup,
     // excluding wasted/trouble options, e.g.: PHP string vs JS object.
@@ -118,10 +120,6 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    * Provides skins if required.
    */
   public function attachSkin(array &$load, $attach = []) {
-    if (empty($attach['skin'])) {
-      return;
-    }
-
     // If we do have a defined skin, load the optional Slick and module css.
     if ($attach['slick_css']) {
       $load['library'][] = 'slick/slick.css';
@@ -214,10 +212,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
         }
       }
 
-      // Build the Slick grid if provided with backwards compatibility.
-      $to_drop = empty($settings['visible_slides']) ? '' : $settings['visible_slides'];
-      $settings['visible_items'] = empty($settings['visible_items']) ? $to_drop : $settings['visible_items'];
-      if (!empty($settings['grid']) && $settings['visible_items']) {
+      // Build the Slick grid if provided.
+      if (!empty($settings['grid']) && !empty($settings['visible_items'])) {
         $build['items'] = self::buildGrid($build['items'], $settings);
       }
     }
@@ -339,7 +335,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $slick[0] = self::slick($build);
 
     // Build the Slick asNavFor/thumbnail.
-    if ($settings['nav'] && !empty($build['thumb'])) {
+    if (isset($build['thumb'])) {
       foreach (['items', 'options', 'settings'] as $key) {
         $build[$key] = isset($build['thumb'][$key]) ? $build['thumb'][$key] : [];
       }
