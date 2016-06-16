@@ -922,7 +922,7 @@ html.js .form--slick .collapsed .fieldset-legend .fieldset-legend-prefix::after 
 }
 
 .form--slick__header {
-  margin-bottom: 15px;
+  margin-bottom: 30px;
 }
 
 .form--slick .form--slick__header .form-item {

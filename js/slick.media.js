@@ -41,7 +41,8 @@
             if (auto_play < 0 || auto_play === false) {
               url = param < 0 ? url + "?auto_play=true" : url + "&amp;auto_play=true";
             }
-          } else if (autoplay < 0 || autoplay === 0) {
+          }
+          else if (autoplay < 0 || autoplay === 0) {
             url = param < 0 ? url + "?autoplay=1" : url + "&amp;autoplay=1";
           }
 

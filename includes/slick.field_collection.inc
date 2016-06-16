@@ -9,7 +9,7 @@
  * Formats Field collection data.
  */
 function slick_format_field_collection($items, $langcode, array &$settings) {
-  $view_mode   = $settings['view_mode'] ? $settings['view_mode'] : 'full';
+  $view_mode   = $settings['view_mode'];
   $slick_id    = $settings['id'];
   $nested_name = empty($settings['nested_optionset']) ? 'default' : $settings['nested_optionset'];
   $nested_set  = empty($settings['nested_slick']) ? NULL : slick_optionset_load($nested_name);
@@ -18,32 +18,35 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
   $settings['lightbox_ready'] = FALSE;
   $settings['picture_ready']  = TRUE;
 
-  $build = array();
+  $build = $dimensions = array();
+
+  if (!empty($settings['image_style'])) {
+    $image = array();
+    $dimensions = slick_get_dimensions($image, $settings['image_style']);
+  }
+
   foreach ($items as $key => $item) {
     $slide   = $thumb = array();
-    $fc      = field_collection_field_get_entity($item);
-    $wrapper = entity_metadata_wrapper($entity_type, $fc);
-    $view    = $fc->view($view_mode);
+    $entity  = field_collection_field_get_entity($item);
+    $wrapper = entity_metadata_wrapper($entity_type, $entity);
+    $view    = $entity->view($view_mode);
     $id      = array_keys($view[$entity_type]);
     $id      = reset($id);
     $fields  = $view[$entity_type][$id];
 
     // Main background image can be core Image, or File entity, multi or single.
-    if (!empty($settings['slide_image']) && $slide_bg = $wrapper->{$settings['slide_image']}->value()) {
-      $file  = isset($slide_bg['fid']) ? $slide_bg : (isset($slide_bg[0]) ? $slide_bg[0] : NULL);
-      $media = array(
-        'scheme'    => file_uri_scheme($file['uri']),
-        'media_uri' => $file['uri'],
-      );
-
-      slick_extract_image_data($settings, $media, $slide, $file);
-      $slide['settings']['type'] = isset($file['type']) ? $file['type'] : 'image';
+    $settings['delta'] = $key;
+    if (!empty($settings['slide_image']) && $stage = $wrapper->{$settings['slide_image']}->value()) {
+      $file  = isset($stage['fid']) ? $stage : (isset($stage[0]) ? $stage[0] : array());
+      $media = $dimensions;
 
       // Image with picture, lazyLoad, and lightbox supports.
-      $slide['slide'] = slick_get_image($settings, $media, $key, $slide['settings']);
+      $slide['slide'] = slick_get_image($settings, $media, $file);
 
+      // Build the thumbnail display.
       if ($settings['nav']) {
         // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
+        // Note: $media here has the expected image URI, not video URI.
         $thumb['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $media);
         if (!empty($settings['thumbnail_caption']) && $caption = $wrapper->{$settings['thumbnail_caption']}->value()) {
           $thumb['caption']['data']['#markup'] = isset($caption['safe_value']) ? $caption['safe_value'] : filter_xss($caption);
@@ -80,12 +83,13 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
         $slide['caption']['overlay'] = $elements;
       }
 
-      slick_get_caption($settings, $entity_type, $fc, $view_mode, $slide);
+      // Build the fieldable captions.
+      slick_get_caption($settings, $entity_type, $entity, $slide);
 
       // Layout field as opposed to the builtin layout options.
       if (!empty($settings['layout'])) {
         if (strpos($settings['layout'], 'field_') !== FALSE && $slide_layout = $wrapper->{$settings['layout']}->value()) {
-          $slide['settings']['layout'] = strip_tags($slide_layout);
+          $settings['layout'] = strip_tags($slide_layout);
         }
       }
 
@@ -111,9 +115,11 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
       }
     }
 
+    $slide['settings'] = $settings;
     $build['items'][$key] = $slide;
     unset($slide, $thumb);
   }
+
   unset($nested_set);
   if (isset($css)) {
     $settings['inline_css'] = $css;
@@ -134,46 +140,45 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
   $entity_type  = $renderables['#entity_type'];
   $bundle       = $renderables['#bundle'];
   $field_name   = $renderables['#field_name'];
-  $nested_style = !empty($settings['nested_style']) ? $settings['nested_style'] : $settings['image_style'];
-  $css_id       = slick_html_id("slick-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}");
+  $nested_style = empty($settings['nested_style']) ? $settings['image_style'] : $settings['nested_style'];
+  $css_id       = slick_html_id("slick-nested-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}");
 
   $settings['picture_ready'] = FALSE;
 
   $overlays = array();
 
-  // @todo refine more to $slide['settings'] and match Media/Image formatters.
   $overset = array(
-    'box_style'       => $settings['colorbox_style'],
     'current_display' => 'overlay',
-    'has_pattern'     => $settings['has_pattern'],
     'image_style'     => $nested_style,
-    'lazy'            => $settings['lazy'],
-    'media_switch'    => $settings['media_switch'],
-    'ratio'           => empty($settings['aspect_ratio']) ? FALSE : $settings['aspect_ratio'],
-    'view_mode'       => $options['view_mode'],
-    'iframe_lazy'     => !empty($settings['iframe_lazy']),
   );
+
+  $overset = array_merge($settings, $overset);
+  $overset_global = $overset;
+
+  $dimensions = array();
+  if (!empty($nested_style)) {
+    $image = array();
+    $dimensions = slick_get_dimensions($image, $nested_style);
+  }
 
   switch ($renderables['#field_type']) {
     case 'image':
     case 'file':
       foreach ($items as $i => $item) {
-        $slide = $media = array();
-        slick_extract_image_data($settings, $media, $slide, $item);
+        $media = $dimensions;
 
+        $overset['delta'] = $i;
         if ($renderables['#field_type'] == 'file') {
           $file = (object) $item;
-          $media['scheme'] = file_uri_scheme($file->uri);
-          $media['media_uri'] = $file->uri;
-          slick_get_media_url($overset, $media, $file);
 
-          // Get audio/video thumbnail uri.
-          $media_image_uri = slick_get_media_thumbnail($overset, $media);
-          if ($media_image_uri) {
-            $media['uri'] = $media_image_uri;
-          }
+          // Needed settings: type scheme image_style uri view_mode.
+          // Extracts media data for: embed_url, box_height, box_width, image uri.
+          slick_extract_media_data($overset, $media, $file);
         }
-        $overlays[$i] = $media + $overset;
+
+        $overlays[$i]['item'] = $item;
+        $overlays[$i]['media'] = $media;
+        $overlays[$i]['settings'] = $overset;
       }
       break;
 
@@ -181,9 +186,11 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
       foreach ($items as $i => $item) {
         $sid             = $item->sid;
         $atom            = scald_atom_load($sid);
-        $base_id         = $atom->base_id;
-        $langcode        = isset($atom->language) ? $atom->language : $options['langcode'];
-        $media['scheme'] = $atom->provider;
+        $base_id         = $item->base_id;
+        $langcode        = isset($item->language) ? $item->language : $options['langcode'];
+        $thumbnail       = isset($item->scald_thumbnail[$langcode][0]) ? $item->scald_thumbnail[$langcode][0] : array();
+        $media           = $dimensions;
+        $media['scheme'] = $item->provider;
 
         $providers = array(
           'scald_youtube',
@@ -191,15 +198,17 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
           'scald_dailymotion',
           'video',
         );
-        if (in_array($atom->provider, $providers)) {
-          $overset['media_id'] = $base_id;
-          if (strpos($atom->provider, 'scald_') !== FALSE) {
-            $media['scheme'] = substr($atom->provider, -6);
+
+        $overset['delta'] = $i;
+        if (in_array($item->provider, $providers)) {
+          $media['media_id'] = $base_id;
+          if (strpos($item->provider, 'scald_') !== FALSE) {
+            $media['scheme'] = substr($item->provider, -6);
           }
         }
 
         $media['embed_url'] = '';
-        switch ($atom->provider) {
+        switch ($item->provider) {
           case 'scald_youtube':
             $media['embed_url'] = '//www.youtube.com/embed/' . $base_id;
             break;
@@ -220,18 +229,14 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
             break;
         }
 
-        // Only care for the first item now.
-        $properties = array('fid', 'height', 'width', 'alt', 'title', 'type');
-        foreach ($properties as $data) {
-          $media[$data] = isset($atom->scald_thumbnail[$langcode][0][$data]) ? $atom->scald_thumbnail[$langcode][0][$data] : NULL;
-        }
-
         $media['uri']   = $atom->file_source;
-        $media['type']  = $atom->type == 'slick' ? 'image' : $atom->type;
-        $media['title'] = $atom->title;
+        $media['type']  = $item->type == 'slick' ? 'image' : $item->type;
+
         $overset['sid'] = $sid;
 
-        $overlays[$i] = $media + $overset;
+        $overlays[$i]['item'] = $thumbnail;
+        $overlays[$i]['media'] = $media;
+        $overlays[$i]['settings'] = $overset;
       }
       break;
 
@@ -244,35 +249,44 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
   // Build the overlays: single static image/audio/video, or nested slicks.
   // Managed overlays with known formatters are nested slicks, or static.
   if ($slides) {
-    $nested_settings = $overset + array(
+    $nested_settings = array(
       'count'          => count($slides),
       'id'             => $css_id,
-      'lazy'           => $settings['lazy'],
-      'lightbox_ready' => $settings['media_switch'] == 'colorbox-switch',
+      'lightbox_ready' => strpos($settings['media_switch'], 'box') !== FALSE,
       'optionset'      => $options['nested_name'],
       'picture'        => FALSE,
       'picture_ready'  => FALSE,
       'attributes'     => array('class' => array('slick--nested')),
     );
 
+    $nested_settings = array_merge($overset_global, $nested_settings);
+    $nested_settings_global = $nested_settings;
+
     // Process individual slick overlay.
-    $element = array();
-    foreach ($slides as $idx => $media) {
-      $nested_settings = array_merge($nested_settings, $media);
+    $element = $js = array();
+    foreach ($slides as $idx => $item) {
+      $slide = array();
+      $media = $item['media'];
+
+      $nested_settings = array_merge($item['settings'], $nested_settings);
+      $nested_settings['delta'] = $idx;
+
       if (empty($settings['nested_slick'])) {
         $idx = 0;
       }
 
       // Image with picture, lazyLoad, and lightbox supports.
-      $slide = slick_get_image($nested_settings, $media, $idx, $media);
-      $element[$idx]['slide'] = $slide;
-      unset($media, $slide);
+      $slide['slide'] = slick_get_image($nested_settings, $media, $item['item']);
+      $slide['settings'] = $nested_settings;
+
+      $element[$idx] = $slide;
+      unset($slide);
     }
 
     // Build the nested slicks.
     if (!empty($settings['nested_slick'])) {
       $attach['attach_media'] = $settings['media_switch'] == 'iframe-switch';
-      $elements = slick_build($element, array(), $nested_settings, $attach, $css_id, $options['nested_set']);
+      $elements = slick_build($element, $js, $nested_settings_global, $attach, $css_id, $options['nested_set']);
     }
     else {
       // Otherwise cares for a single overlay item to not break small layout.

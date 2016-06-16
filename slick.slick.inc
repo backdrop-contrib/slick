@@ -23,20 +23,20 @@ function slick_slick_skins_info() {
 
   $skins = array(
     'default' => array(
-      'name' => t('Default'),
+      'name' => 'Default',
       'css' => array(
         $path . '/css/theme/slick.theme--default.css' => array('weight' => -20),
       ),
     ),
     '3d-back' => array(
-      'name' => t('3d back'),
+      'name' => '3d back',
       'css' => array(
         $path . '/css/theme/slick.theme--3d-back.css' => array('weight' => 1),
       ),
       'description' => t('Adds 3d view with focal point at back, works best with 3 slidesToShow, centerMode, and caption below the slide.'),
     ),
     'asnavfor' => array(
-      'name' => t('Thumbnail: asNavFor'),
+      'name' => 'Thumbnail: asNavFor',
       'group' => 'thumbnail',
       'css' => array(
         $path . '/css/theme/slick.theme--asnavfor.css' => array('weight' => 2),
@@ -44,14 +44,14 @@ function slick_slick_skins_info() {
       'description' => t('Affected thumbnail navigation only.'),
     ),
     'classic' => array(
-      'name' => t('Classic'),
+      'name' => 'Classic',
       'description' => t('Adds dark background color over white caption, only good for slider (single slide visible), not carousel (multiple slides visible), where small captions are placed over images, and animated based on their placement.'),
       'css' => array(
         $path . '/css/theme/slick.theme--classic.css' => array('weight' => 2),
       ),
     ),
     'fullscreen' => array(
-      'name' => t('Full screen'),
+      'name' => 'Full screen',
       'description' => t('Adds full screen display, works best with 1 slidesToShow.'),
       'css' => array(
         $path . '/css/theme/slick.theme--fullscreen.css' => array('weight' => 4),
@@ -61,7 +61,7 @@ function slick_slick_skins_info() {
       'inline css' => TRUE,
     ),
     'fullwidth' => array(
-      'name' => t('Full width'),
+      'name' => 'Full width',
       'description' => t('Adds .slide__constrained wrapper to hold caption overlay within the max-container (1170px for large monitor).'),
       'css' => array(
         $path . '/css/theme/slick.theme--fullwidth.css' => array('weight' => 5),
@@ -69,28 +69,28 @@ function slick_slick_skins_info() {
       ),
     ),
     'boxed' => array(
-      'name' => t('Boxed'),
+      'name' => 'Boxed',
       'description' => t('Adds margins to the sides of slick-list revealing arrows. Reasonable with captions.'),
       'css' => array(
         $path . '/css/theme/slick.theme--boxed.css' => array('weight' => 6),
       ),
     ),
     'grid' => array(
-      'name' => t('Grid'),
-      'description' => t('The last grid carousel. Use slidesToShow > 1 to have more grid combination, only if you have considerable amount of grids, otherwise 1.'),
+      'name' => 'Grid Foundation',
+      'description' => t('Use slidesToShow > 1 to have more grid combination, only if you have considerable amount of grids, otherwise 1. This uses the Foundation block grid.'),
       'css' => array(
         $path . '/css/theme/slick.theme--grid.css' => array('weight' => 7),
       ),
     ),
     'split' => array(
-      'name' => t('Split'),
+      'name' => 'Split',
       'description' => t('Puts image and caption side by side, related to slide layout options.'),
       'css' => array(
         $path . '/css/theme/slick.theme--split.css' => array('weight' => 8),
       ),
     ),
     'boxed-carousel' => array(
-      'name' => t('Box carousel'),
+      'name' => 'Box carousel',
       'description' => t('Carousel that has margins, alternative to centerMode.'),
       'css' => array(
         $path . '/css/theme/slick.theme--boxed.css' => array('weight' => 9),
@@ -98,7 +98,7 @@ function slick_slick_skins_info() {
       ),
     ),
     'boxed-split' => array(
-      'name' => t('Box split'),
+      'name' => 'Box split',
       'description' => t('Adds margins and split caption and image.'),
       'css' => array(
         $path . '/css/theme/slick.theme--boxed.css' => array('weight' => 11),
@@ -106,7 +106,7 @@ function slick_slick_skins_info() {
       ),
     ),
     'rounded' => array(
-      'name' => t('Rounded'),
+      'name' => 'Rounded',
       'description' => t('Rounds the .slide__media, great for 3-5 visible-slides carousel.'),
       'css' => array(
         $path . '/css/theme/slick.theme--rounded.css' => array('weight' => 13),

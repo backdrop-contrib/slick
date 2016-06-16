@@ -68,6 +68,10 @@
       });
 
       $(".media--loading", t).closest(".slide").addClass("slide--loading");
+
+      t.on("lazyLoaded lazyLoadError", function (e, slick, img, src) {
+        _.setBackground(img);
+      });
     },
 
     /**
@@ -101,10 +105,6 @@
         $ratio.addClass("media--ratio").removeClass("js-media--ratio");
       }
 
-      t.on("lazyLoaded lazyLoadError", function (e, slick, img) {
-        _.setBackground(img);
-      });
-
       t.trigger("afterSlick", [_, slick, slick.currentSlide]);
     },
 
@@ -132,8 +132,7 @@
       if (o.randomize && !t.hasClass("slick-initiliazed")) {
         t.children().sort(function () {
           return 0.5 - Math.random();
-        })
-        .each(function () {
+        }).each(function () {
           t.append(this);
         });
       }
@@ -145,6 +144,7 @@
     setPosition: function (t, a, o, slick) {
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
+      // https://github.com/kenwheeler/slick/pull/1846
       if (t.attr("id") === slick.$slider.attr("id")) {
         // Removes padding rules, if no value is provided to allow non-inline.
         if (!o.centerPadding || o.centerPadding === "0") {

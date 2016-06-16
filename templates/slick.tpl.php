@@ -26,7 +26,7 @@
 
   <?php if (empty($settings['unslick'])): ?>
     </div>
-    <nav<?php print $arrow_attributes; ?>>
+    <nav class="slick__arrow<?php print $settings['skin_arrows']; ?>">
       <?php print $settings['prev_arrow']; ?>
       <?php isset($arrow_down) && print $arrow_down; ?>
       <?php print $settings['next_arrow']; ?>

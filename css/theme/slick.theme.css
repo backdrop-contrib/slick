@@ -316,7 +316,7 @@ img[data-lazy] {
 }
 
 /* Prevents confusing white space with centerPadding */
-.slick__image {
+.media__image {
   margin-left: auto;
   margin-right: auto;
 }

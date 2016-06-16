@@ -22,7 +22,6 @@ function slick_theme($existing, $type, $theme, $path) {
       $themes[$key]['template'] = strtr($key, '_', '-');
     }
   }
-
   return $themes;
 }
 
@@ -157,7 +156,7 @@ function slick_skins() {
  * @param string $group
  *   The skin group name: main, thumbnail, overlay, dots, arrows.
  * @param bool $select
- *   The flag to limit the skins for select options.
+ *   The flag to limit the skins for form select options.
  *
  * @return array
  *   The associative array of available skins grouped by $group, else all skins.
@@ -165,7 +164,7 @@ function slick_skins() {
 function slick_get_skins_by_group($group = '', $select = FALSE) {
   $skins = $groups = $ungroups = array();
   foreach (slick_skins() as $skin => $properties) {
-    $item = $select ? check_plain($properties['name']) : $properties;
+    $item = $select ? strip_tags($properties['name']) : $properties;
     if (!empty($group)) {
       if (isset($properties['group'])) {
         if ($properties['group'] != $group) {
@@ -179,7 +178,6 @@ function slick_get_skins_by_group($group = '', $select = FALSE) {
     }
     $skins[$skin] = $item;
   }
-
   return $group ? array_merge($ungroups, $groups) : $skins;
 }
 
@@ -203,12 +201,12 @@ function slick_html_id($string = 'slick', $id = '') {
  * Returns the given optionset object identified by $id.
  *
  * @param string $id
- *   The optionset ID with property name.
+ *   The optionset ID with property name, or default.
  *
  * @return object
  *   Returns the optionset, or else default, if no optionset found.
  */
-function slick_optionset_load($id) {
+function slick_optionset_load($id = 'default') {
   ctools_include('export');
   $optionset = ctools_export_crud_load('slick_optionset', $id);
 
@@ -271,6 +269,12 @@ function slick_attach(array $attach, $settings = array()) {
     $load['js'] += array($easing . '/jquery.easing.min.js' => array('group' => JS_LIBRARY, 'weight' => -6));
   }
 
+  if (!empty($settings['mousewheel'])) {
+    if ($mousewheel = libraries_get_path('mousewheel')) {
+      $load['js'] += array($mousewheel . '/jquery.mousewheel.min.js' => array('group' => JS_LIBRARY, 'weight' => -5));
+    }
+  }
+
   $load['library'][] = array('slick', 'slick');
   $load['js'] += array($path . '/js/slick.load.min.js' => array('weight' => 0));
 
@@ -309,6 +313,10 @@ function slick_attach(array $attach, $settings = array()) {
         }
         unset($nav_skins);
       }
+    }
+
+    if (!empty($settings['thumbnail_hover'])) {
+      $load['css'] += array($path . '/css/components/slick.dots--thumbnail.css' => array());
     }
   }
 
@@ -350,15 +358,14 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
     return array();
   }
 
-  // Simplify ID without breaking changes till the first two dropped.
-  $id             = isset($settings['attributes']['id']) ? $settings['attributes']['id'] : $id;
+  $attachments    = array();
   $display        = empty($settings['current_display']) ? 'main' : $settings['current_display'];
   $settings['id'] = empty($settings['id']) ? slick_html_id('slick', $id) : $settings['id'];
 
-  $attachments = array();
+  $options['mousewheel'] = !empty($settings['mousewheel']);
   if ($display != 'thumbnail') {
-    $custom = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
-    $attachments = $custom ? $attach : slick_attach($attach, $settings);
+    $loaded = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
+    $attachments = $loaded ? $attach : slick_attach($attach, $settings);
 
     if ($display == 'main') {
       if (!empty($settings['override'])) {
@@ -369,7 +376,7 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
       }
 
       // Build the Slick grid if provided.
-      if (!empty($settings['grid']) && !empty($settings['visible_slides']) && function_exists('slick_build_grids')) {
+      if (!empty($settings['grid']) && !empty($settings['visible_slides'])) {
         $items = slick_build_grids($items, $settings);
       }
     }
@@ -400,6 +407,5 @@ function slick_build($items = array(), $options = array(), $settings = array(), 
       );
     }
   }
-  unset($attachments, $items, $optionset, $settings);
   return $slick;
 }

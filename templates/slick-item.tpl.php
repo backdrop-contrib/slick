@@ -16,7 +16,7 @@
  * @see template_preprocess_slick_item()
  */
 ?>
-<?php print render($wrapper_prefix); ?>
+<?php print $wrapper_prefix; ?>
   <?php if ($settings['current_item'] == 'thumbnail'): ?>
     <?php print render($item); ?>
     <?php if ($caption): ?>
@@ -26,14 +26,14 @@
   <?php
     // Main slide may be grid items, nested slicks, or regular text/image/video.
     else: ?>
-    <?php print render($content_prefix); ?>
-      <?php print render($item_prefix); ?>
+    <?php print $content_prefix; ?>
+      <?php print $item_prefix; ?>
       <?php print render($item); ?>
       <?php print $slide_pattern; ?>
-      <?php print render($item_suffix); ?>
+      <?php print $item_suffix; ?>
 
       <?php if ($caption): ?>
-        <?php print render($title_prefix); ?>
+        <?php print $title_prefix; ?>
         <div class="slide__caption">
           <?php if (!empty($caption['overlay'])): ?>
             <div class="slide__overlay"><?php print render($caption['overlay']); ?></div>
@@ -61,9 +61,9 @@
             <?php if (!empty($caption['overlay'])): ?></div><?php endif; ?>
           <?php endif; ?>
         </div>
-        <?php print render($title_suffix); ?>
+        <?php print $title_suffix; ?>
       <?php endif; ?>
 
-    <?php print render($content_suffix); ?>
+    <?php print $content_suffix; ?>
   <?php endif; ?>
-<?php print render($wrapper_suffix); ?>
+<?php print $wrapper_suffix; ?>

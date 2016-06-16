@@ -1,6 +1,15 @@
 
+Slick 7.x-2.0-dev, 2016-06-16
+-----------------------------
+- Fixed for the never-done-right slick_get_dimensions().
+- Fixed for .media-icon--lightbox hover.
+- Optimized slick_optionset_load() to not load from DB by default.
+- Added Optimized option to optimize the storage of the Optionsets by excluding
+  options similar to defaults.
+- Merged slick.fields.inc contents into slick.global.inc to reduce one include.
+
 Slick 7.x-2.0-dev, 2016-06-10
-------------------------------
+-----------------------------
 - #2745803 by 3blake7: Undefined index: path in slick_fields_field_formatter_view().
 - Added "Use CSS background" option to simplify the cumbersome "inline css"
   normally provided via hook_slick_skins_info(), and fully lazyloaded as well.
@@ -8,7 +17,7 @@ Slick 7.x-2.0-dev, 2016-06-10
   using "inline css".
 
 Slick 7.x-2.0-dev, 2016-06-07
-------------------------------
+-----------------------------
 - Fixed for regression with a mix of image/video/audio with lightboxes.
 - #2719051 by gausarts: Merge theme_slick_media() and theme_slick_image_lazy().
 - #2726913 by usdv, tyler.frankenstein: FireFox throws a 404 on default img src.

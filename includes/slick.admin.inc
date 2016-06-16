@@ -468,9 +468,108 @@ function slick_get_top_elements(array &$elements, $settings, &$form_state) {
 }
 
 /**
+ * Returns shared fieldanle form elements for Slick field formatter and Views.
+ */
+function slick_get_fieldable_elements(array &$elements, $settings, $definition = array()) {
+  $slick_fields   = url(drupal_get_path('module', 'slick_fields') . '/README.txt');
+  $layout_builtin = slick_layouts();
+
+  $image_options      = isset($definition['images']) ? $definition['images'] : array();
+  $thumb_options      = isset($definition['thumbnails']) ? $definition['thumbnails'] : array();
+  $overlay_options    = isset($definition['overlays']) ? $definition['overlays'] : array();
+  $layout_options     = isset($definition['layouts']) ? $definition['layouts'] : array();
+  $title_options      = isset($definition['titles']) ? $definition['titles'] : array();
+  $link_options       = isset($definition['links']) ? $definition['links'] : array();
+  $caption_options    = isset($definition['captions']) ? $definition['captions'] : array();
+  $tn_caption_options = isset($definition['thumb_captions']) ? $definition['thumb_captions'] : array();
+  $class_options      = isset($definition['classes']) ? $definition['classes'] : array();
+
+  $elements['slide_layout'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Slide layout'),
+    '#options'     => $layout_options + $layout_builtin,
+    '#prefix'      => '<h3 class="form--slick__title">' . t('Fields') . '</h3>',
+    '#description' => t('Two options: <ol><li>A custom list text field, to control each slide layout. Choose "key" under its Formatter.</li><li>Builtin layouts, to apply uniformly to all slides.</li></ol>Leave empty to DIY. <a href="@url">Read more</a> about layouts.', array('@url' => $slick_fields)),
+    '#access'      => isset($definition['layouts']),
+  );
+
+  $elements['slide_title'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Slide title'),
+    '#options'     => $title_options,
+    '#description' => t('If provided, it will be wrapped with H2 and class .slide__title.'),
+    '#access'      => isset($definition['titles']),
+  );
+
+  $elements['slide_image'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Main image'),
+    '#options'     => $image_options,
+    '#description' => t('Main image, treated as background if overlay is provided. It will be lazy-loaded if the Formatter is <strong>Image</strong> and lazyLoad is enabled. Only one image is displayed per slide, even if it is a multi-value field.'),
+    '#access'      => isset($definition['images']),
+  );
+
+  $elements['slide_thumbnail'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Thumbnail image'),
+    '#options'     => $thumb_options,
+    '#description' => t("Only needed if <em>Option set thumbnail</em> is provided. Maybe the same field as the main image, only different instance. Leave empty to not use thumbnail pager."),
+    '#access'      => isset($definition['thumbnails']),
+  );
+
+  $elements['thumbnail_caption'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Thumbnail caption'),
+    '#options'     => $tn_caption_options,
+    '#description' => t('Thumbnail caption maybe just title/ plain text. If Thumbnail image is not provided, the thumbnail pagers will be just text like regular tabs.'),
+    '#access'      => isset($definition['thumb_captions']),
+  );
+
+  $elements['slide_overlay'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Overlay media/slicks'),
+    '#options'     => $overlay_options,
+    '#description' => t('For audio/video, be sure the display is not image. For nested slicks, use the Slick carousel formatter for this field. Zebra layout is reasonable for overlay and captions.'),
+    '#access'      => isset($definition['overlays']),
+  );
+
+  $elements['slide_link'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Link'),
+    '#options'     => $link_options,
+    '#description' => t('Link to content: Read more, View Case Study, etc, wrapped with class .slide__link.'),
+    '#access'      => isset($definition['links']),
+  );
+
+  $slide_captions = is_array($settings['slide_caption']) ? array_values($settings['slide_caption']) : $settings['slide_caption'];
+  $elements['slide_caption'] = array(
+    '#type'          => 'checkboxes',
+    '#title'         => t('Caption fields'),
+    '#description'   => t("Select fields for the caption, excluding those already selected above."),
+    '#options'       => $caption_options,
+    '#default_value' => $slide_captions,
+    '#access'      => isset($definition['captions']),
+  );
+
+  $elements['slide_classes'] = array(
+    '#title'       => t('Slide class'),
+    '#type'        => 'select',
+    '#options'     => $class_options,
+    '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split, or Slick filtering. Be sure to have a Key, Label or Plain text under Formatter without links accordingly. Supported fields: Node title, Entityreference, Taxonomy term, List, Text.'),
+    '#access'      => isset($definition['classes']),
+  );
+}
+
+/**
  * Returns shared ending form elements across Slick field formatter and Views.
  */
 function slick_get_elements(array &$elements, $settings, &$form_state) {
+  $elements['mousewheel'] = array(
+    '#type'        => 'checkbox',
+    '#title'       => t('Mousewheel'),
+    '#description' => t('Be sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
+  );
+
   $a = array(300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400);
   $period = drupal_map_assoc($a, 'format_interval');
   $elements['cache'] = array(
@@ -517,7 +616,7 @@ function slick_get_grid_elements(array &$elements, $settings, &$form_state) {
     '#type'        => 'select',
     '#title'       => t('Grid large'),
     '#options'     => $grid_options,
-    '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. <br /><strong>Requires</strong>:<ol><li>Visible slides,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents,</li><li>Optionset with Rows and slidesPerRow = 1.</li></ol>This is module feature, older than core Rows, and offers more flexibility. Leave empty to DIY, or to not build grids.'),
+    '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. <br /><strong>Requires</strong>:<ol><li>Visible slides,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents,</li><li>Optionset with Rows and slidesPerRow = 1.</li></ol>This is module feature using the Foundation block grid, older than core Rows, and offers more flexibility. Leave empty to DIY, or to not build grids.'),
     '#prefix'      => '<h3 class="form--slick__title">' . t('Group individual slide as block grid?<small>An older alternative to core <strong>Rows</strong> option. Only works if the total items &gt; <strong>Visible slides</strong>. <br />block grid != slidesToShow option, yet both can work in tandem.<br />block grid = Rows option, yet the first is module feature, the later core.</small>') . '</h3>',
   );
 

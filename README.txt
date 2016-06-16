@@ -369,6 +369,8 @@ KNOWN ISSUES
   o Too much centerPadding at small device affects slidesToShow.
   o Infinite option will create duplicates or clone slides which look more
     obvious if slidesToShow > 1. Simply disable it if not desired.
+  o As of v1.6.0, the parent of nested slicks is not lazyloading ondemand
+    correctly, settings it to progressive will do till the fix is there.
 
 
 PERFORMANCE

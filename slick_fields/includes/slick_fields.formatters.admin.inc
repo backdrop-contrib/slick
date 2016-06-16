@@ -118,6 +118,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   );
 
   // Layout to all supported fields.
+  // @todo re-use for Slick Views.
   $elements['slide_layout'] = array(
     '#title'       => t('Slide layout'),
     '#type'        => 'select',
@@ -144,6 +145,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     '#description' => t('Check this to turn the image into CSS background instead. This opens up the goodness of CSS, such as background cover, fixed attachment, etc. Works best with a single visible slide, skins full width/screen. <br /><strong>Important!</strong> Requires a consistent Aspect ratio, otherwise collapsed containers. Unless a min-height is added manually to <strong>.media--background</strong> selector. Not compatible with Picture, of course.'),
   );
 
+  // @todo re-use for Slick Views.
   if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
     $elements['slide_layout']['#prefix'] = '<h3 class="form--slick__title">' . t('Fields') . '</h3>';
 
@@ -208,6 +210,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       );
     }
 
+    // @todo re-use for Slick Views.
     $elements['slide_title'] = array(
       '#title'       => t('Slide title'),
       '#type'        => 'select',
@@ -299,10 +302,11 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   }
 
   // http://en.wikipedia.org/wiki/List_of_common_resolutions
+  $ratio = array('1:1', '3:2', '4:3', '8:5', '16:9', 'fluid');
   $elements['aspect_ratio'] = array(
     '#type'        => 'select',
     '#title'       => t('Aspect ratio'),
-    '#options'     => drupal_map_assoc(array('1:1', '3:2', '4:3', '8:5', '16:9', 'fluid')),
+    '#options'     => drupal_map_assoc($ratio),
     '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. This also fixes layout reflow and excessive height issues with lazyload ondemand. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpectedly distorted. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc. Choose fluid if unsure.', array(
       '@dimensions' => '//size43.com/jqueryVideoTool.html',
       '@follow'     => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
@@ -393,12 +397,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     $elements['thumbnail_caption']['#options'] = $thumb_captions;
     $elements['thumbnail_caption']['#access'] = TRUE;
   }
-
-  $elements['mousewheel'] = array(
-    '#type'        => 'checkbox',
-    '#title'       => t('Mousewheel'),
-    '#description' => t('Be sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
-  );
 
   // Picture module integration.
   if ($is_picture) {

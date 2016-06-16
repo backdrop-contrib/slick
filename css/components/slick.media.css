@@ -6,7 +6,7 @@
 .media__iframe,
 .slick__litebox,
 .slick__slide picture {
-  border: 0 none;
+  border: 0;
   display: block;
   max-width: 100%;
 }
@@ -107,7 +107,7 @@
   visibility: hidden;
 }
 
-.media--switch .slick__image,
+.media--switch .media__image,
 .media-icon--play,
 .is-playing .media__iframe,
 .is-playing.media--ratio > iframe,
@@ -121,9 +121,9 @@
 }
 
 .is-playing > img,
-.is-playing .slick__image,
+.is-playing .media__image,
 .is-playing.media--switch + .slide__pattern,
-.is-playing.media--switch .slick__image,
+.is-playing.media--switch .media__image,
 .is-playing .media-icon--play,
 .is-playing:hover .media-icon--play {
   opacity: 0;
@@ -137,9 +137,9 @@
 }
 
 /**
- * Fallback non-JS.
+ * Fallback non-JS, if no-js class is provided by theme.
  */
-.no-js .media--switch .slick__image,
+.no-js .media--switch .media__image,
 .no-js .media--switch .media-icon {
   opacity: 0;
   visibility: hidden;

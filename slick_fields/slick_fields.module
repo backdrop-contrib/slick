@@ -22,7 +22,11 @@ function slick_fields_field_formatter_info() {
  */
 function slick_fields_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
-  if (empty($items) && $display['type'] != 'slick') {
+  if (empty($items)) {
+    return $element;
+  }
+
+  if ($display['type'] != 'slick') {
     return $element;
   }
 
@@ -37,14 +41,10 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   // Prepare settings.
   $settings = array(
     'count'       => count($items),
-    'bundle'      => $bundle,
-    'field_type'  => $field['type'],
-    'field_name'  => $field_name,
     'entity_id'   => $entity_id,
     'entity_type' => $entity_type,
     'entity_uri'  => isset($entity_uri['path']) ? $entity_uri['path'] : '',
     'id'          => $id,
-    'inline_css'  => FALSE,
   ) + slick_fields_default_settings();
 
   $settings = array_merge($settings, $display['settings']);
@@ -74,7 +74,6 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   }
 
   // Otherwise do the routines before a cache stored, or when disabled.
-  module_load_include('inc', 'slick', 'includes/slick.fields');
   $build     = $attach = $js = $array = array();
   $optionset = slick_optionset_load($settings['optionset']);
   $lazy      = $optionset->options['settings']['lazyLoad'];
@@ -82,13 +81,15 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   drupal_alter('slick_fields_settings_info', $settings, $items, $optionset);
 
   $settings['blazy']         = $lazy == 'blazy' || !empty($settings['breakpoints']);
+  $settings['box_style']     = $settings['colorbox_style'];
+  $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
   $settings['lazy']          = $settings['blazy'] ? 'blazy' : (isset($items[1]) ? $lazy : '');
   $settings['layout']        = empty($settings['slide_layout']) ? '' : $settings['slide_layout'];
-  $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
-  $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
+  $settings['lightbox']      = strpos($settings['media_switch'], 'box') !== FALSE ? str_replace('-switch', '', $settings['media_switch']) : FALSE;
+  $settings['picture']       = function_exists('picture_mapping_load') && !empty($settings['picture']);
   $settings['ratio']         = !empty($settings['aspect_ratio']) && empty($settings['picture']) ? $settings['aspect_ratio'] : FALSE;
-  $settings['box_style']     = $settings['colorbox_style'];
-  $settings['lightbox']      = strpos($settings['media_switch'], 'box') !== FALSE;
+  $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
+  $settings['view_mode']     = empty($settings['view_mode']) ? 'full' : $settings['view_mode'];
 
   switch ($field['type']) {
     case 'image':
@@ -113,39 +114,30 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     return $element;
   }
 
-  $attachments = slick_attach($attach, $settings);
-  if (!empty($settings['mousewheel'])) {
-    if ($mousewheel = libraries_get_path('mousewheel')) {
-      $js['mousewheel'] = TRUE;
-      $attachments['js'] += array($mousewheel . '/jquery.mousewheel.min.js' => array('group' => JS_LIBRARY, 'weight' => -5));
-    }
+  if ($settings['nav']) {
+    $js['asNavFor'] = "#{$thumb_id}-slider";
   }
 
-  // Inline CSS is to colorize FC individual slide, or Fullscreen skin.
+  // Build attachments.
+  $attachments = slick_attach($attach, $settings);
   if ($settings['skin']) {
+    // Inline CSS is to colorize FC individual slide, or Fullscreen skin.
     if (!empty($settings['inline_css'])) {
       $attachments['css'][] = slick_get_inline_css($settings, $build['items']);
     }
-    if ($settings['thumbnail_hover']) {
-      $attachments['css'] += array($slick_path . '/css/components/slick.dots--thumbnail.css' => array('weight' => -98));
-    }
-  }
-
-  if ($settings['nav']) {
-    $settings['asnavfor_target'] = "#{$thumb_id}-slider";
   }
 
   // Build the single/main display Slick.
   $slick[0] = slick_build($build['items'], $js, $settings, $attachments, $id, $optionset);
 
   if (isset($build['thumb'])) {
-    $optionset = slick_optionset_load($asnavfor);
-    $settings['optionset'] = $asnavfor;
+    $optionset                   = slick_optionset_load($asnavfor);
+    $settings['optionset']       = $asnavfor;
     $settings['current_display'] = 'thumbnail';
-    $settings['asnavfor_target'] = "#{$id}-slider";
+    $js['asNavFor']              = "#{$id}-slider";
 
     // Build the thumbnail+/text navigation Slick.
-    $slick[1] = slick_build($build['thumb'], $array, $settings, $array, $thumb_id, $optionset);
+    $slick[1] = slick_build($build['thumb'], $js, $settings, $array, $thumb_id, $optionset);
 
     $element = array(
       '#theme'    => 'slick_wrapper',
@@ -158,7 +150,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     $element = $view && !empty($settings['markup']) ? $slick : $slick[0];
   }
 
-  unset($build, $optionset, $settings, $slick);
+  unset($build, $optionset, $settings);
   return $element;
 }
 
@@ -202,21 +194,21 @@ function slick_fields_entity_info_alter(&$entity_info) {
 function slick_fields_default_settings() {
   module_load_include('inc', 'slick', 'includes/slick.global');
   $settings = array(
-    'color_field'       => '',
-    'colorbox_style'    => '',
-    'iframe_lazy'       => FALSE,
-    'lightbox_ready'    => FALSE,
-    'markup'            => FALSE,
-    'nested_slick'      => FALSE,
-    'nested_optionset'  => '',
-    'nested_style'      => '',
-    'picture'           => FALSE,
-    'picture_ready'     => FALSE,
-    'picture_style'     => '',
-    'picture_fallback'  => '',
-    'thumbnail_style'   => '',
-    'thumbnail_hover'   => FALSE,
-    'use_ajax'          => FALSE,
+    'box_caption'        => '',
+    'box_caption_custom' => '',
+    'breakpoints'        => array(),
+    'color_field'        => '',
+    'colorbox_style'     => '',
+    'iframe_lazy'        => FALSE,
+    'markup'             => FALSE,
+    'nested_slick'       => FALSE,
+    'nested_optionset'   => '',
+    'nested_style'       => '',
+    'picture'            => FALSE,
+    'picture_style'      => '',
+    'picture_fallback'   => '',
+    'thumbnail_style'    => '',
+    'thumbnail_hover'    => FALSE,
   ) + slick_get_global_default_settings();
 
   return $settings;

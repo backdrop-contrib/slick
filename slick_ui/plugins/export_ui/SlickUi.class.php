@@ -17,6 +17,7 @@ class SlickUi extends ctools_export_ui {
     parent::edit_form($form, $form_state);
 
     ctools_form_include($form_state, 'slick.admin', 'slick');
+    ctools_form_include($form_state, 'slick.theme', 'slick', 'templates');
 
     $module_path = drupal_get_path('module', 'slick');
     $optionset = $form_state['item'];
@@ -33,7 +34,7 @@ class SlickUi extends ctools_export_ui {
     $form['#attributes']['class'][] = 'form--slick';
     $form['#attributes']['class'][] = 'form--compact';
     $form['#attributes']['class'][] = 'form--optionset';
-    $form['#attributes']['class'][] = 'clearfix';
+    $form['#attributes']['class'][] = 'has-tooltip clearfix';
 
     $form['info']['name']['#attributes']['class'][] = 'is-tooltip';
     $form['info']['label']['#attributes']['class'][] = 'is-tooltip';
@@ -44,6 +45,7 @@ class SlickUi extends ctools_export_ui {
     $skins_main = slick_get_skins_by_group('main', TRUE);
     $skins_thumbnail = slick_get_skins_by_group('thumbnail', TRUE);
     $skins = array_merge($skins_main, $skins_thumbnail);
+
     $form['skin'] = array(
       '#type' => 'select',
       '#title' => t('Skin'),
@@ -73,6 +75,16 @@ class SlickUi extends ctools_export_ui {
     $form['options'] = array(
       '#type' => 'vertical_tabs',
       '#tree' => TRUE,
+    );
+
+    $is_optimized = $optionset->name == 'default' ? 0 : 1;
+    $form['options']['optimized'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Optimized'),
+      '#attributes' => array('class' => array('is-tooltip')),
+      '#default_value' => isset($options['optimized']) ? $options['optimized'] : $is_optimized,
+      '#description' => t('Check to optimize the stored options. Anything similar to defaults will be excluded, except those required by sub-modules and theme_slick(). Like you hand-code/ cherry-pick the needed options, and frees up memory. The rest are taken care of by JS. Uncheck only if theme_slick() can not satisfy the needs, and more hand-coded preprocess is needed which is less likely in most cases.'),
+      '#access' => $optionset->name != 'default',
     );
 
     // Image styles.
@@ -417,8 +429,10 @@ class SlickUi extends ctools_export_ui {
   public function edit_form_submit(&$form, &$form_state) {
     parent::edit_form_submit($form, $form_state);
 
-    $options = $form_state['values']['options'];
+    $options   = $form_state['values']['options'];
     $optionset = $form_state['item'];
+    $optimized = isset($options['optimized']) ? $options['optimized'] : FALSE;
+
     // Map and update the friendly CSS easing to its bezier equivalent.
     $override = '';
     if ($form_state['values']['options']['settings']['cssEaseOverride']) {
@@ -438,6 +452,31 @@ class SlickUi extends ctools_export_ui {
 
     // Typecast the values.
     _slick_typecast_optionset($optionset->options, $form_state['values']['breakpoints']);
+
+    // Optimized if so configured.
+    if (!empty($optimized)) {
+      $defaults = slick_get_options();
+      $required = $this->getOptionsRequiredByTemplate();
+      $main     = array_diff_assoc($defaults, $required);
+      $settings = $optionset->options['settings'];
+
+      // Remove wasted dependent options if disabled, empty or not.
+      slick_remove_wasted_dependent_options($settings);
+      $optionset->options['settings'] = array_diff_assoc($settings, $main);
+
+      if (isset($options['responsives']['responsive'])) {
+        $responsives = &$optionset->options['responsives']['responsive'];
+        foreach ($responsives as $key => &$responsive) {
+          if (!empty($responsive['unslick'])) {
+            $responsives[$key]['settings'] = array();
+          }
+          else {
+            slick_remove_wasted_dependent_options($responsives[$key]['settings']);
+            $responsives[$key]['settings'] = array_diff_assoc($responsives[$key]['settings'], $defaults);
+          }
+        }
+      }
+    }
 
     // Remove useless option.
     if (isset($options['options__active_tab'])) {
@@ -815,6 +854,41 @@ class SlickUi extends ctools_export_ui {
   }
 
   /**
+   * Defines options required by theme_slick(), used with optimized option.
+   */
+  public function getOptionsRequiredByTemplate() {
+    $options = array(
+      'asNavFor'         => '',
+      'dotsClass'        => 'slick-dots',
+      'focusOnSelect'    => FALSE,
+      'initialSlide'     => 0,
+      'lazyLoad'         => 'ondemand',
+      'mousewheel'       => FALSE,
+      'prevArrow'        => '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button">Previous</button>',
+      'nextArrow'        => '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button">Next</button>',
+      'rtl'              => FALSE,
+      'rows'             => 1,
+      'slidesPerRow'     => 1,
+      'slide'            => '',
+      'slidesToShow'     => 1,
+    );
+
+    drupal_alter('slick_ui_options_required_by_template_info', $options);
+    return $options;
+  }
+
+  /**
+   * Overrides parent::list_form.
+   */
+  public function list_form(&$form, &$form_state) {
+    parent::list_form($form, $form_state);
+
+    $form['slick description']['#prefix'] = '<div class="ctools-export-ui-row ctools-export-ui-slick-description clearfix">';
+    $form['slick description']['#markup'] = t("<p>Manage the Slick optionsets. Optionsets are Config Entities.</p><p>By default, when this module is enabled, a single optionset is created from configuration. Install Slick example module to speed up by cloning them. Use the Operations column to edit, clone and delete optionsets.<br /><strong class='error'>Important!</strong> Avoid overriding Default optionset as it is meant for Default -- checking and cleaning. Use Clone, or Add, instead. If you did, please clone it and revert, otherwise messes are yours.</p>");
+    $form['slick description']['#suffix'] = '</div>';
+  }
+
+  /**
    * Overrides parent::list_build_row.
    */
   public function list_build_row($item, &$form_state, $operations) {
@@ -860,6 +934,27 @@ class SlickUi extends ctools_export_ui {
     array_splice($headers, 3, 0, $skin_header);
 
     return $headers;
+  }
+
+  /**
+   * Overrides parent::build_operations.
+   */
+  public function build_operations($item) {
+    $allowed_operations = parent::build_operations($item);
+
+    if ($item->name == 'default') {
+      if (isset($allowed_operations['enable'])) {
+        unset($allowed_operations['enable']);
+      }
+      if (isset($allowed_operations['edit'])) {
+        unset($allowed_operations['edit']);
+      }
+      if (isset($allowed_operations['disable'])) {
+        unset($allowed_operations['disable']);
+      }
+    }
+
+    return $allowed_operations;
   }
 
   /**

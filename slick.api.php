@@ -76,7 +76,6 @@
   // 1.
   // Optional $settings, can be removed.
   // Provides HTML settings with optionset name and ID, none of JS related.
-  // See slick_get_element_default_settings() for more supported keys.
   // To add JS key:value pairs, use #options at theme_slick() below instead.
   // If you provide ID, be sure unique per instance as it is cached.
   // Leave empty to be provided by the module.
@@ -129,9 +128,6 @@
         // Optionally adds a custom class, can be a static uniform class, or
         // dynamic one based on the relevant field value.
         'slide_classes' => 'slide--custom-class--' . $key,
-
-        // Optionally adds CSS image pattern overlay over the main image.
-        'has_pattern' => TRUE,
       ),
     );
   }
@@ -215,14 +211,10 @@
  * 3. AsNavFor sample.
  *
  * Requirements for asNavFor:
- *   - $settings['optionset_thumbnail'] = 'optionset_name';
- *     Defined for both slick main and thumbnail where 'optionset_name' is
- *     the same optionset name.
- *
  *   - $settings['current_display'] = 'thumbnail';
  *     Must be defined explicitly only for the thumbnail $settings.
  *
- *   - $settings['asnavfor_target'] = '#TARGETID-slider';
+ *   - $options['asNavFor'] = '#TARGETID-slider';
  *     Defined for both slick main and thumbnail where "TARGETID-slider" is the
  *     actual target which is placed within the $content_attributes.
  *
@@ -267,20 +259,18 @@
 
   // Add options.
   $options = array(
+    // If the main slick ID is "slick-for", the asNavfor target is
+    // targetting the thumbnail slider ID, suffixed with "-slider" automatically.
+    'asNavFor'      => '#slick-nav-slider',
     'arrows'        => FALSE,
     'centerMode'    => TRUE,
     'centerPadding' => '',
   );
 
-  // Satisfy two requirements for the main asnavfor.
-  // 'optionset_thumbnail_name_must_be_similar', e.g.: default, slick_nav.
+  // Satisfy requirements for the main asnavfor.
   $settings = array(
-    'optionset_thumbnail' => 'optionset_thumbnail_name_must_be_similar',
-
-    // If the main slick ID is "slick-for", the asNavfor target is
-    // targetting the thumbnail slider ID, suffixed with "-slider" automatically.
-    'asnavfor_target' => '#slick-nav-slider',
-    'id' => 'slick-for',
+    'optionset' => 'optionset_main',
+    'id'        => 'slick-for',
   );
 
   // Build the main slider.
@@ -299,6 +289,9 @@
 
   // Add options.
   $options = array(
+    // If the thumbnail slick ID is "slick-nav", the asNavfor target is
+    // targetting the main slider ID, suffixed with "-slider" automatically.
+    'asNavFor'      => '#slick-for-slider',
     'arrows'        => TRUE,
     'centerMode'    => TRUE,
     'centerPadding' => '10px',
@@ -307,17 +300,12 @@
     'slidesToShow'  => 5,
   );
 
-  // Satisfy three requirements for the thumbnail asnavfor.
-  // 'optionset_thumbnail_name_must_be_similar', e.g.: default, slick_nav.
+  // Satisfy requirements for the thumbnail asnavfor.
   $settings = array(
-    'optionset_thumbnail' => 'optionset_thumbnail_name_must_be_similar',
+    'optionset'       => 'optionset_thumbnail',
 
     // Must define 'current_display' explicitly to 'thumbnail'.
     'current_display' => 'thumbnail',
-
-    // If the thumbnail slick ID is "slick-nav", the asNavfor target is
-    // targetting the main slider ID, suffixed with "-slider" automatically.
-    'asnavfor_target' => '#slick-for-slider',
   );
 
   // Build the thumbnail slider, empty $attach means basic libraries only.
