@@ -124,7 +124,7 @@
   // Colorbox has no responsive support so far, drop them all when it does.
   Drupal.slickColorbox.resize = function (context, settings) {
     if (cboxResizeTimer) {
-      clearTimeout(cboxResizeTimer);
+      window.clearTimeout(cboxResizeTimer);
     }
 
     var mw = $('body').data("mediaWidth") || settings.colorbox.maxWidth,
@@ -136,7 +136,7 @@
         maxHeight: mh.indexOf("px") > 0 ? parseInt(mh) : mh
       };
 
-    cboxResizeTimer = setTimeout(function () {
+    cboxResizeTimer = window.setTimeout(function () {
       if ($("#cboxOverlay").is(":visible")) {
         var $container = $("#cboxLoadedContent");
 

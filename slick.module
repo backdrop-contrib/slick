@@ -315,8 +315,13 @@ function slick_attach(array $attach, $settings = array()) {
       }
     }
 
+    // @todo drop backward compatibility.
     if (!empty($settings['thumbnail_hover'])) {
-      $load['css'] += array($path . '/css/components/slick.dots--thumbnail.css' => array());
+      $settings['thumbnail_effect'] = 'hover';
+    }
+
+    if (!empty($settings['thumbnail_effect'])) {
+      $load['css'] += array($path . '/css/components/slick.thumbnail--' . $settings['thumbnail_effect'] . '.css' => array());
     }
   }
 

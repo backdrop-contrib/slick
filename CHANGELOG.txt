@@ -1,4 +1,11 @@
 
+Slick 7.x-2.0-dev, 2016-06-19
+-----------------------------
+- Re-used form-elements for Slick fields and Slick views.
+- Backported thumbnail_effect option as a replacement for thumbnail_hover.
+- Allowed Slick to run at least the lazyload on an unslick.
+- Fixed for unslick images.
+
 Slick 7.x-2.0-dev, 2016-06-16
 -----------------------------
 - Fixed for the never-done-right slick_get_dimensions().

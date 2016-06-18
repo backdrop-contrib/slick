@@ -138,8 +138,13 @@ function template_preprocess_slick(&$variables) {
 
     // Adds helper class if thumbnail on dots hover provided.
     $js['dotsClass'] = empty($js['dotsClass']) ? 'slick-dots' : $js['dotsClass'];
-    if (!empty($settings['thumbnail_style']) && !empty($settings['thumbnail_hover'])) {
-      $js['dotsClass'] .= ' slick-dots--thumbnail';
+
+    // @todo drop backward compatibility.
+    if (!empty($settings['thumbnail_hover'])) {
+      $settings['thumbnail_effect'] = 'hover';
+    }
+    if (!empty($settings['thumbnail_style']) && !empty($settings['thumbnail_effect'])) {
+      $js['dotsClass'] .= ' slick-dots--thumbnail slick-dots--thumbnail-' . $settings['thumbnail_effect'];
     }
 
     // Adds dots skin modifier class if provided.

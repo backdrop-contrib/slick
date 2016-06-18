@@ -483,6 +483,7 @@ function slick_get_fieldable_elements(array &$elements, $settings, $definition =
   $caption_options    = isset($definition['captions']) ? $definition['captions'] : array();
   $tn_caption_options = isset($definition['thumb_captions']) ? $definition['thumb_captions'] : array();
   $class_options      = isset($definition['classes']) ? $definition['classes'] : array();
+  $fieldable          = isset($definition['fieldable']) || isset($definition['overlays']);
 
   $elements['slide_layout'] = array(
     '#type'        => 'select',
@@ -493,29 +494,35 @@ function slick_get_fieldable_elements(array &$elements, $settings, $definition =
     '#access'      => isset($definition['layouts']),
   );
 
-  $elements['slide_title'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Slide title'),
-    '#options'     => $title_options,
-    '#description' => t('If provided, it will be wrapped with H2 and class .slide__title.'),
-    '#access'      => isset($definition['titles']),
-  );
+  if ($fieldable) {
+    $elements['slide_title'] = array(
+      '#type'        => 'select',
+      '#title'       => t('Slide title'),
+      '#options'     => $title_options,
+      '#description' => t('If provided, it will be wrapped with H2 and class .slide__title.'),
+      '#access'      => isset($definition['titles']),
+    );
+  }
 
-  $elements['slide_image'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Main image'),
-    '#options'     => $image_options,
-    '#description' => t('Main image, treated as background if overlay is provided. It will be lazy-loaded if the Formatter is <strong>Image</strong> and lazyLoad is enabled. Only one image is displayed per slide, even if it is a multi-value field.'),
-    '#access'      => isset($definition['images']),
-  );
+  if (isset($definition['images'])) {
+    $elements['slide_image'] = array(
+      '#type'        => 'select',
+      '#title'       => t('Main image'),
+      '#options'     => $image_options,
+      '#description' => t('Main image, treated as background if overlay is provided. It will be lazy-loaded if the Formatter is <strong>Image</strong> and lazyLoad is enabled. Only one image is displayed per slide, even if it is a multi-value field.'),
+      '#access'      => isset($definition['images']),
+    );
+  }
 
-  $elements['slide_thumbnail'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Thumbnail image'),
-    '#options'     => $thumb_options,
-    '#description' => t("Only needed if <em>Option set thumbnail</em> is provided. Maybe the same field as the main image, only different instance. Leave empty to not use thumbnail pager."),
-    '#access'      => isset($definition['thumbnails']),
-  );
+  if (isset($definition['thumbnails'])) {
+    $elements['slide_thumbnail'] = array(
+      '#type'        => 'select',
+      '#title'       => t('Thumbnail image'),
+      '#options'     => $thumb_options,
+      '#description' => t("Only needed if <em>Option set thumbnail</em> is provided. Maybe the same field as the main image, only different instance. Leave empty to not use thumbnail pager."),
+      '#access'      => isset($definition['thumbnails']),
+    );
+  }
 
   $elements['thumbnail_caption'] = array(
     '#type'        => 'select',
@@ -525,21 +532,35 @@ function slick_get_fieldable_elements(array &$elements, $settings, $definition =
     '#access'      => isset($definition['thumb_captions']),
   );
 
-  $elements['slide_overlay'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Overlay media/slicks'),
-    '#options'     => $overlay_options,
-    '#description' => t('For audio/video, be sure the display is not image. For nested slicks, use the Slick carousel formatter for this field. Zebra layout is reasonable for overlay and captions.'),
-    '#access'      => isset($definition['overlays']),
-  );
+  if ($fieldable) {
+    $elements['slide_overlay'] = array(
+      '#type'        => 'select',
+      '#title'       => t('Overlay media/slicks'),
+      '#options'     => $overlay_options,
+      '#description' => t('For audio/video, be sure the display is not image. For nested slicks, use the Slick carousel formatter for this field. Zebra layout is reasonable for overlay and captions.'),
+      '#access'      => isset($definition['overlays']),
+    );
+  }
 
-  $elements['slide_link'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Link'),
-    '#options'     => $link_options,
-    '#description' => t('Link to content: Read more, View Case Study, etc, wrapped with class .slide__link.'),
-    '#access'      => isset($definition['links']),
-  );
+  if (isset($definition['links'])) {
+    $elements['slide_link'] = array(
+      '#type'        => 'select',
+      '#title'       => t('Link'),
+      '#options'     => $link_options,
+      '#description' => t('Link to content: Read more, View Case Study, etc, wrapped with class .slide__link.'),
+      '#access'      => isset($definition['links']),
+    );
+  }
+
+  if (isset($definition['classes'])) {
+    $elements['slide_classes'] = array(
+      '#title'       => t('Slide class'),
+      '#type'        => 'select',
+      '#options'     => $class_options,
+      '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split, or Slick filtering. Be sure to have a Key, Label or Plain text under Formatter without links accordingly. Supported fields: Node title, Entityreference, Taxonomy term, List, Text.'),
+      '#access'      => isset($definition['classes']),
+    );
+  }
 
   $slide_captions = is_array($settings['slide_caption']) ? array_values($settings['slide_caption']) : $settings['slide_caption'];
   $elements['slide_caption'] = array(
@@ -548,15 +569,7 @@ function slick_get_fieldable_elements(array &$elements, $settings, $definition =
     '#description'   => t("Select fields for the caption, excluding those already selected above."),
     '#options'       => $caption_options,
     '#default_value' => $slide_captions,
-    '#access'      => isset($definition['captions']),
-  );
-
-  $elements['slide_classes'] = array(
-    '#title'       => t('Slide class'),
-    '#type'        => 'select',
-    '#options'     => $class_options,
-    '#description' => t('If provided, individual slide will have this class, e.g.: to have different background with transparent images and skin Split, or Slick filtering. Be sure to have a Key, Label or Plain text under Formatter without links accordingly. Supported fields: Node title, Entityreference, Taxonomy term, List, Text.'),
-    '#access'      => isset($definition['classes']),
+    '#access'        => isset($definition['captions']),
   );
 }
 
@@ -568,6 +581,7 @@ function slick_get_elements(array &$elements, $settings, &$form_state) {
     '#type'        => 'checkbox',
     '#title'       => t('Mousewheel'),
     '#description' => t('Be sure to download the <a href="@url" target="_blank">mousewheel</a> library, and it is available at <em>sites/.../libraries/mousewheel/jquery.mousewheel.min.js</em>.', array('@url' => '//github.com/brandonaaron/jquery-mousewheel')),
+    '#weight'      => 96,
   );
 
   $a = array(300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400);

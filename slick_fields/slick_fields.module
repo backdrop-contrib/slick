@@ -83,7 +83,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $settings['blazy']         = $lazy == 'blazy' || !empty($settings['breakpoints']);
   $settings['box_style']     = $settings['colorbox_style'];
   $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
-  $settings['lazy']          = $settings['blazy'] ? 'blazy' : (isset($items[1]) ? $lazy : '');
+  $settings['lazy']          = $settings['blazy'] ? 'blazy' : $lazy;
   $settings['layout']        = empty($settings['slide_layout']) ? '' : $settings['slide_layout'];
   $settings['lightbox']      = strpos($settings['media_switch'], 'box') !== FALSE ? str_replace('-switch', '', $settings['media_switch']) : FALSE;
   $settings['picture']       = function_exists('picture_mapping_load') && !empty($settings['picture']);
@@ -208,7 +208,6 @@ function slick_fields_default_settings() {
     'picture_style'      => '',
     'picture_fallback'   => '',
     'thumbnail_style'    => '',
-    'thumbnail_hover'    => FALSE,
   ) + slick_get_global_default_settings();
 
   return $settings;

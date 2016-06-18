@@ -423,6 +423,7 @@ img[data-lazy] {
 .media--background {
   background-size: cover;
   background-position: center center;
+  background-repeat: no-repeat;
 }
 
 .slide--loading .slide__caption {

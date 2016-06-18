@@ -10,14 +10,17 @@
 
   "use strict";
 
+  var unslick;
+
   Drupal.behaviors.slick = {
     attach: function (context, settings) {
       var _ = this;
 
-      $(".slick:not(.unslick)", context).once("slick", function () {
-        var b,
-          t = $("> .slick__slider", this),
-          a = $("> .slick__arrow", this),
+      $(".slick", context).once("slick", function () {
+        var that = this,
+          b,
+          t = $("> .slick__slider", that).length ? $("> .slick__slider", that) : $(that),
+          a = $("> .slick__arrow", that),
           o = $.extend({}, settings.slick, t.data("slick"));
 
         // Populate defaults + globals into each breakpoint.
@@ -36,16 +39,22 @@
 
         // Update the slick settings object.
         t.data("slick", o);
-        o = t.data("slick");
+        o = t.data("slick") || {};
 
         // Build the Slick.
         _.beforeSlick(t, a, o);
         t.slick(_.globals(t, a, o));
         _.afterSlick(t, o);
-      });
 
-      $(".unslick .media--background", context).once("media-background", function () {
-        _.setBackground($(this).find("img"));
+        // Destroy Slick if it is an enforced unslick.
+        // This allows Slick lazyload to run, but prevents further complication.
+        // Should use lazyLoaded event, but images are not always there.
+        if (t.hasClass("unslick")) {
+          window.clearTimeout(unslick);
+          unslick = window.setTimeout(function () {
+            t.slick("unslick");
+          }, 200);
+        }
       });
     },
 
@@ -111,7 +120,7 @@
     /**
      * Turns images into CSS background if so configured.
      */
-    setBackground: function (img) {
+    setBackground: function (img, unslick) {
       var $img = $(img),
         $bg = $img.closest(".media--background");
 
