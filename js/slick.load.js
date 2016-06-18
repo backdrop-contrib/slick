@@ -7,6 +7,8 @@
 
   'use strict';
 
+  var unslick;
+
   /**
    * Attaches slick behavior to HTML element identified by CSS selector .slick.
    *
@@ -16,10 +18,11 @@
     attach: function (context) {
       var me = this;
 
-      $('.slick:not(.unslick)', context).once('slick').each(function () {
+      $('.slick', context).once('slick').each(function () {
+        var that = this;
         var b;
-        var t = $('> .slick__slider', this);
-        var a = $('> .slick__arrow', this);
+        var t = $('> .slick__slider', that).length ? $('> .slick__slider', that) : $(that);
+        var a = $('> .slick__arrow', that);
         var o = $.extend({}, drupalSettings.slick, t.data('slick'));
 
         // Populate defaults + globals into each breakpoint.
@@ -38,16 +41,22 @@
 
         // Update the slick settings object.
         t.data('slick', o);
-        o = t.data('slick');
+        o = t.data('slick') || {};
 
         // Build the Slick.
         me.beforeSlick(t, a, o);
         t.slick(me.globals(t, a, o));
         me.afterSlick(t, o);
-      });
 
-      $('.unslick .media--background', context).once('media-background', function () {
-        me.setBackground($(this).find('img'));
+        // Destroy Slick if it is an enforced unslick.
+        // This allows Slick lazyload to run, but prevents further complication.
+        // Should use lazyLoaded event, but images are not always there.
+        if (t.hasClass('unslick')) {
+          window.clearTimeout(unslick);
+          unslick = window.setTimeout(function () {
+            t.slick('unslick');
+          }, 200);
+        }
       });
     },
 

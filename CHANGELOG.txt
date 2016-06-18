@@ -1,4 +1,8 @@
 
+Slick 8.x-2.0-dev, 2016-06-19
+-----------------------------
+- Allowed Slick to run at least the lazyload on an unslick.
+
 Slick 8.x-2.0-dev, 2016-06-13
 -----------------------------
 - Added lightbox caption option.

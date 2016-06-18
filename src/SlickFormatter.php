@@ -33,14 +33,12 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     $settings['nav']    = !empty($settings['optionset_thumbnail']) && isset($items[1]);
 
     // Do not bother for SlickTextFormatter, or when vanilla is on.
-    // @todo simplify this.
     if (empty($settings['vanilla'])) {
       $resimage          = !empty($settings['responsive_image_style']);
       $lazy              = $build['optionset']->getSetting('lazyLoad');
       $lazy              = ($this->configLoad('responsive_image') && $resimage) ? 'blazy' : $lazy;
-      $blazy             = $lazy == 'blazy' || !empty($settings['blazy']);
-      $settings['lazy']  = (!$blazy && $items->count() == 1) ? '' : $lazy;
-      $settings['blazy'] = $blazy;
+      $settings['blazy'] = $lazy == 'blazy' || !empty($settings['blazy']);
+      $settings['lazy']  = $settings['blazy'] ? 'blazy' : $lazy;
 
       if (!$settings['blazy']) {
         $settings['lazy_class'] = $settings['lazy_attribute'] = 'lazy';
