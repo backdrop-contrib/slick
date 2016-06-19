@@ -29,12 +29,12 @@
         if ($.type(o.responsive) === 'array' && o.responsive.length) {
           for (b in o.responsive) {
             if (o.responsive.hasOwnProperty(b)
-              && o.responsive[b].settings !== "unslick") {
-                o.responsive[b].settings = $.extend(
-                  {},
-                  drupalSettings.slick,
-                  me.globals(t, a, o),
-                  o.responsive[b].settings);
+              && o.responsive[b].settings !== 'unslick') {
+              o.responsive[b].settings = $.extend(
+                {},
+                drupalSettings.slick,
+                me.globals(t, a, o),
+                o.responsive[b].settings);
             }
           }
         }
@@ -72,7 +72,6 @@
      */
     beforeSlick: function (t, a, o) {
       var me = this;
-      var breakpoint;
       var r = $('.slide--0 .media--ratio', t);
 
       me.randomize(t, o);
@@ -155,6 +154,9 @@
 
     /**
      * Turns images into CSS background if so configured.
+     *
+     * @param {object} img
+     *   The image object.
      */
     setBackground: function (img) {
       var $img = $(img);

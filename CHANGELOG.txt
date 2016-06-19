@@ -1,6 +1,7 @@
 
 Slick 8.x-2.0-dev, 2016-06-19
 -----------------------------
+- Moved thumbnails outside the loop.
 - Allowed Slick to run at least the lazyload on an unslick.
 
 Slick 8.x-2.0-dev, 2016-06-13
