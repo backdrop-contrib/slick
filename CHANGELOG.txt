@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2016-06-20
+-----------------------------
+- Added lightbox caption option.
+
 Slick 7.x-2.0-dev, 2016-06-19
 -----------------------------
 - Re-used form-elements for Slick fields and Slick views.
@@ -436,7 +440,7 @@ Slick 7.x-2.0-dev, 2015-6-19
 - Fixed slide--current class for the most complex slicks, i.e.: asNavFor with
   the main display containing nested slicks.
 
-- Renamed not-clear .slick__capture (based on icon) class to .slick__litebox.
+- Renamed not-clear .slick__capture (based on icon) class to .litebox.
 
 - Renamed 'attach_slick_element' to more meaningful 'attach_slick_css'.
   Be sure to update it if you disable slick-theme.css.

@@ -13,7 +13,8 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
   $slick_id    = $settings['id'];
   $nested_name = empty($settings['nested_optionset']) ? 'default' : $settings['nested_optionset'];
   $nested_set  = empty($settings['nested_slick']) ? NULL : slick_optionset_load($nested_name);
-  $entity_type = 'field_collection_item';
+  $entity_type = $settings['target_entity_type'] = 'field_collection_item';
+
   // It is un-reasonable to make large image as colorbox, so disable it.
   $settings['lightbox_ready'] = FALSE;
   $settings['picture_ready']  = TRUE;
@@ -36,6 +37,7 @@ function slick_format_field_collection($items, $langcode, array &$settings) {
 
     // Main background image can be core Image, or File entity, multi or single.
     $settings['delta'] = $key;
+    $settings['target_entity_id'] = $id;
     if (!empty($settings['slide_image']) && $stage = $wrapper->{$settings['slide_image']}->value()) {
       $file  = isset($stage['fid']) ? $stage : (isset($stage[0]) ? $stage[0] : array());
       $media = $dimensions;

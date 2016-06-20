@@ -351,6 +351,7 @@ function template_process_slick_grid(&$variables) {
 function theme_slick_image($variables) {
   $element  = $variables['element'];
   $elements = array(
+    'captions',
     'item',
     'item_attributes',
     'image_style',
@@ -480,6 +481,7 @@ function theme_slick_image($variables) {
   // The link to content or lightboxes.
   if (!empty($variables['url'])) {
     if (!empty($settings['lightbox'])) {
+      $lightbox = TRUE;
       $icon = '<span class="media-icon media-icon--lightbox media-icon--' . $settings['lightbox'] . '"></span>';
       $build .= empty($settings['icon']) ? $icon : $settings['icon'];
       if (!empty($settings['has_pattern'])) {
@@ -490,6 +492,10 @@ function theme_slick_image($variables) {
     $link_options = empty($url_attributes) ? array() : array('attributes' => $url_attributes);
     $link_options['html'] = TRUE;
     $build = l($build, $variables['url'], $link_options);
+
+    if (isset($lightbox) && !empty($variables['captions']['lightbox'])) {
+      $build .= '<div class="litebox-caption element-hidden">' . $variables['captions']['lightbox'] . '</div>';
+    }
   }
 
   return $build;

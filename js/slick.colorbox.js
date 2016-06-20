@@ -38,6 +38,10 @@
           curr;
 
         var runtimeOptions = {
+          title: function () {
+            var $caption = t.siblings('.litebox-caption');
+            return $caption.length ? $caption.html() : '';
+          },
           iframe: isMedia,
           rel: media.rel || null,
           onOpen: function () {

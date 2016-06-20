@@ -62,7 +62,7 @@ function slick_get_image($settings = array(), &$media = array(), $item = array()
   // The $media can be core image, file image/video/audio, or atom reference.
   // Different fields have different signatures, hence simplify em all.
   $media['type'] = empty($media['type']) ? 'image' : $media['type'];
-  foreach (array('alt', 'title', 'uri', 'height', 'width') as $data) {
+  foreach (array('alt', 'fid', 'title', 'uri', 'height', 'width') as $data) {
     $media[$data] = isset($media[$data]) ? $media[$data] : (isset($item[$data]) ? $item[$data] : NULL);
   }
 
@@ -95,7 +95,8 @@ function slick_get_image($settings = array(), &$media = array(), $item = array()
 
   // Now that picture is inside theme_slick_image(), we can manipulate it.
   if (!empty($settings['media_switch']) && $settings['media_switch'] != 'iframe-switch') {
-    slick_get_media_switch($image, $settings);
+    drupal_alter('slick_image_info', $image, $settings, $media);
+    slick_get_media_switch($image, $item, $settings);
   }
 
   unset($item, $settings);
@@ -105,7 +106,7 @@ function slick_get_image($settings = array(), &$media = array(), $item = array()
 /**
  * Returns the media switch: colorbox/photobox, content, excluding iframe.
  */
-function slick_get_media_switch(&$image = array(), $settings = array()) {
+function slick_get_media_switch(&$image = array(), $file = array(), $settings = array()) {
   $item   = $image['#item'];
   $switch = str_replace('-switch', '', $settings['media_switch']);
 
@@ -129,7 +130,7 @@ function slick_get_media_switch(&$image = array(), $settings = array()) {
       $url = !empty($settings['box_style']) ? image_style_url($settings['box_style'], $item['uri']) : file_create_url($item['uri']);
     }
 
-    $classes  = array('slick__' . $switch, 'slick__litebox');
+    $classes  = array('slick__' . $switch, 'litebox');
     if ($switch == 'colorbox' && $settings['count'] > 1) {
       $json['rel'] = $settings['id'];
     }
@@ -137,7 +138,7 @@ function slick_get_media_switch(&$image = array(), $settings = array()) {
       $image['#url_attributes']['rel'] = 'video';
     }
     elseif ($switch == 'slickbox') {
-      $classes = array('slick__box', 'slick__litebox');
+      $classes = array('slick__box', 'litebox');
       $json['entity_id'] = $settings['entity_id'];
       if (!empty($settings['entity_uri']) && !empty($settings['use_ajax'])) {
         $url = $settings['entity_uri'];
@@ -155,10 +156,81 @@ function slick_get_media_switch(&$image = array(), $settings = array()) {
     $image['#url'] = $url;
     $image['#url_attributes']['class'] = $classes;
     $image['#url_attributes']['data-media'] = drupal_json_encode($json);
+
+    if (!empty($settings['box_caption'])) {
+      $image['#captions']['lightbox'] = slick_build_captions($item, $file, $settings);
+    }
   }
   elseif ($switch == 'content' && !empty($settings['entity_uri'])) {
     $image['#url'] = $settings['entity_uri'];
   }
+}
+
+/**
+ * Build lightbox captions.
+ */
+function slick_build_captions($item, $file = array(), $settings = array()) {
+  $title   = empty($item['title']) ? '' : $item['title'];
+  $alt     = empty($item['alt']) ? '' : $item['alt'];
+  $delta   = $settings['delta'];
+  $caption = '';
+  $entity  = $entity_type = NULL;
+
+  // @todo FC.
+  if (!empty($settings['entity'])) {
+    $entity_type = $settings['entity_type'];
+    $entity = $settings['entity'];
+  }
+
+  switch ($settings['box_caption']) {
+    case 'auto':
+      $caption = $alt ? $alt : $title;
+      $caption = strip_tags($caption);
+      break;
+
+    case 'alt':
+      $caption = strip_tags($alt);
+      break;
+
+    case 'title':
+      $caption = strip_tags($title);
+      break;
+
+    case 'alt_title':
+    case 'title_alt':
+      $alt   = $alt ? '<p>' . strip_tags($alt) . '</p>' : '';
+      $title   = $title ? '<h2>' . strip_tags($title) . '</h2>' : '';
+      $caption = $settings['box_caption'] == 'alt_title' ? $alt . $title : $title . $alt;
+      break;
+
+    case 'entity_title':
+      $caption = '';
+      if ($entity) {
+        $entity_title = entity_label($entity_type, $entity);
+        $caption = strip_tags($entity_title);
+      }
+      break;
+
+    case 'custom':
+      $caption = '';
+      if ($entity) {
+        $options = array('clear' => TRUE);
+        $caption = token_replace($settings['box_caption_custom'], array($entity_type => $entity, 'file' => (object) $file), $options);
+
+        // Checks for multi-value text fields, and maps its delta to image.
+        if (strpos($caption, ", <p>") !== FALSE) {
+          $caption = str_replace(", <p>", '| <p>', $caption);
+          $captions = explode("|", $caption);
+          $caption = isset($captions[$delta]) ? $captions[$delta] : '';
+        }
+      }
+      break;
+
+    default:
+      $caption = '';
+  }
+
+  return $caption;
 }
 
 /**

@@ -34,9 +34,11 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $image_styles   = image_style_options(FALSE, PASS_THROUGH);
   $is_views_ui    = '';
 
-  $options['layouts'] = $layout_builtin;
+  $field_entity_type       = $field_type;
+  $options['layouts']      = $layout_builtin;
+  $options['field_type']   = $field_type;
+  $options['box_captions'] = TRUE;
 
-  $field_entity_type = $field_type;
   switch ($field_type) {
     case 'file':
       $title_fields  = array('link_field', 'text_textfield', 'text_textarea');
@@ -44,6 +46,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       $link_fields   = array('text_textfield', 'link_field', 'url_external');
 
       $options['fieldable']      = TRUE;
+      $options['entity_type']    = 'file';
       $options['layouts']        = $field_layouts ? $field_layouts : $options['layouts'];
       $options['classes']        = slick_get_media_fields($instance, array('options_select', 'text_textfield'));
       $options['titles']         = slick_get_media_fields($instance, $title_fields);
@@ -62,6 +65,7 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       $field_layouts     = slick_get_fc_fields($instance, array('list_text'));
 
       $options['fieldable']      = TRUE;
+      $options['entity_type']    = $field_entity_type;
       $options['images']         = slick_get_fc_fields($instance, array('image', 'file'));
       $options['layouts']        = $field_layouts ? $field_layouts : $options['layouts'];
       $options['colors']         = slick_get_fc_fields($instance, array('text', 'color_field_rgb'));
@@ -88,7 +92,9 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
         'alt_field'   => t('Alt'),
       );
 
-      $options['captions'] = $options['thumb_captions'] = $captions;
+      // @todo re-check.
+      $options['entity_type'] = $instance['entity_type'] == 'ctools' ? 'node' : $instance['entity_type'];
+      $options['captions']    = $options['thumb_captions'] = $captions;
       break;
 
     default:
@@ -156,78 +162,8 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     );
   }
 
-  // Misc.
-  $elements['media_switch'] = array(
-    '#title'       => t('Media switcher'),
-    '#type'        => 'select',
-    '#options'     => array(
-      'content'       => t('Image linked to content'),
-      'iframe-switch' => t('Image to iframe switcher'),
-    ),
-    '#description' => t('Dependent on the enabled supported modules.<ol><li>Link to content: for aggregated small slicks.</li><li>Media file iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li></ol>'),
-    '#weight'      => 60,
-    '#prefix'      => '<h3 class="form--slick__title">' . t('Misc') . '</h3>',
-  );
-
-  if (in_array($field_entity_type, array('field_collection_item', 'file'))) {
-    $elements['iframe_lazy'] = array(
-      '#type'        => 'checkbox',
-      '#title'       => t('Lazy iframe'),
-      '#description' => t('Check to make the video/audio iframes truly lazyloaded, and speed up loading time. Depends on JS enabled at client side.'),
-      '#weight'      => 61,
-      '#states' => array(
-        'visible' => array(
-          array('select[name*="[media_switch]"]' => array('value' => 'iframe-switch')),
-        ),
-      ),
-    );
-  }
-
-  // http://en.wikipedia.org/wiki/List_of_common_resolutions
-  $ratio = array('1:1', '3:2', '4:3', '8:5', '16:9', 'fluid');
-  $elements['aspect_ratio'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Aspect ratio'),
-    '#options'     => drupal_map_assoc($ratio),
-    '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. This also fixes layout reflow and excessive height issues with lazyload ondemand. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpectedly distorted. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc. Choose fluid if unsure.', array(
-      '@dimensions' => '//size43.com/jqueryVideoTool.html',
-      '@follow'     => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
-      '@link'       => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
-    )),
-    '#weight'       => 62,
-    '#states'       => array(
-      'visible' => array(
-        ':input[name*="[picture]"]' => array('checked' => FALSE),
-      ),
-    ),
-  );
-
-  // Optional colorbox integration.
-  if ($is_colorbox || $is_photobox) {
-
-    // Re-use the same image style for both boxes.
-    $elements['colorbox_style'] = array(
-      '#title'        => t('Lightbox image style'),
-      '#type'         => 'select',
-      '#empty_option' => t('None (original)'),
-      '#options'      => $image_styles,
-      '#weight'       => 63,
-      '#states' => array(
-        'visible' => array(
-          array('select[name*="[media_switch]"]' => array('value' => 'colorbox-switch')),
-          array('select[name*="[media_switch]"]' => array('value' => 'photobox-switch')),
-        ),
-      ),
-    );
-
-    if ($is_colorbox) {
-      $elements['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox');
-    }
-
-    if ($is_photobox) {
-      $elements['media_switch']['#options']['photobox-switch'] = t('Image to photobox');
-    }
-  }
+  // Build the media switch form elements.
+  slick_get_media_switch_elements($elements, $settings, $options);
 
   $elements['background'] = array(
     '#type'        => 'checkbox',

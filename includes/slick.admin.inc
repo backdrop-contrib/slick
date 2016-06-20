@@ -463,12 +463,10 @@ function slick_get_top_elements(array &$elements, $settings, &$form_state) {
       $elements[$key]['#weight'] = ++$weight;
     }
   }
-
-  drupal_alter('slick_top_elements_info', $elements, $settings, $form_state);
 }
 
 /**
- * Returns shared fieldanle form elements for Slick field formatter and Views.
+ * Returns shared fieldable form elements for Slick field formatter and Views.
  */
 function slick_get_fieldable_elements(array &$elements, $settings, $definition = array()) {
   $slick_fields   = url(drupal_get_path('module', 'slick_fields') . '/README.txt');
@@ -571,6 +569,139 @@ function slick_get_fieldable_elements(array &$elements, $settings, $definition =
     '#default_value' => $slide_captions,
     '#access'        => isset($definition['captions']),
   );
+}
+
+/**
+ * Returns shared fieldable form elements for Slick field formatter and Views.
+ */
+function slick_get_media_switch_elements(array &$elements, $settings, $definition = array()) {
+  $is_colorbox  = function_exists('_colorbox_doheader');
+  $is_photobox  = function_exists('photobox_library');
+  $is_token     = function_exists('token_theme');
+  $image_styles = image_style_options(FALSE, PASS_THROUGH);
+  $field_type   = isset($definition['field_type']) ? $definition['field_type'] : '';
+
+  $elements['media_switch'] = array(
+    '#title'       => t('Media switcher'),
+    '#type'        => 'select',
+    '#options'     => array(
+      'content'       => t('Image linked to content'),
+      'iframe-switch' => t('Image to iframe switcher'),
+    ),
+    '#description' => t('Dependent on the enabled supported modules.<ol><li>Link to content: for aggregated small slicks.</li><li>Media file iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li></ol>'),
+    '#weight'      => 60,
+    '#prefix'      => '<h3 class="form--slick__title">' . t('Misc') . '</h3>',
+  );
+
+  if ($field_type && in_array($field_type, array('field_collection_item', 'file'))) {
+    $elements['iframe_lazy'] = array(
+      '#type'        => 'checkbox',
+      '#title'       => t('Lazy iframe'),
+      '#description' => t('Check to make the video/audio iframes truly lazyloaded, and speed up loading time. Depends on JS enabled at client side.'),
+      '#weight'      => 61,
+      '#states' => array(
+        'visible' => array(
+          array('select[name*="[media_switch]"]' => array('value' => 'iframe-switch')),
+        ),
+      ),
+    );
+  }
+
+  // http://en.wikipedia.org/wiki/List_of_common_resolutions
+  $ratio = array('1:1', '3:2', '4:3', '8:5', '16:9', 'fluid');
+  $elements['aspect_ratio'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Aspect ratio'),
+    '#options'     => drupal_map_assoc($ratio),
+    '#description' => t('Aspect ratio to get consistently responsive images and iframes within responsive layout, required if using media file to switch between iframe and overlay image, otherwise you have to do it properly. This also fixes layout reflow and excessive height issues with lazyload ondemand. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the ratio</a>, otherwise your images will be unexpectedly distorted. <a href="@link" target="_blank">Learn more</a>, or leave empty if you care not for aspect ratio, or prefer to DIY, etc. Choose fluid if unsure.', array(
+      '@dimensions' => '//size43.com/jqueryVideoTool.html',
+      '@follow'     => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
+      '@link'       => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
+    )),
+    '#weight'       => 62,
+    '#states'       => array(
+      'visible' => array(
+        ':input[name*="[picture]"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+
+  // Optional colorbox integration.
+  if ($is_colorbox || $is_photobox || isset($definition['lightbox'])) {
+    $lightbox_enabled = array(
+      'visible' => array(
+        array('select[name*="[media_switch]"]' => array('value' => 'colorbox-switch')),
+        array('select[name*="[media_switch]"]' => array('value' => 'photobox-switch')),
+      ),
+    );
+
+    $lightbox_custom = array(
+      'visible' => array(
+        array('select[name*="[media_switch]"]' => array(array('value' => 'colorbox'), array('value' => 'photobox'))),
+        array('select[name$="[box_caption]"]' => array('value' => 'custom')),
+      ),
+    );
+
+    // Re-use the same image style for both boxes.
+    $elements['colorbox_style'] = array(
+      '#title'        => t('Lightbox image style'),
+      '#type'         => 'select',
+      '#empty_option' => t('None (original)'),
+      '#options'      => $image_styles,
+      '#weight'       => 63,
+      '#states'       => $lightbox_enabled,
+    );
+
+    if ($is_colorbox) {
+      $elements['media_switch']['#options']['colorbox-switch'] = t('Image to colorbox');
+    }
+
+    if ($is_photobox) {
+      $elements['media_switch']['#options']['photobox-switch'] = t('Image to photobox');
+    }
+
+    $box_captions = array(
+      'auto'         => t('Automatic'),
+      'alt'          => t('Alt text'),
+      'title'        => t('Title text'),
+      'alt_title'    => t('Alt and Title'),
+      'title_alt'    => t('Title and Alt'),
+      'entity_title' => t('Content title'),
+      'custom'       => t('Custom'),
+    );
+
+    $elements['box_caption'] = array(
+      '#type'        => 'select',
+      '#title'       => t('Lightbox caption'),
+      '#options'     => $box_captions,
+      '#access'      => isset($definition['box_captions']),
+      '#weight'      => 63,
+      '#states'      => $lightbox_enabled,
+      '#description' => t('Automatic will search for Alt text first, then Title text.'),
+    );
+
+    $elements['box_caption_custom'] = array(
+      '#title'       => t('Lightbox custom caption'),
+      '#type'        => 'textfield',
+      '#access'      => isset($definition['box_captions']),
+      '#weight'      => 63,
+      '#states'      => $lightbox_custom,
+      '#description' => t('Multi-value rich text field will be mapped to each image by its delta.'),
+      '#attributes'  => array('class' => array('js-expandable')),
+    );
+
+    if ($is_token) {
+      $token_tree = array(
+        '#theme'       => 'token_tree_link',
+        '#text'        => t('Tokens'),
+        '#token_types' => isset($definition['entity_type']) ? array('user', $definition['entity_type']) : array(),
+      );
+      $elements['box_caption_custom']['#field_suffix'] = drupal_render($token_tree);
+    }
+    else {
+      $elements['box_caption_custom']['#description'] .= ' ' . t('Install Token module to browse available tokens.');
+    }
+  }
 }
 
 /**

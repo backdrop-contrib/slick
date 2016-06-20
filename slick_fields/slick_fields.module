@@ -90,6 +90,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
   $settings['ratio']         = !empty($settings['aspect_ratio']) && empty($settings['picture']) ? $settings['aspect_ratio'] : FALSE;
   $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
   $settings['view_mode']     = empty($settings['view_mode']) ? 'full' : $settings['view_mode'];
+  $settings['entity']        = empty($settings['box_caption']) ? NULL : $entity;
 
   switch ($field['type']) {
     case 'image':
