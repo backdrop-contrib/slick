@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Fields formatter for the Slick and Media integration.
@@ -10,7 +11,10 @@
 function slick_format_media($items, $langcode, array &$settings) {
   $settings['lightbox_ready'] = $settings['picture_ready'] = TRUE;
 
-  $build = $dimensions = $thumbnails = array();
+  $build        = $dimensions = $thumbnails = array();
+  $has_classes  = !empty($settings['slide_classes']);
+  $has_layouts  = !empty($settings['layout']);
+  $has_overlays = !empty($settings['slide_overlay']);
 
   // Defines image dimensions once to reduce function calls.
   if (!empty($settings['image_style'])) {
@@ -19,10 +23,12 @@ function slick_format_media($items, $langcode, array &$settings) {
   }
 
   // Build the main display.
-  $overlays = !empty($settings['slide_overlay']);
-  $layouts  = !empty($settings['layout']);
-  $classes  = !empty($settings['slide_classes']);
   foreach ($items as $key => $item) {
+    // Prevents edge case EntityMalformedException: Missing bundle property.
+    if (!isset($item['uri'])) {
+      continue;
+    }
+
     $file  = (object) $item;
     $slide = array();
     $media = $dimensions;
@@ -37,7 +43,7 @@ function slick_format_media($items, $langcode, array &$settings) {
     slick_get_caption($settings, 'file', $file, $slide);
 
     // Plain text video URL for plain iframes as video overlay over image.
-    if ($overlays && $overlay = field_get_items('file', $file, $settings['slide_overlay'])) {
+    if ($has_overlays && $overlay = field_get_items('file', $file, $settings['slide_overlay'])) {
       $url = strip_tags($overlay[0]['value']);
       if ($media_id = slick_get_media_id($url)) {
         $slide['caption']['overlay'] = slick_get_media_overlay($url, $media_id);
@@ -45,14 +51,14 @@ function slick_format_media($items, $langcode, array &$settings) {
     }
 
     // Layout field as opposed to the builtin layout options.
-    if ($layouts && strpos($settings['layout'], 'field_') !== FALSE) {
+    if ($has_layouts && strpos($settings['layout'], 'field_') !== FALSE) {
       if ($layout = field_get_items('file', $file, $settings['layout'])) {
         $settings['layout'] = strip_tags($layout[0]['value']);
       }
     }
 
     // Slide classes, if so configured.
-    if ($classes && $classes = field_get_items('file', $file, $settings['slide_classes'])) {
+    if ($has_classes && $classes = field_get_items('file', $file, $settings['slide_classes'])) {
       $settings['slide_classes'] = strip_tags($classes[0]['value']);
     }
 
@@ -69,7 +75,7 @@ function slick_format_media($items, $langcode, array &$settings) {
 
   // Build the thumbnail display.
   if (!empty($settings['nav'])) {
-    $captions = !empty($settings['thumbnail_caption']);
+    $has_caption = !empty($settings['thumbnail_caption']);
     foreach ($items as $key => $item) {
       $file  = (object) $item;
       $media = $thumbnails[$key];
@@ -77,7 +83,7 @@ function slick_format_media($items, $langcode, array &$settings) {
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
       $slide['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $media);
 
-      if ($captions && $caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
+      if ($has_caption && $caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
         $slide['caption']['data']['#markup'] = filter_xss($caption[0]['value']);
       }
 

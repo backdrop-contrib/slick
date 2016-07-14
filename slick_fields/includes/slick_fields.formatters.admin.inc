@@ -16,7 +16,11 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
   $display      = $instance['display'][$view_mode];
   $settings     = $display['settings'];
   $field_type   = $field['type'];
-  $media_widget = $instance['widget']['module'] == 'media';
+  $media_widget = FALSE;
+
+  if (isset($instance['widget'])) {
+    $media_widget = $instance['widget']['module'] == 'media';
+  }
 
   // $field empty at admin/structure/file-types/manage/image/file-display,
   // and this form is also loaded there via file_entity_file_formatter_info().

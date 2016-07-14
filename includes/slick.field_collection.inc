@@ -167,6 +167,11 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
     case 'image':
     case 'file':
       foreach ($items as $i => $item) {
+        // Prevents edge case EntityMalformedException: Missing bundle property.
+        if (!isset($item['uri'])) {
+          continue;
+        }
+
         $media = $dimensions;
 
         $overset['delta'] = $i;

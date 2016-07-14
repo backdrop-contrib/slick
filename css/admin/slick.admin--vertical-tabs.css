@@ -160,7 +160,7 @@
   border: 0;
 }
 
-.form--slick .vertical-tabs .form-item.form-item-options-optimized {
+.form--slick .vertical-tabs div[class*="options-optimized"] {
   background: none;
   border: 0;
   right: 0;
@@ -174,7 +174,7 @@
   z-index: 9;
 }
 
-.form--slick .vertical-tabs .form-item.form-item-options-optimized .description {
+.form--slick .vertical-tabs div[class*="options-optimized"] .description {
   min-width: 320px;
 }
 

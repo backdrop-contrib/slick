@@ -71,9 +71,10 @@ function template_preprocess_slick(&$variables) {
   $id        = empty($settings['id']) ? slick_html_id('slick') : $settings['id'];
 
   // Allows manipulating markups with an enforced unslick.
-  $settings['count']       = empty($settings['count']) ? count($element['#items']) : $settings['count'];
-  $settings['skin_arrows'] = empty($settings['skin_arrows']) ? '' : ' slick__arrow--' . str_replace('_', '-', $settings['skin_arrows']);
-  $settings['unslick']     = !empty($settings['unslick']) || $settings['count'] == 1;
+  $settings['count']        = empty($settings['count']) ? count($element['#items']) : $settings['count'];
+  $settings['skin_arrows']  = empty($settings['skin_arrows']) ? '' : ' slick__arrow--' . str_replace('_', '-', $settings['skin_arrows']);
+  $settings['unslick']      = !empty($settings['unslick']) || $settings['count'] == 1;
+  $settings['slidesToShow'] = $js['slidesToShow'];
 
   // Prepare attributes.
   $attributes         = &$variables['attributes_array'];
@@ -216,7 +217,7 @@ function template_preprocess_slick_item(&$variables) {
   $type     = isset($item['#item']['type']) ? $item['#item']['type'] : '';
 
   // Prepare variables, and remove non-BEM default class.
-  foreach (array('content', 'item', 'title', 'wrapper') as $key) {
+  foreach (array('content', 'item', 'title') as $key) {
     $variables[$key . '_prefix'] = $variables[$key . '_suffix'] = '';
   }
 
@@ -268,17 +269,14 @@ function template_preprocess_slick_item(&$variables) {
   }
 
   // Do not add divities for a single slick (unslick) to have clean markups.
+  $variables['wrapper_prefix'] = '<div' . drupal_attributes($attributes) . '>';
+  $variables['wrapper_suffix'] = '</div>';
+
   $settings['wrapper'] = $settings['count'] > 1 && $settings['current_item'] != 'grid';
-  if ($settings['wrapper']) {
-    $variables['wrapper_prefix'] = '<div' . drupal_attributes($attributes) . '>';
-    $variables['wrapper_suffix'] = '</div>';
-
-    if (empty($settings['grid'])) {
-      $variables['content_prefix'] = '<div class="slide__content">';
-      $variables['content_suffix'] = '</div>';
-    }
+  if ($settings['wrapper'] && empty($settings['grid'])) {
+    $variables['content_prefix'] = '<div class="slide__content">';
+    $variables['content_suffix'] = '</div>';
   }
-
   $variables['settings'] = $settings;
 }
 
@@ -468,8 +466,6 @@ function theme_slick_image($variables) {
     if ($settings['player']) {
       $attributes['class'][] = 'media--player';
       $build .= '<iframe' . drupal_attributes($iframe_attributes) . ' allowfullscreen></iframe>';
-    }
-    if ($switch == 'iframe-switch') {
       $build .= '<span class="media-icon media-icon--close"></span>';
       $build .= '<span class="media-icon media-icon--play"></span>';
     }

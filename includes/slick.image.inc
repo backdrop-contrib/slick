@@ -11,7 +11,8 @@
 function slick_format_image($items, $langcode, array &$settings) {
   $settings['picture_ready'] = $settings['lightbox_ready'] = TRUE;
 
-  $build = $dimensions = array();
+  $build       = $dimensions = array();
+  $has_caption = !empty($settings['slide_caption']);
 
   // Defines image dimensions once to reduce function calls.
   if (!empty($settings['image_style'])) {
@@ -20,12 +21,11 @@ function slick_format_image($items, $langcode, array &$settings) {
   }
 
   // Build the main display.
-  $captions = !empty($settings['slide_caption']);
   foreach ($items as $key => $item) {
     $media = $dimensions;
 
     $settings['delta'] = $key;
-    if ($captions) {
+    if ($has_caption) {
       foreach ($settings['slide_caption'] as $caption) {
         $data = str_replace('_field', '', $caption);
         if (!empty($item[$data])) {
@@ -45,12 +45,12 @@ function slick_format_image($items, $langcode, array &$settings) {
 
   // Build the thumbnail display.
   if (!empty($settings['nav'])) {
-    $captions = !empty($settings['thumbnail_caption']);
+    $has_caption = !empty($settings['thumbnail_caption']);
     foreach ($items as $key => $item) {
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
       $slide['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $item);
 
-      if ($captions) {
+      if ($has_caption) {
         $data = str_replace('_field', '', $settings['thumbnail_caption']);
         if (!empty($item[$data])) {
           $slide['caption']['data']['#markup'] = filter_xss($item[$data]);

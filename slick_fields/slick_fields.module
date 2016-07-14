@@ -44,6 +44,7 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
     'entity_id'   => $entity_id,
     'entity_type' => $entity_type,
     'entity_uri'  => isset($entity_uri['path']) ? $entity_uri['path'] : '',
+    'field_name'  => $field_name,
     'id'          => $id,
   ) + slick_fields_default_settings();
 

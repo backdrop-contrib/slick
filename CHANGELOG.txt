@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2016-07-14
+-----------------------------
+- Fixed for edge case with EntityMalformedException: Missing bundle property.
+- Fixed for broken unslick with the new unslick approach when caption and image
+  are both present.
+
 Slick 7.x-2.0-dev, 2016-06-20
 -----------------------------
 - Added lightbox caption option.
