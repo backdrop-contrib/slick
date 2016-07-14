@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\slick\Plugin\Field\FieldFormatter\SlickEntityReferenceFormatterBase.
+ */
+
 namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\slick\Form\SlickAdmin.
+ */
+
 namespace Drupal\slick\Form;
 
 use Drupal\Core\Url;

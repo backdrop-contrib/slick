@@ -1,8 +1,4 @@
 
-Slick 8.x-2.0-dev, 2016-07-14
------------------------------
-- #2765353 by Vinay15: Remove @file tag docblock from all the .php files.
-
 Slick 8.x-2.0-dev, 2016-06-19
 -----------------------------
 - Moved thumbnails outside the loop.

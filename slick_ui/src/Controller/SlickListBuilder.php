@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\slick_ui\Controller\SlickListBuilder.
+ */
+
 namespace Drupal\slick_ui\Controller;
 
 use Drupal\Component\Utility\Html;

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\slick_ui\Form\SlickForm.
+ */
+
 namespace Drupal\slick_ui\Form;
 
 use Drupal\Core\Form\FormStateInterface;

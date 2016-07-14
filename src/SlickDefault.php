@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\slick\SlickDefault.
+ */
+
 namespace Drupal\slick;
 
 use Drupal\blazy\Dejavu\BlazyDefault;

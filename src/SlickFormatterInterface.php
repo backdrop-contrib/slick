@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\slick\SlickFormatterInterface.
+ */
+
 namespace Drupal\slick;
 
 /**

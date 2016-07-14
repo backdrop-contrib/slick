@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter.
+ */
+
 namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Xss;
