@@ -7,8 +7,6 @@
 
   'use strict';
 
-  var unslick;
-
   /**
    * Attaches slick behavior to HTML element identified by CSS selector .slick.
    *
@@ -52,10 +50,7 @@
         // This allows Slick lazyload to run, but prevents further complication.
         // Should use lazyLoaded event, but images are not always there.
         if (t.hasClass('unslick')) {
-          window.clearTimeout(unslick);
-          unslick = window.setTimeout(function () {
-            t.slick('unslick');
-          }, 200);
+          t.slick('unslick');
         }
       });
     },

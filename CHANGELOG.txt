@@ -1,6 +1,7 @@
 
 Slick 8.x-2.0-dev, 2016-07-14
 -----------------------------
+- Removed useles delay for an unslick since slick already kicks in.
 - #2765353 by Vinay15: Remove @file tag docblock from all the .php files.
 
 Slick 8.x-2.0-dev, 2016-06-19
