@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\slick\SlickFormatter.
- */
-
 namespace Drupal\slick;
 
 use Drupal\slick\Entity\Slick;
