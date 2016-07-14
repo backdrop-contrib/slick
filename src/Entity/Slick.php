@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\slick\Entity\Slick.
- */
-
 namespace Drupal\slick\Entity;
 
 use Drupal\Component\Utility\Html;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\slick\SlickManager.
- */
-
 namespace Drupal\slick;
 
 use Drupal\Component\Utility\Html;
