@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2016-07-14
 -----------------------------
+- #2764893 by PhilY: Error message when using Drupal 7.50.
 - Fixed for edge case with EntityMalformedException: Missing bundle property.
 - Fixed for broken unslick with the new unslick approach when caption and image
   are both present.
