@@ -76,10 +76,11 @@ function template_preprocess_slick(&$variables) {
   $settings['unslick']      = !empty($settings['unslick']) || $settings['count'] == 1;
   $settings['slidesToShow'] = $js['slidesToShow'];
 
-  // Prepare attributes.
-  $attributes         = &$variables['attributes_array'];
-  $attributes         = array('class' => array('slick'), 'id' => $id);
-  $content_attributes = &$variables['content_attributes_array'];
+  // Prepare attributes, supports Omega 4 alike, or regular.
+  $attributes          = &$variables['attributes_array'];
+  $attributes['class'] = isset($attributes['class']) ? $attributes['class'] : array('slick');
+  $attributes['id']    = $id;
+  $content_attributes  = &$variables['content_attributes_array'];
 
   if ($display == 'thumbnail') {
     $attributes['id'] = $id . '-thumbnail';

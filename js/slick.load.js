@@ -49,6 +49,7 @@
         // Should use lazyLoaded event, but images are not always there.
         if (t.hasClass("unslick")) {
           t.slick("unslick");
+          $(".slide", t).removeClass("slide--loading");
         }
       });
     },

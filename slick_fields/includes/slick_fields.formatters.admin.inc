@@ -11,16 +11,11 @@
 function _slick_fields_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   form_load_include($form_state, 'inc', 'slick', 'includes/slick.admin');
 
-  $path         = drupal_get_path('module', 'slick_fields');
-  $slick_path   = drupal_get_path('module', 'slick');
-  $display      = $instance['display'][$view_mode];
-  $settings     = $display['settings'];
-  $field_type   = $field['type'];
-  $media_widget = FALSE;
-
-  if (isset($instance['widget'])) {
-    $media_widget = $instance['widget']['module'] == 'media';
-  }
+  $path       = drupal_get_path('module', 'slick_fields');
+  $slick_path = drupal_get_path('module', 'slick');
+  $display    = $instance['display'][$view_mode];
+  $settings   = $display['settings'];
+  $field_type = $field['type'];
 
   // $field empty at admin/structure/file-types/manage/image/file-display,
   // and this form is also loaded there via file_entity_file_formatter_info().

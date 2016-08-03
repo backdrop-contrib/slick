@@ -284,7 +284,7 @@ function slick_get_caption($settings, $entity_type, $entity, array &$slide = arr
   if (!empty($settings['slide_link']) && $slide_links = field_get_items($entity_type, $entity, $settings['slide_link'])) {
     $links = field_view_field($entity_type, $entity, $settings['slide_link'], $view_mode);
     // Only simplify markups for the known formatters registered by link.module.
-    if (strpos($links['#formatter'], 'link_') !== FALSE) {
+    if (isset($links['#formatter']) && strpos($links['#formatter'], 'link_') !== FALSE) {
       $links = array();
       foreach ($slide_links as $i => $slide_link) {
         $links[$i] = field_view_value($entity_type, $entity, $settings['slide_link'], $slide_link, $view_mode);

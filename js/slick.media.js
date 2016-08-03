@@ -17,7 +17,7 @@
           iframe = t.find("iframe"),
           newIframe = iframe.clone(),
           media = newIframe.data("media"),
-          url = newIframe.data("lazy"),
+          url = newIframe.data("lazy") || newIframe.data("src"),
           $nester = '';
 
         if ($slick.closest(".slick__slider").length) {

@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2016-08-03
+-----------------------------
+- Removed unsed $media_widget.
+- Added support for data-src iframe lazy.
+- Fixed for regression with classes_array and attributes_array.
+
 Slick 7.x-2.0-dev, 2016-07-14
 -----------------------------
 - #2764893 by PhilY: Error message when using Drupal 7.50.
