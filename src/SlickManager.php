@@ -162,6 +162,9 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $suffixes[]        = count(array_filter($settings));
     $suffixes[]        = $settings['cache'];
     $cache['tags']     = Cache::buildTags('slick:' . $settings['id'], $suffixes, '.');
+    if (!empty($settings['cache_tags'])) {
+      $cache['tags'] = array_merge($cache['tags'], $settings['cache_tags']);
+    }
     $cache['contexts'] = ['languages'];
     $cache['max-age']  = $settings['cache'];
     $cache['keys']     = isset($settings['cache_metadata']['keys']) ? $settings['cache_metadata']['keys'] : [$settings['id']];
