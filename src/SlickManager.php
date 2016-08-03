@@ -47,9 +47,9 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
   public function getSkinsByGroup($group = '', $option = FALSE) {
     $skins         = $groups = $ungroups = [];
     $nav_skins     = in_array($group, ['arrows', 'dots']);
-    $defines_skins = $nav_skins ? $this->getSkins()[$group] : $this->getSkins()['skins'];
+    $defined_skins = $nav_skins ? $this->getSkins()[$group] : $this->getSkins()['skins'];
 
-    foreach ($defines_skins as $skin => $properties) {
+    foreach ($defined_skins as $skin => $properties) {
       $item = $option ? Html::escape($properties['name']) : $properties;
       if (!empty($group)) {
         if (isset($properties['group'])) {
