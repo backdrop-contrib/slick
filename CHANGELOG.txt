@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2016-08-03
 -----------------------------
+- #2766399 by nmalinoski: CSS affects ALL images, not just Slick images.
 - Removed unsed $media_widget.
 - Added support for data-src iframe lazy.
 - Fixed for regression with classes_array and attributes_array.
