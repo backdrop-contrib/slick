@@ -1,6 +1,7 @@
 
 Slick 8.x-2.0-dev, 2016-08-03
 -----------------------------
+- #2768457 by chr.fritsch: Add libraries support.
 - #2769073 by audriusb: Allow adding additional cache tags.
 - Fixed for trivial typos $defines_skins to $defined_skins.
 
