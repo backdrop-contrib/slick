@@ -1,6 +1,8 @@
 
 Slick 8.x-2.0-dev, 2016-08-23
 -----------------------------
+- #2783111 by slashrsm: Slick's CSS is affecting all iFrames not just the ones
+  that appear in the Slick carousel.
 - #2785317 by patilvishalvs: Make breakpoints field fault proof.
   Changed breakpoints field back from number to textfield like D7.
 
