@@ -20,7 +20,7 @@ samples from slick_example [3] only if trouble to build slicks. Be sure to read
 its README.txt. Spending 5 minutes or so will save you hours in building more
 complex slideshows.
 
-The module supports Slick 1.5 above.
+The module supports Slick 1.6 above.
 Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.
 
 [1] https://groups.drupal.org/node/20384
@@ -31,7 +31,7 @@ Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.
 REQUIREMENTS
 --------------------------------------------------------------------------------
 - Slick library:
-  o Download Slick archive >= 1.5 from https://github.com/kenwheeler/slick/
+  o Download Slick archive >= 1.6 from https://github.com/kenwheeler/slick/
   o Extract it as is, rename "slick-master" to "slick", so the assets are at:
 
     /libraries/slick/slick/slick.css
@@ -49,7 +49,7 @@ REQUIREMENTS
   ahead for smoother UX.
 
   Important! Be sure to enable Blazy first before updating Slick Alphas,
-  otherwise a requirements error.
+  otherwise a requirement error.
 
 FEATURES
 --------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ To create optionsets, go to:
   admin/config/media/slick
 
 Be sure to enable Slick UI sub-module first, otherwise regular "Access denied".
-These will be available at field formatter "Manage display", and Views UI.
+They will be available at field formatter "Manage display", and Views UI.
 
 
 VIEWS AND FIELDS
@@ -213,6 +213,7 @@ normally < 0 (slick.load.min.js) is the one.
 
 Use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface
 to register ones. Clear the cache once.
+
 See slick.api.php for more info on skins.
 See \Drupal\slick\SlickSkinInterface.
 
@@ -241,6 +242,7 @@ To create Slick grid or multiple rows carousel, there are 3 options:
 
 The first 2 are supported by core library using pure JS approach.
 The last is the Module feature using pure CSS Foundation block-grid.
+
 The key is:
 The total amount of Views results must be bigger than Visible slides, otherwise
 broken Grid, see skin Grid above for more details.
@@ -349,10 +351,11 @@ some code cleanup, and optimization where needed. Patches are very much welcome.
 
 Alpha and Beta releases are for developers only. Be aware of possible breakage.
 
-Be sure to first update Blazy.
 However if it is broken, unless an update is explicitly required, clearing cache
 should fix most issues durig DEV phases. Prior to any update, always visit:
 /admin/config/development/performance
+
+Be sure to first update Blazy.
 
 
 ROADMAP

@@ -166,9 +166,10 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
    * Defines the scope for the form elements.
    */
   public function getScopedFormElements() {
-    $captions    = ['title' => t('Title'), 'alt' => t('Alt')];
+    $captions    = ['title' => $this->t('Title'), 'alt' => $this->t('Alt')];
     $field       = $this->fieldDefinition;
     $entity_type = $field->getTargetEntityTypeId();
+    $target_type = $this->getFieldSetting('target_type');
 
     return [
       'background'        => TRUE,
@@ -181,6 +182,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
       'image_style_form'  => TRUE,
       'media_switch_form' => TRUE,
       'settings'          => $this->getSettings(),
+      'target_type'       => $target_type,
       'thumb_captions'    => $captions,
       'nav'               => TRUE,
     ];

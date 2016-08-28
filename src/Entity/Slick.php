@@ -291,7 +291,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    */
   public static function htmlSettings() {
     return [
-      'cache'             => -1,
+      'cache'             => 0,
       'current_view_mode' => '',
       'display'           => 'main',
       'grid'              => '',
