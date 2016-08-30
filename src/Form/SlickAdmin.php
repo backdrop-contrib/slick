@@ -233,12 +233,6 @@ class SlickAdmin implements SlickAdminInterface {
     if (isset($form['overlay'])) {
       $form['overlay']['#title'] = $this->t('Overlay media/slicks');
       $form['overlay']['#description'] = $this->t('For audio/video, be sure the display is not image. For nested slicks, use the Slick carousel formatter for this field. Zebra layout is reasonable for overlay and captions.');
-
-      // Only Slick Views has ID.
-      if (!isset($definition['id'])) {
-        $form['image']['#description'] .= ' ' . $this->t('<strong>Supported fields</strong>: Image, Video Embed Field.');
-        $form['overlay']['#description'] .= ' ' . $this->t('<strong>Supported fields</strong>: Image, Video Embed Field, Media Entity.');
-      }
     }
   }
 

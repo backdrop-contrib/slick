@@ -45,14 +45,17 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
    * Gets the thumbnail image.
    */
   public function getThumbnail($settings = []) {
-    $thumbnail = [
-      '#theme'      => 'image_style',
-      '#style_name' => $settings['thumbnail_style'],
-      '#uri'        => $settings['uri'],
-    ];
+    $thumbnail = [];
+    if (!empty($settings['uri'])) {
+      $thumbnail = [
+        '#theme'      => 'image_style',
+        '#style_name' => $settings['thumbnail_style'],
+        '#uri'        => $settings['uri'],
+      ];
 
-    foreach (['height', 'width', 'alt', 'title'] as $data) {
-      $thumbnail["#$data"] = isset($settings[$data]) ? $settings[$data] : NULL;
+      foreach (['height', 'width', 'alt', 'title'] as $data) {
+        $thumbnail["#$data"] = isset($settings[$data]) ? $settings[$data] : NULL;
+      }
     }
     return $thumbnail;
   }
