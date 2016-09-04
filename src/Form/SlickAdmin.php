@@ -72,10 +72,11 @@ class SlickAdmin implements SlickAdminInterface {
    */
   public function buildSettingsForm(array &$form, $definition = []) {
     $definition += [
-      'caches'     => TRUE,
-      'namespace'  => 'slick',
-      'optionsets' => $this->getOptionsetsByGroupOptions('main'),
-      'skins'      => $this->getSkinsByGroupOptions('main'),
+      'caches'            => isset($definition['caches']) ? $definition['caches'] : TRUE,
+      'namespace'         => 'slick',
+      'optionsets'        => $this->getOptionsetsByGroupOptions('main'),
+      'skins'             => $this->getSkinsByGroupOptions('main'),
+      'responsive_images' => TRUE,
     ];
 
     $definition['layouts'] = isset($definition['layouts']) ? array_merge($this->getLayoutOptions(), $definition['layouts']) : $this->getLayoutOptions();
@@ -139,44 +140,54 @@ class SlickAdmin implements SlickAdminInterface {
       '#weight'      => -106,
     ];
 
-    $form['skin_arrows'] = [
-      '#type'        => 'select',
-      '#title'       => $this->t('Skin arrows'),
-      '#options'     => $arrows ?: [],
-      '#enforced'    => TRUE,
-      '#description' => $this->t('Implement \Drupal\slick\SlickSkinInterface::arrows() to add your own arrows skins, in the same format as SlickSkinInterface::skins().'),
-      '#access'      => count($arrows) > 0,
-      '#weight'      => -105,
-    ];
+    if (count($arrows) > 0) {
+      $form['skin_arrows'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Skin arrows'),
+        '#options'     => $arrows ?: [],
+        '#enforced'    => TRUE,
+        '#description' => $this->t('Implement \Drupal\slick\SlickSkinInterface::arrows() to add your own arrows skins, in the same format as SlickSkinInterface::skins().'),
+        '#access'      => count($arrows) > 0,
+        '#weight'      => -105,
+      ];
+    }
 
-    $form['skin_dots'] = [
-      '#type'        => 'select',
-      '#title'       => $this->t('Skin dots'),
-      '#options'     => $dots ?: [],
-      '#enforced'    => TRUE,
-      '#description' => $this->t('Implement \Drupal\slick\SlickSkinInterface::dots() to add your own dots skins, in the same format as SlickSkinInterface::skins().'),
-      '#access'      => count($dots) > 0,
-      '#weight'      => -105,
-    ];
+    if (count($dots) > 0) {
+      $form['skin_dots'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Skin dots'),
+        '#options'     => $dots ?: [],
+        '#enforced'    => TRUE,
+        '#description' => $this->t('Implement \Drupal\slick\SlickSkinInterface::dots() to add your own dots skins, in the same format as SlickSkinInterface::skins().'),
+        '#access'      => count($dots) > 0,
+        '#weight'      => -105,
+      ];
+    }
 
-    $form['thumbnail_caption'] = [
-      '#type'        => 'select',
-      '#title'       => $this->t('Thumbnail caption'),
-      '#options'     => isset($definition['thumb_captions']) ? $definition['thumb_captions'] : [],
-      '#description' => $this->t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
-      '#access'      => isset($definition['thumb_captions']),
-      '#states' => [
-        'visible' => [
-          'select[name*="[optionset_thumbnail]"]' => ['!value' => ''],
+    if (isset($definition['thumb_captions'])) {
+      $form['thumbnail_caption'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Thumbnail caption'),
+        '#options'     => isset($definition['thumb_captions']) ? $definition['thumb_captions'] : [],
+        '#description' => $this->t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
+        '#access'      => isset($definition['thumb_captions']),
+        '#states' => [
+          'visible' => [
+            'select[name*="[optionset_thumbnail]"]' => ['!value' => ''],
+          ],
         ],
-      ],
-      '#weight'      => 2,
-    ];
+        '#weight'      => 2,
+      ];
+    }
 
-    $form['skin']['#title'] = $this->t('Skin main');
-    $form['skin']['#description'] = $this->t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <a href=":url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', [':url' => $readme]);
+    if (isset($form['skin'])) {
+      $form['skin']['#title'] = $this->t('Skin main');
+      $form['skin']['#description'] = $this->t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <a href=":url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', [':url' => $readme]);
+    }
 
-    $form['layout']['#description'] = $this->t('Requires a skin. The builtin layouts affects the entire slides uniformly. Split half requires any skin Split. See <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Leave empty to DIY.', ['@url' => $readme_field]);
+    if (isset($form['layout'])) {
+      $form['layout']['#description'] = $this->t('Requires a skin. The builtin layouts affects the entire slides uniformly. Split half requires any skin Split. See <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Leave empty to DIY.', ['@url' => $readme_field]);
+    }
 
     $weight = -99;
     foreach (Element::children($form) as $key) {
@@ -201,8 +212,8 @@ class SlickAdmin implements SlickAdminInterface {
    * Returns the image formatter form elements.
    */
   public function imageStyleForm(array &$form, $definition = []) {
-    $definition['thumbnail_styles'] = TRUE;
-    $definition['ratios'] = TRUE;
+    $definition['thumbnail_styles'] = isset($definition['thumbnail_styles']) ? $definition['thumbnail_styles'] : TRUE;
+    $definition['ratios'] = isset($definition['ratios']) ? $definition['ratios'] : TRUE;
 
     $definition['thumbnail_effects'] = [
       'hover' => $this->t('Hoverable'),
@@ -213,13 +224,21 @@ class SlickAdmin implements SlickAdminInterface {
       $this->blazyAdmin->imageStyleForm($form, $definition);
     }
 
-    $form['image_style']['#description'] = $this->t('The main image style. This will be treated as the fallback image, which is normally smaller, if Breakpoints are provided, and if <strong>Use CSS background</strong> is disabled. Otherwise this is the only image displayed. If Slick media module installed, this determines iframe sizes to have various iframe dimensions with just a single file entity view mode, relevant for a mix of image and multimedia to get a consistent display.');
+    if (isset($form['image_style'])) {
+      $form['image_style']['#description'] = $this->t('The main image style. This will be treated as the fallback image, which is normally smaller, if Breakpoints are provided, and if <strong>Use CSS background</strong> is disabled. Otherwise this is the only image displayed. If Slick media module installed, this determines iframe sizes to have various iframe dimensions with just a single file entity view mode, relevant for a mix of image and multimedia to get a consistent display.');
+    }
 
-    $form['thumbnail_style']['#description'] = $this->t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>If <em>Dots with thumbnail</em> selected, displayed when hovering over dots.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.');
+    if (isset($form['thumbnail_style'])) {
+      $form['thumbnail_style']['#description'] = $this->t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>If <em>Dots with thumbnail</em> selected, displayed when hovering over dots.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.');
+    }
 
-    $form['thumbnail_effect']['#description'] = $this->t('Dependent on a Skin, Dots and Thumbnail style options. No asnavfor/ Optionset thumbnail is needed. <ol><li><strong>Hoverable</strong>: Dots pager are kept, and thumbnail will be hidden and only visible on dot mouseover, default to min-width 120px.</li><li><strong>Static grid</strong>: Dots are hidden, and thumbnails are displayed as a static grid acting like dots pager.</li></ol>Alternative to asNavFor aka separate thumbnails as slider.');
+    if (isset($form['thumbnail_effect'])) {
+      $form['thumbnail_effect']['#description'] = $this->t('Dependent on a Skin, Dots and Thumbnail style options. No asnavfor/ Optionset thumbnail is needed. <ol><li><strong>Hoverable</strong>: Dots pager are kept, and thumbnail will be hidden and only visible on dot mouseover, default to min-width 120px.</li><li><strong>Static grid</strong>: Dots are hidden, and thumbnails are displayed as a static grid acting like dots pager.</li></ol>Alternative to asNavFor aka separate thumbnails as slider.');
+    }
 
-    $form['background']['#description'] .= ' ' . $this->t('This opens up the goodness of CSS, such as background cover, fixed attachment, etc. Works best with a single visible slide, skins full width/screen. <br /><strong>Important!</strong> Requires a consistent Aspect ratio, otherwise collapsed containers. Unless a min-height is added manually to <strong>.media--background</strong> selector. Not compatible with Responsive image, but compatible with Blazy multi-serving images, of course.');
+    if (isset($form['background'])) {
+      $form['background']['#description'] .= ' ' . $this->t('This opens up the goodness of CSS, such as background cover, fixed attachment, etc. Works best with a single visible slide, skins full width/screen. <br /><strong>Important!</strong> Requires a consistent Aspect ratio, otherwise collapsed containers. Unless a min-height is added manually to <strong>.media--background</strong> selector. Not compatible with Responsive image, but compatible with Blazy multi-serving images, of course.');
+    }
   }
 
   /**

@@ -138,7 +138,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
         $thumb = ['settings' => $config];
 
         // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-        $thumb[$item_id] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($thumb['settings']);
+        $thumb[$item_id] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($config);
 
         $caption = $settings['thumbnail_caption'];
         $thumb['caption'] = empty($item->{$caption}) ? [] : ['#markup' => Xss::filterAdmin($item->{$caption})];

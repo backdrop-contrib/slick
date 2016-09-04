@@ -25,7 +25,10 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
 
     $optionset_name     = $settings['optionset'] ?: 'default';
     $build['optionset'] = Slick::load($optionset_name);
-    $settings['nav']    = !empty($settings['optionset_thumbnail']) && isset($items[1]);
+
+    if (!isset($settings['nav'])) {
+      $settings['nav'] = !empty($settings['optionset_thumbnail']) && isset($items[1]);
+    }
 
     // Do not bother for SlickTextFormatter, or when vanilla is on.
     if (empty($settings['vanilla'])) {

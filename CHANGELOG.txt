@@ -1,4 +1,8 @@
 
+Slick 8.x-1.0-dev, 2016-09-05
+-----------------------------
+- Refined form elements, and a few cleanups.
+
 Slick 8.x-1.0-dev, 2016-08-30
 -----------------------------
 - Removed non-contextual descriptions.

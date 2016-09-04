@@ -22,6 +22,7 @@
 
   .slide--caption--center .slide__caption,
   .slide--caption--center-top .slide__caption,
+  .slide--caption--left .slide__caption,
   .slide--caption--right .slide__caption {
     width: 42%;
   }
@@ -39,6 +40,10 @@
     padding: 0;
     position: absolute;
     text-align: center;
+  }
+
+  .slide--caption--left .slide__caption {
+    position: absolute;
   }
 
   .slide--caption--right .slide__caption {

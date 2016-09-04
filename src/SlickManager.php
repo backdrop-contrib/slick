@@ -19,7 +19,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    *
    * @const $skins.
    */
-  private static $skins = ['overlay', 'main', 'thumbnail', 'arrows', 'dots'];
+  private static $skins = ['overlay', 'main', 'thumbnail', 'arrows', 'dots', 'widget'];
 
   /**
    * Returns the supported skins.
@@ -157,20 +157,24 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       '#pre_render' => [static::class . '::preRenderSlick'],
     ];
 
-    $settings          = $build['settings'];
-    $suffixes[]        = count($build['items']);
-    $suffixes[]        = count(array_filter($settings));
-    $suffixes[]        = $settings['cache'];
-    $cache['tags']     = Cache::buildTags('slick:' . $settings['id'], $suffixes, '.');
-    if (!empty($settings['cache_tags'])) {
-      $cache['tags'] = array_merge($cache['tags'], $settings['cache_tags']);
-    }
-    $cache['contexts'] = ['languages'];
-    $cache['max-age']  = $settings['cache'];
-    $cache['keys']     = isset($settings['cache_metadata']['keys']) ? $settings['cache_metadata']['keys'] : [$settings['id']];
-    $cache['keys'][]   = $settings['display'];
+    $settings = $build['settings'];
 
-    $slick['#cache']   = $cache;
+    if (isset($settings['cache'])) {
+      $suffixes[]        = count($build['items']);
+      $suffixes[]        = count(array_filter($settings));
+      $suffixes[]        = $settings['cache'];
+      $cache['contexts'] = ['languages'];
+      $cache['max-age']  = $settings['cache'];
+      $cache['keys']     = isset($settings['cache_metadata']['keys']) ? $settings['cache_metadata']['keys'] : [$settings['id']];
+      $cache['keys'][]   = $settings['display'];
+      $cache['tags']     = Cache::buildTags('slick:' . $settings['id'], $suffixes, '.');
+      if (!empty($settings['cache_tags'])) {
+        $cache['tags'] = array_merge($cache['tags'], $settings['cache_tags']);
+      }
+
+      $slick['#cache']   = $cache;
+    }
+
     return $slick;
   }
 
@@ -297,7 +301,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     // One slick_theme() to serve multiple displays: main, overlay, thumbnail.
     $defaults = Slick::htmlSettings();
     $settings = $build['settings'] ? array_merge($defaults, $build['settings']) : $defaults;
-    $id       = self::getHtmlId('slick', $settings['id']);
+    $id       = isset($settings['id']) ? $settings['id'] : '';
+    $id       = self::getHtmlId('slick', $id);
     $thumb_id = $id . '-thumbnail';
     $options  = $build['options'];
     $switch   = isset($settings['media_switch']) ? $settings['media_switch'] : '';
