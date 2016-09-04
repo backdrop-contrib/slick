@@ -158,7 +158,7 @@ function template_preprocess_slick_slide(&$variables) {
   // wrapper: Don't add divities for a single item to have clean markups.
   $item['slide']         = isset($item['slide']) ? $item['slide'] : [];
   $item['caption']       = array_filter($item['caption']);
-  $settings['split']     = !empty($item) && $settings['caption'];
+  $settings['split']     = !empty($item) && !empty($settings['caption']);
   $settings['data']      = !empty($item['caption']['alt']) || !empty($item['caption']['title']) || !empty($item['caption']['data']);
   $settings['fullwidth'] = !empty($settings['skin']) && strpos($settings['skin'], 'full') !== FALSE;
   $settings['detroy']    = $settings['current_item'] == 'main' && !empty($settings['grid']) && !empty($settings['unslick']);

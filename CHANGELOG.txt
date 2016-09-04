@@ -1,6 +1,7 @@
 
 Slick 8.x-1.0-dev, 2016-09-05
 -----------------------------
+- #2792319 by audriusb: Undefined index: caption.
 - Refined form elements, and a few cleanups.
 
 Slick 8.x-1.0-dev, 2016-08-30
