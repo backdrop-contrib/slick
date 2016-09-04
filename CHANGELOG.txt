@@ -1,6 +1,8 @@
 
 Slick 8.x-1.0-dev, 2016-09-05
 -----------------------------
+- #2793477 by daniel.bosen: Hook requirements returns error when libraries
+  module is used.
 - #2792319 by audriusb: Undefined index: caption.
 - Refined form elements, and a few cleanups.
 
