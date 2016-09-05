@@ -130,7 +130,7 @@ function template_preprocess_slick(&$variables) {
 
     // The slider must have the attribute "dir" set to "rtl", if so configured.
     if (!empty($js['rtl'])) {
-      $content_attributes['dir'] = 'rtl';
+      $attributes['dir'] = 'rtl';
     }
 
     // Arrows are enforced to allow responsive options hide/show them.
@@ -491,7 +491,7 @@ function theme_slick_image($variables) {
     $build = l($build, $variables['url'], $link_options);
 
     if (isset($lightbox) && !empty($variables['captions']['lightbox'])) {
-      $build .= '<div class="litebox-caption element-hidden">' . $variables['captions']['lightbox'] . '</div>';
+      $build .= '<div class="litebox-caption element-invisible">' . $variables['captions']['lightbox'] . '</div>';
     }
   }
 

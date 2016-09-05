@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2016-09-06
+-----------------------------
+- Changed RTL placement from content_attributes to attributes to allow
+  correcting arrow placement which is placed outside slider.
+- Allowed a few reasonable HTML tags within slide title.
+
 Slick 7.x-2.0-dev, 2016-08-03
 -----------------------------
 - #2766399 by nmalinoski: CSS affects ALL images, not just Slick images.
