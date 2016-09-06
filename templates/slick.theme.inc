@@ -72,7 +72,7 @@ function template_preprocess_slick(&$variables) {
     }
 
     if ($js['rtl']) {
-      $content_attributes->setAttribute('dir', 'rtl');
+      $attributes['dir'] = 'rtl';
     }
 
     // Add the configuration as JSON object into the slick container.

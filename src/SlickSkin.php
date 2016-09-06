@@ -72,7 +72,7 @@ class SlickSkin implements SlickSkinInterface {
       ],
       'split' => [
         'name' => 'Split',
-        'description' => $this->t('Puts image and caption side by side, related to slide layout options.'),
+        'description' => $this->t('Puts image and caption side by side, requires any split layout option.'),
         'css' => [
           'theme' => [
             'css/theme/slick.theme--split.css' => [],

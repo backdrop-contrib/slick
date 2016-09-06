@@ -42,6 +42,10 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
         $settings['lazy_class'] = $settings['lazy_attribute'] = 'lazy';
       }
     }
+    else {
+      // Nothings to work with Vanilla on, disable the asnavfor.
+      $settings['nav'] = FALSE;
+    }
   }
 
   /**

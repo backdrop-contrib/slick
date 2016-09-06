@@ -182,7 +182,7 @@ class SlickAdmin implements SlickAdminInterface {
 
     if (isset($form['skin'])) {
       $form['skin']['#title'] = $this->t('Skin main');
-      $form['skin']['#description'] = $this->t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <a href=":url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', [':url' => $readme]);
+      $form['skin']['#description'] = $this->t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. E.g.: Skin Split requires any split layout option. Failing to choose the expected layout makes it useless. See <a href=":url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', [':url' => $readme]);
     }
 
     if (isset($form['layout'])) {
@@ -237,7 +237,7 @@ class SlickAdmin implements SlickAdminInterface {
     }
 
     if (isset($form['background'])) {
-      $form['background']['#description'] .= ' ' . $this->t('This opens up the goodness of CSS, such as background cover, fixed attachment, etc. Works best with a single visible slide, skins full width/screen. <br /><strong>Important!</strong> Requires a consistent Aspect ratio, otherwise collapsed containers. Unless a min-height is added manually to <strong>.media--background</strong> selector. Not compatible with Responsive image, but compatible with Blazy multi-serving images, of course.');
+      $form['background']['#description'] .= ' ' . $this->t('Works best with a single visible slide, skins full width/screen.');
     }
   }
 
@@ -313,7 +313,7 @@ class SlickAdmin implements SlickAdminInterface {
       'infinite'      => $this->t('Infinite'),
       'mouseWheel'    => $this->t('Mousewheel'),
       'randomize'     => $this->t('Randomize'),
-      'variableWidth' => $this->t('variableWidth'),
+      'variableWidth' => $this->t('Variable width'),
     ];
 
     $this->manager->getModuleHandler()->alter('slick_overridable_options_info', $options);

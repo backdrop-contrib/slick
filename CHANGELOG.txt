@@ -1,4 +1,11 @@
 
+Slick 8.x-1.0-dev, 2016-09-07
+-----------------------------
+- Marked it Beta3.
+- Changed RTL placement from content_attributes to attributes to allow
+  correcting arrow placement which is placed outside slider.
+- Refined most descriptions to be more helpful.
+
 Slick 8.x-1.0-dev, 2016-09-05
 -----------------------------
 - #2793477 by daniel.bosen: Hook requirements returns error when libraries

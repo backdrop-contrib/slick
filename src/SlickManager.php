@@ -311,7 +311,6 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $build['optionset'] = $build['optionset'] ?: Slick::load($settings['optionset']);
     $settings['id']     = $id;
     $settings['nav']    = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
-    $settings['cache']  = isset($settings['cache']) ? $settings['cache'] : -1;
     $mousewheel         = $build['optionset']->getSetting('mouseWheel');
 
     if ($settings['nav']) {
@@ -337,7 +336,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     // Build the main Slick.
     $slick[0] = self::slick($build);
 
-    // Build the Slick asNavFor/thumbnail.
+    // Build the thumbnail Slick.
     if (isset($build['thumb'])) {
       foreach (['items', 'options', 'settings'] as $key) {
         $build[$key] = isset($build['thumb'][$key]) ? $build['thumb'][$key] : [];

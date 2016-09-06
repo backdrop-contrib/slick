@@ -245,7 +245,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    * Removes wasted dependent options, even if not empty.
    */
   public function removeWastedDependentOptions(array &$js) {
-    foreach ($this->getDependentOptions() as $key => $option) {
+    foreach (self::getDependentOptions() as $key => $option) {
       if (isset($js[$key]) && empty($js[$key])) {
         foreach ($option as $dependent) {
           unset($js[$dependent]);
