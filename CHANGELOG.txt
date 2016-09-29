@@ -1,6 +1,7 @@
 
 Slick 8.x-1.0-dev, 2016-09-29
 -----------------------------
+- #2799617 by trobey: Include project namespace for module dependencies.
 - Removed useless spaceless from sub-templates.
 - Added Thumbnail position option to move around thumbnail nav at ease. Styling
   is up to you as usual.
