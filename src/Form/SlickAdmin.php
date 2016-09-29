@@ -164,6 +164,28 @@ class SlickAdmin implements SlickAdminInterface {
       ];
     }
 
+    if (isset($definition['thumb_positions'])) {
+      $form['thumbnail_position'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Thumbnail position'),
+        '#options' => [
+          'left'       => $this->t('Left'),
+          'right'      => $this->t('Right'),
+          'top'        => $this->t('Top'),
+          'over-left'  => $this->t('Overlay left'),
+          'over-right' => $this->t('Overlay right'),
+          'over-top'   => $this->t('Overlay top'),
+        ],
+        '#description' => $this->t('By default thumbnail is positioned at bottom. Hence to change the position of thumbnail. Only reasonable with 1 visible main stage at a time. Except any TOP, the rest requires Vertical option enabled for Optionset thumbnail, and a custom CSS height to selector <strong>.slick--thumbnail</strong> to avoid overflowing tall thumbnails, or adjust <strong>slidesToShow</strong> to fit the height. Further theming is required as usual. Overlay is absolutely positioned over the stage rather than sharing the space. See skin <strong>X VTabs</strong> for vertical thumbnail sample.'),
+        '#states' => [
+          'visible' => [
+            'select[name*="[optionset_thumbnail]"]' => ['!value' => ''],
+          ],
+        ],
+        '#weight'      => -99,
+      ];
+    }
+
     if (isset($definition['thumb_captions'])) {
       $form['thumbnail_caption'] = [
         '#type'        => 'select',
@@ -383,8 +405,8 @@ class SlickAdmin implements SlickAdminInterface {
   /**
    * Return the field formatter settings summary.
    */
-  public function settingsSummary($plugin) {
-    return $this->blazyAdmin->settingsSummary($plugin);
+  public function settingsSummary($plugin, $definition = []) {
+    return $this->blazyAdmin->settingsSummary($plugin, $definition);
   }
 
   /**

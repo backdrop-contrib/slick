@@ -1,4 +1,11 @@
 
+Slick 8.x-1.0-dev, 2016-09-29
+-----------------------------
+- Removed useless spaceless from sub-templates.
+- Added Thumbnail position option to move around thumbnail nav at ease. Styling
+  is up to you as usual.
+- Fixed for non-empty slick, nothing should be processed when items are empty.
+
 Slick 8.x-1.0-dev, 2016-09-07
 -----------------------------
 - Marked it Beta3.

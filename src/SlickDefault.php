@@ -33,7 +33,8 @@ class SlickDefault extends BlazyDefault {
    */
   public static function imageSettings() {
     return [
-      'thumbnail_effect' => '',
+      'thumbnail_effect'   => '',
+      'thumbnail_position' => '',
     ] + self::baseSettings() + parent::imageSettings();
   }
 

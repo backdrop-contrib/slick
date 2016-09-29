@@ -297,12 +297,15 @@ class Slick extends ConfigEntityBase implements SlickInterface {
       'grid'              => '',
       'id'                => '',
       'nav'               => FALSE,
+      'navpos'            => FALSE,
       'media_switch'      => '',
       'optionset'         => 'default',
       'ratio'             => '',
       'skin'              => '',
       'unslick'           => FALSE,
       'vanilla'           => FALSE,
+      'vertical'          => FALSE,
+      'vertical_tn'       => FALSE,
       'view_name'         => '',
     ];
   }

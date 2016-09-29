@@ -146,8 +146,12 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    * {@inheritdoc}
    */
   public static function slick($build = []) {
-    foreach (['options', 'optionset', 'settings'] as $key) {
+    foreach (['items', 'options', 'optionset', 'settings'] as $key) {
       $build[$key] = isset($build[$key]) ? $build[$key] : [];
+    }
+
+    if (empty($build['items'])) {
+      return [];
     }
 
     $slick = [
@@ -279,7 +283,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $build[$key] = isset($build[$key]) ? $build[$key] : [];
     }
 
-    return [
+    return empty($build['items']) ? [] : [
       '#theme'      => 'slick_wrapper',
       '#items'      => [],
       '#build'      => $build,
@@ -308,15 +312,18 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $switch   = isset($settings['media_switch']) ? $settings['media_switch'] : '';
 
     // Additional settings.
-    $build['optionset'] = $build['optionset'] ?: Slick::load($settings['optionset']);
-    $settings['id']     = $id;
-    $settings['nav']    = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
-    $mousewheel         = $build['optionset']->getSetting('mouseWheel');
+    $build['optionset']      = $build['optionset'] ?: Slick::load($settings['optionset']);
+    $settings['id']          = $id;
+    $settings['nav']         = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
+    $settings['navpos']      = !empty($settings['nav']) && !empty($settings['thumbnail_position']);
+    $settings['vertical']    = $build['optionset']->getSetting('vertical');
+    $mousewheel              = $build['optionset']->getSetting('mouseWheel');
 
     if ($settings['nav']) {
-      $options['asNavFor'] = "#{$thumb_id}-slider";
-      $optionset_thumbnail = Slick::load($settings['optionset_thumbnail']);
-      $mousewheel          = $optionset_thumbnail->getSetting('mouseWheel');
+      $options['asNavFor']     = "#{$thumb_id}-slider";
+      $optionset_thumbnail     = Slick::load($settings['optionset_thumbnail']);
+      $mousewheel              = $optionset_thumbnail->getSetting('mouseWheel');
+      $settings['vertical_tn'] = $optionset_thumbnail->getSetting('vertical');
     }
 
     // Attach libraries.
@@ -352,6 +359,10 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
       unset($build['thumb']);
       $slick[1] = self::slick($build);
+    }
+
+    if ($settings['navpos']) {
+      $slick = array_reverse($slick);
     }
 
     // Collect the slick instances.

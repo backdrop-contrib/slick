@@ -184,6 +184,7 @@ class SlickImageFormatter extends ImageFormatterBase implements ContainerFactory
       'settings'          => $this->getSettings(),
       'target_type'       => $target_type,
       'thumb_captions'    => $captions,
+      'thumb_positions'   => TRUE,
       'nav'               => TRUE,
     ];
   }

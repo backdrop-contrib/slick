@@ -19,16 +19,18 @@ function template_preprocess_slick(&$variables) {
   $customs   = isset($element['#options']) ? $element['#options'] : [];
   $optionset = isset($element['#optionset']) ? $element['#optionset'] : Slick::load($settings['optionset']);
   $js        = $customs ? array_merge($optionset->getSettings(), $customs) : $optionset->getSettings();
-  $display   = $variables['display'] = $settings['display'];
+
+  if (isset($variables['settings'])) {
+    $settings = array_merge($settings, $variables['settings']);
+  }
 
   // Prepare attributes.
   $attributes = &$variables['attributes'];
   $content_attributes = new Attribute();
+  $display = $variables['display'] = $settings['display'];
 
-  if (!isset($attributes['id'])) {
-    $id = empty($settings['id']) ? Slick::getHtmlId('slick') : $settings['id'];
-    $attributes['id'] = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
-  }
+  $id = empty($settings['id']) ? Slick::getHtmlId('slick') : $settings['id'];
+  $attributes['id'] = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
 
   // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
   if ($settings['view_name'] && $settings['current_view_mode']) {
@@ -90,15 +92,17 @@ function template_preprocess_slick(&$variables) {
   foreach ($element['#items'] as $delta => $item) {
     $settings['current_item'] = $display;
     $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
-    unset($item['settings']);
+    $item_attributes = isset($item['attributes']) ? $item['attributes'] : [];
+    unset($item['settings'], $item['attributes']);
 
     $theme = $settings['vanilla'] ? 'vanilla' : ($display == 'thumbnail' ? 'thumbnail' : 'slide');
 
     $slide = [
-      '#theme'    => 'slick_' . $theme,
-      '#item'     => $item,
-      '#delta'    => $delta,
-      '#settings' => $settings,
+      '#theme'      => 'slick_' . $theme,
+      '#item'       => $item,
+      '#delta'      => $delta,
+      '#settings'   => $settings,
+      '#attributes' => $item_attributes,
     ];
     $variables['items'][$delta] = $slide;
     unset($slide);

@@ -18,6 +18,7 @@
 
 .slick-wrapper {
   position: relative;
+  overflow: hidden;
 }
 
 /**
