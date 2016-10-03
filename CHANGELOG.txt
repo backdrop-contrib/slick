@@ -1,4 +1,8 @@
 
+Slick 8.x-1.0-dev, 2016-10-03
+-----------------------------
+- Fixed for nested slicks with a full screen skin.
+
 Slick 8.x-1.0-dev, 2016-09-29
 -----------------------------
 - Marked it Beta4.

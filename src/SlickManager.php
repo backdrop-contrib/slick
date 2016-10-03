@@ -333,10 +333,12 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
     $settings['mousewheel'] = !empty($options['overridables']['mouseWheel']) || $mousewheel;
     $settings['down_arrow'] = $build['optionset']->getSetting('downArrow');
+    $settings['lazy']       = empty($settings['lazy']) ? $build['optionset']->getSetting('lazyLoad') : $settings['lazy'];
 
     $attachments            = $this->attach($settings);
     $build['options']       = $options;
     $build['settings']      = $settings;
+
     $element['#settings']   = $settings;
     $element['#attached']   = empty($build['attached']) ? $attachments : NestedArray::mergeDeep($build['attached'], $attachments);
 
