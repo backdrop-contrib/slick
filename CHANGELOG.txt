@@ -1,6 +1,7 @@
 
 Slick 8.x-1.0-dev, 2016-10-25
 -----------------------------
+- Minified please. Never commit anything when you are tired.
 - Added optional "Slick Image with Media" formatter to retain VEM/ME within
   image/file ER environment if VEM/ME is installed.
 - Moved Slick grid CSS foundation into Blazy for reusability outside slick, such
