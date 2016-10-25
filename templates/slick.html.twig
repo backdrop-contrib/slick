@@ -40,6 +40,7 @@
     settings.downArrow ? 'slick--has-arrow-down',
     settings.asNavFor ? 'slick--' ~ display|clean_class,
     settings.slidesToShow > 1 ? 'slick--multiple-view',
+    settings.count <= settings.slidesToShow ? 'slick--less',
     display == 'main' and settings.media_switch ? 'slick--' ~ settings.media_switch|clean_class,
     display == 'thumbnail' and settings.thumbnail_caption ? 'slick--has-caption'
   ]
@@ -56,21 +57,25 @@
     <div{{ content_attributes.addClass('slick__slider') }}>
   {% endif %}
 
+  {% block slick_content %}
     {% for item in items %}
       {{ item }}
     {% endfor %}
+  {% endblock %}
 
   {% if not settings.unslick %}
     </div>
-    <nav{{ settings.arrow.attributes.addClass(arrow_classes) }}>
-      {{ settings.prevArrow|striptags('<a><em><span><strong><button><div>')|raw }}
-      {% if settings.downArrow.attributes is defined %}
-        <button{{ settings.downArrow.attributes.addClass('slick-down')
-          .setAttribute('type', 'button')
-          .setAttribute('data-target', settings.downArrowTarget)
-          .setAttribute('data-offset', settings.downArrowOffset) }}></button>
-      {% endif %}
-      {{ settings.nextArrow|striptags('<a><em><span><strong><button><div>')|raw }}
-    </nav>
+    {% block slick_arrow %}
+      <nav{{ settings.arrow.attributes.addClass(arrow_classes) }}>
+        {{ settings.prevArrow|striptags('<a><em><span><strong><button><div>')|raw }}
+        {% if settings.downArrow.attributes is defined %}
+          <button{{ settings.downArrow.attributes.addClass('slick-down')
+            .setAttribute('type', 'button')
+            .setAttribute('data-target', settings.downArrowTarget)
+            .setAttribute('data-offset', settings.downArrowOffset) }}></button>
+        {% endif %}
+        {{ settings.nextArrow|striptags('<a><em><span><strong><button><div>')|raw }}
+      </nav>
+    {% endblock %}
   {% endif %}
 </div>

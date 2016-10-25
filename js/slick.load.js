@@ -52,6 +52,10 @@
         if (t.hasClass('unslick')) {
           t.slick('unslick');
         }
+        else {
+          // Add helper class for arrow visibility as they are outside slider.
+          $(that).addClass('slick--initialized');
+        }
       });
     },
 
@@ -87,20 +91,12 @@
         t.on('beforeChange.slick', function () {
           // .b-lazy can be attached to IMG, or DIV as CSS background.
           var $src = $('.slide--loading .b-lazy', t);
-          var $loaded = $('.b-loaded', t);
 
           if ($src.length) {
             // Enforces lazyload ahead to smoothen the UX.
             Drupal.blazy.init.load($src);
           }
-
-          $loaded.closest('.slide').removeClass('slide--loading');
         });
-
-        Drupal.blazy.init.options.success = function (elm) {
-          $(elm).closest('.slide').removeClass('slide--loading');
-          Drupal.blazy.clearing(elm);
-        };
       }
     },
 
@@ -157,8 +153,9 @@
       var $img = $(img);
       var $bg = $img.closest('.media--background');
 
-      $img.closest('.media').removeClass('media--loading').addClass('media--loaded');
-      $img.closest('.slide--loading').removeClass('slide--loading');
+      $img.parents('[class*="loading"]').removeClass(function (index, css) {
+        return (css.match(/(\S+)loading/g) || []).join(' ');
+      });
 
       if ($bg.length) {
         $bg.css('background-image', 'url(' + $img.attr('src') + ')');
@@ -202,6 +199,7 @@
      *   The visibility of slick arrows controlled by CSS class visually-hidden.
      */
     setPosition: function (t, a, o, slick) {
+      var less = slick.slideCount <= o.slidesToShow;
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
       if (t.attr('id') === slick.$slider.attr('id')) {
@@ -210,8 +208,15 @@
           slick.$list.css('padding', '');
         }
 
+        // @todo: Remove temp fix for when total <= slidesToShow.
+        // Ensures the fix doesn't break responsive options.
+        // @see https://github.com/kenwheeler/slick/issues/262
+        if (less && slick.$slideTrack.width() <= slick.$slider.width()) {
+          slick.$slideTrack.css({left: '', transform: ''});
+        }
+
         // Do not remove arrows, to allow responsive have different options.
-        return slick.slideCount <= o.slidesToShow || o.arrows === false
+        return less || o.arrows === false
           ? a.addClass('visually-hidden') : a.removeClass('visually-hidden');
       }
     },

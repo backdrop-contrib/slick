@@ -32,9 +32,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
 
     // Do not bother for SlickTextFormatter, or when vanilla is on.
     if (empty($settings['vanilla'])) {
-      $resimage          = !empty($settings['responsive_image_style']);
       $lazy              = $build['optionset']->getSetting('lazyLoad');
-      $lazy              = ($this->configLoad('responsive_image') && $resimage) ? 'blazy' : $lazy;
       $settings['blazy'] = $lazy == 'blazy' || !empty($settings['blazy']);
       $settings['lazy']  = $settings['blazy'] ? 'blazy' : $lazy;
 
@@ -43,7 +41,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
       }
     }
     else {
-      // Nothings to work with Vanilla on, disable the asnavfor.
+      // Nothing to work with Vanilla on, disable the asnavfor, else JS error.
       $settings['nav'] = FALSE;
     }
   }
@@ -56,7 +54,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     if (!empty($settings['uri'])) {
       $thumbnail = [
         '#theme'      => 'image_style',
-        '#style_name' => $settings['thumbnail_style'],
+        '#style_name' => isset($settings['thumbnail_style']) ? $settings['thumbnail_style'] : 'thumbnail',
         '#uri'        => $settings['uri'],
       ];
 

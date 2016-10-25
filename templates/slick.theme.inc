@@ -53,9 +53,6 @@ function template_preprocess_slick(&$variables) {
     $js['lazyLoad'] = 'blazy';
     $blazy = empty($settings['blazy_data']) ? [] : $settings['blazy_data'];
     $blazy['ratio'] = $settings['ratio'];
-    if (!empty($settings['width']) && empty($blazy['ratio'])) {
-      $blazy['default'] = [$settings['width'], $settings['height']];
-    }
     $attributes['data-blazy'] = Json::encode($blazy);
   }
 
@@ -174,6 +171,7 @@ function template_preprocess_slick_slide(&$variables) {
  */
 function template_preprocess_slick_grid(&$variables) {
   $variables['settings'] = $variables['element']['#settings'];
+  $variables['delta']    = isset($variables['element']['#delta']) ? $variables['element']['#delta'] : 0;
 
   $variables['items'] = [];
   foreach ($variables['element']['#items'] as $delta => $item) {
@@ -181,14 +179,19 @@ function template_preprocess_slick_grid(&$variables) {
     $variables['settings'] = isset($item['settings']) ? array_merge($variables['settings'], $item['settings']) : $variables['settings'];
     unset($item['settings']);
 
+    $item_attributes = [];
+    if (!empty($item['#attributes'])) {
+      $item_attributes = $item['#attributes'];
+    }
+
     $slide['slide'] = [
-      '#theme'    => 'slick_slide',
+      '#theme'    => empty($settings['vanilla']) ? 'slick_slide' : 'slick_vanilla',
       '#item'     => $item,
       '#delta'    => $delta,
       '#settings' => $variables['settings'],
     ];
 
-    $slide['attributes'] = new Attribute();
+    $slide['attributes'] = new Attribute($item_attributes);
     $variables['items'][$delta] = $slide;
     unset($slide);
   }

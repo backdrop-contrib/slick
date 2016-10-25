@@ -98,7 +98,7 @@ The Slick module has several sub-modules:
 
 
 [1] http://dgo.to/slick_media
-[2] http://dgo.to/slick_media
+[2] http://dgo.to/slick_video
 [3] http://dgo.to/slick_paragraphs
 [4] http://dgo.to/slick_views
 [5] http://dgo.to/slick_extras
@@ -319,7 +319,7 @@ KNOWN ISSUES
 --------------------------------------------------------------------------------
 - Slick admin CSS may not be compatible with private or contrib admin
   themes. Only if trouble with admin display, please disable it at:
-  admin/config/media/slick/ui
+  admin/config/media/blazy
 
 - The Slick lazyLoad is not supported with Responsive image. Slick only
   facilitates Responsive image to get in. The image formatting is taken over by
@@ -342,11 +342,15 @@ KNOWN ISSUES
     Otherwise disable Aspect ratio for multi-serving images.
   o If the total < slidesToShow, Slick behaves. Previously added a workaround to
     fix this, but later dropped and handed over to the core instead.
+    Brought back the temp fix for 1.6+ as per 10/18/16:
+    See https://github.com/kenwheeler/slick/issues/262
   o Fade option with slideToShow > 1 will screw up.
   o variableWidth ignores slidesToShow.
   o Too much centerPadding at small device affects slidesToShow.
   o Infinite option will create duplicates or clone slides which look more
     obvious if slidesToShow > 1. Simply disable it if not desired.
+  o If thumbnail display is Infinite, the main one must be infinite too, else
+    incorrect syncing.
 
 
 CURRENT DEVELOPMENT STATUS

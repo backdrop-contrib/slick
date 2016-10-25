@@ -17,6 +17,7 @@ use Drupal\blazy\Dejavu\BlazyEntityReferenceBase;
  * @see \Drupal\slick_media\Plugin\Field\FieldFormatter\SlickMediaFormatter.
  */
 abstract class SlickEntityReferenceFormatterBase extends BlazyEntityReferenceBase implements ContainerFactoryPluginInterface {
+
   use SlickFormatterTrait;
 
   /**

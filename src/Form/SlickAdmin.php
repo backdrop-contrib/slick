@@ -14,6 +14,7 @@ use Drupal\slick\SlickManagerInterface;
  * Provides resusable admin functions, or form elements.
  */
 class SlickAdmin implements SlickAdminInterface {
+
   use StringTranslationTrait;
 
   /**
@@ -71,15 +72,12 @@ class SlickAdmin implements SlickAdminInterface {
    * Returns the main form elements.
    */
   public function buildSettingsForm(array &$form, $definition = []) {
-    $definition += [
-      'caches'            => isset($definition['caches']) ? $definition['caches'] : TRUE,
-      'namespace'         => 'slick',
-      'optionsets'        => $this->getOptionsetsByGroupOptions('main'),
-      'skins'             => $this->getSkinsByGroupOptions('main'),
-      'responsive_images' => TRUE,
-    ];
-
-    $definition['layouts'] = isset($definition['layouts']) ? array_merge($this->getLayoutOptions(), $definition['layouts']) : $this->getLayoutOptions();
+    $definition['caches']           = isset($definition['caches']) ? $definition['caches'] : TRUE;
+    $definition['namespace']        = 'slick';
+    $definition['optionsets']       = isset($definition['optionsets']) ? $definition['optionsets'] : $this->getOptionsetsByGroupOptions('main');
+    $definition['skins']            = isset($definition['skins']) ? $definition['skins'] : $this->getSkinsByGroupOptions('main');
+    $definition['responsive_image'] = isset($definition['responsive_image']) ? $definition['responsive_image'] : TRUE;
+    $definition['layouts']          = isset($definition['layouts']) ? array_merge($this->getLayoutOptions(), $definition['layouts']) : $this->getLayoutOptions();
 
     $this->openingForm($form, $definition);
 
@@ -122,23 +120,23 @@ class SlickAdmin implements SlickAdminInterface {
       $form['optionset']['#title'] = $this->t('Optionset main');
     }
 
-    $form['optionset_thumbnail'] = [
-      '#type'        => 'select',
-      '#title'       => $this->t('Optionset thumbnail'),
-      '#options'     => $this->getOptionsetsByGroupOptions('thumbnail'),
-      '#description' => $this->t('If provided, asNavFor aka thumbnail navigation applies. Leave empty to not use thumbnail navigation.'),
-      '#access'      => isset($definition['nav']) || isset($definition['thumbnails']),
-      '#weight'      => -108,
-    ];
+    if (!empty($definition['nav']) || !empty($definition['thumbnails'])) {
+      $form['optionset_thumbnail'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Optionset thumbnail'),
+        '#options'     => $this->getOptionsetsByGroupOptions('thumbnail'),
+        '#description' => $this->t('If provided, asNavFor aka thumbnail navigation applies. Leave empty to not use thumbnail navigation.'),
+        '#weight'      => -108,
+      ];
 
-    $form['skin_thumbnail'] = [
-      '#type'        => 'select',
-      '#title'       => $this->t('Skin thumbnail'),
-      '#options'     => $this->getSkinsByGroupOptions('thumbnail'),
-      '#description' => $this->t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', ['@url' => $readme]),
-      '#access'      => isset($definition['nav']) || isset($definition['thumbnails']),
-      '#weight'      => -106,
-    ];
+      $form['skin_thumbnail'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Skin thumbnail'),
+        '#options'     => $this->getSkinsByGroupOptions('thumbnail'),
+        '#description' => $this->t('Thumbnail navigation skin. See main <a href="@url" target="_blank">README</a> for details on Skins. Leave empty to not use thumbnail navigation.', ['@url' => $readme]),
+        '#weight'      => -106,
+      ];
+    }
 
     if (count($arrows) > 0) {
       $form['skin_arrows'] = [
@@ -147,7 +145,6 @@ class SlickAdmin implements SlickAdminInterface {
         '#options'     => $arrows ?: [],
         '#enforced'    => TRUE,
         '#description' => $this->t('Implement \Drupal\slick\SlickSkinInterface::arrows() to add your own arrows skins, in the same format as SlickSkinInterface::skins().'),
-        '#access'      => count($arrows) > 0,
         '#weight'      => -105,
       ];
     }
@@ -159,12 +156,11 @@ class SlickAdmin implements SlickAdminInterface {
         '#options'     => $dots ?: [],
         '#enforced'    => TRUE,
         '#description' => $this->t('Implement \Drupal\slick\SlickSkinInterface::dots() to add your own dots skins, in the same format as SlickSkinInterface::skins().'),
-        '#access'      => count($dots) > 0,
         '#weight'      => -105,
       ];
     }
 
-    if (isset($definition['thumb_positions'])) {
+    if (!empty($definition['thumb_positions'])) {
       $form['thumbnail_position'] = [
         '#type'        => 'select',
         '#title'       => $this->t('Thumbnail position'),
@@ -186,13 +182,12 @@ class SlickAdmin implements SlickAdminInterface {
       ];
     }
 
-    if (isset($definition['thumb_captions'])) {
+    if (!empty($definition['thumb_captions'])) {
       $form['thumbnail_caption'] = [
         '#type'        => 'select',
         '#title'       => $this->t('Thumbnail caption'),
         '#options'     => isset($definition['thumb_captions']) ? $definition['thumb_captions'] : [],
         '#description' => $this->t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
-        '#access'      => isset($definition['thumb_captions']),
         '#states' => [
           'visible' => [
             'select[name*="[optionset_thumbnail]"]' => ['!value' => ''],
@@ -225,19 +220,23 @@ class SlickAdmin implements SlickAdminInterface {
   public function mediaSwitchForm(array &$form, $definition = []) {
     $this->blazyAdmin->mediaSwitchForm($form, $definition);
 
-    $form['media_switch']['#description'] = $this->t('Depends on the enabled supported modules, or has known integration with Slick.<ol><li>Link to content: for aggregated small slicks.</li><li>Image to iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li><li>Intense: image to fullscreen intense image.</li></ol>');
+    if (isset($form['media_switch'])) {
+      $form['media_switch']['#description'] = $this->t('Depends on the enabled supported modules, or has known integration with Slick.<ol><li>Link to content: for aggregated small slicks.</li><li>Image to iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li><li>Intense: image to fullscreen intense image.</li></ol>');
+    }
 
-    $form['ratio']['#description'] .= ' ' . $this->t('Required if using media entity to switch between iframe and overlay image, otherwise DIY.');
+    if (isset($form['ratio']['#description'])) {
+      $form['ratio']['#description'] .= ' ' . $this->t('Required if using media entity to switch between iframe and overlay image, otherwise DIY.');
+    }
   }
 
   /**
    * Returns the image formatter form elements.
    */
   public function imageStyleForm(array &$form, $definition = []) {
-    $definition['thumbnail_styles'] = isset($definition['thumbnail_styles']) ? $definition['thumbnail_styles'] : TRUE;
+    $definition['thumbnail_style'] = isset($definition['thumbnail_style']) ? $definition['thumbnail_style'] : TRUE;
     $definition['ratios'] = isset($definition['ratios']) ? $definition['ratios'] : TRUE;
 
-    $definition['thumbnail_effects'] = [
+    $definition['thumbnail_effect'] = [
       'hover' => $this->t('Hoverable'),
       'grid'  => $this->t('Static grid'),
     ];
@@ -251,7 +250,7 @@ class SlickAdmin implements SlickAdminInterface {
     }
 
     if (isset($form['thumbnail_style'])) {
-      $form['thumbnail_style']['#description'] = $this->t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>If <em>Dots with thumbnail</em> selected, displayed when hovering over dots.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.');
+      $form['thumbnail_style']['#description'] = $this->t('Usages: <ol><li>If <em>Optionset thumbnail</em> provided, it is for asNavFor thumbnail navigation.</li><li>For <em>Thumbnail effect</em>.</li><li>Photobox thumbnail.</li><li>Custom work to build arrows with thumbnails via the provided data-thumb attributes.</li></ol>Leave empty to not use thumbnails.');
     }
 
     if (isset($form['thumbnail_effect'])) {
@@ -269,7 +268,9 @@ class SlickAdmin implements SlickAdminInterface {
   public function fieldableForm(array &$form, $definition = []) {
     $this->blazyAdmin->fieldableForm($form, $definition);
 
-    $form['thumbnail']['#description'] = $this->t("Only needed if <em>Optionset thumbnail</em> is provided. Maybe the same field as the main image, only different instance and image style. Leave empty to not use thumbnail pager.");
+    if (isset($form['thumbnail'])) {
+      $form['thumbnail']['#description'] = $this->t("Only needed if <em>Optionset thumbnail</em> is provided. Maybe the same field as the main image, only different instance and image style. Leave empty to not use thumbnail pager.");
+    }
 
     if (isset($form['overlay'])) {
       $form['overlay']['#title'] = $this->t('Overlay media/slicks');
@@ -285,9 +286,9 @@ class SlickAdmin implements SlickAdminInterface {
       $this->blazyAdmin->gridForm($form, $definition);
     }
 
-    $header = $this->t('Group individual slide as block grid?<small>An older alternative to core <strong>Rows</strong> option. Only works if the total items &gt; <strong>Visible slides</strong>. <br />block grid != slidesToShow option, yet both can work in tandem.<br />block grid = Rows option, yet the first is module feature, the later core.</small>');
+    $header = $this->t('Group individual item as block grid?<small>An older alternative to core <strong>Rows</strong> option. Only works if the total items &gt; <strong>Visible slides</strong>. <br />block grid != slidesToShow option, yet both can work in tandem.<br />block grid = Rows option, yet the first is module feature, the later core.</small>');
 
-    $form['grid_header']['#markup'] = '<h3 class="form__title">' . $header . '</h3>';
+    $form['grid_header']['#markup'] = '<h3 class="form__title form__title--grid">' . $header . '</h3>';
 
     $form['grid']['#description'] = $this->t('The amount of block grid columns for large monitors 64.063em - 90em. <br /><strong>Requires</strong>:<ol><li>Visible items,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents,</li><li>Optionset with Rows and slidesPerRow = 1.</li></ol>This is module feature, older than core Rows, and offers more flexibility. Leave empty to DIY, or to not build grids.');
   }
@@ -305,12 +306,12 @@ class SlickAdmin implements SlickAdminInterface {
     ];
 
     $form['overridables'] = [
-      '#type'          => 'checkboxes',
-      '#title'         => $this->t('Overridable options'),
-      '#description'   => $this->t("Override the main optionset to re-use one. Anything dictated here will override the current main optionset. Unchecked means FALSE"),
-      '#options'       => $this->getOverridableOptions(),
-      '#weight'        => 114,
-      '#enforced'      => TRUE,
+      '#type'        => 'checkboxes',
+      '#title'       => $this->t('Overridable options'),
+      '#description' => $this->t("Override the main optionset to re-use one. Anything dictated here will override the current main optionset. Unchecked means FALSE"),
+      '#options'     => $this->getOverridableOptions(),
+      '#weight'      => 114,
+      '#enforced'    => TRUE,
       '#states' => [
         'visible' => [
           ':input[name$="[override]"]' => ['checked' => TRUE],
@@ -318,9 +319,7 @@ class SlickAdmin implements SlickAdminInterface {
       ],
     ];
 
-    if (!isset($form['cache'])) {
-      $this->blazyAdmin->closingForm($form, $definition);
-    }
+    $this->blazyAdmin->closingForm($form, $definition);
   }
 
   /**

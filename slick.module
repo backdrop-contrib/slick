@@ -57,8 +57,25 @@ function slick_library_info_build() {
  * Implements hook_config_schema_info_alter().
  */
 function slick_config_schema_info_alter(array &$definitions) {
-  $settings = SlickDefault::extendedSettings();
-  Blazy::configSchemaInfoAlter($definitions, 'slick_base', $settings);
+  Blazy::configSchemaInfoAlter($definitions, 'slick_base', SlickDefault::extendedSettings());
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function slick_field_formatter_info_alter(array &$info) {
+  // Supports Media Entity via VEM within VEF if available.
+  if (function_exists('video_embed_media_media_bundle_insert')) {
+    $info['slick_file'] = [
+      'id'          => 'slick_file',
+      'label'       => t('Slick Image with Media'),
+      'description' => t('Display the images associated to VEM/ME as a simple mix of Slick image/video carousel.'),
+      'class'       => 'Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatter',
+      'field_types' => ['entity_reference', 'image'],
+      'quickedit'   => ['editor' => 'disabled'],
+      'provider'    => 'slick',
+    ];
+  }
 }
 
 /**

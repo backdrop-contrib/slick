@@ -71,8 +71,9 @@
             if (isSlick) {
               curr = parseInt(t.closest('.slick__slide:not(.slick-cloned)')
                 .data('slickIndex'));
-              if ($slider.parent().next('.slick').length) {
-                var $thumb = $slider.parent().next('.slick')
+              // Thumbnail nav can be positioned before or after main display.
+              if ($slider.parent().siblings('.slick').length) {
+                var $thumb = $slider.parent().siblings('.slick')
                   .find('.slick__slider');
                 $thumb.slick('slickGoTo', curr);
               }

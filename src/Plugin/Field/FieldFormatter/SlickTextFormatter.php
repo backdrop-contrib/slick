@@ -13,11 +13,11 @@ use Drupal\slick\SlickManagerInterface;
 use Drupal\slick\SlickDefault;
 
 /**
- * Plugin implementation of the 'slick_text' formatter.
+ * Plugin implementation of the 'Slick Text' formatter.
  *
  * @FieldFormatter(
  *   id = "slick_text",
- *   label = @Translation("Slick carousel"),
+ *   label = @Translation("Slick Text"),
  *   field_types = {
  *     "text",
  *     "text_long",
@@ -27,6 +27,7 @@ use Drupal\slick\SlickDefault;
  * )
  */
 class SlickTextFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+
   use SlickFormatterTrait;
 
   /**

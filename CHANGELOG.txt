@@ -1,4 +1,17 @@
 
+Slick 8.x-1.0-dev, 2016-10-25
+-----------------------------
+- Added optional "Slick Image with Media" formatter to retain VEM/ME within
+  image/file ER environment if VEM/ME is installed.
+- Moved Slick grid CSS foundation into Blazy for reusability outside slick, such
+  as with core Views HTML list, or even Unformatted format.
+- Respected "Vanilla slick" option when using grid items.
+- Cleaned up and refined slick.theme.css for better UX.
+- Brought back the slide offset temp fix for when count <= slidesTosShow as no
+  resolution, by now. To be removed when the actual fix is available.
+- Ported the failsafe for deleted optionset while being used.
+- Added Twig block section for easy partial extensions, and reduce dups.
+
 Slick 8.x-1.0-dev, 2016-10-03
 -----------------------------
 - Fixed for nested slicks with a full screen skin.

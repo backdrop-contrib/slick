@@ -62,11 +62,11 @@ class SlickListBuilder extends DraggableListBuilder {
    */
   public function buildHeader() {
     $header = array(
-      'label'       => t('Optionset'),
-      'breakpoints' => t('Breakpoints'),
-      'group'       => t('Group'),
-      'lazyload'    => t('Lazyload'),
-      'skin'        => t('Skin'),
+      'label'       => $this->t('Optionset'),
+      'breakpoints' => $this->t('Breakpoints'),
+      'group'       => $this->t('Group'),
+      'lazyload'    => $this->t('Lazyload'),
+      'skin'        => $this->t('Skin'),
     );
 
     return $header + parent::buildHeader();
@@ -81,8 +81,8 @@ class SlickListBuilder extends DraggableListBuilder {
 
     $row['label'] = Html::escape($this->getLabel($entity));
     $row['breakpoints']['#markup'] = $entity->getBreakpoints();
-    $row['group']['#markup'] = $entity->getGroup() ?: t('All');
-    $row['lazyload']['#markup'] = $entity->getSetting('lazyLoad') ?: t('None');
+    $row['group']['#markup'] = $entity->getGroup() ?: $this->t('All');
+    $row['lazyload']['#markup'] = $entity->getSetting('lazyLoad') ?: $this->t('None');
     $row['skin']['#markup'] = Html::escape($skin);
 
     // Has to do this separately as concat with HTML tag is no joy.
@@ -100,7 +100,7 @@ class SlickListBuilder extends DraggableListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Configure');
+      $operations['edit']['title'] = $this->t('Configure');
     }
 
     $operations['duplicate'] = array(

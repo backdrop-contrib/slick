@@ -80,12 +80,13 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $attach['blazy_colorbox'] = FALSE;
     $load = parent::attach($attach);
 
-    if (is_file('libraries/easing/jquery.easing.min.js')) {
-      $load['library'][] = 'slick/slick.easing';
-    }
-
     if (!empty($attach['lazy'])) {
       $load['library'][] = 'blazy/loading';
+    }
+
+    // @todo: Only load slick if not static grid.
+    if (is_file('libraries/easing/jquery.easing.min.js')) {
+      $load['library'][] = 'slick/slick.easing';
     }
 
     $load['library'][] = 'slick/slick.load';
@@ -112,10 +113,9 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
   }
 
   /**
-   * Provides skins if required.
+   * Provides skins only if required.
    */
   public function attachSkin(array &$load, $attach = []) {
-    // If we do have a defined skin, load the optional Slick and module css.
     if ($attach['slick_css']) {
       $load['library'][] = 'slick/slick.css';
     }
@@ -234,6 +234,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
   /**
    * Returns items as a grid display.
+   *
+   * @todo: Move it to Blazy for re-useability.
    */
   public static function buildGrid($build = [], array &$settings) {
     $grids = [];
@@ -306,7 +308,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $defaults = Slick::htmlSettings();
     $settings = $build['settings'] ? array_merge($defaults, $build['settings']) : $defaults;
     $id       = isset($settings['id']) ? $settings['id'] : '';
-    $id       = self::getHtmlId('slick', $id);
+    $id       = Slick::getHtmlId('slick', $id);
     $thumb_id = $id . '-thumbnail';
     $options  = $build['options'];
     $switch   = isset($settings['media_switch']) ? $settings['media_switch'] : '';
