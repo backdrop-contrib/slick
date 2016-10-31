@@ -10,6 +10,7 @@
   box-sizing: border-box;
 }
 
+.slick img,
 .slick iframe {
   border: 0;
   height: auto;
@@ -66,7 +67,6 @@
 .slick__slide {
   max-width: 100%;
   position: absolute;
-  vertical-align: top;
   visibility: hidden;
 }
 

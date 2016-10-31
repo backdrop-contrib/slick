@@ -71,30 +71,25 @@
      */
     beforeSlick: function (t, a, o) {
       var me = this;
-      var r = $('.slide--0 .media--ratio', t);
 
       me.randomize(t, o);
 
-      t.on('setPosition.slick', function (e, slick) {
+      t.on('setPosition.slickLoad', function (e, slick) {
         me.setPosition(t, a, o, slick);
       });
-
-      // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
-      if (r.length && r.is(':hidden')) {
-        r.removeClass('media--ratio').addClass('js-media--ratio');
-      }
 
       $('.media--loading', t).closest('.slide').addClass('slide--loading');
 
       // Blazy integration.
       if (o.lazyLoad === 'blazy' && Drupal.blazy) {
-        t.on('beforeChange.slick', function () {
+        t.on('beforeChange.slickLoad', function () {
           // .b-lazy can be attached to IMG, or DIV as CSS background.
-          var $src = $('.slide--loading .b-lazy', t);
+          var $src = $('.b-lazy:not(.b-loaded)', t);
 
           if ($src.length) {
             // Enforces lazyload ahead to smoothen the UX.
             Drupal.blazy.init.load($src);
+            $(window).trigger('scroll');
           }
         });
       }
@@ -111,10 +106,9 @@
     afterSlick: function (t, o) {
       var me = this;
       var slick = t.slick('getSlick');
-      var $ratio = $('.js-media--ratio', t);
 
       // Arrow down jumper.
-      t.parent().on('click.slick.load', '.slick-down', function (e) {
+      t.parent().on('click.slickLoad', '.slick-down', function (e) {
         e.preventDefault();
         var b = $(this);
         $('html, body').stop().animate({
@@ -123,17 +117,10 @@
       });
 
       if (o.mouseWheel) {
-        t.on('mousewheel.slick.load', function (e, delta) {
+        t.on('mousewheel.slickLoad', function (e, delta) {
           e.preventDefault();
           return (delta < 0) ? t.slick('slickNext') : t.slick('slickPrev');
         });
-      }
-
-      // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
-      if ($ratio.length) {
-        // t[0].slick.refresh();
-        t.trigger('resize');
-        $ratio.addClass('media--ratio').removeClass('js-media--ratio');
       }
 
       t.on('lazyLoaded lazyLoadError', function (e, slick, img) {

@@ -1,4 +1,12 @@
 
+Slick 8.x-1.0-dev, 2016-10-31
+-----------------------------
+- Added support for Blazy new CSS3 Columns along with Grid Foundation.
+- Moved "the failsafe for deleted optionset while being used" outside Slick.php
+  since it was breaking Add/Duplicate operations, till proper fix.
+- Updated Slick colorbox JS file to re-use blazy.colorbox because Blazy now
+  also supports Media Entity for colorbox videos.
+
 Slick 8.x-1.0-dev, 2016-10-25
 -----------------------------
 - Minified please. Never commit anything when you are tired.

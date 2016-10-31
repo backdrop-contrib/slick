@@ -119,7 +119,7 @@ abstract class SlickFileFormatterBase extends BlazyFileFormatterBase {
 
       if (!empty($settings['caption'])) {
         foreach ($settings['caption'] as $caption) {
-          $element['caption'][$caption] = empty($item->{$caption}) ? [] : ['#markup' => Xss::filterAdmin($item->{$caption})];
+          $element['caption'][$caption] = empty($element['item']->{$caption}) ? [] : ['#markup' => Xss::filterAdmin($element['item']->{$caption})];
         }
       }
 
@@ -132,7 +132,7 @@ abstract class SlickFileFormatterBase extends BlazyFileFormatterBase {
 
         // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
         $thumb[$item_id]  = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($settings);
-        $thumb['caption'] = empty($item->{$tn_caption}) ? [] : ['#markup' => Xss::filterAdmin($item->{$tn_caption})];
+        $thumb['caption'] = empty($element['item']->{$tn_caption}) ? [] : ['#markup' => Xss::filterAdmin($element['item']->{$tn_caption})];
 
         $build['thumb']['items'][$delta] = $thumb;
         unset($thumb);

@@ -42,7 +42,7 @@ function template_preprocess_slick(&$variables) {
   $settings['count']   = isset($settings['count']) ? $settings['count'] : count($element['#items']);
   $settings['unslick'] = $settings['unslick'] || $settings['count'] == 1;
 
-  foreach (['asNavFor', 'nextArrow', 'prevArrow', 'downArrowTarget', 'downArrowOffset', 'slidesToShow'] as $key) {
+  foreach (['asNavFor', 'nextArrow', 'prevArrow', 'downArrowTarget', 'downArrowOffset', 'slidesToShow', 'vertical'] as $key) {
     $settings[$key] = isset($js[$key]) ? $js[$key] : FALSE;
   }
 
@@ -172,11 +172,17 @@ function template_preprocess_slick_slide(&$variables) {
 function template_preprocess_slick_grid(&$variables) {
   $variables['settings'] = $variables['element']['#settings'];
   $variables['delta']    = isset($variables['element']['#delta']) ? $variables['element']['#delta'] : 0;
+  $variables['grid_id']  = 'grid';
+
+  $settings = $variables['settings'];
+  if (!empty($settings['style']) && $settings['style'] == 'column') {
+    $variables['grid_id'] = 'column';
+  }
 
   $variables['items'] = [];
   foreach ($variables['element']['#items'] as $delta => $item) {
-    $variables['settings']['current_item'] = 'grid';
-    $variables['settings'] = isset($item['settings']) ? array_merge($variables['settings'], $item['settings']) : $variables['settings'];
+    $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
+    $settings['current_item'] = 'grid';
     unset($item['settings']);
 
     $item_attributes = [];
@@ -184,11 +190,11 @@ function template_preprocess_slick_grid(&$variables) {
       $item_attributes = $item['#attributes'];
     }
 
-    $slide['slide'] = [
+    $slide['content'] = [
       '#theme'    => empty($settings['vanilla']) ? 'slick_slide' : 'slick_vanilla',
       '#item'     => $item,
       '#delta'    => $delta,
-      '#settings' => $variables['settings'],
+      '#settings' => $settings,
     ];
 
     $slide['attributes'] = new Attribute($item_attributes);

@@ -355,12 +355,12 @@ class HookSlickSkin implements SlickSkinInterface {
    * {@inheritdoc}
    */
   public function skins() {
-    $theme_path = drupal_get_path('theme', 'my_theme');
+    $theme_path = base_path() . drupal_get_path('theme', 'my_theme');
 
     return [
       'skin_name' => [
         // Human readable skin name.
-        'name' => t('Skin name'),
+        'name' => 'Skin name',
         // Description of the skin.
         'description' => t('Skin description.'),
         // To reduce confusion on form selection: main, thumbnail.

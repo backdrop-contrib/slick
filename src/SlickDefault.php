@@ -23,7 +23,6 @@ class SlickDefault extends BlazyDefault {
       'skin_arrows'         => '',
       'skin_dots'           => '',
       'skin_thumbnail'      => '',
-      'style'               => 'slick',
       'thumbnail_caption'   => '',
     ] + parent::baseSettings();
   }

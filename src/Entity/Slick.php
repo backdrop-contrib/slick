@@ -165,19 +165,6 @@ class Slick extends ConfigEntityBase implements SlickInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::load().
-   */
-  public static function load($id) {
-    $optionset = parent::load($id);
-
-    // Ensures deleted optionset while being used doesn't screw up.
-    if (!isset($optionset->name)) {
-      $optionset = static::load('default');
-    }
-    return $optionset;
-  }
-
-  /**
    * Overrides \Drupal\Core\Entity\Entity::create().
    */
   public static function create(array $values = []) {

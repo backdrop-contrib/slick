@@ -101,6 +101,10 @@ class SlickAdmin implements SlickAdminInterface {
       $this->blazyAdmin->breakpointsForm($form, $definition);
     }
 
+    if (!empty($definition['style']) && isset($form['style']['#description'])) {
+      $form['style']['#description'] .= ' ' . $this->t('CSS3 Columns is best with adaptiveHeight. Will use regular carousel as default style if left empty. Yet, both CSS3 Columns and Grid Foundation are respected as Grid displays when <strong>Grid large</strong> option is provided.');
+    }
+
     $this->closingForm($form, $definition);
   }
 
@@ -221,7 +225,7 @@ class SlickAdmin implements SlickAdminInterface {
     $this->blazyAdmin->mediaSwitchForm($form, $definition);
 
     if (isset($form['media_switch'])) {
-      $form['media_switch']['#description'] = $this->t('Depends on the enabled supported modules, or has known integration with Slick.<ol><li>Link to content: for aggregated small slicks.</li><li>Image to iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li><li>Intense: image to fullscreen intense image.</li></ol>');
+      $form['media_switch']['#description'] = $this->t('Depends on the enabled supported modules, or has known integration with Slick.<ol><li>Link to content: for aggregated small slicks.</li><li>Image to iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li><li>Intense: image to fullscreen intense image.</li></ol> Try selecting "<strong>- None -</strong>" first before changing if trouble with this complex form states.');
     }
 
     if (isset($form['ratio']['#description'])) {

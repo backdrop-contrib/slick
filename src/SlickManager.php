@@ -77,7 +77,6 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       'module_css' => $this->configLoad('module_css', 'slick.settings'),
     ];
 
-    $attach['blazy_colorbox'] = FALSE;
     $load = parent::attach($attach);
 
     if (!empty($attach['lazy'])) {
@@ -162,7 +161,6 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     ];
 
     $settings = $build['settings'];
-
     if (isset($settings['cache'])) {
       $suffixes[]        = count($build['items']);
       $suffixes[]        = count(array_filter($settings));
@@ -234,10 +232,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
   /**
    * Returns items as a grid display.
-   *
-   * @todo: Move it to Blazy for re-useability.
    */
-  public static function buildGrid($build = [], array &$settings) {
+  public static function buildGrid($items = [], array &$settings) {
     $grids = [];
 
     // Display all items if unslick is enforced for plain grid to lightbox.
@@ -248,7 +244,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
       $slide['slide'] = [
         '#theme'    => 'slick_grid',
-        '#items'    => $build,
+        '#items'    => $items,
         '#delta'    => 0,
         '#settings' => $settings,
       ];
@@ -258,7 +254,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     else {
       // Otherwise do chunks to have a grid carousel.
       $preserve_keys     = !empty($settings['preserve_keys']);
-      $grid_items        = array_chunk($build, $settings['visible_items'], $preserve_keys);
+      $grid_items        = array_chunk($items, $settings['visible_items'], $preserve_keys);
       $settings['count'] = count($grid_items);
 
       foreach ($grid_items as $delta => $grid_item) {
@@ -314,7 +310,13 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $switch   = isset($settings['media_switch']) ? $settings['media_switch'] : '';
 
     // Additional settings.
-    $build['optionset']      = $build['optionset'] ?: Slick::load($settings['optionset']);
+    $build['optionset'] = $build['optionset'] ?: Slick::load($settings['optionset']);
+
+    // Ensures deleted optionset while being used doesn't screw up.
+    if (empty($build['optionset'])) {
+      $build['optionset'] = Slick::load('default');
+    }
+
     $settings['id']          = $id;
     $settings['nav']         = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
     $settings['navpos']      = !empty($settings['nav']) && !empty($settings['thumbnail_position']);
@@ -336,6 +338,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $settings['mousewheel'] = !empty($options['overridables']['mouseWheel']) || $mousewheel;
     $settings['down_arrow'] = $build['optionset']->getSetting('downArrow');
     $settings['lazy']       = empty($settings['lazy']) ? $build['optionset']->getSetting('lazyLoad') : $settings['lazy'];
+    $settings['blazy']      = empty($settings['blazy']) ? $settings['lazy'] == 'blazy' : $settings['blazy'];
 
     $attachments            = $this->attach($settings);
     $build['options']       = $options;

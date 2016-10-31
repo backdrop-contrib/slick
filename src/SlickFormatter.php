@@ -26,6 +26,11 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     $optionset_name     = $settings['optionset'] ?: 'default';
     $build['optionset'] = Slick::load($optionset_name);
 
+    // Ensures deleted optionset while being used doesn't screw up.
+    if (empty($build['optionset'])) {
+      $build['optionset'] = Slick::load('default');
+    }
+
     if (!isset($settings['nav'])) {
       $settings['nav'] = !empty($settings['optionset_thumbnail']) && isset($items[1]);
     }
@@ -36,7 +41,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
       $settings['blazy'] = $lazy == 'blazy' || !empty($settings['blazy']);
       $settings['lazy']  = $settings['blazy'] ? 'blazy' : $lazy;
 
-      if (!$settings['blazy']) {
+      if (empty($settings['blazy'])) {
         $settings['lazy_class'] = $settings['lazy_attribute'] = 'lazy';
       }
     }
@@ -44,6 +49,10 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
       // Nothing to work with Vanilla on, disable the asnavfor, else JS error.
       $settings['nav'] = FALSE;
     }
+
+    $settings['overridables'] = array_filter($settings['overridables']);
+    // @todo: Enable after proper checks.
+    // $settings = array_filter($settings);
   }
 
   /**
@@ -68,12 +77,12 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
   /**
    * Overrides BlazyFormatterManager::getMediaSwitch().
    */
-  public function getMediaSwitch(array &$element = [], $settings = []) {
-    parent::getMediaSwitch($element, $settings);
-    $switch = $settings['media_switch'];
+  public function getMediaSwitch(array &$element = []) {
+    parent::getMediaSwitch($element);
+    $settings = $element['#settings'];
 
     if (isset($element['#url_attributes'])) {
-      $element['#url_attributes']['class'] = ['slick__' . $switch, 'litebox'];
+      $element['#url_attributes']['class'] = ['slick__' . $settings['media_switch'], 'litebox'];
     }
   }
 
