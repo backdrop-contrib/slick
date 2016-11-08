@@ -296,7 +296,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
       'cache'             => 0,
       'current_view_mode' => '',
       'display'           => 'main',
-      'grid'              => '',
+      'grid'              => 0,
       'id'                => '',
       'nav'               => FALSE,
       'navpos'            => FALSE,

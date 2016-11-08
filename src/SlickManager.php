@@ -19,7 +19,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    *
    * @const $skins.
    */
-  private static $skins = ['overlay', 'main', 'thumbnail', 'arrows', 'dots', 'widget'];
+  private static $skins = ['browser', 'overlay', 'main', 'thumbnail', 'arrows', 'dots', 'widget'];
 
   /**
    * Returns the supported skins.
@@ -170,6 +170,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $cache['keys']     = isset($settings['cache_metadata']['keys']) ? $settings['cache_metadata']['keys'] : [$settings['id']];
       $cache['keys'][]   = $settings['display'];
       $cache['tags']     = Cache::buildTags('slick:' . $settings['id'], $suffixes, '.');
+
       if (!empty($settings['cache_tags'])) {
         $cache['tags'] = array_merge($cache['tags'], $settings['cache_tags']);
       }
@@ -236,7 +237,13 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
   public static function buildGrid($items = [], array &$settings) {
     $grids = [];
 
+    // Enforces unslick with less items.
+    if (empty($settings['unslick']) && !empty($settings['count'])) {
+      $settings['unslick'] = $settings['count'] < $settings['visible_items'];
+    }
+
     // Display all items if unslick is enforced for plain grid to lightbox.
+    // Or when the total is less than visible_items.
     if (!empty($settings['unslick'])) {
       $settings['display']      = 'main';
       $settings['current_item'] = 'grid';
@@ -252,7 +259,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $grids[0] = $slide;
     }
     else {
-      // Otherwise do chunks to have a grid carousel.
+      // Otherwise do chunks to have a grid carousel, and also update count.
       $preserve_keys     = !empty($settings['preserve_keys']);
       $grid_items        = array_chunk($items, $settings['visible_items'], $preserve_keys);
       $settings['count'] = count($grid_items);
@@ -317,6 +324,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $build['optionset'] = Slick::load('default');
     }
 
+    $settings['count']       = empty($settings['count']) ? count($build['items']) : $settings['count'];
     $settings['id']          = $id;
     $settings['nav']         = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
     $settings['navpos']      = !empty($settings['nav']) && !empty($settings['thumbnail_position']);
@@ -344,6 +352,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $build['options']       = $options;
     $build['settings']      = $settings;
 
+    // Build the Slick wrapper elements.
     $element['#settings']   = $settings;
     $element['#attached']   = empty($build['attached']) ? $attachments : NestedArray::mergeDeep($build['attached'], $attachments);
 
@@ -368,6 +377,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $slick[1] = self::slick($build);
     }
 
+    // Reverse slicks if thumbnail position is provided to get CSS float works.
     if ($settings['navpos']) {
       $slick = array_reverse($slick);
     }

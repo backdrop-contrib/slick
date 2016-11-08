@@ -56,22 +56,23 @@ function template_preprocess_slick(&$variables) {
     $attributes['data-blazy'] = Json::encode($blazy);
   }
 
+  if ($js['rtl']) {
+    $attributes['dir'] = 'rtl';
+  }
+
   // Prevents broken slick when only one item given, or an enforced unslick.
   if (!$settings['unslick']) {
     $content_attributes->setAttribute('id', $attributes['id'] . '-slider');
 
-    $settings['arrow']['attributes'] = new Attribute();
+    // @todo drop backward compatibility, and use direct variables instead.
+    $variables['arrow_attributes'] = $settings['arrow']['attributes'] = new Attribute();
     if ($display == 'main' && $js['downArrow'] && $js['downArrowTarget']) {
-      $settings['downArrow']['attributes'] = new Attribute();
+      $variables['arrow_down_attributes'] = $settings['downArrow']['attributes'] = new Attribute();
     }
 
     // focusOnSelect won't work with empty slide value, so add proper selector.
     if (empty($js['slide']) && $js['focusOnSelect']) {
       $js['slide'] = ($js['rows'] == 1 && $js['slidesPerRow'] == 1) ? '.slick__slide' : $js['slide'];
-    }
-
-    if ($js['rtl']) {
-      $attributes['dir'] = 'rtl';
     }
 
     // Add the configuration as JSON object into the slick container.
@@ -162,6 +163,7 @@ function template_preprocess_slick_slide(&$variables) {
   $settings['split']     = !empty($item) && !empty($settings['caption']);
   $settings['data']      = !empty($item['caption']['alt']) || !empty($item['caption']['title']) || !empty($item['caption']['data']);
   $settings['fullwidth'] = !empty($settings['skin']) && strpos($settings['skin'], 'full') !== FALSE;
+  $settings['grid']      = empty($settings['grid']) ? FALSE : $settings['grid'];
   $settings['detroy']    = $settings['current_item'] == 'main' && !empty($settings['grid']) && !empty($settings['unslick']);
   $settings['wrapper']   = $settings['count'] > 1 && $settings['current_item'] != 'grid';
 }
@@ -175,8 +177,11 @@ function template_preprocess_slick_grid(&$variables) {
   $variables['grid_id']  = 'grid';
 
   $settings = $variables['settings'];
-  if (!empty($settings['style']) && $settings['style'] == 'column') {
-    $variables['grid_id'] = 'column';
+
+  // By default Slick only supports Grid Foundation, adds relevant grid_id for
+  // optional Style: CSS3 Columns, and probably future flexbox.
+  if (!empty($settings['style']) && $settings['style'] != 'slick') {
+    $variables['grid_id'] = $settings['style'];
   }
 
   $variables['items'] = [];

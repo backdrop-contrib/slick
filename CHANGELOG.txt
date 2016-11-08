@@ -1,4 +1,14 @@
 
+Slick 8.x-1.0-dev, 2016-11-09
+-----------------------------
+- A few cleanups.
+- Fixed for the new Grid and CSS3 Columns at field formatter settings not saved.
+
+Slick 8.x-1.0-dev, 2016-11-01
+-----------------------------
+- Simplified settings.arrow.attributes to arrow_attributes.
+- Simplified settings.downArrow.attributes to arrow_down_attributes.
+
 Slick 8.x-1.0-dev, 2016-10-31
 -----------------------------
 - Added support for Blazy new CSS3 Columns along with Grid Foundation.

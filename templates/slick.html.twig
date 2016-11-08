@@ -32,12 +32,13 @@
     'slick',
     settings.unslick ? 'unslick',
     settings.blazy ? 'blazy',
+    settings.vertical ? 'slick--vertical',
     settings.attributes.class ? settings.attributes.class|join(' '),
     settings.skin ? 'slick--skin--' ~ settings.skin|clean_class,
     'boxed' in settings.skin ? 'slick--skin--boxed',
     'split' in settings.skin ? 'slick--skin--split',
     settings.optionset ? 'slick--optionset--' ~ settings.optionset|clean_class,
-    settings.downArrow ? 'slick--has-arrow-down',
+    arrow_down_attributes is defined ? 'slick--has-arrow-down',
     settings.asNavFor ? 'slick--' ~ display|clean_class,
     settings.slidesToShow > 1 ? 'slick--multiple-view',
     settings.count <= settings.slidesToShow ? 'slick--less',
@@ -48,6 +49,7 @@
 {%
   set arrow_classes = [
     'slick__arrow',
+    settings.vertical ? 'slick__arrow--v',
     settings.skin_arrows ? 'slick__arrow--' ~ settings.skin_arrows|clean_class
   ]
 %}
@@ -66,10 +68,10 @@
   {% if not settings.unslick %}
     </div>
     {% block slick_arrow %}
-      <nav{{ settings.arrow.attributes.addClass(arrow_classes) }}>
+      <nav{{ arrow_attributes.addClass(arrow_classes) }}>
         {{ settings.prevArrow|striptags('<a><em><span><strong><button><div>')|raw }}
-        {% if settings.downArrow.attributes is defined %}
-          <button{{ settings.downArrow.attributes.addClass('slick-down')
+        {% if arrow_down_attributes is defined %}
+          <button{{ arrow_down_attributes.addClass('slick-down')
             .setAttribute('type', 'button')
             .setAttribute('data-target', settings.downArrowTarget)
             .setAttribute('data-offset', settings.downArrowOffset) }}></button>

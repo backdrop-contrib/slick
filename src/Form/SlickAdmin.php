@@ -89,7 +89,7 @@ class SlickAdmin implements SlickAdminInterface {
       $this->mediaSwitchForm($form, $definition);
     }
 
-    if (isset($definition['grid_form']) && !isset($form['grid'])) {
+    if (!empty($definition['grid_form']) && !isset($form['grid'])) {
       $this->gridForm($form, $definition);
     }
 
@@ -102,7 +102,7 @@ class SlickAdmin implements SlickAdminInterface {
     }
 
     if (!empty($definition['style']) && isset($form['style']['#description'])) {
-      $form['style']['#description'] .= ' ' . $this->t('CSS3 Columns is best with adaptiveHeight. Will use regular carousel as default style if left empty. Yet, both CSS3 Columns and Grid Foundation are respected as Grid displays when <strong>Grid large</strong> option is provided.');
+      $form['style']['#description'] .= ' ' . $this->t('CSS3 Columns is best with adaptiveHeight, non-vertical. Will use regular carousel as default style if left empty. Yet, both CSS3 Columns and Grid Foundation are respected as Grid displays when <strong>Grid large</strong> option is provided.');
     }
 
     $this->closingForm($form, $definition);
@@ -190,7 +190,7 @@ class SlickAdmin implements SlickAdminInterface {
       $form['thumbnail_caption'] = [
         '#type'        => 'select',
         '#title'       => $this->t('Thumbnail caption'),
-        '#options'     => isset($definition['thumb_captions']) ? $definition['thumb_captions'] : [],
+        '#options'     => $definition['thumb_captions'],
         '#description' => $this->t('Thumbnail caption maybe just title/ plain text. If Thumbnail image style is not provided, the thumbnail pagers will be just text like regular tabs.'),
         '#states' => [
           'visible' => [
@@ -349,26 +349,21 @@ class SlickAdmin implements SlickAdminInterface {
    * Returns default layout options for the core Image, or Views.
    */
   public function getLayoutOptions() {
-    $layouts = &drupal_static(__METHOD__, NULL);
-
-    if (!isset($layouts)) {
-      $layouts = [
-        'bottom'      => $this->t('Caption bottom'),
-        'top'         => $this->t('Caption top'),
-        'right'       => $this->t('Caption right'),
-        'left'        => $this->t('Caption left'),
-        'center'      => $this->t('Caption center'),
-        'center-top'  => $this->t('Caption center top'),
-        'below'       => $this->t('Caption below the slide'),
-        'stage-right' => $this->t('Caption left, stage right'),
-        'stage-left'  => $this->t('Caption right, stage left'),
-        'split-right' => $this->t('Caption left, stage right, split half'),
-        'split-left'  => $this->t('Caption right, stage left, split half'),
-        'stage-zebra' => $this->t('Stage zebra'),
-        'split-zebra' => $this->t('Split half zebra'),
-      ];
-    }
-    return $layouts;
+    return [
+      'bottom'      => $this->t('Caption bottom'),
+      'top'         => $this->t('Caption top'),
+      'right'       => $this->t('Caption right'),
+      'left'        => $this->t('Caption left'),
+      'center'      => $this->t('Caption center'),
+      'center-top'  => $this->t('Caption center top'),
+      'below'       => $this->t('Caption below the slide'),
+      'stage-right' => $this->t('Caption left, stage right'),
+      'stage-left'  => $this->t('Caption right, stage left'),
+      'split-right' => $this->t('Caption left, stage right, split half'),
+      'split-left'  => $this->t('Caption right, stage left, split half'),
+      'stage-zebra' => $this->t('Stage zebra'),
+      'split-zebra' => $this->t('Split half zebra'),
+    ];
   }
 
   /**

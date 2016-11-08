@@ -89,7 +89,6 @@
           if ($src.length) {
             // Enforces lazyload ahead to smoothen the UX.
             Drupal.blazy.init.load($src);
-            $(window).trigger('scroll');
           }
         });
       }
