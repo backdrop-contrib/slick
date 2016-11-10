@@ -1,4 +1,12 @@
 
+Slick 7.x-2.0-dev, 2016-11-10
+-----------------------------
+- Optimized slick Grid, and made it re-usable for non-list items.
+- Fixed for Views preview with adminimal-theme and slick Grid.
+- Fixed for broken grid display CSS being overridden by Seven theme.
+- Removed useless/unwanted extra nested slick__slide wrapper for grid items.
+- A couple of cleanups.
+
 Slick 7.x-2.0-dev, 2016-09-06
 -----------------------------
 - Changed RTL placement from content_attributes to attributes to allow

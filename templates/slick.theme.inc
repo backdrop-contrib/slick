@@ -218,7 +218,7 @@ function template_preprocess_slick_item(&$variables) {
   $type     = isset($item['#item']['type']) ? $item['#item']['type'] : '';
 
   // Prepare variables, and remove non-BEM default class.
-  foreach (array('content', 'item', 'title') as $key) {
+  foreach (array('content', 'item', 'title', 'wrapper') as $key) {
     $variables[$key . '_prefix'] = $variables[$key . '_suffix'] = '';
   }
 
@@ -270,8 +270,11 @@ function template_preprocess_slick_item(&$variables) {
   }
 
   // Do not add divities for a single slick (unslick) to have clean markups.
-  $variables['wrapper_prefix'] = '<div' . drupal_attributes($attributes) . '>';
-  $variables['wrapper_suffix'] = '</div>';
+  // Or when it is a grid item.
+  if ($settings['current_item'] != 'grid') {
+    $variables['wrapper_prefix'] = '<div' . drupal_attributes($attributes) . '>';
+    $variables['wrapper_suffix'] = '</div>';
+  }
 
   $settings['wrapper'] = $settings['count'] > 1 && $settings['current_item'] != 'grid';
   if ($settings['wrapper'] && empty($settings['grid'])) {

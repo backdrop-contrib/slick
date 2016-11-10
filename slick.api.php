@@ -85,6 +85,7 @@
     'optionset' => 'blog',
 
     // Optional skin name fetched from hook_slick_skins_info(), otherwise none.
+    // The supported keys: skin, skin_thumbnail, skin_arrows, skin_dots.
     'skin' => 'fullwidth',
 
     // ID can be used for lightbox group, cache ID, the asnavfor, etc.
@@ -139,15 +140,9 @@
   // @see slick_fields/slick_views for the real world samples.
   $attach = array();
 
-  // Add more assets using supported slick_attach() keys.
-  $attach = array(
-    'attach_skin' => 'my-custom-skin',
-
-    // If building asnavfor with a custom skin, otherwise ignore this.
-    'attach_skin_thumbnail' => 'my-custom-skin-thumbnail',
-  );
-
-  $attachments = slick_attach($attach);
+  // To add skins, use the $settings variable mentioned above, with supported
+  // keys: skin, skin_thumbnail, skin_arrows, skin_dots.
+  $attachments = slick_attach($attach, $settings);
 
   // Add more attachments using regular library keys just as freely:
   $attachments['css'] += array(MYTHEME_PATH . '/css/zoom.css'   => array('weight' => 9));
@@ -398,7 +393,8 @@ function hook_slick_attach_load_info_alter(&$load, $attach, $skins, $settings) {
 // Empty array for the basic files, or optionallly pass a skin to have a proper
 // display where appropriate, see slick_fields/slick_views for more samples.
 $attach = array();
-$attachments = slick_attach($attach);
+$settings = array('skin' => 'fullwidth', 'skin_thumbnail' => 'asnavfor');
+$attachments = slick_attach($attach, $settings);
 
 // Add another custom library to the array.
 $transit = libraries_get_path('jquery.transit') . '/jquery.transit.min.js';
@@ -505,8 +501,8 @@ function hook_slick_skins_info() {
  * @see https://www.drupal.org/node/1892574
  */
 function hook_slick_skins_info_alter(array &$skins) {
-  // The source can be theme or module.
-  // The CSS is provided by my_theme.
+  // The source can be theme, or module.
+  // Hence the CSS is provided by my_theme.
   $path = drupal_get_path('theme', 'my_theme');
 
   // Modify the default skin's name and description.

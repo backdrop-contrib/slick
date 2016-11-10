@@ -30,7 +30,8 @@
 
 .slick-wrapper,
 .slick,
-.slick * {
+.slick *,
+body.adminimal-theme .slick * {
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   -o-box-sizing: border-box;
@@ -415,7 +416,7 @@ img[data-lazy] {
   margin-left: -15px;
   margin-top: -15px;
   font-size: 0;
-  z-index: 9;
+  z-index: 22;
   -webkit-animation: rotateplane 1.2s infinite ease-in-out;
   animation: rotateplane 1.2s infinite ease-in-out;
 }

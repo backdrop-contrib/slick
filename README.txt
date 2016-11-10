@@ -57,7 +57,8 @@ VERSIONS
 7.x-2.x supports exportable optionsets via CTools.
 Be sure to run update, when upgrading from 7.x-1.x to 7.x-2.x.
 
-7.x-2.x supports Slick 1.5 above.
+7.x-2.1+ supports Slick 1.6 above.
+7.x-2.0- supports Slick 1.5.9 below.
 Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.
 
 
@@ -201,14 +202,16 @@ Optional skins:
 - Full width
   Adds additional wrapper to wrap overlay audio/video and captions properly.
   This is designated for large slider in the header or spanning width to window
-  edges at least 1170px width for large monitor.
+  edges at least 1170px width for large monitor. To have a custom full width
+  skin, simply prefix your skin with "full", e.g.: fullstage, fullwindow, etc.
 
 - Boxed
   Added a 0 60px margin to slick-list container and hide neighboring slides.
   An alternative to centerPadding which still reveals neighboring slides.
 
 - Split
-  Caption and image/media are split half, and placed side by side.
+  Caption and image/media are split half, and placed side by side. This requires
+  any layout containing "split", otherwise useless.
 
 - Box carousel
   Added box-shadow to the carousel slides, multiple visible slides. Use
@@ -371,6 +374,8 @@ KNOWN ISSUES
     obvious if slidesToShow > 1. Simply disable it if not desired.
   o As of v1.6.0, the parent of nested slicks is not lazyloading ondemand
     correctly, settings it to progressive will do till the fix is there.
+  o If thumbnail display is Infinite, the main one must be infinite too, else
+    incorrect syncing.
 
 
 PERFORMANCE

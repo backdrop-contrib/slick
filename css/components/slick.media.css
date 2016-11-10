@@ -88,6 +88,10 @@
   top: 50%;
 }
 
+.media--loading .media-icon--play::before {
+  display: none;
+}
+
 .media-icon--play:hover {
   border-color: #ff6d2c;
 }

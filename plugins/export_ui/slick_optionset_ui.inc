@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file is no longer in use.
+ * This file is no longer in use, and only relevant for Beta1 below.
  *
  * This file is kept to avoid sudden WSOD, or errors during update process, when
  * the process is reversed: running /update.php prior to clearing cache.
