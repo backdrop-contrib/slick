@@ -1,6 +1,7 @@
 
 Slick 7.x-2.0-dev, 2016-11-10
 -----------------------------
+- #2811703 by GeduR: Remove unused $slick_options variable SlickUi.class.php.
 - Optimized slick Grid, and made it re-usable for non-list items.
 - Fixed for Views preview with adminimal-theme and slick Grid.
 - Fixed for broken grid display CSS being overridden by Seven theme.

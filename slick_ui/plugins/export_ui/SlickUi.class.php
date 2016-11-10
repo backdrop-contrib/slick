@@ -21,9 +21,7 @@ class SlickUi extends ctools_export_ui {
 
     $module_path = drupal_get_path('module', 'slick');
     $optionset = $form_state['item'];
-
     $options = $optionset->options;
-    $slick_options = slick_get_options();
 
     if (variable_get('slick_admin_css', TRUE)) {
       $form['#attached']['library'][] = array('slick_ui', 'slick.ui');
