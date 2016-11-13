@@ -247,10 +247,8 @@ class SlickAdmin implements SlickAdminInterface {
 
     if (!isset($form['image_style'])) {
       $this->blazyAdmin->imageStyleForm($form, $definition);
-    }
 
-    if (isset($form['image_style'])) {
-      $form['image_style']['#description'] = $this->t('The main image style. This will be treated as the fallback image, which is normally smaller, if Breakpoints are provided, and if <strong>Use CSS background</strong> is disabled. Otherwise this is the only image displayed. If Slick media module installed, this determines iframe sizes to have various iframe dimensions with just a single file entity view mode, relevant for a mix of image and multimedia to get a consistent display.');
+      $form['image_style']['#description'] = $this->t('The main image style. This will be treated as the fallback image, which is normally smaller, if Breakpoints are provided, and if <strong>Use CSS background</strong> is disabled. Otherwise this is the only image displayed. Ignored by Responsive image option.');
     }
 
     if (isset($form['thumbnail_style'])) {

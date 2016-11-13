@@ -1,4 +1,8 @@
 
+Slick 8.x-1.0-dev, 2016-11-14
+-----------------------------
+- Fixed for colorbox regression with the recent JS move into Blazy.
+
 Slick 8.x-1.0-dev, 2016-11-09
 -----------------------------
 - A few cleanups.
