@@ -32,7 +32,7 @@
      * @name set
      *
      * @param {string} method
-     *   The method to apply to .slide__slider element.
+     *   The method to apply to .slick__slider element.
      */
     set: function (method) {
       var $box = $.colorbox.element();

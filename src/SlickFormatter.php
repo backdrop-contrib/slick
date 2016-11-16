@@ -74,16 +74,4 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     return $thumbnail;
   }
 
-  /**
-   * Overrides BlazyFormatterManager::getMediaSwitch().
-   */
-  public function getMediaSwitch(array &$element = []) {
-    parent::getMediaSwitch($element);
-    $settings = $element['#settings'];
-
-    if (isset($element['#url_attributes'])) {
-      $element['#url_attributes']['class'] = ['slick__' . $settings['media_switch'], 'litebox'];
-    }
-  }
-
 }
