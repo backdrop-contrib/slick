@@ -55,9 +55,9 @@ function template_preprocess_slick(&$variables) {
       $attributes['data-blazy'] = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
     }
 
-    // Supports Photoswipe integration.
-    if ($settings['media_switch'] == 'photoswipe') {
-      $attributes['class'][] = 'photoswipe-gallery';
+    if (!empty($settings['media_switch']) && empty($settings['grid'])) {
+      $switch = str_replace('_', '-', $settings['media_switch']);
+      $attributes['data-' . $switch . '-gallery'] = TRUE;
     }
   }
 
@@ -187,6 +187,11 @@ function template_preprocess_slick_grid(&$variables) {
   // optional Style: CSS3 Columns, and probably future flexbox.
   if (!empty($settings['style']) && $settings['style'] != 'slick') {
     $variables['grid_id'] = $settings['style'];
+  }
+
+  if (!empty($settings['media_switch'])) {
+    $switch = str_replace('_', '-', $settings['media_switch']);
+    $variables['attributes']['data-' . $switch . '-gallery'] = TRUE;
   }
 
   $variables['items'] = [];

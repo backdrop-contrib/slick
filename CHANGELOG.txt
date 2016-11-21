@@ -1,4 +1,8 @@
 
+Slick 8.x-1.0-dev, 2016-11-21
+-----------------------------
+- Split lightbox gallery identifier into Grid wrapper, if provided.
+
 Slick 8.x-1.0-dev, 2016-11-17
 -----------------------------
 - Removed the no-longer needed SlickFormatter::getMediaSwitch() overrides as

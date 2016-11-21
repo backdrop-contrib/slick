@@ -43,19 +43,19 @@
 
 /** Draggable. */
 .draggable {
-  cursor: grab;
   cursor: -webkit-grab;
+  cursor: grab;
 }
 
 .draggable:active {
-  cursor: grabbing;
   cursor: -webkit-grabbing;
+  cursor: grabbing;
 }
 
 .draggable:active a,
 .draggable:active .slide__caption {
-  cursor: grabbing;
   cursor: -webkit-grabbing;
+  cursor: grabbing;
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
