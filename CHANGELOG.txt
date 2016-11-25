@@ -1,4 +1,8 @@
 
+Slick 8.x-1.0-dev, 2016-11-26
+-----------------------------
+- Fixed for broken iframes when Aspect ratio is not provided.
+
 Slick 8.x-1.0-dev, 2016-11-21
 -----------------------------
 - Split lightbox gallery identifier into Grid wrapper, if provided.

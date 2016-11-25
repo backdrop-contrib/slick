@@ -10,10 +10,13 @@
   box-sizing: border-box;
 }
 
+.slick img {
+  height: auto;
+}
+
 .slick img,
 .slick iframe {
   border: 0;
-  height: auto;
   max-width: 100%;
 }
 
@@ -220,11 +223,14 @@
   pointer-events: auto;
 }
 
-/* Overrides too tiny bullets from core slick.css */
+/* Provides decent dots if core slick-theme.css is disabled. */
 .slick-dots li  {
   margin-bottom: 5px;
+  display: inline-block;
+  vertical-align: top;
 }
 
+/* Overrides too tiny bullets from core slick.css.*/
 .slick-dots li button::before {
   font-size: 12px;
   font-size: 0.75rem;
