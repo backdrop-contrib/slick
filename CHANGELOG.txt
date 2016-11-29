@@ -1,4 +1,9 @@
 
+Slick 8.x-1.0-dev, 2016-11-29
+-----------------------------
+- Marked it Beta5.
+- A few cleanups.
+
 Slick 8.x-1.0-dev, 2016-11-26
 -----------------------------
 - Fixed for broken iframes when Aspect ratio is not provided.

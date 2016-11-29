@@ -51,8 +51,6 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     }
 
     $settings['overridables'] = array_filter($settings['overridables']);
-    // @todo: Enable after proper checks.
-    // $settings = array_filter($settings);
   }
 
   /**
