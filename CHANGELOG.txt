@@ -1,6 +1,7 @@
 
 Slick 8.x-1.0-dev, 2016-12-06
 -----------------------------
+- Converted the rest of Simpletest methods into PHPUnit's.
 - Fixed for coding standards.
 - Ported Optimized option to clean out defaults from the stored settings.
 - Added tests.

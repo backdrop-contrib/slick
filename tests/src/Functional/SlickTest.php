@@ -78,22 +78,22 @@ class SlickTest extends BrowserTestBase {
 
     // Login as the Slick admin user.
     $this->drupalLogin($this->slickAdminUser);
-    $testsets = ['testset1', 'testset2'];
+    $defaults = ['testset1', 'testset2'];
 
     // 1. Test creating a new optionset with default settings.
-    foreach ($testsets as $name) {
+    foreach ($defaults as $name) {
       $optionset = Slick::create(['name' => $name, 'label' => $name]);
       $this->assertTrue($optionset->id() == $name, format_string('Optionset created: @name', ['@name' => $optionset->id()]));
-      $this->assertFalse(empty($optionset->getOptions()), 'Create optionset works.');
+      $this->assertNotEmpty($optionset->getOptions(), 'Create optionset works.');
 
       // Save the optionset to the database.
       $optionset = $optionset->save();
-      $this->assertFalse(FALSE === $optionset, 'Optionset saved to database.');
+      $this->assertNotNull($optionset, 'Optionset saved to database.');
 
       // Read the values from the database.
       $optionset = Slick::load($name);
       $this->assertNotNull($optionset, format_string('Loaded optionset: @name', ['@name' => $optionset->id()]));
-      $this->assertEquals($name, $optionset->id(), format_string('Loaded name matches: @name', ['@name' => $optionset->id()]));
+      $this->assertSame($name, $optionset->id(), format_string('Loaded name matches: @name', ['@name' => $optionset->id()]));
 
       // Ensure defaults match the custom saved data when no overrides.
       $default = Slick::create();
@@ -107,7 +107,7 @@ class SlickTest extends BrowserTestBase {
           '@value' => $read_value,
           '@new_value' => $read_new_value,
         ]);
-        $this->assertEquals($value, $new_value, $message);
+        $this->assertSame($value, $new_value, $message);
       }
     }
 
@@ -119,9 +119,9 @@ class SlickTest extends BrowserTestBase {
 
     // 3. Test optionsets are loaded correctly.
     foreach ($optionsets as $key => $optionset) {
-      $this->assertTrue($optionset->id(), 'The loaded optionset has a defined machine.');
-      $this->assertTrue($optionset->label(), 'The loaded optionset has a defined human readable name.');
-      $this->assertTrue(!empty($optionset->getSettings()), 'The loaded optionset has a defined array of settings.');
+      $this->assertNotEmpty($optionset->id(), 'The loaded optionset has a defined machine.');
+      $this->assertNotEmpty($optionset->label(), 'The loaded optionset has a defined human readable name.');
+      $this->assertNotEmpty($optionset->getSettings(), 'The loaded optionset has a defined array of settings.');
     }
 
     // Update the optionset.
@@ -129,7 +129,7 @@ class SlickTest extends BrowserTestBase {
     $test_options = $test_options['valid'];
 
     // Load one of the test optionset.
-    $test = $testsets[1];
+    $test = $defaults[1];
     $optionset = Slick::load($test);
 
     // 4. Test comparing saved options different from the set2 options.
@@ -143,7 +143,8 @@ class SlickTest extends BrowserTestBase {
         '@saved_value' => $read_saved_value,
         '@value' => $read_value,
       ]);
-      $this->assertNotEqual($saved_value, $value, $message);
+
+      $this->assertNotEquals($value, $saved_value, $message);
     }
 
     // Union the saved values to use the overrides now.
@@ -169,11 +170,11 @@ class SlickTest extends BrowserTestBase {
         '@saved_value' => $read_saved_value,
         '@value' => $read_value,
       ]);
-      $this->assertEquals($saved_value, $value, $message);
+      $this->assertSame($saved_value, $value, $message);
     }
 
     // Delete the optionset.
-    $this->assertTrue($optionset->id(), format_string('Optionset @name exists and will be deleted.', ['@name' => $test]));
+    $this->assertNotEmpty($optionset->id(), format_string('Optionset @name exists and will be deleted.', ['@name' => $test]));
 
     $optionset->delete();
   }
@@ -190,6 +191,7 @@ class SlickTest extends BrowserTestBase {
     $this->verifyPages(['admin/config/media/slick/add'], 200);
 
     // 1. Test the optionset add form.
+    $assert = $this->assertSession();
     $label = 'Testset';
     $id = 'testset';
     $optionset = [
@@ -199,21 +201,21 @@ class SlickTest extends BrowserTestBase {
 
     // Make a POST request to admin/config/media/slick/add.
     $this->verifySubmitForm('admin/config/media/slick/add', $optionset, t('Save'), 200);
-    $this->assertRaw(format_string('slick.optionset %label has been added.', ['%label' => $label]), 'Slick added successfully.');
+    $assert->pageTextContains(format_string('slick.optionset @label has been added.', ['@label' => $label]));
 
     // Confirms that optionset is already created, a unique name is required.
     $this->verifySubmitForm('admin/config/media/slick/add', $optionset, t('Save'), 200);
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'), 'Blocked the creation of duplicate optionset name.');
+    $assert->pageTextContains(t('The machine-readable name is already in use. It must be unique.'));
 
     // 2. Test the optionset delete form.
     $testset = Slick::load($id);
     $this->assertNotNull($testset);
     $this->verifyPages(['admin/config/media/slick/' . $id . '/delete'], 200);
-    $this->assertRaw(format_string('Are you sure you want to delete the Slick optionset %label?', ['%label' => $label]));
+    $assert->pageTextContains(format_string('Are you sure you want to delete the Slick optionset @label?', ['@label' => $label]));
 
     // Delete the optionset.
     $this->verifySubmitForm('admin/config/media/slick/' . $id . '/delete', [], t('Delete'), 200);
-    $this->assertRaw(format_string('The Slick optionset %label has been deleted', ['%label' => $label]), 'Slick deleted successfully.');
+    $assert->pageTextContains(format_string('The Slick optionset @label has been deleted', ['@label' => $label]));
 
     // 3. Test that the deleted optionset no longer exists.
     $testset = Slick::load($id);
@@ -222,39 +224,42 @@ class SlickTest extends BrowserTestBase {
     // 4. Test the optionset overrides.
     $options = $this->getOptionsets();
 
-    foreach ($options['valid'] as $edit) {
-      // Attempts to save each option value.
-      $xpath = [];
-      foreach ($edit as $key => $value) {
+    foreach ($options['valid'] as $set => $values) {
+      $edit = [];
+      foreach ($values as $key => $value) {
         // @todo: Hidden field not found.
         // Behat\Mink\Exception\ElementNotFoundException: Form field with
         // id|name|label|value "options[settings][cssEaseBezier]" not found.
         if ($key == 'cssEaseBezier') {
           continue;
         }
-        $xpath["options[settings][$key]"] = $value;
+
+        $edit["options[settings][{$key}]"] = $value;
       }
+      $this->verifySubmitForm('admin/config/media/slick/default', $edit, t('Save'), 200, 'Default optionset overriden.');
 
-      $this->verifySubmitForm('admin/config/media/slick/default', $xpath, t('Save'), 200, 'Default optionset overriden.');
+      // 5. Test the previous saved/ overriden values loaded into the form.
+      // Hence the optionset set2 has different values.
+      if ($set == 'set2') {
+        $this->verifyPages(['admin/config/media/slick/default'], 200);
 
-      // 5. Test saved/overriden values loaded into form.
-      $this->verifyPages(['admin/config/media/slick/default'], 200);
+        foreach ($values as $key => $value) {
+          // @todo: Hidden field not found, and deal with checkboxes.
+          // Behat\Mink\Exception\ElementNotFoundException: Form field with
+          // id|name|label|value "options[settings][cssEaseBezier]" not found.
+          if ($key == 'cssEaseBezier' || is_bool($value)) {
+            continue;
+          }
 
-      foreach ($edit as $v => $value) {
-        // @todo: Hidden field not found.
-        // Behat\Mink\Exception\ElementNotFoundException: Form field with
-        // id|name|label|value "options[settings][cssEaseBezier]" not found.
-        if ($v == 'cssEaseBezier') {
-          continue;
+          // Assert that the field has an overriden value.
+          $assert->fieldValueEquals("options[settings][{$key}]", $value);
         }
-
-        // Assert that a field exists in the current page.
-        $read_value = $this->getPrintedValue($value);
-        $this->assertFieldByName("options[settings][$v]", $value, format_string("@v:@value inserted correctly.", [
-          '@v' => $v,
-          '@value' => $read_value,
-        ]));
       }
+    }
+
+    // 6. Assert that a field does not exist in the current page.
+    foreach ($options['error'] as $key => $value) {
+      $assert->elementNotExists('css', '[name="options[settings][' . $key . ']"]');
     }
   }
 
@@ -276,7 +281,7 @@ class SlickTest extends BrowserTestBase {
     ];
 
     // Invalid edge cases.
-    $error = [];
+    $error = ['invalidOption' => TRUE];
 
     return ['valid' => $valid, 'error' => $error];
   }
