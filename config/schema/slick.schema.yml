@@ -199,6 +199,9 @@ slick.optionset.*:
     breakpoints:
       type: integer
       label: 'Breakpoints'
+    optimized:
+      type: boolean
+      label: 'Optimized'
     options:
       type: mapping
       label: 'Options'

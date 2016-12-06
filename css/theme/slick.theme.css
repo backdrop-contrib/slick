@@ -224,7 +224,7 @@
 }
 
 /* Provides decent dots if core slick-theme.css is disabled. */
-.slick-dots li  {
+.slick-dots li {
   margin-bottom: 5px;
   display: inline-block;
   vertical-align: top;

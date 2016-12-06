@@ -260,7 +260,7 @@ HTML STRUCTURE
 --------------------------------------------------------------------------------
 Note, non-BEM classes are added by JS.
 
-<div class="slick slick-processed">
+<div class="slick">
   <div class="slick__slider slick-initialized slick-slider">
     <div class="slick__slide"></div>
   </div>

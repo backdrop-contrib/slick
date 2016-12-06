@@ -140,7 +140,13 @@ class SlickForm extends SlickFormBase {
           '#title'      => $responsives['title'],
           '#open'       => FALSE,
           '#group'      => 'responsive',
-          '#attributes' => ['class' => ['details--responsive', 'details--breakpoint-' . $i, 'has-tooltip']],
+          '#attributes' => [
+            'class' => [
+              'details--responsive',
+              'details--breakpoint-' . $i,
+              'has-tooltip',
+            ],
+          ],
         ];
 
         unset($responsives['title'], $responsives['type']);
@@ -181,8 +187,14 @@ class SlickForm extends SlickFormBase {
                 '#title'      => $responsive['title'],
                 '#open'       => TRUE,
                 '#group'      => $i,
-                '#attributes' => ['class' => ['details--settings', 'details--breakpoint-' . $i, 'has-tooltip']],
                 '#states'     => ['visible' => [':input[name*="[responsive][' . $i . '][unslick]"]' => ['checked' => FALSE]]],
+                '#attributes' => [
+                  'class' => [
+                    'details--settings',
+                    'details--breakpoint-' . $i,
+                    'has-tooltip',
+                  ],
+                ],
               ];
 
               unset($responsive['title'], $responsive['type']);
@@ -445,11 +457,12 @@ class SlickForm extends SlickFormBase {
         'description' => $this->t('Randomize the slide display, useful to manipulate cached blocks.'),
       ];
 
+      $responds = ['window', 'slider', 'min'];
       $elements['respondTo'] = [
         'type'        => 'select',
         'title'       => $this->t('Respond to'),
         'description' => $this->t("Width that responsive object responds to. Can be 'window', 'slider' or 'min' (the smaller of the two)."),
-        'options'     => array_combine(['window', 'slider', 'min'], ['window', 'slider', 'min']),
+        'options'     => array_combine($responds, $responds),
       ];
 
       $elements['rtl'] = [
@@ -546,7 +559,7 @@ class SlickForm extends SlickFormBase {
         'type'         => 'select',
         'options'      => $this->getCssEasingOptions(),
         'empty_option' => $this->t('- None -'),
-        'description'  => $this->t('If provided, this will override the CSS ease with the pre-defined CSS easings based on <a href="@ceaser">CSS Easing Animation Tool</a>. Leave it empty to use your own CSS ease.',['@ceaser' => 'http://matthewlein.com/ceaser/']),
+        'description'  => $this->t('If provided, this will override the CSS ease with the pre-defined CSS easings based on <a href="@ceaser">CSS Easing Animation Tool</a>. Leave it empty to use your own CSS ease.', ['@ceaser' => 'http://matthewlein.com/ceaser/']),
       ];
 
       $elements['useTransform'] = [
@@ -623,6 +636,7 @@ class SlickForm extends SlickFormBase {
    */
   public function cleanFormElements() {
     $excludes = [
+      'accessibility',
       'appendArrows',
       'appendDots',
       'asNavFor',

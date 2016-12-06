@@ -13,7 +13,7 @@ class SlickSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'slick_settings_form';
   }
 

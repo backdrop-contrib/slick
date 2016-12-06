@@ -13,7 +13,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
   /**
    * {@inheritdoc}
    */
-  public function buildSettings(array &$build = [], $items) {
+  public function buildSettings(array &$build, $items) {
     $settings = &$build['settings'];
 
     // Prepare integration with Blazy.

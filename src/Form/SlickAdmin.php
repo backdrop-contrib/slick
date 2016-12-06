@@ -20,14 +20,14 @@ class SlickAdmin implements SlickAdminInterface {
   /**
    * The blazy admin service.
    *
-   * @var \Drupal\blazy\Form\BlazyAdminInterface.
+   * @var \Drupal\blazy\Form\BlazyAdminInterface
    */
   protected $blazyAdmin;
 
   /**
    * The slick manager service.
    *
-   * @var \Drupal\slick\SlickManagerInterface.
+   * @var \Drupal\slick\SlickManagerInterface
    */
   protected $manager;
 

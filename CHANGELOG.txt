@@ -1,4 +1,10 @@
 
+Slick 8.x-1.0-dev, 2016-12-06
+-----------------------------
+- Fixed for coding standards.
+- Ported Optimized option to clean out defaults from the stored settings.
+- Added tests.
+
 Slick 8.x-1.0-dev, 2016-11-29
 -----------------------------
 - Marked it Beta5.
