@@ -267,3 +267,7 @@ img[data-lazy] {
   display: inline-block;
   vertical-align: top;
 }
+
+.slick--less .draggable {
+  cursor: default;
+}

@@ -48,12 +48,13 @@ function template_preprocess_slick(&$variables) {
     $settings[$key] = isset($js[$key]) ? $js[$key] : $default;
   }
 
-  $settings['lazy'] = isset($settings['lazy']) ? $settings['lazy'] : $js['lazyLoad'];
-
   // Blazy can still lazyload an unslick.
+  $settings['lazy'] = empty($settings['lazy']) ? $js['lazyLoad'] : $settings['lazy'];
   if ($display != 'thumbnail') {
     if ($settings['lazy'] == 'blazy' || !empty($settings['blazy'])) {
-      $js['lazyLoad'] = 'blazy';
+      if ($settings['lazy'] == 'blazy') {
+        $js['lazyLoad'] = 'blazy';
+      }
       $attributes['data-blazy'] = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
     }
 
@@ -223,7 +224,7 @@ function template_preprocess_slick_grid(&$variables) {
 /**
  * Prepares variables for slick-image.html.twig template.
  *
- * @todo: Decide if to keep, or drop this for just blazy.html.twig.
+ * @deprecated: Just use blazy.html.twig to reduce function calls.
  */
 function template_preprocess_slick_image(&$variables) {
   template_preprocess_blazy($variables);

@@ -269,6 +269,12 @@ abstract class SlickFormBase extends EntityForm {
     foreach ($defaults as $name => $value) {
       if (isset($settings[$name])) {
         $cast = gettype($defaults[$name]);
+
+        // Change float to integer if value is no longer float.
+        if ($name == 'edgeFriction' && $settings[$name] == '1') {
+          $cast = 'integer';
+        }
+
         settype($settings[$name], $cast);
       }
     }
@@ -387,6 +393,7 @@ abstract class SlickFormBase extends EntityForm {
    */
   public function getOptionsRequiredByTemplate() {
     $options = [
+      'lazyLoad'     => 'ondemand',
       'slidesToShow' => 1,
     ];
 

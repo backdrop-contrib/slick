@@ -1,4 +1,11 @@
 
+Slick 8.x-1.0-dev, 2016-12-09
+-----------------------------
+- Fixed for the new Optimized option consequences.
+- Fixed for edgeFriction when it is integer, no longer double.
+- Improved message for slick_requirements().
+- Deprecated theme_slick_image() for theme_blazy() to reduce function calls.
+
 Slick 8.x-1.0-dev, 2016-12-06
 -----------------------------
 - Converted the rest of Simpletest methods into PHPUnit's.

@@ -155,7 +155,8 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    * {@inheritdoc}
    */
   public function getSettings() {
-    return isset($this->options['settings']) ? $this->options['settings'] : [];
+    // With the Optimized options, all defaults are cleaned out, merge em.
+    return isset($this->options['settings']) ? array_merge(self::defaultSettings(), $this->options['settings']) : self::defaultSettings();
   }
 
   /**
@@ -170,7 +171,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    * {@inheritdoc}
    */
   public function getSetting($setting_name) {
-    return isset($this->options['settings'][$setting_name]) ? $this->options['settings'][$setting_name] : NULL;
+    return isset($this->getSettings()[$setting_name]) ? $this->getSettings()[$setting_name] : NULL;
   }
 
   /**
@@ -186,7 +187,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
   public static function create(array $values = []) {
     $optionset = parent::create($values);
 
-    $optionset->setSettings($optionset->getSettings() + self::defaultSettings());
+    $optionset->setSettings($optionset->getSettings());
     return $optionset;
   }
 
@@ -227,7 +228,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    */
   public function removeDefaultValues(array $js) {
     $config   = [];
-    $defaults = $this->load('default')->getSettings();
+    $defaults = self::defaultSettings();
 
     // Remove wasted dependent options if disabled, empty or not.
     $this->removeWastedDependentOptions($js);

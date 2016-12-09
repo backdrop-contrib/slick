@@ -17,14 +17,14 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     $settings = &$build['settings'];
 
     // Prepare integration with Blazy.
-    $settings['item_id']          = 'slide';
-    $settings['namespace']        = 'slick';
-    $settings['theme_hook_image'] = isset($settings['theme_hook_image']) ? $settings['theme_hook_image'] : 'slick_image';
+    $settings['item_id']   = 'slide';
+    $settings['namespace'] = 'slick';
 
+    // Pass basic info to parent::buildSettings().
     parent::buildSettings($build, $items);
 
-    $optionset_name     = $settings['optionset'] ?: 'default';
-    $build['optionset'] = Slick::load($optionset_name);
+    // Slick specific stuffs.
+    $build['optionset'] = Slick::load($settings['optionset']);
 
     // Ensures deleted optionset while being used doesn't screw up.
     if (empty($build['optionset'])) {
