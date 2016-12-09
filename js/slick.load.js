@@ -51,6 +51,10 @@
           t.slick("unslick");
           $(".slide", t).removeClass("slide--loading");
         }
+        else {
+          // Add helper class for arrow visibility as they are outside slider.
+          $(that).addClass('slick--initialized');
+        }
       });
     },
 
@@ -147,6 +151,7 @@
      * Updates arrows visibility based on available options.
      */
     setPosition: function (t, a, o, slick) {
+      var less = slick.slideCount <= o.slidesToShow;
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
       // https://github.com/kenwheeler/slick/pull/1846
@@ -156,8 +161,15 @@
           slick.$list.css("padding", "");
         }
 
+        // @todo: Remove temp fix for when total <= slidesToShow.
+        // Ensures the fix doesn't break responsive options.
+        // @see https://github.com/kenwheeler/slick/issues/262
+        if (less && slick.$slideTrack.width() <= slick.$slider.width()) {
+          slick.$slideTrack.css({left: '', transform: ''});
+        }
+
         // Do not remove arrows, to allow responsive have different options.
-        return slick.slideCount <= o.slidesToShow || o.arrows === false
+        return less || o.arrows === false
           ? a.addClass("element-hidden") : a.removeClass("element-hidden");
       }
     },

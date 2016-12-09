@@ -102,6 +102,12 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = str_replace('_', '-', 'slick--view--' . $settings['view_name'] . '--' . $settings['current_view_mode']);
   }
 
+  // @todo: Remove temp fix for when total <= slidesToShow.
+  // @see https://github.com/kenwheeler/slick/issues/262
+  if ($settings['count'] <= $settings['slidesToShow']) {
+    $attributes['class'][] = 'slick--less';
+  }
+
   // Consistent styling is always needed even for an unslick.
   if ($skin) {
     foreach (array('boxed', 'split') as $key) {
@@ -350,7 +356,7 @@ function template_process_slick_grid(&$variables) {
  *
  * @ingroup themeable
  */
-function theme_slick_image($variables) {
+function theme_slick_image(array $variables) {
   $element  = $variables['element'];
   $elements = array(
     'captions',

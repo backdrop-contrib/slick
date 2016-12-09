@@ -81,14 +81,14 @@ function slick_format_media($items, $langcode, array &$settings) {
       $media = $thumbnails[$key];
 
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-      $slide['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $media);
+      $thumb['slide'] = slick_get_thumbnail($settings['thumbnail_style'], $media);
 
       if ($has_caption && $caption = field_get_items('file', $file, $settings['thumbnail_caption'])) {
-        $slide['caption']['data']['#markup'] = filter_xss($caption[0]['value']);
+        $thumb['caption']['data']['#markup'] = filter_xss($caption[0]['value']);
       }
 
-      $build['thumb'][$key] = $slide;
-      unset($file, $slide);
+      $build['thumb'][$key] = $thumb;
+      unset($file, $thumb);
     }
   }
 

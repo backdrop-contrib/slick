@@ -58,7 +58,7 @@ function slick_get_global_default_settings() {
  * @return array
  *   The renderable array formatted for the slick_image().
  */
-function slick_get_image($settings = array(), &$media = array(), $item = array()) {
+function slick_get_image(array $settings = array(), array &$media = array(), array $item = array()) {
   // The $media can be core image, file image/video/audio, or atom reference.
   // Different fields have different signatures, hence simplify em all.
   $media['type'] = empty($media['type']) ? 'image' : $media['type'];
@@ -130,7 +130,7 @@ function slick_get_media_switch(&$image = array(), $file = array(), $settings = 
       $url = !empty($settings['box_style']) ? image_style_url($settings['box_style'], $item['uri']) : file_create_url($item['uri']);
     }
 
-    $classes  = array('slick__' . $switch, 'litebox');
+    $classes = array('slick__' . $switch, 'litebox');
     if ($switch == 'colorbox' && $settings['count'] > 1) {
       $json['rel'] = $settings['id'];
     }
@@ -198,7 +198,7 @@ function slick_build_captions($item, $file = array(), $settings = array()) {
 
     case 'alt_title':
     case 'title_alt':
-      $alt   = $alt ? '<p>' . strip_tags($alt) . '</p>' : '';
+      $alt     = $alt ? '<p>' . strip_tags($alt) . '</p>' : '';
       $title   = $title ? '<h2>' . strip_tags($title) . '</h2>' : '';
       $caption = $settings['box_caption'] == 'alt_title' ? $alt . $title : $title . $alt;
       break;
@@ -259,7 +259,6 @@ function slick_build_grids(array $build, &$settings) {
     $settings['current_item']    = 'grid';
     $settings['count']           = 2;
 
-    // Displays all items if unslick is enforced such as plain grid to lightbox.
     $slide['slide'] = array(
       '#theme'    => 'slick_grid',
       '#items'    => $build,

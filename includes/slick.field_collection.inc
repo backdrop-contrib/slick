@@ -179,7 +179,7 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
           $file = (object) $item;
 
           // Needed settings: type scheme image_style uri view_mode.
-          // Extracts media data for: embed_url, box_height, box_width, image uri.
+          // Extracts media data for: embed_url, box_height, box_width, uri.
           slick_extract_media_data($overset, $media, $file);
         }
 
@@ -238,7 +238,6 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
 
         $media['uri']   = $atom->file_source;
         $media['type']  = $item->type == 'slick' ? 'image' : $item->type;
-
         $overset['sid'] = $sid;
 
         $overlays[$i]['item'] = $thumbnail;
@@ -271,22 +270,22 @@ function _slick_build_fc_overlay(&$settings, $wrapper, $options = array()) {
 
     // Process individual slick overlay.
     $element = $js = array();
-    foreach ($slides as $idx => $item) {
+    foreach ($slides as $delta => $item) {
       $slide = array();
       $media = $item['media'];
 
-      $nested_settings = array_merge($item['settings'], $nested_settings);
-      $nested_settings['delta'] = $idx;
+      $item_settings = array_merge($item['settings'], $nested_settings);
+      $item_settings['delta'] = $delta;
 
       if (empty($settings['nested_slick'])) {
-        $idx = 0;
+        $delta = 0;
       }
 
       // Image with picture, lazyLoad, and lightbox supports.
-      $slide['slide'] = slick_get_image($nested_settings, $media, $item['item']);
-      $slide['settings'] = $nested_settings;
+      $slide['slide'] = slick_get_image($item_settings, $media, $item['item']);
+      $slide['settings'] = $item_settings;
 
-      $element[$idx] = $slide;
+      $element[$delta] = $slide;
       unset($slide);
     }
 

@@ -50,14 +50,31 @@ body.adminimal-theme .slick * {
   max-width: 100%;
 }
 
+.slick {
+  max-width: 100%;
+  position: relative;
+}
+
 .slick-initialized {
   overflow: visible;
 }
 
-.slick,
+/** Visibility fix for stacking slides during initialization. */
 .slick__slide {
   max-width: 100%;
+  position: absolute;
+  visibility: hidden;
+}
+
+/** Prevents collapsing container during initialization. */
+.slick__slide.slide--0 {
   position: relative;
+}
+
+.unslick .slick__slide,
+.slick-initialized .slick__slide {
+  position: relative;
+  visibility: visible;
 }
 
 /* Prevents collapsing slick when unslick like one item. */
@@ -73,6 +90,7 @@ body.adminimal-theme .slick * {
   z-index: 4;
 }
 
+/** Draggable cursors. */
 .draggable {
   cursor: grab;
   cursor: -webkit-grab;
@@ -380,16 +398,16 @@ img[data-lazy] {
   z-index: 0;
 }
 
-/* The lazyloaded element: IMG, IFRAME, DIV */
-.media--loading .media__element {
-  display: block;
-  opacity: 0;
+.media__element {
+  opacity: 1;
   -webkit-transition: opacity 500ms ease-in-out;
   transition: opacity 500ms ease-in-out;
 }
 
-.media--loaded .media__element {
-  opacity: 1;
+/* The lazyloaded element: IMG, IFRAME, DIV */
+.media--loading .media__element {
+  display: block;
+  opacity: 0;
 }
 
 /* Needed to display preloader with CSS BG image, otherwise hidden. */
@@ -434,6 +452,24 @@ img[data-lazy] {
 /* Prevents nested slicks from inheriting background images. */
 .slick--nested .media--background {
   background-image: none;
+}
+
+/** @todo: Remove temp fix for when total <= slidesToShow. */
+/** @see https://github.com/kenwheeler/slick/issues/262 */
+.slick--less .slick-track {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.slick--less .slick-slide {
+  float: none;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.slick--less .draggable {
+  cursor: default;
 }
 
 @media (min-width: 64em) {

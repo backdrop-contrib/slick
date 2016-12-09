@@ -28,7 +28,6 @@ class SlickUi extends ctools_export_ui {
       $form['#attached']['css'][] = $module_path . '/css/admin/slick.admin--vertical-tabs.css';
     }
 
-    // $form['#attributes']['class'][] = 'no-js';
     $form['#attributes']['class'][] = 'form--slick';
     $form['#attributes']['class'][] = 'form--compact';
     $form['#attributes']['class'][] = 'form--optionset';
@@ -630,11 +629,12 @@ class SlickUi extends ctools_export_ui {
         'type' => 'textfield',
       );
 
+      $lazies = array('anticipated', 'ondemand', 'progressive');
       $elements['lazyLoad'] = array(
         'title' => t('Lazy load'),
-        'description' => t("Set lazy loading technique. 'ondemand' will load the image as soon as you slide to it, 'progressive' loads one image after the other when the page loads. Note: dummy image is no good for ondemand. If ondemand fails to generate images, try progressive instead. Or use <a href='@url' target='_blank'>imageinfo_cache</a>. To share images for Pinterest, leave empty, otherwise no way to read actual image src.", array('@url' => '//www.drupal.org/project/imageinfo_cache')),
+        'description' => t("Set lazy loading technique. 'ondemand' will load the image as soon as you slide to it, 'progressive' loads one image after the other when the page loads. 'anticipated' preloads images, and requires Slick 1.6.1+. Note: dummy image is no good for ondemand. If ondemand fails to generate images, try progressive instead. Or use <a href='@url' target='_blank'>imageinfo_cache</a>. To share images for Pinterest, leave empty, otherwise no way to read actual image src.", array('@url' => '//www.drupal.org/project/imageinfo_cache')),
         'type' => 'select',
-        'options' => drupal_map_assoc(array('ondemand', 'progressive')),
+        'options' => drupal_map_assoc($lazies),
         'empty_option' => t('- None -'),
       );
 

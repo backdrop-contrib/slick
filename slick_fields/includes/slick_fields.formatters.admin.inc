@@ -209,7 +209,6 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
     elseif ($field_entity_type == 'field_collection_item') {
       // Complex slide layout is provided by FC alone.
       // Skip media file field as it is the main/ background media already.
-
       $elements['media_switch']['#title'] = t('Media overlay switcher');
       $elements['media_switch']['#description'] .= t('<br />Applied to overlay only.');
 

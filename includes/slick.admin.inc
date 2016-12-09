@@ -258,7 +258,7 @@ function slick_optionset_delete($optionset) {
  * @param int $breakpoints
  *   The number of breakpoints if specified.
  */
-function _slick_typecast_optionset(&$options = array(), $breakpoints = 0) {
+function _slick_typecast_optionset(array &$options = array(), $breakpoints = 0) {
   if (empty($options)) {
     return;
   }
@@ -839,7 +839,8 @@ function slick_get_admin_assets(array &$elements, $settings = array()) {
         $slick_path . '/css/admin/slick.admin--ui.css' => array('group' => CSS_THEME + 1),
         $slick_path . '/css/admin/slick.admin--ui--field.css' => array('group' => CSS_THEME + 1),
       );
-      $elements['#attached']['js'][]  = $slick_path . '/js/slick.admin.ui.min.js';
+
+      $elements['#attached']['js'][] = $slick_path . '/js/slick.admin.ui.min.js';
     }
   }
 

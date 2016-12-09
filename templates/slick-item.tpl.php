@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Default theme implementation for the individual Slick item/slide template.
@@ -23,9 +24,7 @@
       <div class="slide__caption"><?php print render($caption); ?></div>
     <?php endif; ?>
 
-  <?php
-    // Main slide may be grid items, nested slicks, or regular text/image/video.
-    else: ?>
+  <?php else: ?>
     <?php print $content_prefix; ?>
       <?php print $item_prefix; ?>
       <?php print render($item); ?>
@@ -40,7 +39,9 @@
           <?php endif; ?>
 
           <?php if (!empty($caption['data']) || !empty($caption['title']) || !empty($caption['alt'])): ?>
-            <?php if (!empty($caption['overlay'])): ?><div class="slide__data"><?php endif; ?>
+            <?php if (!empty($caption['overlay'])): ?>
+              <div class="slide__data">
+            <?php endif; ?>
 
             <?php if (!empty($caption['title'])): ?>
               <h2 class="slide__title"><?php print render($caption['title']); ?></h2>
@@ -58,7 +59,9 @@
               <div class="slide__link"><?php print render($caption['link']); ?></div>
             <?php endif; ?>
 
-            <?php if (!empty($caption['overlay'])): ?></div><?php endif; ?>
+            <?php if (!empty($caption['overlay'])): ?>
+              </div>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
         <?php print $title_suffix; ?>

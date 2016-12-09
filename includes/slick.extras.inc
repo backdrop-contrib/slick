@@ -17,63 +17,6 @@ function slick_is_media($scheme) {
 }
 
 /**
- * Gets a media URL from the rendered iframe already containing all the params.
- *
- * @deprecated for slick_extract_media_data().
- */
-function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
-  if (!slick_is_media($media['scheme'])) {
-    return;
-  }
-
-  // If a file has an invalid type, allow file_view_file() to work.
-  if (!file_type_is_enabled($file->type)) {
-    $file->type = file_get_type($file);
-  }
-
-  $media['type'] = empty($media['type']) ? $file->type : $media['type'];
-
-  $renderables = file_view_file($file, $settings['view_mode']);
-
-  // Only do the hard work if we do have a misconfigured file view mode.
-  // This is a fallback for the failing expected output when all weights are 0,
-  // and the non-supported schemes may screw up file_view_file().
-  if (!isset($renderables['#uri'])) {
-    $formatter = 'media_' . $media['scheme'] . '_' . $media['type'];
-    $renderables = array(
-      '#theme'   => $formatter,
-      '#uri'     => $file->uri,
-      '#options' => slick_load_media_settings($media['type'], $settings['view_mode'], $formatter),
-    );
-  }
-
-  // Are we dealing with INLINE or LIGHTBOX audio/video dimensions?
-  // LIGHTBOX videos need the actual video dimensions independent from images,
-  // hence we put them into box_height and box_width taken from the active file
-  // entity view mode as no custom settings for lightbox video dimensions, yet.
-  $media['box_height'] = $renderables['#options']['height'];
-  $media['box_width']  = $renderables['#options']['width'];
-
-  // On the contrary, allows various INLINE iframe dimensions based on the given
-  // image_style, good to re-use a single file view mode for various file host
-  // entity view modes, and a mix of image and media with consistent dimensions.
-  if (!empty($settings['image_style'])) {
-    $settings['content_attributes']['width']  = $media['width'];
-    $settings['content_attributes']['height'] = $media['height'];
-  }
-
-  $rendered_media = drupal_render($renderables);
-
-  if (!empty($rendered_media) && strpos($rendered_media, 'src') !== FALSE) {
-    $dom = new DOMDocument();
-    libxml_use_internal_errors(TRUE);
-    $dom->loadHTML($rendered_media);
-    $url = $dom->getElementsByTagName('iframe')->item(0)->getAttribute('src');
-    $media['embed_url'] = $url;
-  }
-}
-
-/**
  * Builds Youtube/ Vimeo overlay as file entity don't support nested file.
  */
 function slick_get_media_overlay($url, $media_id) {
@@ -331,4 +274,13 @@ function slick_color_brightness($hex, $steps) {
   $g_hex = str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
   $b_hex = str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
   return '#' . $r_hex . $g_hex . $b_hex;
+}
+
+/**
+ * Gets a media URL from the rendered iframe already containing all the params.
+ *
+ * @deprecated for slick_extract_media_data().
+ */
+function slick_get_media_url(array &$settings, array &$media, $file = NULL) {
+  slick_extract_media_data($settings, $media, $file);
 }
