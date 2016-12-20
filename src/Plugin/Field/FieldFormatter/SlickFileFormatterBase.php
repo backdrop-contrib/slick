@@ -77,13 +77,6 @@ abstract class SlickFileFormatterBase extends BlazyFileFormatterBase {
   }
 
   /**
-   * Builds the settings.
-   */
-  public function buildSettings() {
-    return $this->getSettings();
-  }
-
-  /**
    * Build the slick carousel elements.
    */
   public function buildElements(array &$build, $files) {

@@ -103,7 +103,6 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
     $definition = $this->getScopedFormElements();
 
     $this->admin()->buildSettingsForm($element, $definition);
-    $element['layout']['#access'] = FALSE;
     return $element;
   }
 
@@ -113,6 +112,8 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
   public function getScopedFormElements() {
     return [
       'current_view_mode' => $this->viewMode,
+      'no_layouts'        => TRUE,
+      'plugin_id'         => $this->getPluginId(),
       'settings'          => $this->getSettings(),
     ];
   }

@@ -78,7 +78,7 @@
         me.setPosition(t, a, o, slick);
       });
 
-      $('.media--loading', t).closest('.slide').addClass('slide--loading');
+      $('.media--loading', t).closest('.slide__content').addClass('is-loading');
 
       // Blazy integration.
       if (o.lazyLoad === 'blazy' && Drupal.blazy) {
@@ -138,8 +138,9 @@
     setBackground: function (img) {
       var $img = $(img);
       var $bg = $img.closest('.media--background');
+      var p = $img.closest('.slide') || $img.closest('.unslick');
 
-      $img.parents('[class*="loading"]').removeClass(function (index, css) {
+      $img.parentsUntil(p).removeClass(function (index, css) {
         return (css.match(/(\S+)loading/g) || []).join(' ');
       });
 
@@ -186,6 +187,8 @@
      */
     setPosition: function (t, a, o, slick) {
       var less = slick.slideCount <= o.slidesToShow;
+      var hide = less || o.arrows === false;
+
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
       if (t.attr('id') === slick.$slider.attr('id')) {
@@ -194,7 +197,7 @@
           slick.$list.css('padding', '');
         }
 
-        // @todo: Remove temp fix for when total <= slidesToShow.
+        // @todo: Remove temp fix for when total <= slidesToShow at 1.6.1+.
         // Ensures the fix doesn't break responsive options.
         // @see https://github.com/kenwheeler/slick/issues/262
         if (less && slick.$slideTrack.width() <= slick.$slider.width()) {
@@ -202,8 +205,7 @@
         }
 
         // Do not remove arrows, to allow responsive have different options.
-        return less || o.arrows === false
-          ? a.addClass('visually-hidden') : a.removeClass('visually-hidden');
+        return a[hide ? 'addClass' : 'removeClass']('visually-hidden');
       }
     },
 

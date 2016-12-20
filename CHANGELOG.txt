@@ -1,4 +1,9 @@
 
+Slick 8.x-1.0-dev, 2016-12-18
+-----------------------------
+- Added SlickEntityFormatterBase.php for base ER without field details.
+- A few cleanups: TWIG indentation, descriptions, default settings.
+
 Slick 8.x-1.0-dev, 2016-12-09
 -----------------------------
 - Fixed for the new Optimized option consequences.

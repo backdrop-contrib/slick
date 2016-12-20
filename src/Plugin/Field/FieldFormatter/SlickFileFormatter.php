@@ -19,7 +19,7 @@ class SlickFileFormatter extends SlickFileFormatterBase {
    * {@inheritdoc}
    */
   public function buildSettings() {
-    return ['blazy' => TRUE, 'theme_hook_image' => 'blazy'] + parent::getSettings();
+    return ['blazy' => TRUE] + parent::getSettings();
   }
 
   /**

@@ -77,15 +77,18 @@ class SlickAdmin implements SlickAdminInterface {
     $definition['optionsets']       = isset($definition['optionsets']) ? $definition['optionsets'] : $this->getOptionsetsByGroupOptions('main');
     $definition['skins']            = isset($definition['skins']) ? $definition['skins'] : $this->getSkinsByGroupOptions('main');
     $definition['responsive_image'] = isset($definition['responsive_image']) ? $definition['responsive_image'] : TRUE;
-    $definition['layouts']          = isset($definition['layouts']) ? array_merge($this->getLayoutOptions(), $definition['layouts']) : $this->getLayoutOptions();
+
+    if (empty($definition['no_layouts'])) {
+      $definition['layouts'] = isset($definition['layouts']) ? array_merge($this->getLayoutOptions(), $definition['layouts']) : $this->getLayoutOptions();
+    }
 
     $this->openingForm($form, $definition);
 
-    if (isset($definition['image_style_form']) && !isset($form['image_style'])) {
+    if (!empty($definition['image_style_form']) && !isset($form['image_style'])) {
       $this->imageStyleForm($form, $definition);
     }
 
-    if (isset($definition['media_switch_form']) && !isset($form['media_switch'])) {
+    if (!empty($definition['media_switch_form']) && !isset($form['media_switch'])) {
       $this->mediaSwitchForm($form, $definition);
     }
 
@@ -93,11 +96,11 @@ class SlickAdmin implements SlickAdminInterface {
       $this->gridForm($form, $definition);
     }
 
-    if (isset($definition['fieldable_form']) && !isset($form['image'])) {
+    if (!empty($definition['fieldable_form']) && !isset($form['image'])) {
       $this->fieldableForm($form, $definition);
     }
 
-    if (isset($definition['breakpoints'])) {
+    if (!empty($definition['breakpoints'])) {
       $this->blazyAdmin->breakpointsForm($form, $definition);
     }
 
@@ -225,7 +228,13 @@ class SlickAdmin implements SlickAdminInterface {
     $this->blazyAdmin->mediaSwitchForm($form, $definition);
 
     if (isset($form['media_switch'])) {
-      $form['media_switch']['#description'] = $this->t('Depends on the enabled supported modules, or has known integration with Slick.<ol><li>Link to content: for aggregated small slicks.</li><li>Image to iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li><li>Intense: image to fullscreen intense image.</li></ol> Try selecting "<strong>- None -</strong>" first before changing if trouble with this complex form states.');
+      $form['media_switch']['#description'] = $this->t('Depends on the enabled supported modules, or has known integration with Slick.<ol><li>Link to content: for aggregated small slicks.</li><li>Image to iframe: audio/video is hidden below image until toggled, otherwise iframe is always displayed, and draggable fails. Aspect ratio applies.</li><li>Colorbox.</li><li>Photobox. Be sure to select "Thumbnail style" for the overlay thumbnails.</li><li>Intense: image to fullscreen intense image.</li>');
+
+      if (!empty($definition['multimedia']) && isset($definition['fieldable_form'])) {
+        $form['media_switch']['#description'] .= ' ' . $this->t('<li>Image rendered by its formatter: image-related settings here will be ignored: breakpoints, image style, CSS background, aspect ratio, lazyload, etc. Only choose if needing a special image formatter such as Image Link Formatter.</li>');
+      }
+
+      $form['media_switch']['#description'] .= ' ' . $this->t('</ol> Try selecting "<strong>- None -</strong>" first before changing if trouble with this complex form states.');
     }
 
     if (isset($form['ratio']['#description'])) {

@@ -134,7 +134,7 @@
 
 /* Only display when JS is ready. */
 .slick__arrow,
-.slide--loading .slide__caption {
+.is-loading .slide__caption {
   visibility: hidden;
 }
 
@@ -254,7 +254,7 @@ img[data-lazy] {
   margin: 0 auto;
 }
 
-/** @todo: Remove temp fix for when total <= slidesToShow. */
+/** @todo: Remove temp fix for when total <= slidesToShow at 1.6.1+. */
 /** @see https://github.com/kenwheeler/slick/issues/262 */
 .slick--less .slick-track {
   margin-left: auto;

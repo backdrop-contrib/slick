@@ -17,32 +17,26 @@ class SlickDefault extends BlazyDefault {
    */
   public static function baseSettings() {
     return [
-      'optionset_thumbnail' => '',
-      'override'            => FALSE,
-      'overridables'        => [],
-      'skin_arrows'         => '',
-      'skin_dots'           => '',
-      'skin_thumbnail'      => '',
-      'thumbnail_caption'   => '',
+      'override'     => FALSE,
+      'overridables' => [],
+      'skin_arrows'  => '',
+      'skin_dots'    => '',
     ] + parent::baseSettings();
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @todo: Use parent::gridSettings().
    */
   public static function imageSettings() {
     return [
-      'grid'               => 0,
-      'grid_header'        => '',
-      'grid_medium'        => 0,
-      'grid_small'         => 0,
-      'preserve_keys'      => FALSE,
-      'thumbnail_effect'   => '',
-      'thumbnail_position' => '',
-      'visible_items'      => 0,
-    ] + self::baseSettings() + parent::imageSettings();
+      'optionset_thumbnail' => '',
+      'preserve_keys'       => FALSE,
+      'skin_thumbnail'      => '',
+      'thumbnail_caption'   => '',
+      'thumbnail_effect'    => '',
+      'thumbnail_position'  => '',
+      'visible_items'       => 0,
+    ] + self::baseSettings() + parent::imageSettings() + parent::gridSettings();
   }
 
   /**

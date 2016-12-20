@@ -18,8 +18,7 @@ function template_preprocess_slick(&$variables) {
   $settings  = isset($element['#settings']) ? array_merge($defaults, $element['#settings']) : $defaults;
   $customs   = isset($element['#options']) ? $element['#options'] : [];
   $optionset = isset($element['#optionset']) ? $element['#optionset'] : Slick::load($settings['optionset']);
-  $js_merged = $customs ? array_merge($optionset->getSettings(), $customs) : $optionset->getSettings();
-  $js        = array_merge(Slick::jsSettings(), $js_merged);
+  $js        = $customs ? array_merge($optionset->getSettings(), $customs) : $optionset->getSettings();
 
   if (isset($variables['settings'])) {
     $settings = array_merge($settings, $variables['settings']);
