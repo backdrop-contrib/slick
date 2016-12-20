@@ -1,4 +1,9 @@
 
+Slick 8.x-1.0-dev, 2016-12-20
+-----------------------------
+- #2837939 by gausarts, toncic: Missing schema error for edgeFriction option,
+  creating new slick optionset. Resaving optionset and clearing cache fix it.
+
 Slick 8.x-1.0-dev, 2016-12-18
 -----------------------------
 - Added SlickEntityFormatterBase.php for base ER without field details.

@@ -268,14 +268,16 @@ abstract class SlickFormBase extends EntityForm {
 
     foreach ($defaults as $name => $value) {
       if (isset($settings[$name])) {
-        $cast = gettype($defaults[$name]);
+        // Seems double is ignored, and causes a missing schema, unlike float.
+        $type = gettype($defaults[$name]);
+        $type = $type == 'double' ? 'float' : $type;
 
         // Change float to integer if value is no longer float.
-        if ($name == 'edgeFriction' && $settings[$name] == '1') {
-          $cast = 'integer';
+        if ($name == 'edgeFriction') {
+          $type = $settings[$name] == '1' ? 'integer' : 'float';
         }
 
-        settype($settings[$name], $cast);
+        settype($settings[$name], $type);
       }
     }
   }

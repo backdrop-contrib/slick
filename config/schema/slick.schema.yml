@@ -132,7 +132,7 @@ slick_optionset:
       type: boolean
       label: 'Swipe to slide'
     edgeFriction:
-      type: double
+      type: float
       label: 'Edge friction'
     touchMove:
       type: boolean
