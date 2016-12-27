@@ -1,4 +1,13 @@
 
+Slick 8.x-1.0-dev, 2016-12-27
+-----------------------------
+- Marked it Beta6.
+
+Slick 8.x-1.0-dev, 2016-12-24
+-----------------------------
+- Simplified slick.load.js to reduce dup variables.
+- Moved slick related media player from Blazy into Slick.
+
 Slick 8.x-1.0-dev, 2016-12-20
 -----------------------------
 - #2837939 by gausarts, toncic: Missing schema error for edgeFriction option,

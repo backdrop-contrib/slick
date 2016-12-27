@@ -31,7 +31,7 @@
   set classes = [
     'slick',
     settings.unslick ? 'unslick',
-    settings.blazy ? 'blazy',
+    display == 'main' and settings.blazy ? 'blazy',
     settings.vertical ? 'slick--vertical',
     settings.attributes.class ? settings.attributes.class|join(' '),
     settings.skin ? 'slick--skin--' ~ settings.skin|clean_class,
