@@ -20,10 +20,6 @@ function template_preprocess_slick(&$variables) {
   $optionset = isset($element['#optionset']) ? $element['#optionset'] : Slick::load($settings['optionset']);
   $js        = $customs ? array_merge($optionset->getSettings(), $customs) : $optionset->getSettings();
 
-  if (isset($variables['settings'])) {
-    $settings = array_merge($settings, $variables['settings']);
-  }
-
   // Prepare attributes.
   $attributes = &$variables['attributes'];
   $content_attributes = new Attribute();

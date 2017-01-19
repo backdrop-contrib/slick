@@ -18,7 +18,7 @@
   function doSlick(i, elm) {
     var t = $('> .slick__slider', elm).length ? $('> .slick__slider', elm) : $(elm);
     var a = $('> .slick__arrow', elm);
-    var o = $.extend({}, drupalSettings.slick, t.data('slick'));
+    var o = t.data('slick') ? $.extend({}, drupalSettings.slick, t.data('slick')) : drupalSettings.slick;
     var r = $.type(o.responsive) === 'array' && o.responsive.length ? o.responsive : false;
     var b;
 
@@ -170,11 +170,9 @@
 
     /**
      * Trigger the media close.
-     *
-     * @param {jQuery.Event} e
-     *   The event triggered by a `click` event.
      */
-    function closeOut(e) {
+    function closeOut() {
+      // Clean up any pause marker at slider container.
       t.removeClass('is-paused');
 
       if (t.find('.is-playing').length) {
@@ -184,12 +182,8 @@
 
     /**
      * Trigger pause on slick instance when media plying a video.
-     *
-     * @param {jQuery.Event} e
-     *   The event triggered by a `click` event.
      */
-    function pause(e) {
-      // Clean up any pause marker at slider container.
+    function pause() {
       t.addClass('is-paused').slick('slickPause');
     }
 

@@ -78,6 +78,35 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
   }
 
   /**
+   * Implements hook_library_info_build().
+   */
+  public function libraryInfoBuild() {
+    $libraries['slick.css'] = [
+      'dependencies' => ['slick/slick'],
+      'css' => [
+        'theme' => ['/libraries/slick/slick/slick-theme.css' => []],
+      ],
+    ];
+
+    foreach (self::getConstantSkins() as $group) {
+      if ($skins = $this->getSkinsByGroup($group)) {
+        foreach ($skins as $key => $skin) {
+          $provider = isset($skin['provider']) ? $skin['provider'] : 'slick';
+          $id = $provider . '.' . $group . '.' . $key;
+          if (isset($skin['css']) && is_array($skin['css'])) {
+            $libraries[$id]['css'] = $skin['css'];
+          }
+          if (isset($skin['js']) && is_array($skin['js'])) {
+            $libraries[$id]['js'] = $skin['js'];
+          }
+        }
+      }
+    }
+
+    return $libraries;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function attach($attach = []) {
