@@ -1,6 +1,8 @@
 
 Slick 8.x-1.0-dev, 2017-01-24
 -----------------------------
+- #2843870 by ruslan_03492: Requirements could not be resolved to an installable
+  set of packages drupal/blazy 8.*.
 - Arranged the form item weights for better visibility.
 
 Slick 8.x-1.0-dev, 2017-01-16
