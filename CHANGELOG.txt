@@ -1,4 +1,8 @@
 
+Slick 8.x-1.0-dev, 2017-01-24
+-----------------------------
+- Arranged the form item weights for better visibility.
+
 Slick 8.x-1.0-dev, 2017-01-16
 -----------------------------
 - Moved slick_library_info_build() content into SlickManager to declutter

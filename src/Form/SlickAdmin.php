@@ -312,7 +312,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#title'       => $this->t('Override main optionset'),
       '#type'        => 'checkbox',
       '#description' => $this->t('If checked, the following options will override the main optionset. Useful to re-use one optionset for several different displays.'),
-      '#weight'      => 113,
+      '#weight'      => 112,
       '#enforced'    => TRUE,
     ];
 
@@ -321,7 +321,7 @@ class SlickAdmin implements SlickAdminInterface {
       '#title'       => $this->t('Overridable options'),
       '#description' => $this->t("Override the main optionset to re-use one. Anything dictated here will override the current main optionset. Unchecked means FALSE"),
       '#options'     => $this->getOverridableOptions(),
-      '#weight'      => 114,
+      '#weight'      => 113,
       '#enforced'    => TRUE,
       '#states' => [
         'visible' => [
