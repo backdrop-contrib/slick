@@ -1,4 +1,8 @@
 
+Slick 8.x-1.0-dev, 2017-02-10
+-----------------------------
+- Fixed for regression with Overridables option not being respected.
+
 Slick 8.x-1.0-dev, 2017-01-24
 -----------------------------
 - #2843870 by ruslan_03492: Requirements could not be resolved to an installable
