@@ -1,4 +1,11 @@
 
+Slick 8.x-1.0-dev, 2017-02-11
+-----------------------------
+- Fixed for Slick libraries weight regression at hook_library_info_alter().
+- Fixed for hidden form element.
+- Cleaned up debris from old approach.
+- Added dependencies to skins.
+
 Slick 8.x-1.0-dev, 2017-02-10
 -----------------------------
 - Fixed for regression with Overridables option not being respected.

@@ -93,11 +93,11 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
         foreach ($skins as $key => $skin) {
           $provider = isset($skin['provider']) ? $skin['provider'] : 'slick';
           $id = $provider . '.' . $group . '.' . $key;
-          if (isset($skin['css']) && is_array($skin['css'])) {
-            $libraries[$id]['css'] = $skin['css'];
-          }
-          if (isset($skin['js']) && is_array($skin['js'])) {
-            $libraries[$id]['js'] = $skin['js'];
+
+          foreach (['css', 'js', 'dependencies'] as $property) {
+            if (isset($skin[$property]) && is_array($skin[$property])) {
+              $libraries[$id][$property] = $skin[$property];
+            }
           }
         }
       }

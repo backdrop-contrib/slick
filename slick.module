@@ -69,7 +69,7 @@ function slick_hook_info() {
  */
 function slick_library_info_alter(&$libraries, $extension) {
   if ($extension === 'slick' && function_exists('libraries_get_path')) {
-    $libraries['slick']['js'] = ['/' . libraries_get_path('slick') . '/slick/slick.min.js' => []];
+    $libraries['slick']['js'] = ['/' . libraries_get_path('slick') . '/slick/slick.min.js' => ['weight' => -3]];
     $libraries['slick']['css']['base'] = ['/' . libraries_get_path('slick') . '/slick/slick.css' => []];
     $libraries['slick.css']['css']['theme'] = ['/' . libraries_get_path('slick') . '/slick/slick-theme.css' => []];
   }
