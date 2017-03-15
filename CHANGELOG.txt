@@ -1,4 +1,9 @@
 
+Slick 8.x-1.0-dev, 2017-03-15
+-----------------------------
+- #2855190 by daniel.bosen: Using bower or composer to download the slick
+  library is cumbersome.
+
 Slick 8.x-1.0-dev, 2017-03-11
 -----------------------------
 - Fixed for typo in comments.
