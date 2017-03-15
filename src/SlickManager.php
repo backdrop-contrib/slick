@@ -354,6 +354,16 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $options  = $build['options'];
     $switch   = isset($settings['media_switch']) ? $settings['media_switch'] : '';
 
+    // Supports programmatic options defined within skin definitions to allow
+    // addition of options with other libraries integrated with Slick without
+    // modifying Optionset like Zoom, Reflection, Slicebox, etc.
+    if (!empty($settings['skin'])) {
+      $skins = $this->getSkinsByGroup('main');
+      if (isset($skins[$settings['skin']]['options'])) {
+        $options = array_merge($options, $skins[$settings['skin']]['options']);
+      }
+    }
+
     // Additional settings.
     $build['optionset'] = $build['optionset'] ?: Slick::load($settings['optionset']);
 
@@ -414,7 +424,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $slick[1] = self::slick($build);
     }
 
-    // Reverse slicks if thumbnail position is provided to get CSS float works.
+    // Reverse slicks if thumbnail position is provided to get CSS float work.
     if ($settings['navpos']) {
       $slick = array_reverse($slick);
     }

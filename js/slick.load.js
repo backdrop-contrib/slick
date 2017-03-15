@@ -178,7 +178,7 @@
     }
 
     /**
-     * Trigger pause on slick instance when media plying a video.
+     * Trigger pause on slick instance when media playing a video.
      */
     function pause() {
       t.addClass('is-paused').slick('slickPause');

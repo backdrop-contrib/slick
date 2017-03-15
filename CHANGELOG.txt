@@ -1,4 +1,11 @@
 
+Slick 8.x-1.0-dev, 2017-03-11
+-----------------------------
+- Fixed for typo in comments.
+- Added supports for programmatic options defined within skin definitions to
+  allow addition of options with other libraries integrated with Slick without
+  modifying Optionset like Zoom, Reflection, Slicebox, etc.
+
 Slick 8.x-1.0-dev, 2017-02-11
 -----------------------------
 - Fixed for Slick libraries weight regression at hook_library_info_alter().
