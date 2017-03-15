@@ -78,7 +78,7 @@ class SlickListBuilder extends DraggableListBuilder {
     $skins = $this->manager->getSkins()['skins'];
     $skin  = $entity->getSkin();
 
-    $row['label'] = Html::escape($this->getLabel($entity));
+    $row['label'] = Html::escape($entity->label());
     $row['breakpoints']['#markup'] = $entity->getBreakpoints();
     $row['group']['#markup'] = $entity->getGroup() ?: $this->t('All');
     $row['lazyload']['#markup'] = $entity->getSetting('lazyLoad') ?: $this->t('None');
