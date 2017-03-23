@@ -1,4 +1,8 @@
 
+Slick 8.x-1.0-dev, 2017-03-20
+-----------------------------
+- Added a list of available skins at optionset page as planned ages ago.
+
 Slick 8.x-1.0-dev, 2017-03-15
 -----------------------------
 - #2770005 by Shreya Shetty, gausarts, Nitesh Pawar: Replaces deprecated methods
