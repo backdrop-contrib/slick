@@ -106,7 +106,7 @@ class SlickListBuilder extends DraggableListBuilder {
     }
 
     $operations['duplicate'] = [
-      'title'  => t('Duplicate'),
+      'title'  => $this->t('Duplicate'),
       'weight' => 15,
       'url'    => $entity->toUrl('duplicate-form'),
     ];
