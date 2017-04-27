@@ -331,6 +331,10 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       '#items'      => [],
       '#build'      => $build,
       '#pre_render' => [[$this, 'preRenderSlickWrapper']],
+      // Satisfy CTools blocks as per 2017/04/06: 2804165 which expects children
+      // only, but not #theme, #type, #markup properties.
+      // @todo: Remove when CTools is more accommodative.
+      'items'       => [],
     ];
   }
 
