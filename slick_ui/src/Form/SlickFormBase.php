@@ -293,7 +293,7 @@ abstract class SlickFormBase extends EntityForm {
     $easings = &drupal_static(__METHOD__, NULL);
 
     if (!isset($easings)) {
-      $easings = array(
+      $easings = [
         'linear'           => 'Linear',
         'swing'            => 'Swing',
         'easeInQuad'       => 'easeInQuad',
@@ -326,7 +326,7 @@ abstract class SlickFormBase extends EntityForm {
         'easeInBounce'     => 'easeInBounce',
         'easeOutBounce'    => 'easeOutBounce',
         'easeInOutBounce'  => 'easeInOutBounce',
-      );
+      ];
     }
     return $easings;
   }
@@ -346,7 +346,7 @@ abstract class SlickFormBase extends EntityForm {
    */
   public function getCssEasingOptions($map = FALSE) {
     $css_easings = [];
-    $available_easings = array(
+    $available_easings = [
 
       // Defaults/ Native.
       'ease'           => 'ease|ease',
@@ -380,7 +380,7 @@ abstract class SlickFormBase extends EntityForm {
       'easeInOutExpo'  => 'easeInOutExpo|cubic-bezier(1.000, 0.000, 0.000, 1.000)',
       'easeInOutCirc'  => 'easeInOutCirc|cubic-bezier(0.785, 0.135, 0.150, 0.860)',
       'easeInOutBack'  => 'easeInOutBack|cubic-bezier(0.680, -0.550, 0.265, 1.550)',
-    );
+    ];
 
     foreach ($available_easings as $key => $easing) {
       list($readable_easing, $css_easing) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);

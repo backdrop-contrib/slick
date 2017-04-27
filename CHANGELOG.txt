@@ -1,6 +1,8 @@
 
 Slick 8.x-1.0-dev, 2017-04-27
 -----------------------------
+- #2873222 by Munavijayalakshmi, dhruveshdtripathi: Convert module to use short
+  array syntax (new coding standard).
 - #2872871 by elimw: Slick Images Not Showing in Drupal 8.3.
 
 Slick 8.x-1.0-dev, 2017-04-08
