@@ -1,4 +1,10 @@
 
+Slick 8.x-1.0-dev, 2017-04-08
+-----------------------------
+- Fixed for .slide__media DIV wrapper being rendered when empty at
+  slick-slide.html.twig.
+- Cleaned up README and typos.
+
 Slick 8.x-1.0-dev, 2017-03-20
 -----------------------------
 - Added a list of available skins at optionset page as planned ages ago.

@@ -50,7 +50,7 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
       $settings['nav'] = FALSE;
     }
 
-    // Only trim overridables options if enabled.
+    // Only trim overridables options if disabled.
     if (empty($settings['override'])) {
       $settings['overridables'] = array_filter($settings['overridables']);
     }

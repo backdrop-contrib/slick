@@ -210,7 +210,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $cache['tags']     = Cache::buildTags('slick:' . $settings['id'], $suffixes, '.');
 
       if (!empty($settings['cache_tags'])) {
-        $cache['tags'] = array_merge($cache['tags'], $settings['cache_tags']);
+        $cache['tags'] = Cache::mergeTags($cache['tags'], $settings['cache_tags']);
       }
 
       $slick['#cache'] = $cache;
@@ -356,7 +356,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
     // Supports programmatic options defined within skin definitions to allow
     // addition of options with other libraries integrated with Slick without
-    // modifying Optionset like Zoom, Reflection, Slicebox, etc.
+    // modifying optionset such as for Zoom, Reflection, Slicebox, Transit, etc.
     if (!empty($settings['skin'])) {
       $skins = $this->getSkinsByGroup('main');
       if (isset($skins[$settings['skin']]['options'])) {
