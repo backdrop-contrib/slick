@@ -195,6 +195,10 @@ class SlickUi extends ctools_export_ui {
           $form['options']['settings'][$name]['#size'] = 20;
           $form['options']['settings'][$name]['#maxlength'] = 255;
         }
+
+        if ($element['type'] == 'hidden' && isset($element['states'])) {
+          unset($element['states']);
+        }
       }
 
       if (isset($element['field_suffix'])) {
@@ -882,7 +886,7 @@ class SlickUi extends ctools_export_ui {
     parent::list_form($form, $form_state);
 
     $form['slick description']['#prefix'] = '<div class="ctools-export-ui-row ctools-export-ui-slick-description clearfix">';
-    $form['slick description']['#markup'] = t("<p>Manage the Slick optionsets. Optionsets are Config Entities.</p><p>By default, when this module is enabled, a single optionset is created from configuration. Install Slick example module to speed up by cloning them. Use the Operations column to edit, clone and delete optionsets.<br /><strong class='error'>Important!</strong> Avoid overriding Default optionset as it is meant for Default -- checking and cleaning. Use Clone, or Add, instead. If you did, please clone it and revert, otherwise messes are yours.</p>");
+    $form['slick description']['#markup'] = t("<p>Manage the Slick optionsets. Optionsets are Config Entities.</p><p>By default, when this module is enabled, a single optionset is created from configuration. Install Slick example module to speed up by cloning them. Use the Operations column to edit, clone and delete optionsets.<br /><strong class='error'>Important!</strong> Avoid overriding Default optionset as it is meant for Default -- checking and cleaning. Use Clone, or Add, instead. If you did, please clone it and revert, otherwise messes are yours.<br />Slick doesn't need Slick UI to run. It is always safe to uninstall (not only disable) Slick UI once done with optionsets, either stored at codes, or database.</p>");
     $form['slick description']['#suffix'] = '</div>';
   }
 

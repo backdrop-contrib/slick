@@ -1,4 +1,10 @@
 
+Slick 7.x-2.0-dev, 2017-04-08
+-----------------------------
+- Fixed for hidden element at Slick UI page.
+- Added recommendation to uninstall Slick UI at production, and QUICK
+  PERFORMANCE TIPS section.
+
 Slick 7.x-2.0-dev, 2016-12-09
 -----------------------------
 - Fixed for coding standards.
