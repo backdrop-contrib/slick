@@ -22,6 +22,8 @@ function slick_fields_field_formatter_info() {
  */
 function slick_fields_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
+  $items   = array_filter($items);
+
   if (empty($items)) {
     return $element;
   }

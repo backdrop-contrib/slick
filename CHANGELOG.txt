@@ -1,4 +1,9 @@
 
+Slick 7.x-2.0-dev, 2017-06-01
+-----------------------------
+- #2867683 by msgph: Fix fatal error when referenced image does not exist
+  anymore.
+
 Slick 7.x-2.0-dev, 2017-04-08
 -----------------------------
 - Fixed for hidden element at Slick UI page.
