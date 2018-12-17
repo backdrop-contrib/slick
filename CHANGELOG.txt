@@ -1,6 +1,8 @@
 
 Slick 8.x-1.0-dev, 2018-12-17
 -----------------------------
+- Issue #2480245 by B-Prod, Ben Young: Breakpoint-specific options lost if same as defaults
+- Issue #2920193 by ShaxA: Slick is not starting the autoplay after a modal is closed
 - Issue #3010260 by bendeguz.csirmaz: Optimize slick_library_info_alter()
 - Issue #2996130 by huzooka, bendeguz.csirmaz: Misleading (false-negative) 
   report on status report page
