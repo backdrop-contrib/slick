@@ -20,9 +20,11 @@
     var a = $('> .slick__arrow', elm);
     var o = t.data('slick') ? $.extend({}, drupalSettings.slick, t.data('slick')) : drupalSettings.slick;
     var r = $.type(o.responsive) === 'array' && o.responsive.length ? o.responsive : false;
+    var d = o.appendDots;
     var b;
 
     // Populate defaults + globals into each breakpoint.
+    o.appendDots = d === '.slick__arrow' ? a : (d || $(t));
     if (r) {
       for (b in r) {
         if (r.hasOwnProperty(b) && r[b].settings !== 'unslick') {
@@ -48,6 +50,13 @@
       });
 
       $('.media--loading', t).closest('.slide__content').addClass('is-loading');
+
+      // Puts dots in between arrows for easy theming like this: < ooooo >.
+      if (d === '.slick__arrow') {
+        t.on('init.sl', function (e, slick) {
+          $(slick.$dots).insertAfter(slick.$prevArrow);
+        });
+      }
 
       // Blazy integration.
       if (o.lazyLoad === 'blazy' && Drupal.blazy) {
@@ -202,8 +211,6 @@
         lazyLoad: o.lazyLoad,
         dotsClass: o.dotsClass,
         rtl: o.rtl,
-        appendDots: o.appendDots === '.slick__arrow'
-          ? a : (o.appendDots || $(t)),
         prevArrow: $('.slick-prev', a),
         nextArrow: $('.slick-next', a),
         appendArrows: a,

@@ -1,6 +1,8 @@
 
 Slick 8.x-1.0-dev, 2018-12-17
 -----------------------------
+- Issue #2937960 by gausarts, WalkingDexter, a.sinitsa, igonzalez: Many
+  carousels on one page with custom AppendDots.
 - Change negative margins to transforms for center captions to allow more
   flexible widths without hard-coding widths.
 - Added support for Video Embed Media 8.x-2.x.
