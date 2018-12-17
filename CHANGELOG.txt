@@ -1,6 +1,7 @@
 
 Slick 8.x-1.0-dev, 2018-12-17
 -----------------------------
+- Issue #2964773 by fjgarlin: Support Slick library 1.9.0
 - Issue #2937960 by gausarts, WalkingDexter, a.sinitsa, igonzalez: Many
   carousels on one page with custom AppendDots.
 - Change negative margins to transforms for center captions to allow more
