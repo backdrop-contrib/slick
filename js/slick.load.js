@@ -142,14 +142,17 @@
      *   The visibility of slick arrows controlled by CSS class visually-hidden.
      */
     function setPosition(slick) {
-      var less = slick.slideCount <= o.slidesToShow;
-      var hide = less || o.arrows === false;
+      // Use the options that applies for the current breakpoint and not the
+      // variable "o".
+      // @see https://www.drupal.org/project/slick/issues/2480245
+      var less = slick.slideCount <= slick.options.slidesToShow;
+      var hide = less || slick.options.arrows === false;
 
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
       if (t.attr('id') === slick.$slider.attr('id')) {
         // Removes padding rules, if no value is provided to allow non-inline.
-        if (!o.centerPadding || o.centerPadding === '0') {
+        if (!slick.options.centerPadding || slick.options.centerPadding === '0') {
           slick.$list.css('padding', '');
         }
 
