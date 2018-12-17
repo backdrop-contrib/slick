@@ -82,12 +82,14 @@ function template_preprocess_slick(&$variables) {
     }
 
     // Add the configuration as JSON object into the slick container.
-    if ($json = $optionset->removeDefaultValues($js)) {
+    $variables['js'] = isset($variables['js']) ? array_merge($js, $variables['js']) : $js;
+    if ($json = $optionset->removeDefaultValues($variables['js'])) {
       $content_attributes->setAttribute('data-slick', Json::encode($json));
     }
   }
 
   // Pass settings and attributes to twig.
+  $variables['js'] = $js;
   $variables['settings'] = $settings;
   $variables['content_attributes'] = $content_attributes;
 
@@ -166,7 +168,7 @@ function template_preprocess_slick_slide(&$variables) {
   // wrapper: Don't add divities for a single item to have clean markups.
   $item['slide']         = isset($item['slide']) ? $item['slide'] : [];
   $item['caption']       = array_filter($item['caption']);
-  $settings['split']     = !empty($item) && !empty($settings['caption']);
+  $settings['split']     = !empty($item) && (!empty($settings['caption']) || !empty($settings['title']));
   $settings['data']      = !empty($item['caption']['alt']) || !empty($item['caption']['title']) || !empty($item['caption']['data']);
   $settings['fullwidth'] = !empty($settings['skin']) && strpos($settings['skin'], 'full') !== FALSE;
   $settings['grid']      = empty($settings['grid']) ? FALSE : $settings['grid'];

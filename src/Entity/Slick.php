@@ -384,6 +384,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
       'slidesPerRow'    => 1,
       'slide'           => '',
       'slidesToShow'    => 1,
+      'vertical'        => FALSE,
     ];
   }
 

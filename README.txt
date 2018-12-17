@@ -324,7 +324,7 @@ KNOWN ISSUES
   themes. Only if trouble with admin display, please disable it at:
   admin/config/media/blazy
 
-- The Slick lazyLoad is not supported with Responsive image. Slick only
+- The Slick lazyLoad is not compatible with Responsive image. Slick only
   facilitates Responsive image to get in. The image formatting is taken over by
   Responsive image.
   Some other options such as Aspect ratio is currently not supported either.
