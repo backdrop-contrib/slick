@@ -41,13 +41,11 @@
      * The event must be bound prior to slick being called.
      */
     function beforeSlick() {
+      var isBlazy = o.lazyLoad === 'blazy' && Drupal.blazy;
+
       if (o.randomize && !t.hasClass('slick-initiliazed')) {
         randomize();
       }
-
-      t.on('setPosition.sl', function (e, slick) {
-        setPosition(slick);
-      });
 
       $('.media--loading', t).closest('.slide__content').addClass('is-loading');
 
@@ -59,17 +57,25 @@
       }
 
       // Blazy integration.
-      if (o.lazyLoad === 'blazy' && Drupal.blazy) {
+      // .b-lazy can be attached to IMG, or DIV as CSS background.
+      var $src = $('.b-lazy:not(.b-loaded)', t);
+      if (isBlazy) {
         t.on('beforeChange.sl', function () {
-          // .b-lazy can be attached to IMG, or DIV as CSS background.
-          var $src = $('.b-lazy:not(.b-loaded)', t);
-
           if ($src.length) {
             // Enforces lazyload ahead to smoothen the UX.
             Drupal.blazy.init.load($src);
           }
         });
       }
+
+      t.on('setPosition.sl', function (e, slick) {
+        setPosition(slick);
+
+        // Revalidate Blazy.
+        if (isBlazy && $src.length) {
+          Drupal.blazy.init.revalidate();
+        }
+      });
     }
 
     /**
