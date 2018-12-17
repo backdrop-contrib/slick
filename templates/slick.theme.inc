@@ -59,8 +59,11 @@ function template_preprocess_slick(&$variables) {
     }
   }
 
-  if (!empty($js['rtl'])) {
-    $attributes['dir'] = 'rtl';
+  // Make slick language-direction-aware.
+  $language = \Drupal::languageManager()->getCurrentLanguage();
+  if ($language->getDirection() == 'rtl') {
+    $attributes['dir'] = $language->getDirection();
+    $js['rtl'] = $language->getDirection() ? TRUE : FALSE;
   }
 
   // Prevents broken slick when only one item given, or an enforced unslick.
