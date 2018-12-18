@@ -267,6 +267,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     }
 
     $build['options'] = isset($js) ? array_merge($build['options'], $js) : $build['options'];
+    \Drupal::moduleHandler()->alter('slick_optionset', $build['optionset'], $build['settings']);
     foreach (['items', 'options', 'optionset', 'settings'] as $key) {
       $element["#$key"] = $build[$key];
     }
