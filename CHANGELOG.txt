@@ -1,6 +1,9 @@
 
-Slick 7.x-2.0-dev, 2018-12-19
+Slick 7.x-2.1-dev, 2018-12-19
 -----------------------------
+- Yeeeha! 7.x-2.1 is out after 3 years of dev storms.
+- Issue #2850792 by gausarts, giupenni, dasginganinja, Zythyr, xlin: Plan for
+  7.x-2.1 release.
 - Added support for HTML within lightbox captions.
 
 Slick 7.x-2.0-dev, 2017-06-01
