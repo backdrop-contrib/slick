@@ -228,7 +228,8 @@ function slick_build_captions($item, $file = array(), $settings = array()) {
       $caption = '';
   }
 
-  return empty($caption) ? '' : filter_xss($caption);
+  $allowed_tags = array('a', 'em', 'strong', 'h2', 'p', 'span', 'ul', 'li');
+  return empty($caption) ? '' : filter_xss($caption, $allowed_tags);
 }
 
 /**

@@ -1,4 +1,8 @@
 
+Slick 7.x-2.0-dev, 2018-12-19
+-----------------------------
+- Added support for HTML within lightbox captions.
+
 Slick 7.x-2.0-dev, 2017-06-01
 -----------------------------
 - #2867683 by msgph: Fix fatal error when referenced image does not exist
