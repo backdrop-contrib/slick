@@ -185,29 +185,27 @@ function slick_build_captions($item, $file = array(), $settings = array()) {
   switch ($settings['box_caption']) {
     case 'auto':
       $caption = $alt ? $alt : $title;
-      $caption = strip_tags($caption);
       break;
 
     case 'alt':
-      $caption = strip_tags($alt);
+      $caption = $alt;
       break;
 
     case 'title':
-      $caption = strip_tags($title);
+      $caption = $title;
       break;
 
     case 'alt_title':
     case 'title_alt':
-      $alt     = $alt ? '<p>' . strip_tags($alt) . '</p>' : '';
-      $title   = $title ? '<h2>' . strip_tags($title) . '</h2>' : '';
+      $alt     = $alt ? '<p>' . $alt . '</p>' : '';
+      $title   = $title ? '<h2>' . $title . '</h2>' : '';
       $caption = $settings['box_caption'] == 'alt_title' ? $alt . $title : $title . $alt;
       break;
 
     case 'entity_title':
       $caption = '';
       if ($entity) {
-        $entity_title = entity_label($entity_type, $entity);
-        $caption = strip_tags($entity_title);
+        $caption = entity_label($entity_type, $entity);
       }
       break;
 
@@ -230,7 +228,7 @@ function slick_build_captions($item, $file = array(), $settings = array()) {
       $caption = '';
   }
 
-  return $caption;
+  return empty($caption) ? '' : filter_xss($caption);
 }
 
 /**
