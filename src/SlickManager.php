@@ -188,12 +188,12 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    * {@inheritdoc}
    */
   public static function slick(array $build = []) {
-    foreach (['items', 'options', 'optionset', 'settings'] as $key) {
-      $build[$key] = isset($build[$key]) ? $build[$key] : [];
-    }
-
     if (empty($build['items'])) {
       return [];
+    }
+
+    foreach (['items', 'options', 'optionset', 'settings'] as $key) {
+      $build[$key] = isset($build[$key]) ? $build[$key] : [];
     }
 
     $slick = [

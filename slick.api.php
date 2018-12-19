@@ -494,14 +494,16 @@ function hook_slick_skins_info() {
 /**
  * Modifies overridable options at admin UI to re-use one optionset.
  *
- * Only accepts boolean values as these are displayed as checkboxes.
+ * Only accepts boolean values as these are displayed as checkboxes under
+ * `Override main optionset` form field at Slick formatter/ Slick Views forms.
  *
  * @see \Drupal\slick\Form\SlickAdmin::getOverridableOptions()
+ * @see config/install/slick.optionset.default.yml
  *
  * @ingroup slick_api
  */
 function hook_slick_overridable_options_info_alter(&$options) {
-  // Adds RTL option to Slick field formatters, or Slick Views UI.
+  // Adds RTL option to Slick field formatters, or Slick Views UI forms.
   $options['rtl'] = t('RTL');
 }
 
