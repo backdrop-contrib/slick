@@ -396,6 +396,57 @@ function slick_get_media_fields($instance, $widget_types = NULL) {
 }
 
 /**
+ * Gets a list of fields in the Paragraphs item.
+ */
+function slick_get_paragraphs_fields($instance, $bundles, $field_types) {
+  $entity_type = 'paragraphs_item';
+  $paragraphs_options = array();
+  // Add panelizer support.
+  if ($instance['entity_type'] == 'ctools') {
+    foreach ($bundles as $bundle_type => $types) {
+      foreach ($types as $type) {
+        $instance = field_info_instance($bundle_type, $instance['field_name'], $type);
+        $allowed_bundles = $instance['settings']['allowed_bundles'];
+        $paragraphs_options += _slick_get_paragraphs_fields_options($allowed_bundles, $entity_type, $field_types);
+      }
+    }
+  }
+  else {
+    $allowed_bundles = $instance['settings']['allowed_bundles'];
+    $paragraphs_options = _slick_get_paragraphs_fields_options($allowed_bundles, $entity_type, $field_types);
+  }
+
+  return $paragraphs_options;
+}
+
+/**
+ * Helper function to get list of supported field base on field_types.
+ */
+function _slick_get_paragraphs_fields_options($allowed_bundles, $entity_type, $field_types) {
+  $options = array();
+  foreach ($allowed_bundles as $bundle_name => $bundle) {
+    if ($bundle !== -1) {
+      $fields = field_info_instances($entity_type, $bundle_name);
+      foreach ($fields as $name => $field) {
+        $info = field_info_field($name);
+        if ($field_types == '_all') {
+          $options[$name] = $field['label'];
+        }
+        else {
+          if (in_array($entity_type, array_keys($info['bundles']))
+            && in_array($info['type'], $field_types)
+          ) {
+            $options[$name] = $field['label'];
+          }
+        }
+      }
+    }
+  }
+
+  return $options;
+}
+
+/**
  * Returns shared starting form elements across Slick field formatter and Views.
  */
 function slick_get_top_elements(array &$elements, $settings, &$form_state) {

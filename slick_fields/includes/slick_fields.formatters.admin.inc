@@ -85,6 +85,36 @@ function _slick_fields_field_formatter_settings_form($field, $instance, $view_mo
       ));
       break;
 
+    case 'paragraphs':
+      $bundles           = $field['bundles'];
+      $field_entity_type = 'paragraphs_item';
+      $overlay_fields    = array('image', 'file');
+      $title_fields      = array('link_field', 'text', 'text_long');
+      $link_fields       = array('text', 'link_field', 'url');
+      $field_layouts     = slick_get_paragraphs_fields($instance, $bundles, array('list_text'));
+
+      $options['fieldable']      = TRUE;
+      $options['entity_type']    = $field_entity_type;
+      $options['images']         = slick_get_paragraphs_fields($instance, $bundles, array('image', 'file'));
+      $options['layouts']        = $field_layouts ? $field_layouts : $options['layouts'];
+      $options['colors']         = slick_get_paragraphs_fields($instance, $bundles, array('text', 'color_field_rgb'));
+      $options['overlays']       = slick_get_paragraphs_fields($instance, $bundles, $overlay_fields);
+      $options['titles']         = slick_get_paragraphs_fields($instance, $bundles, $title_fields);
+      $options['links']          = slick_get_paragraphs_fields($instance, $bundles, $link_fields);
+      $options['thumb_captions'] = slick_get_paragraphs_fields($instance, $bundles, array('text', 'text_long'));
+      $options['captions']       = slick_get_paragraphs_fields($instance, $bundles, array(
+        'blockreference',
+        'file',
+        'image',
+        'link_field',
+        'list_text',
+        'text_long',
+        'text_with_summary',
+        'taxonomy_term_reference',
+        'text',
+      ));
+      break;
+
     case 'image':
       $captions = array(
         'title_field' => t('Title'),

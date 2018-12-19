@@ -11,7 +11,7 @@
 function slick_fields_field_formatter_info() {
   $formatters['slick'] = array(
     'label'       => t('Slick carousel'),
-    'field types' => array('image', 'file', 'field_collection'),
+    'field types' => array('image', 'file', 'field_collection', 'paragraphs'),
     'settings'    => slick_fields_default_settings(),
   );
   return $formatters;
@@ -111,6 +111,12 @@ function slick_fields_field_formatter_view($entity_type, $entity, $field, $insta
       module_load_include('inc', 'slick', 'includes/slick.extras');
       module_load_include('inc', 'slick', 'includes/slick.field_collection');
       $build = slick_format_field_collection($items, $langcode, $settings);
+      break;
+
+    case 'paragraphs':
+      module_load_include('inc', 'slick', 'includes/slick.extras');
+      module_load_include('inc', 'slick', 'includes/slick.paragraphs');
+      $build = slick_format_paragraphs($items, $settings);
       break;
   }
 
