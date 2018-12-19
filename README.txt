@@ -56,6 +56,24 @@ REQUIREMENTS
   Important! Be sure to enable Blazy first before updating Slick Alphas,
   otherwise a requirement error.
 
+- If using Composer with https://github.com/fxpio/composer-asset-plugin and via
+  bower-asset, Libraries.module[5] is required. Watch out dots and dashes:
+
+  $ composer require bower-asset/blazy \
+  bower-asset/slick-carousel:^1.8 \
+  bower-asset/jquery-mousewheel \
+  bower-asset/jquery.easing \
+  drupal/blazy \
+  drupal/slick
+
+  Be sure to install `composer-asset-plugin' globally first:
+  $ composer global require "fxp/composer-asset-plugin:~1.3"
+
+  And setup the required config first:
+  https://www.drupal.org/project/slick/issues/2907371#comment-12882235
+
+  [5] http://dgo.to/libraries
+
 FEATURES
 --------------------------------------------------------------------------------
 o Fully responsive. Scales with its container.

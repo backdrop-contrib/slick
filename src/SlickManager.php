@@ -126,8 +126,21 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $load['library'][] = 'blazy/loading';
     }
 
-    // @todo: Only load slick if not static grid.
-    if (is_file('libraries/easing/jquery.easing.min.js')) {
+    // Load optional easing library.
+    $easing = 'libraries/easing/jquery.easing.min.js';
+    if (function_exists('libraries_get_path')) {
+      $library_path = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
+
+      if ($library_path) {
+        $easing = $library_path . '/jquery.easing.min.js';
+        // Composer via bower-asset puts the library within `js` directory.
+        if (!is_file($easing)) {
+          $easing = $library_path . '/js/jquery.easing.min.js';
+        }
+      }
+    }
+
+    if (is_file($easing)) {
       $load['library'][] = 'slick/slick.easing';
     }
 
