@@ -389,6 +389,8 @@ KNOWN ISSUES
   o If thumbnail display is Infinite, the main one must be infinite too, else
     incorrect syncing.
   o adaptiveHeight is no good for vertical.
+  o Colorbox integration is not working well with lazyload onDemand. Solution:
+    Choose one of other lazyload options: Anticipated, Blazy, Progressive.
 
 
 CURRENT DEVELOPMENT STATUS
