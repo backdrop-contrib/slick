@@ -1,7 +1,6 @@
 name: Slick
 type: module
 description: "Slick carousel, the last carousel you'll ever need."
-version: VERSION
 core: 8.x
 package: Slick
 dependencies:

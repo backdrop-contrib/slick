@@ -512,8 +512,8 @@ function hook_slick_overridable_options_info_alter(&$options) {
 /**
  * Modifies Slick optionset before being passed to preprocess, or templates.
  *
- * @param object $slick
- *   The \Drupal\slick\Entity\Slick Slick object being modified.
+ * @param \Drupal\slick\Entity\Slick $slick
+ *   The Slick object being modified.
  * @param array $settings
  *   The contextual settings related to UI and HTML layout settings.
  *
