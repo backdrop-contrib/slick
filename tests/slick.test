@@ -263,6 +263,12 @@ class SlickTestCase extends DrupalWebTestCase {
   public function getOptions() {
     // Valid optionset data.
     $defaults = slick_get_options();
+
+    // Exclude non UI options, but included as defaults for formatters, or
+    // outside the designated main form elements.
+    unset($defaults['mousewheel']);
+    unset($defaults['randomize']);
+
     $valid = array(
       'set1' => $defaults,
       'set2' => array(
