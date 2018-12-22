@@ -10,6 +10,7 @@ use Drupal\Tests\slick\Traits\SlickUnitTestTrait;
  * Tests the Slick field rendering using the text field type.
  *
  * @coversDefaultClass \Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatter
+ * @requires module video_embed_media
  * @group slick
  */
 class SlickFileFormatterTest extends BlazyKernelTestBase {
