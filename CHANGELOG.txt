@@ -16,7 +16,8 @@ Slick 8.x-1.0-dev, 2018-12-17
   report on status report page
 - Issue #2948735 by alaa abbad, Muath Khraisat: Adding the alt attribute to the
   slick thumbnails
-- Issue #2945030 by alaa abbad: The button role is unnecessary for element button
+- Issue #2945030 by alaa abbad: The button role is unnecessary for element
+  button.
 - Issue #2922036 by shaal, matio89: RTL Views Drupal 8
 
 Slick 8.x-1.0-dev, 2017-05-26

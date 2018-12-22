@@ -31,6 +31,7 @@ class SlickFileFormatterTest extends BlazyKernelTestBase {
     'blazy',
     'slick',
     'slick_test',
+    'video_embed_media',
   ];
 
   /**

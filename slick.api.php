@@ -5,6 +5,8 @@
  * Hooks and API provided by the Slick module.
  */
 
+use Drupal\slick\Entity\Slick;
+
 /**
  * @defgroup slick_api Slick API
  * @{
@@ -519,7 +521,7 @@ function hook_slick_overridable_options_info_alter(&$options) {
  *
  * @ingroup slick_api
  */
-function hook_slick_optionset_alter(\Drupal\slick\Entity\Slick &$slick, array $settings) {
+function hook_slick_optionset_alter(Slick &$slick, array $settings) {
   if ($slick->id() == 'x_slick_nav') {
     // Overrides the main settings of navigation with optionset ID x_slick_nav.
     // To see available options, see config/install/slick.optionset.default.yml.
