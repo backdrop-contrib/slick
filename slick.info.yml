@@ -6,4 +6,4 @@ package: Slick
 dependencies:
   - blazy:blazy
 test_dependencies:
-  - video_embed_field/video_embed_media
+  - video_embed_field:video_embed_media
