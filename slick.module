@@ -46,7 +46,7 @@ function slick_field_formatter_info_alter(array &$info) {
   if (\Drupal::moduleHandler()->moduleExists('video_embed_media')) {
     $info['slick_file'] = [
       'id'          => 'slick_file',
-      'label'       => t('Slick Image with Media'),
+      'label'       => t('Slick Image with Media (deprecated for Slick Media)'),
       'description' => t('Display the images associated to VEM/ME as a simple mix of Slick image/video carousel.'),
       'class'       => 'Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatter',
       'field_types' => ['entity_reference', 'image'],
