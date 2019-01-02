@@ -220,13 +220,3 @@ function template_preprocess_slick_grid(&$variables) {
     unset($slide);
   }
 }
-
-/**
- * Prepares variables for slick-image.html.twig template.
- *
- * @deprecated: Just use blazy.html.twig to reduce function calls.
- * This is never used, and will be removed post 8.x-1.1.
- */
-function template_preprocess_slick_image(&$variables) {
-  template_preprocess_blazy($variables);
-}

@@ -1,5 +1,6 @@
 
 Slick 8.x-2.0-dev, 2019-01-01
 -----------------------------
+- Added a new dedicated Media integration via SlickMediaFormatterBase.
 - Issue #3023234 by gausarts: Create a new branch for core Media.
 - Initial commit.

@@ -13,7 +13,7 @@ use Drupal\slick\SlickDefault;
  */
 function slick_theme() {
   $themes = [];
-  $all = ['slick', 'slide', 'grid', 'image', 'thumbnail', 'vanilla', 'wrapper'];
+  $all = ['slick', 'slide', 'grid', 'thumbnail', 'vanilla', 'wrapper'];
   foreach ($all as $item) {
     $key = $item == 'slick' ? $item : 'slick_' . $item;
     $themes[$key] = [
