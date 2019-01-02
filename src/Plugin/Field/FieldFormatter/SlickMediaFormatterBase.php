@@ -71,8 +71,12 @@ abstract class SlickMediaFormatterBase extends BlazyMediaFormatterBase implement
    * {@inheritdoc}
    */
   public function getScopedFormElements() {
+    $multiple = $this->fieldDefinition->getFieldStorageDefinition()->isMultiple();
+
     return [
       'namespace' => 'slick',
+      'grid_form' => $multiple,
+      'style' => $multiple,
     ] + parent::getScopedFormElements();
   }
 
