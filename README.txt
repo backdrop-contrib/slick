@@ -6,28 +6,17 @@ Slick is a powerful and performant slideshow/carousel solution leveraging Ken
 Wheeler's Slick carousel.
 See http://kenwheeler.github.io/slick
 
-Powerful: Slick is one of the sliders [1], as of 9/15, the only one [2], which
-supports nested sliders and a mix of lazy-loaded image/video with
-image-to-iframe or multimedia lightbox switchers.
-See below for the supported media.
-
-Performant: Slick is stored as plain HTML the first time it is requested, and
-then reused on subsequent requests. Carousels with cacheability and lazyload
-are lighter and faster than those without.
-
 Slick has gazillion options, please start with the very basic working
-samples from slick_example [3] only if trouble to build slicks. Be sure to read
-its README.txt. Spending 5 minutes or so will save you hours in building more
+samples from slick_example [1] only if trouble to build slicks. Be sure to read
+its README.txt [2]. Spending 5 minutes or so will save you hours in building more
 complex slideshows.
 
 The module supports Slick 1.6 above until 1.8.1. Versions 1.9.0 and above are
-not currently supported.
-Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.
+not currently supported. Slick 2.x is just out 9/21/15, and hasn't been
+officially supported now, 9/27.
 
-[1] https://groups.drupal.org/node/20384
-[2] https://www.drupal.org/node/418616
-[3] http://dgo.to/slick_extras
-[4] https://www.drupal.org/project/slick/issues/2964773
+[1] http://dgo.to/slick_extras
+[2] /admin/help/slick_ui
 
 
 REQUIREMENTS
@@ -53,11 +42,31 @@ REQUIREMENTS
   background lazyloading, breakpoint dependent multi-serving images, lazyload
   ahead for smoother UX.
 
-  Important! Be sure to enable Blazy first before updating Slick Alphas,
-  otherwise a requirement error.
 
-- If using Composer with https://github.com/fxpio/composer-asset-plugin and via
-  bower-asset, Libraries.module[5] is required. Watch out dots and dashes:
+INSTALLATION
+--------------------------------------------------------------------------------
+  1. MANUAL:
+  Install the module as usual, more info can be found on:
+  https://www.drupal.org/docs/8/extending-drupal-8/installing-drupal-8-modules
+
+  2. COMPOSER:
+  There are various ways to install third party bower/npm asset libraries. Check
+  out any below suitable to your workflow:
+  https://www.drupal.org/project/blazy/issues/3021902
+  https://www.drupal.org/project/slick/issues/2907371
+  Or jump here:
+  https://www.drupal.org/project/slick/issues/2907371#comment-12882235
+
+  It is up to you to decide which works best. Composer is not designed to manage
+  JS, CSS or HTML framework assets. It is for PHP. Then come Composer plugins, and
+  other workarounds to make Composer workflow easier. As we have alternatives,
+  it is not covered here. Please find more info on the above-mentioned issues.
+
+  Specific to Slick libraries, be sure to install Libraries module! Slick has
+  different namespace: `slick` as in github, and `slick-carousel` at bower/ npm.
+
+  If using Composer with https://github.com/fxpio/composer-asset-plugin and via
+  bower-asset, Libraries.module [1] is required. Watch out dots and dashes:
 
   $ composer require bower-asset/blazy \
   bower-asset/slick-carousel:^1.8 \
@@ -72,7 +81,7 @@ REQUIREMENTS
   And setup the required config first:
   https://www.drupal.org/project/slick/issues/2907371#comment-12882235
 
-  [5] http://dgo.to/libraries
+  [1] http://dgo.to/libraries
 
 FEATURES
 --------------------------------------------------------------------------------
@@ -98,15 +107,12 @@ o Media switcher: Image linked to content, Image to iframe, Image to colorbox,
 o Cacheability + lazyload = light + fast.
 
 
-INSTALLATION
+SUB-MODULES
 --------------------------------------------------------------------------------
-Install the module as usual, more info can be found on:
-http://drupal.org/documentation/install/modules-themes/modules-7
-
 The Slick module has several sub-modules:
 - slick_ui, included, to manage optionsets, can be uninstalled at production.
 
-- slick_media [1], to get richer contents using Media entity.
+- slick_media [1], to get richer contents using core Media.
 
 - slick_video [2], to get video carousels using Video Embed Field.
 
@@ -127,17 +133,17 @@ The Slick module has several sub-modules:
 
 
 
-OPTIONAL INTEGRATION
+INTEGRATION
 --------------------------------------------------------------------------------
 Slick supports enhancements and more complex layouts.
 
+REQUIRED
+- core Media, to have richer contents: image, video, or a mix of em.
+
+OPTIONAL
 - Colorbox, to have grids/slides that open up image/video in overlay.
 - Photobox, idem ditto.
 - Responsive image, in core, to get truly responsive image.
-- Media Entity, to have richer contents: image, video, or a mix of em.
-  http://dgo.to/media_entity
-- Video Embed Media, idem ditto.
-  http://dgo.to/video_embed_field
 - Paragraphs, to get more complex slides at field level.
   http://dgo.to/paragraphs
 - Mousewheel, download from https://github.com/brandonaaron/jquery-mousewheel,
@@ -304,9 +310,9 @@ A basic knowledge of Drupal site building is required. If you get stuck:
   o install slick_example.
 
 If you do have bug reports, we love bugs, please:
-  o provide steps to reproduce it,
+  o provide steps to reproduce it, valid bugs must have consistent reproduction,
   o provide detailed info, a screenshot of the output and Slick form, or words
-    to identify it any better,
+    to identify it any better, library version, module version, active theme.
   o make sure that the bug is caused by the module.
 
 For the Slick library bug, please report it to the actual library:
@@ -320,20 +326,49 @@ Shortly, you should kindly help the maintainers with detailed info to help you.
 Thanks.
 
 
-SUBMITTING PATCHES OR BUG REPORTS
+SUBMITTING PATCHES OR ISSUES
 --------------------------------------------------------------------------------
-When submitting bug reports, please be kind with proper reproduction, and enough
-details. Mentioning library version, module version, active theme, or anything
-which may help us identify issue better would be very helpful. Please consider
-the following to help you explain better and to help us understand better your
-bug reports, or patches as needed:
+SUBMITTING PATCHES OR ISSUES
+Please consider the following to help you explain better, and to help us
+understand better your bug reports, or patches as needed:
 https://www.drupal.org/issue-summaries
 https://www.drupal.org/node/1326662
+
+o If you hate formalism, consider a line, or two in the body text.
+o Avoid explaining everything in the title.
+o Use body text for explanation purposes.
+o If language is a barrier, use google translate, or alike.
+
+1. SUBMITTING ISSUES
+When submitting bug reports, please:
+o Be kind with proper reproduction, and enough details.
+o Mentioning library version, module version, active theme, or anything which
+  may help us identify issue better would be very helpful.
+o Check out dups.
+o If unsure, file it a support request. We'll mark a bug a bug even if you
+  file it under support requests.
+
+2. SUBMITTING PATCHES
+We consider a patch as help, they consider it a sale, so thank you in advanced!
+In order for you to help, or buy, us successfully, please consider:
+o communicating and filling out the body text with proper explanations, not in
+  comments. I've seen patches which broke a module, so explanation is a must.
+  If you have no time to write it in the body text, please hold off till later!
+o providing optional links to the change records, or docs, if any.
+o providing links to docs is a must for coding standards issues.
+  This also let us, you and me, learn from the actual docs, not told by tools!
+  We can just run `drupalcs ...`, but help is welcome, too, in case a miss.
+o providing reproduction steps for bug reports is a must. No repro, no bugs.
+
+You must speak like human to human, and help us respect you, and your time.
+Dumping patches with empty body text will be disregarded, till the above is met.
+
+Thank you for your kind consideration, cooperation, and contribution!
 
 
 TROUBLESHOOTING
 --------------------------------------------------------------------------------
-- When upgrading from Slick v1.3.6 to later version, try to resave options at:
+- When upgrading from Slick v1.3.6 to later version, try to re-save options at:
   o admin/config/media/slick
   o admin/structure/types/manage/CONTENT_TYPE/display
   o admin/structure/views/view/VIEW_NAME
@@ -412,6 +447,7 @@ Have the latest or similar release Blazy to avoid trouble in the first place.
 ROADMAP
 --------------------------------------------------------------------------------
 - Bug fixes, code cleanup, optimization, and full release.
+- Core Media integration.
 
 
 HOW CAN YOU HELP?

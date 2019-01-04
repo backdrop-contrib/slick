@@ -2,7 +2,7 @@
 
 namespace Drupal\slick;
 
-use Drupal\blazy\Dejavu\BlazyDefault;
+use Drupal\blazy\BlazyDefault;
 
 /**
  * Defines shared plugin default settings for field formatter and Views style.

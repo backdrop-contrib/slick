@@ -9,33 +9,68 @@ samples from <a href="http://dgo.to/slick_extras">slick_example</a> only if trou
 its README.txt. Spending 5 minutes or so will save you hours in building more<br />
 complex slideshows.</p>
 
-<p>The module supports Slick 1.6 above.<br />
-Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.</p>
+<p>The module supports Slick 1.6 above until 1.8.1. Versions 1.9.0 and above are
+not currently supported. Slick 2.x is just out 9/21/15, and hasn't been
+officially supported now, 9/27.</p>
 
 <h3>REQUIREMENTS</h3>
 
 <ul>
-  <li>Slick library:  <br />
-    <ul>
-      <li>Download Slick archive &gt;= 1.6 from https://github.com/kenwheeler/slick/</li>
-      <li>Extract it as is, rename "slick-master" to "slick", so the assets are at:<br />
-        <em>/libraries/slick/slick/slick.css</em><br />
-        <em>/libraries/slick/slick/slick-theme.css</em> (optional if a skin chosen)<br />
-        <em>/libraries/slick/slick/slick.min.js</em>
-      </li>
-    </ul>
-  </li>
-  <li>Download jqeasing from https://github.com/gdsmith/jquery.easing, so available&nbsp; at:<br />
-    <em>/libraries/easing/jquery.easing.min.js</em><br />
-    This is CSS easing fallback for non-supporting browsers.</li>
-  <li>Blazy.module, to reduce DRY stuffs, and as a bonus, advanced lazyloading
-  such as delay lazyloading for below-fold sliders, iframe, (fullscreen) CSS
-  background lazyloading, breakpoint dependent multi-serving images, lazyload
-  ahead for smoother UX.</li>
+  <li><a href="https://github.com/kenwheeler/slick/releases">Slick library</a>:<br>
+Master branch is not supported. Instead download, rename one of the official <a href="https://github.com/kenwheeler/slick/releases"><strong>slick releases</strong></a> to <strong>slick</strong>, so the assets are available at:
+    <ul><li><em>sites/../libraries/slick/slick/slick.css</em></li>
+<li><em>sites/../libraries/slick/slick/slick-theme.css (optional if a skin is chosen)</em></li>
+<li><em>sites/../libraries/slick/slick/slick.min.js</em></li>
+</ul></li>
+<li><a href="https://www.drupal.org/project/libraries">Libraries</a>, D7 and D8 with Composer.</li>
+<li><a href="https://www.drupal.org/project/blazy">Blazy</a></li>
+<li>[Optional] <a href="https://github.com/gdsmith/jquery.easing">jqeasing</a>, so available at:<br><em>sites/../libraries/easing/jquery.easing.min.js</em><br>
+Fallback for old browsers, ignorable to use CSS3 easing alone.</li>
 </ul>
 
-<p>&nbsp; Important! Enable Blazy first before updating Slick Alphas,<br />
-&nbsp; otherwise a requirement error.</p>
+<h3>INSTALLATION</h3>
+<ol>
+  <li>
+    <h4>MANUAL</h4>
+    <p>Install the module as usual, more info can be found on:
+      https://www.drupal.org/docs/8/extending-drupal-8/installing-drupal-8-modules</p>
+  </li>
+  <li>
+    <h4>COMPOSER</h4>
+<p>There are various ways to install third party bower/npm asset libraries. Check
+out any below suitable to your workflow:
+https://www.drupal.org/project/blazy/issues/3021902
+https://www.drupal.org/project/slick/issues/2907371
+Or jump here:
+https://www.drupal.org/project/slick/issues/2907371#comment-12882235</p>
+
+<p>It is up to you to decide which works best. Composer is not designed to manage
+JS, CSS or HTML framework assets. It is for PHP. Then come Composer plugins, and
+other workarounds to make Composer workflow easier. As we have alternatives,
+it is not covered here. Please find more info on the above-mentioned issues.</p>
+
+<p>Specific to Slick libraries, be sure to install Libraries module! Slick has
+different namespace: `slick` as in github, and `slick-carousel` at bower/ npm.</p>
+
+<p>If using Composer with https://github.com/fxpio/composer-asset-plugin and via
+bower-asset, <a href="http://dgo.to/libraries">Libraries</a> module is required.
+Watch out dots and dashes:</p>
+
+<code>$ composer require bower-asset/blazy \
+bower-asset/slick-carousel:^1.8 \
+bower-asset/jquery-mousewheel \
+bower-asset/jquery.easing \
+drupal/blazy \
+drupal/slick
+</code>
+
+Be sure to install `composer-asset-plugin' globally first:
+<code>$ composer global require "fxp/composer-asset-plugin:~1.3"</code>
+
+<p>And setup the required config first:
+https://www.drupal.org/project/slick/issues/2907371#comment-12882235</p>
+</li>
+</ol>
 
 <h3>FEATURES</h3>
 
@@ -58,16 +93,12 @@ Slick 2.x is just out 9/21/15, and hasn't been officially supported now, 9/27.</
   <li>Cacheability + lazyload = light + fast.</li>
 </ul>
 
-<h3>INSTALLATION</h3>
-
-<p>Install the module as usual, more info can be found on:<br />
-http://drupal.org/documentation/install/modules-themes/modules-7</p>
-
+<h3>SUB-MODULES</h3>
 <p>The Slick module has several sub-modules:</p>
 
 <ul>
   <li>slick_ui, included, to manage optionsets, can be uninstalled at production.</li>
-  <li><a href="http://dgo.to/slick_media">slick_media</a>, to get richer contents using Media entity.</li>
+  <li><a href="http://dgo.to/slick_media">slick_media</a>, to get richer contents using Media.</li>
   <li><a href="http://dgo.to/slick_video">slick_video</a>, to get video carousels using Video Embed Field.</li>
   <li><a href="http://dgo.to/slick_paragraphs">slick_paragraphs</a>, to get more complex slides at field level.</li>
   <li><a href="http://dgo.to/slick_views">slick_views</a>, to get more complex slides.</li>
@@ -89,7 +120,6 @@ http://drupal.org/documentation/install/modules-themes/modules-7</p>
   <em>/libraries/mousewheel/jquery.mousewheel.min.js</em></li>
 </ul>
 
-<p>&nbsp;</p>
 
 <h3>OPTIONSETS</h3>
 
@@ -343,6 +373,7 @@ should fix most issues during DEV phases.</p>
 <h3>ROADMAP</h3>
 
 <p>- Bug fixes, code cleanup, optimization, and full release.</p>
+<p>- Core Media integration.</p>
 
 <h3>HOW CAN YOU HELP?</h3>
 

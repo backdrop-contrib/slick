@@ -146,8 +146,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
     $load['library'][] = 'slick/slick.load';
 
-    $components = ['colorbox', 'mousewheel'];
-    foreach ($components as $component) {
+    foreach (['colorbox', 'mousewheel'] as $component) {
       if (!empty($attach[$component])) {
         $load['library'][] = 'slick/slick.' . $component;
       }
@@ -430,7 +429,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $slick[0] = self::slick($build);
 
     // Build the thumbnail Slick.
-    if ($settings['nav'] && isset($build['thumb'])) {
+    if ($settings['nav'] && !empty($build['thumb'])) {
       foreach (['items', 'options', 'settings'] as $key) {
         $build[$key] = isset($build['thumb'][$key]) ? $build['thumb'][$key] : [];
       }
