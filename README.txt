@@ -328,36 +328,40 @@ Thanks.
 
 SUBMITTING PATCHES OR ISSUES
 --------------------------------------------------------------------------------
-SUBMITTING PATCHES OR ISSUES
 Please consider the following to help you explain better, and to help us
 understand better your bug reports, or patches as needed:
 https://www.drupal.org/issue-summaries
 https://www.drupal.org/node/1326662
 
-o If you hate formalism, consider a line, or two in the body text.
+o If you hate formalism, consider a crystal clear line, or two in the body text.
 o Avoid explaining everything in the title.
 o Use body text for explanation purposes.
 o If language is a barrier, use google translate, or alike.
 
 1. SUBMITTING ISSUES
 When submitting bug reports, please:
-o Be kind with proper reproduction, and enough details.
-o Mentioning library version, module version, active theme, or anything which
-  may help us identify issue better would be very helpful.
-o Check out dups.
-o If unsure, file it a support request. We'll mark a bug a bug even if you
+o be kind with proper reproduction, and enough details.
+o mention library version, related-module version, if any, active theme, or
+  anything which may help us identify issue better.
+o ensure the library is loaded, not 404.
+o switch to stock Bartik for just in case it is your custom theme.
+o use matching or similar branches or tags for related modules.
+o check out dups.
+o file it a support request, if unsure. We'll mark a bug a bug even if you
   file it under support requests.
 
 2. SUBMITTING PATCHES
 We consider a patch as help, they consider it a sale, so thank you in advanced!
 In order for you to help, or buy, us successfully, please consider:
 o communicating and filling out the body text with proper explanations, not in
-  comments. I've seen patches which broke a module, so explanation is a must.
+  comments (unless for comment patches, of course).
+  I've seen patches which broke a module, so explanation is a must.
   If you have no time to write it in the body text, please hold off till later!
 o providing optional links to the change records, or docs, if any.
 o providing links to docs is a must for coding standards issues.
-  This also let us, you and me, learn from the actual docs, not told by tools!
+  This also lets us, you and me, learn from the actual docs, not told by tools!
   We can just run `drupalcs ...`, but help is welcome, too, in case a miss.
+o checking out the latest dev branch in case already resolved.
 o providing reproduction steps for bug reports is a must. No repro, no bugs.
 
 You must speak like human to human, and help us respect you, and your time.
@@ -379,7 +383,7 @@ TROUBLESHOOTING
 
 - Always clear the cache, and re-generate JS (if aggregation is on) when
   updating the module to ensure things are picked up:
-  o admin/config/development/performance
+  o /admin/config/development/performance
 
 - If you are customizing template files, or theme functions, be sure to re-check
   against the latest.
@@ -391,7 +395,7 @@ KNOWN ISSUES
 --------------------------------------------------------------------------------
 - Slick admin CSS may not be compatible with private or contrib admin
   themes. Only if trouble with admin display, please disable it at:
-  admin/config/media/blazy
+  /admin/config/media/blazy
 
 - The Slick lazyLoad is not compatible with Responsive image. Slick only
   facilitates Responsive image to get in. The image formatting is taken over by
@@ -421,6 +425,7 @@ KNOWN ISSUES
   o Too much centerPadding at small device affects slidesToShow.
   o Infinite option will create duplicates or clone slides which look more
     obvious if slidesToShow > 1. Simply disable it if not desired.
+    This means that lightboxes (Colorbox, Photobox, PhotoSwipe) will have dups.
   o If thumbnail display is Infinite, the main one must be infinite too, else
     incorrect syncing.
   o adaptiveHeight is no good for vertical.

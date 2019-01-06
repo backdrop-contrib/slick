@@ -221,9 +221,9 @@
         nextArrow: $('.slick-next', a),
         appendArrows: a,
         customPaging: function (slick, i) {
-          var tn = slick.$slides.eq(i).find('[data-thumb]') || null;
-          var img = '<img alt="' + Drupal.t(tn.attr('alt')) + '" src="' + tn.data('thumb') + '">';
-          var dotsThumb = tn.length && o.dotsClass.indexOf('thumbnail') > 0 ?
+          var container = slick.$slides.eq(i).find('[data-thumb]') || null;
+          var img = '<img alt="' + Drupal.t(container.find('img').attr('alt')) + '" src="' + container.data('thumb') + '">';
+          var dotsThumb = container.length && o.dotsClass.indexOf('thumbnail') > 0 ?
             '<div class="slick-dots__thumbnail">' + img + '</div>' : '';
           return slick.defaults.customPaging(slick, i).add(dotsThumb);
         }
