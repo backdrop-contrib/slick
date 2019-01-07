@@ -198,6 +198,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
   /**
    * {@inheritdoc}
+   *
+   * @todo change to non-static method for testability.
    */
   public static function slick(array $build = []) {
     if (empty($build['items'])) {
@@ -238,6 +240,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
   /**
    * Builds the Slick instance as a structured array ready for ::renderer().
+   *
+   * @todo change to non-static method for testability, and alter.
    */
   public static function preRenderSlick(array $element) {
     $build = $element['#build'];
@@ -250,7 +254,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
     // Adds helper class if thumbnail on dots hover provided.
     $dots_class = [];
-    if (!empty($settings['thumbnail_style']) && !empty($settings['thumbnail_effect'])) {
+    if (!empty($settings['thumbnail_effect']) && (!empty($settings['thumbnail_style']) || !empty($settings['thumbnail']))) {
       $dots_class[] = 'slick-dots--thumbnail-' . $settings['thumbnail_effect'];
     }
 
@@ -289,6 +293,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
   /**
    * Returns items as a grid display.
+   *
+   * @todo change to non-static method for testability.
    */
   public static function buildGrid(array $items = [], array &$settings = []) {
     $grids = [];
