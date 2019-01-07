@@ -32,6 +32,7 @@ class SlickSettingsFormTest extends KernelTestBase {
     'system',
     'file',
     'image',
+    'media',
     'blazy',
     'slick',
     'slick_ui',

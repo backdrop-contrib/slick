@@ -198,10 +198,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
   /**
    * {@inheritdoc}
-   *
-   * @todo change to non-static method for testability.
    */
-  public static function slick(array $build = []) {
+  public function slick(array $build = []) {
     if (empty($build['items'])) {
       return [];
     }
@@ -214,7 +212,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       '#theme'      => 'slick',
       '#items'      => [],
       '#build'      => $build,
-      '#pre_render' => [static::class . '::preRenderSlick'],
+      '#pre_render' => [[$this, 'preRenderSlick']],
     ];
 
     $settings = $build['settings'];
@@ -240,10 +238,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
   /**
    * Builds the Slick instance as a structured array ready for ::renderer().
-   *
-   * @todo change to non-static method for testability, and alter.
    */
-  public static function preRenderSlick(array $element) {
+  public function preRenderSlick(array $element) {
     $build = $element['#build'];
     unset($element['#build']);
 
@@ -278,12 +274,12 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
       // Build the Slick grid if provided.
       if (!empty($settings['grid']) && !empty($settings['visible_items'])) {
-        $build['items'] = self::buildGrid($build['items'], $settings);
+        $build['items'] = $this->buildGrid($build['items'], $settings);
       }
     }
 
     $build['options'] = isset($js) ? array_merge($build['options'], $js) : $build['options'];
-    \Drupal::moduleHandler()->alter('slick_optionset', $build['optionset'], $build['settings']);
+    $this->moduleHandler->alter('slick_optionset', $build['optionset'], $build['settings']);
     foreach (['items', 'options', 'optionset', 'settings'] as $key) {
       $element["#$key"] = $build[$key];
     }
@@ -293,10 +289,8 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
   /**
    * Returns items as a grid display.
-   *
-   * @todo change to non-static method for testability.
    */
-  public static function buildGrid(array $items = [], array &$settings = []) {
+  public function buildGrid(array $items = [], array &$settings = []) {
     $grids = [];
 
     // Enforces unslick with less items.
@@ -432,7 +426,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $element['#attached'] = empty($build['attached']) ? $attachments : NestedArray::mergeDeep($build['attached'], $attachments);
 
     // Build the main Slick.
-    $slick[0] = self::slick($build);
+    $slick[0] = $this->slick($build);
 
     // Build the thumbnail Slick.
     if ($settings['nav'] && !empty($build['thumb'])) {
@@ -449,7 +443,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $build['options']['asNavFor'] = "#{$id}-slider";
 
       unset($build['thumb']);
-      $slick[1] = self::slick($build);
+      $slick[1] = $this->slick($build);
     }
 
     // Reverse slicks if thumbnail position is provided to get CSS float work.

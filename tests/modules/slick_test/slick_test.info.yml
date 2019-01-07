@@ -5,6 +5,6 @@ hidden: true
 package: Testing
 core: 8.x
 dependencies:
-  - blazy:blazy_test
-  - slick:slick
+  - blazy:blazy_test (>= 2.x)
+  - slick:slick (>= 2.x)
   - video_embed_field/video_embed_media

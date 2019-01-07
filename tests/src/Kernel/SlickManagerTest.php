@@ -154,13 +154,13 @@ class SlickManagerTest extends BlazyKernelTestBase {
       'optionset' => Slick::load($settings['optionset']),
     ];
 
-    $slick = $manager::slick($build);
+    $slick = $manager->slick($build);
     $this->assertEquals($expected, !empty($slick));
 
     $slick['#build']['settings'] = $settings;
     $slick['#build']['items'] = $items;
 
-    $element = $manager::preRenderSlick($slick);
+    $element = $manager->preRenderSlick($slick);
     $this->assertEquals($expected, !empty($element));
 
     if (!empty($settings['optionset_thumbnail'])) {
