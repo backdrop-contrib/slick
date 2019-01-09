@@ -40,6 +40,8 @@ function slick_config_schema_info_alter(array &$definitions) {
 
 /**
  * Implements hook_field_formatter_info_alter().
+ *
+ * @todo TBD; remove post or prior to release, or keep for core Media.
  */
 function slick_field_formatter_info_alter(array &$info) {
   // Supports Media Entity via VEM within VEF if available.

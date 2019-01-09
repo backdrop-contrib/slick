@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base class for slick entity reference formatters without field details.
  *
  * @see \Drupal\slick_paragraphs\Plugin\Field\FieldFormatter
+ * @see \Drupal\slick_entityreference\Plugin\Field\FieldFormatter
  */
 abstract class SlickEntityFormatterBase extends BlazyEntityBase implements ContainerFactoryPluginInterface {
 

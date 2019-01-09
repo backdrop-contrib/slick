@@ -264,6 +264,15 @@ field.formatter.settings.slick_image:
   label: 'Slick image display format settings'
 
 # The Slick file formatter settings.
+# @deprecated TBD; to be removed.
 field.formatter.settings.slick_file:
   type: slick_image
   label: 'Slick image with ME display format settings'
+
+slick_media:
+  type: slick_extended
+  label: 'Slick media base display format settings'
+
+field.formatter.settings.slick_media:
+  type: slick_media
+  label: 'Slick media display format settings'

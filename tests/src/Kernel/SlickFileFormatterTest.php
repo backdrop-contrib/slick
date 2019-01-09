@@ -11,6 +11,7 @@ use Drupal\Tests\slick\Traits\SlickUnitTestTrait;
  *
  * @coversDefaultClass \Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatter
  * @requires module video_embed_media
+ * @todo remove this test as we no longer support VEM.
  * @group slick
  */
 class SlickFileFormatterTest extends BlazyKernelTestBase {

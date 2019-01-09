@@ -15,15 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for Slick media formatters with field details, and oEmbed support.
  *
- * This is not functional yet till a new formatter is created, or `Slick Media`
- * extends this. The candidate name if included in the main module is
- * `Slick oEmbed`, or just `Slick Media (with oEmbed)`` with machine name
- * `slick_oembed` to avoid conflict with existing `slick_media`. Alternatively
- * replace `Slick Media` with a similar formatter of the main module, and
- * provide a hook_update().
- *
  * @see Drupal\slick_media\Plugin\Field\FieldFormatter\SlickMediaFormatter
- * For the proof of concept, Slick Media 8.x-2.x can extend this to have oEmbed.
  */
 abstract class SlickMediaFormatterBase extends BlazyMediaFormatterBase implements ContainerFactoryPluginInterface {
 
@@ -37,11 +29,12 @@ abstract class SlickMediaFormatterBase extends BlazyMediaFormatterBase implement
   protected $imageStyleStorage;
 
   /**
-   * Constructs a BlazyFormatter object.
+   * Constructs a SlickMediaFormatter object.
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, BlazyOEmbed $blazy_oembed, SlickFormatterInterface $formatter, EntityStorageInterface $image_style_storage, SlickManagerInterface $manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $logger_factory, $blazy_oembed, $formatter);
 
+    // @todo $this->imageFactory = $image_factory;
     $this->imageStyleStorage = $image_style_storage;
     $this->formatter         = $formatter;
     $this->manager           = $manager;

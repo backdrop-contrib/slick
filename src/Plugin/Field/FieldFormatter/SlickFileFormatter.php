@@ -9,6 +9,9 @@ use Drupal\blazy\Dejavu\BlazyVideoTrait;
  * Plugin implementation of the 'Slick File' formatter to get ME within images.
  *
  * This is not 'Slick Media', instead a simple mix of image and optional video.
+ *
+ * @deprecated for Slick Media (with oEmbed).
+ * @todo remove post/ prior to 2.x release.
  */
 class SlickFileFormatter extends SlickFileFormatterBase {
 
