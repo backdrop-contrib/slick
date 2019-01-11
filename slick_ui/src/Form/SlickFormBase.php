@@ -134,9 +134,9 @@ abstract class SlickFormBase extends EntityForm {
       '#type'          => 'select',
       '#title'         => $this->t('Group'),
       '#options'       => [
-        'main'      => t('Main'),
-        'overlay'   => t('Overlay'),
-        'thumbnail' => t('Thumbnail'),
+        'main'      => $this->t('Main'),
+        'overlay'   => $this->t('Overlay'),
+        'thumbnail' => $this->t('Thumbnail'),
       ],
       '#empty_option'  => $this->t('- None -'),
       '#default_value' => $slick->getGroup(),
