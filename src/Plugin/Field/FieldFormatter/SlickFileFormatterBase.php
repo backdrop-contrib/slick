@@ -87,7 +87,7 @@ abstract class SlickFileFormatterBase extends BlazyFileFormatterBase {
 
     foreach ($files as $delta => $file) {
       $settings['delta'] = $delta;
-      $settings['type']  = 'image';
+      $settings['type'] = 'image';
 
       /** @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
       $item = $file->_referringItem;
@@ -124,7 +124,7 @@ abstract class SlickFileFormatterBase extends BlazyFileFormatterBase {
         $thumb = ['settings' => $settings];
 
         // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-        $thumb[$item_id]  = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($settings, $element['item']);
+        $thumb[$item_id] = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($settings, $element['item']);
         $thumb['caption'] = empty($element['item']->{$tn_caption}) ? [] : ['#markup' => Xss::filterAdmin($element['item']->{$tn_caption})];
 
         $build['thumb']['items'][$delta] = $thumb;

@@ -44,12 +44,14 @@ class SlickManagerTest extends BlazyKernelTestBase {
 
     $bundle = $this->bundle;
 
+    $this->messenger = $this->container->get('messenger');
     $this->slickAdmin = $this->container->get('slick.admin');
     $this->blazyAdminFormatter = $this->slickAdmin;
     $this->slickFormatter = $this->container->get('slick.formatter');
     $this->slickManager = $this->container->get('slick.manager');
 
     $this->slickForm = new SlickForm(
+      $this->messenger,
       $this->slickAdmin,
       $this->slickManager
     );
@@ -138,7 +140,7 @@ class SlickManagerTest extends BlazyKernelTestBase {
    * @dataProvider providerTestSlickBuild
    */
   public function testBuild($items, array $settings, array $options, $expected) {
-    $manager  = $this->slickManager;
+    $manager = $this->slickManager;
     $defaults = $this->getFormatterSettings() + Slick::htmlSettings();
     $settings = array_merge($defaults, $settings);
 

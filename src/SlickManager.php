@@ -117,7 +117,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    * {@inheritdoc}
    */
   public function attach($attach = []) {
-    $attach['slick_css']  = isset($attach['slick_css']) ? $attach['slick_css'] : $this->configLoad('slick_css', 'slick.settings');
+    $attach['slick_css'] = isset($attach['slick_css']) ? $attach['slick_css'] : $this->configLoad('slick_css', 'slick.settings');
     $attach['module_css'] = isset($attach['module_css']) ? $attach['module_css'] : $this->configLoad('module_css', 'slick.settings');
 
     $load = parent::attach($attach);

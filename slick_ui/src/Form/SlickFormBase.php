@@ -10,6 +10,7 @@ use Drupal\slick\Entity\Slick;
 use Drupal\slick\Form\SlickAdminInterface;
 use Drupal\slick\SlickManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Messenger\Messenger;
 
 /**
  * Provides base form for a slick instance configuration form.
@@ -31,6 +32,13 @@ abstract class SlickFormBase extends EntityForm {
   protected $manager;
 
   /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\Messenger
+   */
+  protected $messenger;
+
+  /**
    * The JS easing options.
    *
    * @var array
@@ -40,7 +48,8 @@ abstract class SlickFormBase extends EntityForm {
   /**
    * Constructs a SlickForm object.
    */
-  public function __construct(SlickAdminInterface $admin, SlickManagerInterface $manager) {
+  public function __construct(Messenger $messenger, SlickAdminInterface $admin, SlickManagerInterface $manager) {
+    $this->messenger = $messenger;
     $this->admin = $admin;
     $this->manager = $manager;
   }
@@ -50,6 +59,7 @@ abstract class SlickFormBase extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('messenger'),
       $container->get('slick.admin'),
       $container->get('slick.manager')
     );
@@ -256,12 +266,12 @@ abstract class SlickFormBase extends EntityForm {
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity.
       // @todo #2278383.
-      drupal_set_message($this->t('@config_prefix %label has been updated.', $message));
+      $this->messenger->addMessage($this->t('@config_prefix %label has been updated.', $message));
       $this->logger('slick')->notice('@config_prefix %label has been updated.', $notice);
     }
     else {
       // If we created a new entity.
-      drupal_set_message($this->t('@config_prefix %label has been added.', $message));
+      $this->messenger->addMessage($this->t('@config_prefix %label has been added.', $message));
       $this->logger('slick')->notice('@config_prefix %label has been added.', $notice);
     }
   }
@@ -274,7 +284,7 @@ abstract class SlickFormBase extends EntityForm {
       $form_state->setValue('breakpoints_count', $form_state->getValue('breakpoints'));
       if ($form_state->getValue('breakpoints') >= 6) {
         $message = $this->t('You are trying to load too many Breakpoints. Try reducing it to reasonable numbers say, between 1 to 5.');
-        drupal_set_message($message, 'warning');
+        $this->messenger->addMessage($message, 'warning');
       }
     }
 

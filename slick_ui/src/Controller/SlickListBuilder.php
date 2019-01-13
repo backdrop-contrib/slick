@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\blazy\BlazyGrid;
 use Drupal\slick\SlickManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Messenger\Messenger;
 
 /**
  * Provides a listing of Slick optionsets.
@@ -25,18 +26,28 @@ class SlickListBuilder extends DraggableListBuilder {
   protected $manager;
 
   /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\Messenger
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new SlickListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
+   * @param \Drupal\Core\Messenger\Messenger $messenger
+   *   The messenger service.
    * @param \Drupal\slick\SlickManagerInterface $manager
    *   The slick manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, SlickManagerInterface $manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, Messenger $messenger, SlickManagerInterface $manager) {
     parent::__construct($entity_type, $storage);
     $this->manager = $manager;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -46,6 +57,7 @@ class SlickListBuilder extends DraggableListBuilder {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
+      $container->get('messenger'),
       $container->get('slick.manager')
     );
   }
@@ -77,7 +89,7 @@ class SlickListBuilder extends DraggableListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $skins = $this->manager->getSkins()['skins'];
-    $skin  = $entity->getSkin();
+    $skin = $entity->getSkin();
 
     $row['label'] = Html::escape($entity->label());
     $row['breakpoints']['#markup'] = $entity->getBreakpoints();
@@ -183,7 +195,7 @@ class SlickListBuilder extends DraggableListBuilder {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    drupal_set_message($this->t('The optionsets order has been updated.'));
+    $this->messenger->addMessage($this->t('The optionsets order has been updated.'));
   }
 
 }

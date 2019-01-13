@@ -5,11 +5,36 @@ namespace Drupal\slick_ui\Form;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\Messenger;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds the form to delete a Slick optionset.
  */
 class SlickDeleteForm extends EntityConfirmFormBase {
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\Messenger
+   */
+  protected $messenger;
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(Messenger $messenger) {
+    $this->messenger = $messenger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('messenger')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -38,7 +63,7 @@ class SlickDeleteForm extends EntityConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
 
-    drupal_set_message($this->t('The Slick optionset %label has been deleted.', ['%label' => $this->entity->label()]));
+    $this->messenger->addMessage($this->t('The Slick optionset %label has been deleted.', ['%label' => $this->entity->label()]));
     $this->logger('user')->notice('Deleted optionset %oid (%label)', ['%oid' => $this->entity->id(), '%label' => $this->entity->label()]);
 
     $form_state->setRedirectUrl($this->getCancelUrl());
