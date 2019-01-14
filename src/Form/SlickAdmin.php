@@ -107,7 +107,7 @@ class SlickAdmin implements SlickAdminInterface {
       $this->fieldableForm($form, $definition);
     }
 
-    if (!empty($definition['breakpoints'])) {
+    if (!empty($definition['breakpoints']) && !$this->manager()->configLoad('unbreakpoints', 'blazy.settings')) {
       $this->blazyAdmin->breakpointsForm($form, $definition);
     }
 
