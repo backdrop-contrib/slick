@@ -8,8 +8,8 @@ See http://kenwheeler.github.io/slick
 
 Slick has gazillion options, please start with the very basic working
 samples from slick_example [1] only if trouble to build slicks. Be sure to read
-its README.txt [2]. Spending 5 minutes or so will save you hours in building more
-complex slideshows.
+its README.txt [2]. Spending 5 minutes or so will save you hours in building
+more complex slideshows.
 
 The module supports Slick 1.6 above until 1.8.1. Versions 1.9.0 and above are
 not currently supported. Slick 2.x is just out 9/21/15, and hasn't been
@@ -58,9 +58,10 @@ INSTALLATION
   https://www.drupal.org/project/slick/issues/2907371#comment-12882235
 
   It is up to you to decide which works best. Composer is not designed to manage
-  JS, CSS or HTML framework assets. It is for PHP. Then come Composer plugins, and
-  other workarounds to make Composer workflow easier. As we have alternatives,
-  it is not covered here. Please find more info on the above-mentioned issues.
+  JS, CSS or HTML framework assets. It is for PHP. Then come Composer plugins,
+  and other workarounds to make Composer workflow easier.
+  As we have alternatives, it is not covered here.
+  Please find more info on the above-mentioned issues.
 
   Specific to Slick libraries, be sure to install Libraries module! Slick has
   different namespace: `slick` as in github, and `slick-carousel` at bower/ npm.

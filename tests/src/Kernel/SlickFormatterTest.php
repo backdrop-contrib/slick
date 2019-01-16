@@ -85,7 +85,6 @@ class SlickFormatterTest extends BlazyKernelTestBase {
    * Tests the Slick formatters.
    */
   public function testSlickFormatter() {
-    $bundle = $this->bundle;
     $entity = $this->entity;
 
     // Generate the render array to verify if the cache tags are as expected.

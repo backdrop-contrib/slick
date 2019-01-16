@@ -207,7 +207,6 @@ abstract class SlickFormBase extends EntityForm {
     $default = $slick->id() == 'default';
     if (!$default && !$form_state->isValueEmpty('optimized')) {
       $defaults = $slick::defaultSettings();
-      $options  = $form_state->getValue('options');
       $required = $this->getOptionsRequiredByTemplate();
       $main     = array_diff_assoc($defaults, $required);
       $settings = $form_state->getValue(['options', 'settings']);
