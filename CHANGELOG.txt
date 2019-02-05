@@ -1,0 +1,19 @@
+
+Slick 7.x-3.0-dev, 2019-01-19
+-----------------------------
+- Deprecated old Slick carousel formatter to the new ones suffixed with field
+  type: slick_file, slick_image, slick_field_collection, slick_paragraphs so
+  that each can have a unique class. Previously just named `slick' and possible
+  with module_load_include(). Now using autoloaded classes.
+- Moved most reusable JS and CSS into Blazy.
+- Moved extra skins into slick_extras.module, not slick_example.
+- Removed general options, and moved js-related options into the main settings.
+- Added theme_slick_thumbnail() and theme_slick_vanilla() to reduce complexity
+  at theme_slick_slide(), and more fine grained theming.
+- Renamed hook_slick_attach_load_info_alter() to hook_slick_attach_alter().
+- Removed theme_slick_image() for theme_blazy().
+- Removed slick-grid.tpl.php for function theme_slick_grid().
+- Changed slick-item.tpl.php into slick-slide.tpl.php, and use
+  theme_slick_slide() by default now.
+- Changed slick.tpl.php into function theme_slick() by default now.
+- Initial commit.

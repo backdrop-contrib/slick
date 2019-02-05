@@ -1,0 +1,10 @@
+name = Slick UI
+description = 'Provides Slick carousel configuration UI.'
+core = 7.x
+package = Slick
+configure = admin/config/media/slick/ui
+
+autoload = TRUE
+registry_autoload[] = PSR-4
+
+dependencies[] = slick:slick (>= 3.x)

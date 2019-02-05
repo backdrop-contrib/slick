@@ -1,0 +1,13 @@
+name = Slick Test
+description = 'Testing Slick.'
+type = module
+hidden = true
+package = Testing
+core = 7.x
+
+autoload = TRUE
+registry_autoload[] = PSR-4
+
+dependencies[] = registry_autoload:registry_autoload
+dependencies[] = blazy:blazy
+dependencies[] = slick:slick (>= 3.x)
