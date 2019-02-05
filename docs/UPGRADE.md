@@ -14,7 +14,7 @@ Migration is not supported, yet. Consider 3.x for new sites only.
 Although the relevant updates are provided, but we haven't thoroughly reviewed
 the migration path with tons of slick instances, nor considering theme changes.
 This branch is a backport of 8.x, so it may not be compatible with the previous
-branch. It is a complete rewrite without. Although Slick 3.x strives to stick
+branch. It is a complete rewrite. Although Slick 3.x strives to stick
 to 2.x convention, but may break it here and there.
 
 The only advantage of this branch is Blazy, autoload, and a few 8.x goodness.
@@ -156,7 +156,7 @@ Otherwise we may have to do more homeworks for a smoother migration.
      * slick_extras/src/SlickExtrasSkin.php
      * slick_example/src/SlickExampleSkin.php
 
-     Chek out slick.info file for sample to hook into one of autoloader modules.
+     Check out slick.info file for sample to hook into one of autoloader modules.
      And clear cache as usual as these skins are cached.
 
 3. **Formatter IDs**
@@ -171,7 +171,7 @@ Otherwise we may have to do more homeworks for a smoother migration.
 
    [/admin/config/media/slick/ui](/admin/config/media/slick/ui)
 
-   Otherwise you may have change it manually.
+   Otherwise you may have to change it manually.
 
    The reason for the change is now Slick uses classes, previously used
    `module_load_include()`. So it needs a unique plugin ID to begin with.
@@ -179,7 +179,7 @@ Otherwise we may have to do more homeworks for a smoother migration.
    bloating the runtime functions or module file, nor hard dependencies thanks
    to Drupal hooks which simply mean only a portion of codes are executed at
    runtime, not all at once. Classes are just more awesome with autoload still
-   no hard depenndencies.
+   no hard dependencies.
 
 4. **Libraries**
 
@@ -234,6 +234,7 @@ You don't need to extend classes unless it makes your life easier. Please stick
 to 2.x. Or gradually update and replace deprecated functions for the new ones.
 See `slick.deprecated.inc` for details as they shall be removed on full release.
 
+Below is only needed if you import classes in your module. Otherwise ignore.
 In your MODULE.info file, include one of the supported autoloader modules along
 with their required directives, e.g.:
 ```
