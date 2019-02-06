@@ -75,7 +75,10 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
 
       // Extract relevant variables from image or file entity/ media.
       foreach (['attributes', 'height', 'weight', 'alt', 'title'] as $key) {
-        $thumbnail["#$key"] = isset($item->{$key}) ? $item->{$key} : NULL;
+        // Do not output empty value to prevent ugly title undefined.
+        if ($item && isset($item->{$key})) {
+          $thumbnail["#$key"] = $item->{$key};
+        }
       }
     }
     return $thumbnail;

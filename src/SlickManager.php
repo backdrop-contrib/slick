@@ -334,7 +334,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
    * Returns items as a grid display.
    */
   public function buildGrid(array $items, array &$settings = []) {
-    // Enforces unslick with less items.
+    // Enforces unslick with less items. A slideshow should slide, else destroy.
     if (empty($settings['unslick']) && !empty($settings['count'])) {
       $settings['unslick'] = $settings['count'] < $settings['visible_items'];
     }
@@ -434,7 +434,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
    */
   public function prepareWrapperAttributes(array $settings = []) {
     $classes = [];
-    if ($settings['skin']) {
+    if (!empty($settings['skin'])) {
       $classes[] = str_replace('_', '-', $settings['skin']);
     }
     if (!empty($settings['skin_thumbnail'])) {

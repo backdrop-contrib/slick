@@ -93,7 +93,7 @@ use Drupal\slick\Entity\Slick;
  *
  * @section sec_detail Detailed sample #2
  *
- * This can go to some hook_preprocess() of a target html.twig, or any relevant
+ * This can go to some hook_preprocess() of a target .tpl.php, or any relevant
  * PHP file.
  *
  * The goal is to create a vertical newsticker, or tweets, with pure text only.
@@ -118,9 +118,9 @@ use Drupal\slick\Entity\Slick;
  *   // @see \Drupal\slick\SlickDefault for most supported settings.
  *   $build['settings'] = [
  *     // Optional optionset name, otherwise fallback to default.
- *     // 'optionset' => 'blog',
+ *     'optionset' => 'blog',
  *     // Optional skin name fetched from hook_slick_skins_info(), else none.
- *     // 'skin' => 'fullwidth',
+ *     'skin' => 'fullwidth',
  *     // Define the main ID. The rest are managed by the module.
  *     // If you provide ID, be sure unique per instance as it is cached.
  *     // Leave empty to be provided by the module.
@@ -160,7 +160,7 @@ use Drupal\slick\Entity\Slick;
  *
  *         // Optionally add a custom layout, can be a static uniform value, or
  *         // dynamic one based on the relevant field value.
- *         // @see src/Plugin/Field/README.txt for the supported layout keys.
+ *         // @see slick_fields/README.md for the supported layout keys.
  *         'layout' => 'bottom',
  *
  *         // Optionally add a custom class, can be a static uniform class, or
@@ -263,15 +263,15 @@ use Drupal\slick\Entity\Slick;
  *       // contains:
  *       // item: Drupal\image\Plugin\Field\FieldType\ImageItem.
  *       // Slick expects a render array for each item, here for simplicity.
- *       'slide'   => '<img src="/path/to/image-0' . $key . '.jpg">',
+ *       'slide' => '<img src="/path/to/image-0' . $key . '.jpg">',
  *
  *       // Main caption contains: alt, data, link, overlay, title keys which
  *       // serve the purpose to have consistent markups and skins without
  *       // bothering much nor remembering what HTML tags and where to place to
- *       // provide for each purpose cosnsitently. CSS will do layout regardless
+ *       // provide for each purpose consistently. CSS will do layout regardless
  *       // HTML composition.
  *       // If having more complex caption data, use 'data' key instead.
- *       // If the common layout doesn't satisfy the need, just override twig.
+ *       // If the common layout doesn't satisfy the need, just override .tpl.
  *       'caption' => ['title' => 'Description #' . $key],
  *     ];
  *   }
@@ -307,7 +307,7 @@ use Drupal\slick\Entity\Slick;
  *       // Use $formatter->getThumbnail($settings) where $settings contain:
  *       // uri, image_style, height, width, alt, title.
  *       // Slick expects a render array for each item, here for simplicity.
- *       'slide'   => '<img src="/path/to/image-0' . $key . '.jpg">',
+ *       'slide' => '<img src="/path/to/image-0' . $key . '.jpg">',
  *
  *       // Thumbnail caption accepts direct markup or custom renderable array
  *       // without any special key to be simple as much as complex.
@@ -348,7 +348,7 @@ use Drupal\slick\Entity\Slick;
  *
  * The class must implement \Drupal\slick\SlickSkinInterface, and it has 3
  * supported methods: ::skins(), ::dots(), ::arrows() to have skin options for
- * main/thumbnail/overlay/nested displays, dots, and arrows skins respectively.
+ * main/thumbnail displays, dots, and arrows skins respectively.
  * The declared skins will be available for custom coded, or UI selections.
  *
  * @see \Drupal\slick\SlickSkinInterface
@@ -368,11 +368,15 @@ use Drupal\slick\Entity\Slick;
  * A skin can specify CSS and JS files to include when Slick is displayed,
  * except for a thumbnail skin which accepts CSS only.
  *
- * Each skin supports 5 keys:
+ * Each skin supports a few keys:
  * - name: The human readable name of the skin.
  * - description: The description about the skin, for help and manage pages.
+ * - dependencies: An array of library dependencies.
  * - css: An array of CSS files to attach.
  * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
+ * - options: An array of JS options to be included within [data-slick] such
+ *     as when integrating extra libraries defined at `js` which later can be
+ *     accessed by JS via [data-slick] to work with.
  * - group: A string grouping the current skin: main, thumbnail.
  * - provider: A module name registering the skins.
  *

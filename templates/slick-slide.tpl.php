@@ -29,7 +29,7 @@
 ?>
 <?php
   $slide = empty($item['slide']) ? '' : render($item['slide']);
-  if ($slide && $settings['split'] && !$settings['unslick']) {
+  if ($slide && $settings['split'] && empty($settings['unslick'])) {
     $slide = '<div class="slide__media">' . $slide . '</div>';
   }
 ?>

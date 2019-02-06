@@ -28,13 +28,6 @@ class SlickLibrary extends BlazyLibrary {
    */
   public function libraryAlter(&$libraries, $extension) {
     if ($extension === 'slick') {
-      $library_path = libraries_get_path('slick') ?: libraries_get_path('slick-carousel');
-      if ($library_path) {
-        $libraries['slick']['js'] = [$library_path . '/slick/slick.min.js' => ['group' => JS_LIBRARY]];
-        $libraries['slick']['css']['base'] = [$library_path . '/slick/slick.css' => []];
-        $libraries['css']['css']['theme'] = [$library_path . '/slick/slick-theme.css' => []];
-      }
-
       $library_easing = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
       if ($library_easing) {
         $easing_path = $library_easing . '/jquery.easing.min.js';

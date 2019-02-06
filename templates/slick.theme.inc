@@ -161,11 +161,6 @@ function template_preprocess_slick(&$variables) {
   $attributes['class'] = array_merge(['slick'], $custom_classes);
   $content_attributes  = &$variables['content_attributes_array'];
 
-  // Merge few common JS affecting HTML displays into settings.
-  foreach (SlickDefault::jsSettings() as $key => $default) {
-    $settings[$key] = isset($js[$key]) ? $js[$key] : $default;
-  }
-
   // Blazy can still lazyload an unslick.
   $settings['lazy'] = $settings['lazy'] ?: $js['lazyLoad'];
   if ($display != 'thumbnail' && ($settings['lazy'] == 'blazy' || !empty($settings['blazy']))) {
@@ -184,13 +179,13 @@ function template_preprocess_slick(&$variables) {
     $attributes['class'][] = 'unslick';
   }
   else {
-    if ($settings['count'] <= $settings['slidesToShow']) {
+    if ($settings['count'] <= $js['slidesToShow']) {
       $attributes['class'][] = 'slick--less';
     }
 
     // Main arrows.
     $arrows = [];
-    if ($settings['vertical']) {
+    if ($js['vertical']) {
       $arrows[] = 'slick__arrow--v';
     }
     if ($settings['skin_arrows']) {
@@ -199,14 +194,14 @@ function template_preprocess_slick(&$variables) {
     $variables['arrow_attributes_array']['class'] = array_merge(['slick__arrow'], $arrows);
 
     // Down arrows.
-    $variables['arrow_down_attributes_array'] = [];
+    $downs = [];
     if ($display == 'main' && !empty($js['downArrow']) && !empty($js['downArrowTarget'])) {
       $downs['class'] = ['slick-down'];
       $downs['data-offset'] = $js['downArrowOffset'];
       $downs['data-target'] = $js['downArrowTarget'];
-      $variables['arrow_down_attributes_array'] = $downs;
       $attributes['class'][] = 'slick--has-arrow-down';
     }
+    $variables['arrow_down_attributes_array'] = $downs;
 
     // Main arrows.
     // @todo remove the $settings parts (BC) for $js to reduce dups.
@@ -228,7 +223,7 @@ function template_preprocess_slick(&$variables) {
     }
   }
 
-  // Pass settings and attributes to theme_slick().
+  // Pass js, settings and attributes to theme_slick().
   $variables['js'] = $js;
   $variables['settings'] = $settings;
 
@@ -242,7 +237,7 @@ function template_preprocess_slick(&$variables) {
     unset($item['settings'], $item['attributes'], $item['item']);
 
     // Using non-hard-coded theme_slick_BLAH() is simply for flexibility
-    // to extend functionality -- lightbox, media, main image or thumbnail, etc.
+    // to extend functionality -- lightbox, grid, main media or thumbnail, etc.
     // before arriving here. This is kind of tiny control room to decide what
     // to do with each item. Note the new vanilla and thumbnail themes.
     $theme = $settings['vanilla'] ? 'vanilla' : ($display == 'thumbnail' ? 'thumbnail' : 'slide');
@@ -332,7 +327,7 @@ function theme_slick_slide(array $variables) {
   extract($variables);
 
   $slide = empty($item['slide']) ? '' : drupal_render($item['slide']);
-  if ($slide && $settings['split'] && !$settings['unslick']) {
+  if ($slide && $settings['split'] && empty($settings['unslick'])) {
     $slide = '<div class="slide__media">' . $slide . '</div>';
   }
 

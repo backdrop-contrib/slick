@@ -36,7 +36,7 @@ Migrate at your own risk! Be prepared this update may kill your kittens.
 
    Although Slick 3.x strives to stick to 2.x convention, but not always.
 
-4. **Clear cache** to prevent .tpl removal from blocking the update process.
+4. **Clear cache** to prevent the .tpl removal from blocking the update process.
    If you don't modify slick .tpl files, please skip steps #3, #4.
 
 5. Running `/update.php` or `drush updb` is required.
@@ -64,7 +64,7 @@ Skip #1 and #2 if Blazy was in place.
 4. Run `/update.php` or `drush updb`:
    * to bulk convert old optionsets which were stdClass instances to be
      `\Drupal\slick\Entity\Slick` class instances.
-   * to change deprecated Slick formatter into the new ones automatically.
+   * to change the deprecated Slick formatter into the new ones automatically.
 
 5. Note the errors, if any, and please report. Or continue below.
 
@@ -115,29 +115,31 @@ Otherwise we may have to do more homeworks for a smoother migration.
    * Removed theme_slick_image() for theme_blazy().
    * Removed slick-grid.tpl.php for theme_slick_grid().
    * Changed slick.tpl.php for theme_slick() by default.
-   * Changed slick-item.tpl.php into slick-slide.tpl.php.
+   * Changed and removed slick-item.tpl.php for slick-slide.tpl.php.
    * Changed theme_slick_item() into theme_slick_slide() for clarity like 8.x.
 
    Slick 3.x has only two template files: `slick-slide.tpl.php`, and
    `slick.tpl.php` which are not used by default till you copy to your theme,
-   only if you need to. Slick now uses theme functions instead.
+   only if you need to. If not, ignore. Slick now uses theme functions instead.
    Since they are both PHP, not Twig, it makes no big difference as they are
    both equally themeable, except probably some performance gain.
 
-   If you modified any, be sure to update them accordingly.
-   Especially the `slick-slide.tpl.php` and `slick-grid.tpl.php` file which has
-   different render array. Previously has `item` and `caption` as separate
-   variables. Now merged into `item` to be `item.slide` and `item.caption`.
+   Only if you modified any, be sure to update them accordingly. If not, ignore.
+   Especially the `slick-slide.tpl.php` file which has different render array.
+   Also update the removed `slick-grid.tpl.php` for `theme_slick_grid()`.
+   Previously has `item` and `caption` as separate variables. Now merged into
+   `item` to be `item.slide` and `item.caption`.
    It is simply to make generic and consistent variables for new slick themes:
-   theme_slick_vanilla(), and theme_slick_thumbnail() where both may or may not
-   have captions.
+   `theme_slick_vanilla()`, and `theme_slick_thumbnail()` where both may or may
+   not have captions.
 
 3. **Skins**
    * Like D8, extra skins are moved into slick_extras.module, not slick_example.
      Be sure to enable slick_extras if using stock skins. This ensures you can
      uninstall slick_example, but left slick_extras enabled just for skins.
-   * Skins are no longer stored at MY_MODULE.slick.inc. Now moved into a class
-     file says, src/SlickMyModuleSkin.php, implementing SlickSkinInterface.
+   * Skins are no longer stored at **MY_MODULE.slick.inc**. Now moved into a
+     class file says, src/SlickMyModuleSkin.php which implements
+     SlickSkinInterface.
 
      Registering skins in the .module file is still the same, except its
      content is now moved into a class file SlickMyModuleSkin.php, and replaced
@@ -156,8 +158,8 @@ Otherwise we may have to do more homeworks for a smoother migration.
      * slick_extras/src/SlickExtrasSkin.php
      * slick_example/src/SlickExampleSkin.php
 
-     Check out slick.info file for sample to hook into one of autoloader modules.
-     And clear cache as usual as these skins are cached.
+     Check out slick.info file for sample to hook into one of autoloader
+     modules. And clear cache as usual as these skins are cached.
 
 3. **Formatter IDs**
 
@@ -186,13 +188,14 @@ Otherwise we may have to do more homeworks for a smoother migration.
    Most Slick libraries, like D8, are now moved into Blazy to be re-usable for
    non-carousel formatters or Views styles. If you use any manually in code,
    be sure to update it to reference Blazy libraries instead.
+   Slick 3.x has now only slick.colorbox.js and slick.load.js.
 
 5. **Optionset/ API**, if you don't store optionsets in codebase, skip below.
   + Options under `general` are removed. Some merged into the main options.
     If you added a custom wrapper class under `General` option, be sure to use
-    preprocess now, or override theme_slick() accordingly.
+    preprocess now, or override `theme_slick()` accordingly.
   + Renamed ctools plugin api from `slick_default_preset` to `slick_optionset`.
-    Update your hook_ctools_plugin_api() to use `slick_optionset`.
+    Update your `hook_ctools_plugin_api()` to use `slick_optionset`.
     With this, also changed `MY_MODULE.slick_default_preset.inc` into
     `MY_MODULE.slick_optionset.inc`.
     If using bulk exporter, this is already taken care of by ctools exporter,
@@ -225,8 +228,8 @@ Otherwise we may have to do more homeworks for a smoother migration.
         }
         ````
 
-        Be sure you add relevant autoload directives into your MODULE.info file.
-        See below for details.
+        Important! Be sure you add relevant autoload directives into your
+        MODULE.info file. See below for details.
 
 
 ## MIGRATING SLICK (CUSTOM) MODULES FROM 2.x TO 3.x
@@ -234,9 +237,9 @@ You don't need to extend classes unless it makes your life easier. Please stick
 to 2.x. Or gradually update and replace deprecated functions for the new ones.
 See `slick.deprecated.inc` for details as they shall be removed on full release.
 
-Below is only needed if you import classes in your module. Otherwise ignore.
-In your MODULE.info file, include one of the supported autoloader modules along
-with their required directives, e.g.:
+Below is only needed if you import classes or optionsets in your module.
+Otherwise ignore. In your MODULE.info file, include one of the supported
+autoloader modules along with their required directives, e.g.:
 ```
 ; This is for autoload.module
 autoload = TRUE
@@ -260,11 +263,11 @@ dependencies[] = xautoload:xautoload
 Decide which works best for you.
 
 ## KNOWN ISSUES WITH AUTOLOADER
-* autoload: must run `drush aur` and `drush cc` on Blazy, or Slick activation,
-  or fatal. The same procedure applies whenever blazy-related modules are
-  activated, or adding new classes. Especially during DEV, Alpha, Beta.
-  If not using drush, consider the other two:
-  registry_autoload, xautoload.
+* **autoload**: must run `drush aur` and `drush cc` on Blazy, or Slick
+  activation, or fatal. The same procedure applies whenever blazy-related
+  modules are activated, or adding new classes. Especially during DEV, Alpha,
+  Beta. If not using drush, consider the other two:
+  **registry_autoload**, **xautoload**.
 
 This 3.x branch is meant to take advantage of Blazy features, and DRY.
 

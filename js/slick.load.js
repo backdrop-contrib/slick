@@ -179,7 +179,7 @@
         }
 
         // @todo remove fix for unclean unslick.
-        if (t.hasClass('unslick')) {
+        if (t.hasClass('unslick') && t.find('.slick-dots').length) {
           t.find('.slick-dots').remove();
         }
 
