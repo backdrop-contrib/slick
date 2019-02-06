@@ -6,8 +6,8 @@
  *
  * Slick 3.x strives to be compatible with Slick 2.x, but not always.
  * Unlike Slick 2.x which uses .tpl, Slick 3.x uses theme functions with the
- * expected render array for some. An extra care is needed as Slick 3.x still
- * supports the unused optional .tpl files, as well.
+ * expected render array for some. An extra care (string vs. render array) is
+ * needed as Slick 3.x still supports the unused optional .tpl files, as well.
  */
 
 use Drupal\blazy\Blazy;
@@ -97,16 +97,16 @@ function theme_slick_wrapper(array $variables) {
  * @param array $variables
  *   An associative array containing:
  *   - items: The array of items containing main image/video/audio, optional
- *     image/video/audio overlay and captions, and optional thumbnail
- *     texts/images.
+ *       image/video/audio overlay and captions, and optional thumbnail
+ *       texts/images.
  *   - js: The JS optionset which may contain configurable HTML such as arrows.
  *   - settings: A cherry-picked settings that mostly defines the slide HTML or
- *     layout, and few JS settings/options which affect HTML output.
+ *       layout, and few JS settings/options which affect HTML output.
  *   - attributes: The attributes to hold the main container classes, RTL, id.
  *   - content_attributes: The array of attributes to hold optional id and
- *     data-slick containing JSON object aka JS settings the Slick expects to
- *     override default options. We don't store these JS settings in the normal
- *     <head>, but inline within data-slick attribute instead.
+ *       data-slick containing JSON object aka JS settings the Slick expects to
+ *       override default options. We don't store these JS settings in the
+ *       normal <head>, but inline within data-slick attribute instead.
  *
  * @ingroup themeable
  */
@@ -157,8 +157,8 @@ function template_preprocess_slick(&$variables) {
   $settings['unslick'] = $settings['unslick'] || $settings['count'] == 1;
   $attributes          = &$variables['attributes_array'];
   $custom_classes      = isset($attributes['class']) ? $attributes['class'] : [];
-  $attributes['id']    = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
   $attributes['class'] = array_merge(['slick'], $custom_classes);
+  $attributes['id']    = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
   $content_attributes  = &$variables['content_attributes_array'];
 
   // Blazy can still lazyload an unslick.
@@ -183,25 +183,29 @@ function template_preprocess_slick(&$variables) {
       $attributes['class'][] = 'slick--less';
     }
 
-    // Main arrows.
-    $arrows = [];
+    // Arrows.
+    $arrows = $downs = [];
     if ($js['vertical']) {
       $arrows[] = 'slick__arrow--v';
     }
-    if ($settings['skin_arrows']) {
-      $arrows[] = 'slick__arrow--' . str_replace('_', '-', $settings['skin_arrows']);
-    }
-    $variables['arrow_attributes_array']['class'] = array_merge(['slick__arrow'], $arrows);
 
-    // Down arrows.
-    $downs = [];
-    if ($display == 'main' && !empty($js['downArrow']) && !empty($js['downArrowTarget'])) {
-      $downs['class'] = ['slick-down'];
-      $downs['data-offset'] = $js['downArrowOffset'];
-      $downs['data-target'] = $js['downArrowTarget'];
-      $attributes['class'][] = 'slick--has-arrow-down';
+    // Only makes sense for the main display.
+    if ($display == 'main') {
+      if ($settings['skin_arrows']) {
+        $arrows[] = 'slick__arrow--' . str_replace('_', '-', $settings['skin_arrows']);
+      }
+
+      // Down arrows.
+      if (!empty($js['downArrow']) && !empty($js['downArrowTarget'])) {
+        $downs['class'] = ['slick-down'];
+        $downs['data-offset'] = $js['downArrowOffset'];
+        $downs['data-target'] = $js['downArrowTarget'];
+        $attributes['class'][] = 'slick--has-arrow-down';
+      }
     }
+
     $variables['arrow_down_attributes_array'] = $downs;
+    $variables['arrow_attributes_array']['class'] = array_merge(['slick__arrow'], $arrows);
 
     // Main arrows.
     // @todo remove the $settings parts (BC) for $js to reduce dups.
@@ -429,9 +433,9 @@ function template_preprocess_slick_slide(&$variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - $attributes: An array of attributes to apply to the element.
- *   - $items: A renderable array of the main image/background.
- *   - $settings: An array containing cherry-picked settings.
+ *   - attributes: An array of attributes to apply to the element.
+ *   - items: A renderable array of the main image/background.
+ *   - settings: An array containing cherry-picked settings.
  *
  * @ingroup themeable
  */

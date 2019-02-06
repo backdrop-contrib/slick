@@ -21,8 +21,7 @@ function slick_requirements($phase) {
   $t = get_t();
 
   $library_path = libraries_get_path('slick') ?: libraries_get_path('slick-carousel');
-  $path = $library_path . '/slick/slick.min.js';
-  $exists = is_file($path);
+  $exists = $library_path && is_file($library_path . '/slick/slick.min.js');
   $requirements['slick_library'] = [
     'title'       => $t('Slick library'),
     'description' => $exists ? '' : $t('The <a href="@url">Slick library</a> should be installed at <strong>/sites/all/libraries/slick/slick/slick.min.js</strong>, or any path supported by libraries.module.', [

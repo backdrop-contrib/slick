@@ -20,6 +20,13 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   protected $skinDefinition;
 
   /**
+   * The easing libray.
+   *
+   * @var string|bool
+   */
+  protected $easingPath;
+
+  /**
    * The supported skins.
    *
    * @var array
@@ -54,36 +61,46 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   }
 
   /**
+   * Returns easing library path if available, else FALSE.
+   */
+  public function getEasingPath() {
+    if (!isset($this->easingPath)) {
+      $this->easingPath = FALSE;
+      $library_easing = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
+      if ($library_easing) {
+        $easing_path = $library_easing . '/jquery.easing.min.js';
+        // Composer via bower-asset puts the library within `js` directory.
+        if (!is_file($easing_path)) {
+          $easing_path = $library_easing . '/js/jquery.easing.min.js';
+        }
+        $this->easingPath = is_file($easing_path) ? $easing_path : FALSE;
+      }
+    }
+    return $this->easingPath;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function attach(array $attach) {
-    $attach['slick_css'] = isset($attach['slick_css']) ? $attach['slick_css'] : $this->config('slick_css', TRUE);
-    $attach['module_css'] = isset($attach['module_css']) ? $attach['module_css'] : $this->config('module_css', TRUE);
-
     $load = parent::attach($attach);
 
     // Load optional easing library.
-    $easing_path = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
-    if ($easing_path) {
-      $easing = $easing_path . '/jquery.easing.min.js';
-      // Composer via bower-asset puts the library within `js` directory.
-      if (!is_file($easing)) {
-        $easing = $easing_path . '/js/jquery.easing.min.js';
-      }
-
-      if (is_file($easing)) {
-        $load['library'][] = ['slick', 'easing'];
-      }
+    if ($this->getEasingPath()) {
+      $load['library'][] = ['slick', 'easing'];
     }
 
-    $load['library'][] = ['slick', 'load'];
-
+    // Load optional colorbox, or mousewheel.
     foreach (['colorbox', 'mousewheel'] as $component) {
       if (!empty($attach[$component])) {
         $load['library'][] = ['slick', $component];
       }
     }
 
+    // Load the main slick initializer.
+    $load['library'][] = ['slick', 'load'];
+
+    // Only attach a skin if so configured.
     if (!empty($attach['skin'])) {
       $this->attachSkin($load, $attach);
     }
@@ -98,7 +115,6 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     ];
 
     drupal_alter('slick_attach', $load, $attach);
-
     return $load;
   }
 
@@ -106,11 +122,11 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
    * Provides skins only if required.
    */
   public function attachSkin(array &$load, $attach = []) {
-    if ($attach['slick_css']) {
+    if ($this->config('slick_css', TRUE)) {
       $load['library'][] = ['slick', 'css'];
     }
 
-    if ($attach['module_css']) {
+    if ($this->config('module_css', TRUE)) {
       $load['library'][] = ['slick', 'theme'];
     }
 
@@ -257,7 +273,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
         $attributes['data-blazy'] = empty($settings['blazy_data']) ? '' : drupal_json_encode($settings['blazy_data']);
       }
 
-      // Provide a context for lightbox, or multimedia galleries.
+      // Provide a context for lightbox, or multimedia galleries, save for grid.
       if (!empty($settings['media_switch']) && empty($settings['grid'])) {
         $switch = str_replace('_', '-', $settings['media_switch']);
         $attributes['data-' . $switch . '-gallery'] = TRUE;
@@ -290,7 +306,6 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     $settings += SlickDefault::htmlSettings();
 
     // Adds helper class if thumbnail on dots hover provided.
-    $dots_class = [];
     if (!empty($settings['thumbnail_effect']) && (!empty($settings['thumbnail_style']) || !empty($settings['thumbnail']))) {
       $dots_class[] = 'slick-dots--thumbnail-' . $settings['thumbnail_effect'];
     }
@@ -300,7 +315,8 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
       $dots_class[] = 'slick-dots--' . str_replace('_', '-', $settings['skin_dots']);
     }
 
-    if ($dots_class && !empty($build['optionset'])) {
+    // Merge dot classes with the custom defined at optionset.
+    if (isset($dots_class) && !empty($build['optionset'])) {
       $dots_class[] = $build['optionset']->getSetting('dotsClass') ?: 'slick-dots';
       $js['dotsClass'] = implode(" ", $dots_class);
     }
@@ -324,6 +340,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
     drupal_alter('slick_optionset', $build['optionset'], $settings);
 
+    // Pass the array to render array.
     foreach (SlickDefault::themeProperties() as $key) {
       $element["#$key"] = $build[$key];
     }

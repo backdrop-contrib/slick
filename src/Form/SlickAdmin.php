@@ -96,7 +96,7 @@ class SlickAdmin extends BlazyAdminExtended implements SlickAdminInterface {
         '#title'       => t('Optionset thumbnail'),
         '#options'     => $this->getOptionsetsByGroupOptions('thumbnail'),
         '#description' => t('If provided, asNavFor aka thumbnail navigation applies. Leave empty to not use thumbnail navigation.'),
-        '#weight'      => -108,
+        '#weight'      => -107,
       ];
 
       $form['skin_thumbnail'] = [

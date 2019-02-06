@@ -28,13 +28,7 @@ class SlickLibrary extends BlazyLibrary {
    */
   public function libraryAlter(&$libraries, $extension) {
     if ($extension === 'slick') {
-      $library_easing = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
-      if ($library_easing) {
-        $easing_path = $library_easing . '/jquery.easing.min.js';
-        // Composer via bower-asset puts the library within `js` directory.
-        if (!is_file($easing_path)) {
-          $easing_path = $library_easing . '/js/jquery.easing.min.js';
-        }
+      if ($easing_path = $this->manager->getEasingPath()) {
         $libraries['easing']['js'] = [$easing_path => ['group' => JS_LIBRARY]];
       }
 
@@ -120,6 +114,9 @@ class SlickLibrary extends BlazyLibrary {
 
       foreach ($libraries as &$library) {
         $library += $common;
+        if (isset($library['js'])) {
+          $library['dependencies'][] = ['system', 'jquery.once'];
+        }
       }
       $this->libraries = $libraries;
     }

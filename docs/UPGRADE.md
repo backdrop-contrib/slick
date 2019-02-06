@@ -97,7 +97,8 @@ If you modified Slick templates, be sure to update, see SLICK 3x CHANGES below.
    just did automatic conversions, not manual re-export, of course.
    See `slick_example.slick_optionset.inc` 3.x branch for samples.
 2. Once re-exported, revert back all database optionsets into codebase at:
-   /admin/config/media/slick
+
+   **/admin/config/media/slick**
 
 BC layer is still provided till 3.x full release. If we missed, please report.
 The more successful reports, the faster this new branch reaches full release.
