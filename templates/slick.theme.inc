@@ -424,7 +424,7 @@ function template_preprocess_slick_slide(&$variables) {
     $attributes['class'][] = 'slide--caption--' . str_replace('_', '-', $settings['layout']);
   }
   if (!empty($settings['class'])) {
-    // Respects string with spaces such as CSV tags to spaces delimiter.
+    // Respects string with spaces such as CSV tags to space delimiter.
     $attributes['class'][] = drupal_strtolower(str_replace('_', '-', $settings['class']));
   }
 

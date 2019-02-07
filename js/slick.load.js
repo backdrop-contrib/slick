@@ -46,10 +46,6 @@
         randomize();
       }
 
-      if (!isBlazy) {
-        $('.media--loading', t).closest('.slide__content').addClass('is-loading');
-      }
-
       // Puts dots in between arrows for easy theming like this: < ooooo >.
       if (d === '.slick__arrow') {
         t.on('init.sl', function (e, slick) {
@@ -68,6 +64,9 @@
           }
         });
       }
+      else {
+        $('.media--loading', t).closest('.slide__content').addClass('is-loading');
+      }
 
       t.on('setPosition.sl', function (e, slick) {
         setPosition(slick);
@@ -75,12 +74,22 @@
     }
 
     /**
+     * Reacts on Slick afterChange event.
+     */
+    function afterChange() {
+      if (t.find('.media--player').length) {
+        closeOut();
+      }
+      if (isBlazy && $('.b-lazy:not(.b-loaded)', t).length) {
+        // @todo recheck for Blazy is not loaded on slidesToShow > 1.
+        Drupal.blazy.init.revalidate();
+      }
+    }
+
+    /**
      * The event must be bound after slick being called.
      */
     function afterSlick() {
-      var slick = t.slick('getSlick');
-      var media = t.find('.media--player').length;
-
       // Arrow down jumper.
       t.parent().on('click.sl', '.slick-down', function (e) {
         e.preventDefault();
@@ -103,9 +112,10 @@
         });
       }
 
+      t.on('afterChange.sl', afterChange);
+
       // Turns off any video if any change to the slider.
-      if (media) {
-        t.on('afterChange.sl', closeOut);
+      if (t.find('.media--player').length) {
         t.on('click.sl', '.media__icon--close', closeOut);
         t.on('click.sl', '.media__icon--play', pause);
       }
@@ -184,7 +194,7 @@
         }
 
         // Do not remove arrows, to allow responsive have different options.
-        return a[hide ? 'addClass' : 'removeClass']('element-invisible');
+        a[hide ? 'addClass' : 'removeClass']('element-invisible');
       }
     }
 
@@ -230,7 +240,8 @@
           var img = '<img alt="' + Drupal.t(container.find('img').attr('alt')) + '" src="' + container.data('thumb') + '">';
           var dotsThumb = container.length && o.dotsClass.indexOf('thumbnail') > 0 ?
             '<div class="slick-dots__thumbnail">' + img + '</div>' : '';
-          return dotsThumb ? slick.defaults.customPaging(slick, i).add(dotsThumb) : slick.defaults.customPaging(slick, i);
+          var paging = slick.defaults.customPaging(slick, i);
+          return dotsThumb ? paging.add(dotsThumb) : paging;
         }
       };
     }
@@ -258,7 +269,7 @@
    */
   Drupal.behaviors.slick = {
     attach: function (context) {
-      $('.slick', context).once('slick').each(doSlick);
+      $('.slick', context).once('slick', doSlick);
     }
   };
 

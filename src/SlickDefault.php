@@ -82,7 +82,7 @@ class SlickDefault extends BlazyDefault {
       'vertical'      => FALSE,
       'vertical_tn'   => FALSE,
       'view_name'     => '',
-    ] + self::imageSettings() + self::jsSettings();
+    ] + self::imageSettings();
   }
 
   /**

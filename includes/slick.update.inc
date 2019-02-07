@@ -19,6 +19,7 @@ use Drupal\slick\SlickDefault;
  */
 function _slick_update_formatter_settings(array &$settings = []) {
   $deps = [
+    'colorbox_style',
     'picture',
     'picture_style',
     'picture_fallback',
@@ -64,8 +65,6 @@ function _slick_update_formatter_settings(array &$settings = []) {
   if (isset($settings['slide_field_wrapper'])) {
     $settings['vanilla'] = empty($settings['slide_field_wrapper']) ? 1 : 0;
   }
-
-  $settings['updated'] = 1;
 
   // Empty or not, safe to cleanup old settings.
   foreach ($deps as $key) {

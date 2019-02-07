@@ -275,8 +275,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
       // Provide a context for lightbox, or multimedia galleries, save for grid.
       if (!empty($settings['media_switch']) && empty($settings['grid'])) {
-        $switch = str_replace('_', '-', $settings['media_switch']);
-        $attributes['data-' . $switch . '-gallery'] = TRUE;
+        $attributes['data-' . $settings['media_switch'] . '-gallery'] = TRUE;
       }
     }
     elseif ($settings['display'] == 'thumbnail') {
@@ -344,6 +343,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     foreach (SlickDefault::themeProperties() as $key) {
       $element["#$key"] = $build[$key];
     }
+
     return $element;
   }
 
@@ -398,7 +398,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   public function prepareGridAttributes(array $settings = []) {
     // By default Slick only supports Grid Foundation, adds relevant grid_id for
     // optional Style: CSS3 Columns, and probably future flexbox.
-    $grid_id = !empty($settings['style']) && $settings['style'] != 'slick' ? $settings['style'] : 'grid';
+    $grid_id = empty($settings['style']) ? 'grid' : $settings['style'];
     $classes[] = 'block-columngrid block-' . $grid_id;
     $classes[] = $settings['unslick'] ? 'slick__grid' : 'slide__content';
 
@@ -415,8 +415,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
     // Support a grid of lightbox or inline multimedia gallery.
     if (!empty($settings['media_switch'])) {
-      $switch = str_replace('_', '-', $settings['media_switch']);
-      $attributes['data-' . $switch . '-gallery'] = TRUE;
+      $attributes['data-' . $settings['media_switch'] . '-gallery'] = TRUE;
     }
     return $attributes;
   }
@@ -509,7 +508,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
       }
     }
 
-    // Additional settings.
+    // Load the optionset to work with.
     $optionset = $build['optionset'] ?: Slick::load($settings['optionset']);
 
     // Ensures deleted optionset while being used doesn't screw up.

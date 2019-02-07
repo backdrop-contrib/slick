@@ -23,8 +23,7 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
     // Pass basic info to parent::buildSettings().
     parent::buildSettings($build, $items, $entity);
 
-    // Slick specific stuffs. Note old exports use stdClass(), now Slick.
-    // Below and anywhere take both into considerations till removed post 3.x.
+    // Load the optionset to work with.
     $optionset = Slick::load($settings['optionset']);
 
     // Ensures deleted optionset while being used doesn't screw up.
@@ -55,7 +54,6 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
     }
 
     $settings = array_filter($settings);
-    $build['attached'] = $this->attach($settings);
     $build['optionset'] = $optionset;
   }
 
