@@ -12,7 +12,7 @@ understand better your bug reports, or patches as needed:
 * If you hate formalism, consider a crystal clear line, or two in the body text.
 * Avoid explaining everything in the title.
 * Use body text for explanation purposes.
-* If language is a barrier, use google translate, or alike.
+* If language is a barrier, use any available/ online translation tool.
 
 ### SUBMITTING ISSUES
 When submitting bug reports, please:
@@ -50,17 +50,17 @@ Thank you for your kind consideration, cooperation, and contribution!
 ## BUG REPORTS OR SUPPORT REQUESTS
 A basic knowledge of Drupal site building is required. If you get stuck:
 
-   * consult the provided READMEs,
-   * descriptions on each form item,
-   * the relevant guidelines from the supported modules,
+   * consult the provided READMEs via **/admin/help**,
+   * consult descriptions on each form item,
+   * consult the relevant guidelines from the supported modules,
    * consider the project issue queues, your problem may be already addressed,
-   * install slick_example.
+   * install **slick_example**.
 
 If you do have bug reports, we love bugs, please:
    * provide steps to reproduce it, valid bugs must have consistent
      reproduction,
    * provide detailed info, a screenshot of the output and Slick form, or words
-    to identify it any better, library version, module version, active theme.
+     to identify it any better, library version, module version, active theme.
    * make sure that the bug is caused by the module.
 
 For the Slick library bug, please report it to:

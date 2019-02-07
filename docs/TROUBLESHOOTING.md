@@ -2,6 +2,8 @@
 ***
 ***
 ## TROUBLESHOOTING
+Please read this before submitting issues. This 4-years+ brief is worth saving
+you from headaches.
 
 1. When upgrading from Slick v1.3.6 to later version, try to re-save options at:
   * admin/config/media/slick
@@ -20,18 +22,19 @@
 3. If you are customizing template files, or theme functions, be sure to
    re-check against the latest.
 
-4. Be sure Slick release is similar, or later than Blazy.
+4. Slick release is similar, or later than Blazy.
 
 
 ## KNOWN ISSUES
 1. Slick admin CSS may not be compatible with private or contrib admin
-  themes. Only if trouble with admin display, please disable it at:
-  `/admin/config/media/blazy`
+   themes. Only if trouble with admin display, please disable it at:
 
-2. The Slick lazyLoad is not compatible with Responsive image. Slick only
-  facilitates Responsive image to get in. The image formatting is taken over by
-  Responsive image.
-  Some other options such as Aspect ratio is currently not supported either.
+   `/admin/config/media/blazy`
+
+2. The Slick lazyLoad is not compatible with Picture. Slick only
+   facilitates Picture to get in. The image formatting is taken over by
+   Picture. Some other options such as Aspect ratio is currently not
+   supported either.
 
 3. Photobox is best for:
    * infinite true + slidesToShow 1
@@ -44,7 +47,7 @@
    * lazyLoad ondemand has issue with dummy image excessive height.
      Added fixes to suppress it via option Aspect ratio (fluid | enforced).
      Or use Blazy lazyload for more advanced options.
-   * Aspect ratio is not compatible with Responsive image or multi-serving
+   * Aspect ratio is not compatible with Picture or multi-serving
      images.
      However if you can stick to one Aspect ratio, choose 'enforced' instead.
      Otherwise disable Aspect ratio for multi-serving images.
@@ -61,12 +64,16 @@
    * If thumbnail display is Infinite, the main one must be infinite too, else
      incorrect syncing.
    * adaptiveHeight is no good for vertical.
-   * Colorbox integration is not working well with lazyload onDemand. Solution:
-     Choose one of other lazyload options: Anticipated, Blazy, Progressive.
-     As the issue with similar setup never happens with PhotoSwipe, we can only
-     conclude Slick with lazyload onDemand just doesn't play nice with Colorbox.
+   * Colorbox integration is not working well with lazyload onDemand.  
+     **Solution:**
 
-5. Slick carousel for text formatter is designed for multi-value fields.
+     Choose one of other lazyload options: **Anticipated, Blazy, Progressive**.
+
+     As the issue with similar setup never happens with Photobox nor PhotoSwipe,
+     we can only conclude Slick with lazyload onDemand just doesn't play nice
+     with Colorbox.
+
+5. Slick carousel is designed for multi-value fields.
    Unfortunately no handy way to disable formatters for single value at D7.
    So the formatter is available even for single value, but not actually
-   functioning, please ignore till we can get rid of it at D7.
+   functioning, please ignore it till we can get rid of it at D7.

@@ -1,13 +1,14 @@
 ***
 ***
+# FAQS
 
 ## NESTED SLICKS
 Nested slick is a parent Slick containing slides which contain individual child
 slick per slide. The child slicks are basically regular slide overlays like
 a single video over the large background image, only with nested slicks it can
 be many videos displayed as a slideshow as well.
-Use Slick Paragraphs or Views to build one.
-Supported multi-value fields for nested slicks: Image, Text, VEF, Media entity.
+Use Slick Fields with Field Collection or Paragraphs or Views to build one.
+Supported multi-value fields for nested slicks: Image, Text, Media.
 
 
 ## SKINS
@@ -26,43 +27,51 @@ accordingly. The provided skins are very basic to support the necessary layouts.
 It is not the module job to match your awesome design requirements.
 
 ### Optional skins:
-* None
+* **None**
+
   It is all about DIY.
   Doesn't load any extra CSS other than the basic styles required by slick.
   Skins at the optionset are ignored, only useful to fetch description and
   your own custom work when not using the sub-modules, nor plugins.
   If using individual slide layout, do the layouts yourself.
 
-* Classic
+* **Classic**
+
   Adds dark background color over white caption, only good for slider (single
   slide visible), not carousel (multiple slides visible), where small captions
   are placed over images, and animated based on their placement.
 
-* Full screen
+* **Full screen**
+
   Works best with 1 slidesToShow. Use z-index layering > 8 to position elements
   over the slides, and place it at large regions. Currently only works with
   Slick fields, use Views to make it a block. Use Slick Paragraphs to
   have more complex contents inside individual slide, and assign it to Slide
   caption fields.
 
-* Full width
+* **Full width**
+
   Adds additional wrapper to wrap overlay video and captions properly.
   This is designated for large slider in the header or spanning width to window
   edges at least 1170px width for large monitor. To have a custom full width
   skin, simply prefix your skin with "full", e.g.: fullstage, fullwindow, etc.
 
-* Split
+* **Split**
+
   Caption and image/media are split half, and placed side by side. This requires
   any layout containing "split", otherwise useless.
 
-* Grid
+* **Grid**
+
   Only reasonable if you have considerable amount of slides.
   Uses the Foundation 5.5 block-grid, and disabled if you choose your own skin
   not named Grid. Otherwise overrides skin Grid accordingly.
 
-  Requires:
+  **Requires:**
+
   Visible slides, Skin Grid for starter, A reasonable amount of slides,
   Optionset with Rows and slidesPerRow = 1.
+
   Avoid variableWidth and adaptiveHeight. Use consistent dimensions.
   This is module feature, older than core Rows, and offers more flexibility.
   Available at slick_views, and configurable via Views UI.
@@ -76,7 +85,7 @@ Use `hook_slick_skins_info()` and implement \Drupal\slick\SlickSkinInterface
 to register ones. Clear the cache once.
 
 See slick.api.php for more info on skins.
-See \Drupal\slick\SlickSkinInterface.
+See **\Drupal\slick\SlickSkinInterface**.
 
 Other skins are available at [Slick Extras](http://dgo.to/slick_extras).
 Some extra skins are WIP which may not work as expected. Use them as starters,
@@ -86,20 +95,23 @@ not final products.
 ## GRID
 To create Slick grid or multiple rows carousel, there are 3 options:
 
-1. One row grid managed by library:
+1. **One row grid managed by library:**
+
    Visit [/admin/config/media/slick](/admin/config/media/slick),
    Edit current optionset, and set
 
    ``slidesToShow > 1, and Rows and slidesperRow = 1``
 
-2. Multiple rows grid managed by library:
+2. **Multiple rows grid managed by library:**
+
    Visit [/admin/config/media/slick](/admin/config/media/slick)
 
    Edit current optionset, and set
 
    ``slidesToShow = 1, Rows > 1 and slidesPerRow > 1``
 
-3. Multiple rows grid managed by Module:
+3. **Multiple rows grid managed by module:**
+
    Visit [Grid sample](/admin/structure/views/view/slick_x/edit/block_grid)
    from slick_example. Be sure to install the Slick example sub-module first.
    Requires skin "Grid", and
@@ -109,7 +121,8 @@ To create Slick grid or multiple rows carousel, there are 3 options:
 The first 2 are supported by core library using pure JS approach.
 The last is the Module feature using pure CSS Foundation block-grid.
 
-The key is:
+**The key is:**
+
 The total amount of Views results must be bigger than Visible slides, otherwise
 broken Grid, see skin Grid above for more details.
 

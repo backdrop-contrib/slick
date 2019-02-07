@@ -68,10 +68,11 @@ Skip #1 and #2 if Blazy was in place.
 
 5. Note the errors, if any, and please report. Or continue below.
 
-6. Update Slick Views, Slick Extras, if you use it into 3.x branch, else broken
-   displays due to some stock skins moving. Run the provided updates, as well.
-   If you use stock skins, be sure to install Slick Extras as some skins are
-   moved into Slick Extras, not Slick Example.
+6. Update **Slick Views**, **Slick Extras**, if you use it into 3.x branch,
+   else broken displays due to some stock skins moving.
+   Run the provided updates, as well.
+   If you use stock skins, install Slick Extras as some skins are moved into
+   **Slick Extras**, not **Slick Example**.
 
    This ensures you can keep Slick Example disabled, if you don't install it,
    and only enable Slick Extras just for stock skins. If you installed Slick
@@ -84,12 +85,14 @@ Skip #1 and #2 if Blazy was in place.
    with Slick 3.x till they have time to update to the new Slick codebase.
 
 7. Regenerate CSS/ JS at `/admin/config/development/performance` as this affects
-   libraries changes (Routines: Uncheck options. Save. Clear cache. Verify).
+   libraries changes.
+
+   **Routines**: Uncheck options. Save. Clear cache. Verify.
 
 ***
 Shortly, do it one at a time. Not all at once like usual. If you are feeling
 adventurous, feel free to do it all at once at your own risk.
-If you modified Slick templates, be sure to update, see SLICK 3x CHANGES below.
+If you modified Slick templates, update templates, see SLICK 3x CHANGES below.
 ***
 
 ### If you stored optionsets in codebase, ignore if you don't:
@@ -110,34 +113,40 @@ Otherwise we may have to do more homeworks for a smoother migration.
    * Added two new columns `collection` + `optimized` (previously in options).
 
 2. **Theme/ template files**
-   * Added theme_slick_thumbnail() and theme_slick_vanilla() to reduce
-     complexity at theme_slick_slide(), and more fine grained theming. No .tpl
-     files, just theme functions.
-   * Removed theme_slick_image() for theme_blazy().
-   * Removed slick-grid.tpl.php for theme_slick_grid().
-   * Changed slick.tpl.php for theme_slick() by default.
-   * Changed and removed slick-item.tpl.php for slick-slide.tpl.php.
-   * Changed theme_slick_item() into theme_slick_slide() for clarity like 8.x.
+   * Added **theme_slick_thumbnail()** and **theme_slick_vanilla()** to reduce
+     complexity at **theme_slick_slide()**, and more fine grained theming.
+     No .tpl files, just theme functions.
+   * Removed **theme_slick_image()** for **theme_blazy()**.
+   * Removed **slick-grid.tpl.php** for **theme_slick_grid()**.
+   * Changed **slick.tpl.php** for **theme_slick()** by default.
+   * Changed and removed **slick-item.tpl.php** for **slick-slide.tpl.php**
+     which is not actually used by default.
+   * Changed **theme_slick_item()** into **theme_slick_slide()** for clarity
+     like 8.x.
 
-   Slick 3.x has only two template files: `slick-slide.tpl.php`, and
-   `slick.tpl.php` which are not used by default till you copy to your theme,
-   only if you need to. If not, ignore. Slick now uses theme functions instead.
+   Slick 3.x has only two template files:
+   `slick-slide.tpl.php`, and `slick.tpl.php` which are not used by default till
+   you copy to your theme, only if you need to. If not, ignore. Slick now uses
+   theme functions instead.
+
    Since they are both PHP, not Twig, it makes no big difference as they are
    both equally themeable, except probably some performance gain.
 
-   Only if you modified any, be sure to update them accordingly. If not, ignore.
-   Especially the `slick-slide.tpl.php` file which has different render array.
-   Also update the removed `slick-grid.tpl.php` for `theme_slick_grid()`.
-   Previously has `item` and `caption` as separate variables. Now merged into
-   `item` to be `item.slide` and `item.caption`.
+   Only if you modified any, update them accordingly. If not, ignore.
+   * The `slick-slide.tpl.php` file has different render array.
+   * Update the removed `slick-grid.tpl.php` for `theme_slick_grid()`.
+
+     Previously has `item` and `caption` as separate variables. Now merged into
+     `item` to be `item.slide` and `item.caption`.
+
    It is simply to make generic and consistent variables for new slick themes:
    `theme_slick_vanilla()`, and `theme_slick_thumbnail()` where both may or may
    not have captions.
 
 3. **Skins**
    * Like D8, extra skins are moved into slick_extras.module, not slick_example.
-     Be sure to enable slick_extras if using stock skins. This ensures you can
-     uninstall slick_example, but left slick_extras enabled just for skins.
+     Enable slick_extras if using stock skins. This ensures you can uninstall
+     slick_example, but left slick_extras enabled just for skins.
    * Skins are no longer stored at **MY_MODULE.slick.inc**. Now moved into a
      class file says, src/SlickMyModuleSkin.php which implements
      SlickSkinInterface.
@@ -146,15 +155,15 @@ Otherwise we may have to do more homeworks for a smoother migration.
      content is now moved into a class file SlickMyModuleSkin.php, and replaced
      by a fully qualified class name here:
 
-    ```
-     function MY_MODULE_slick_skins_info() {
-       // Previously this contains skin definitions. Now moved into a class
-       // file with similar structure, only stored within a method `skins()`.
-       return '\Drupal\MY_MODULE\SlickMyModuleSkin';
-     }
-    ```
+    ````
+      function MY_MODULE_slick_skins_info() {
+        // Previously this contains skin definitions. Now moved into a class
+        // file with similar structure, only stored within a method `skins()`.
+        return '\Drupal\MY_MODULE\SlickMyModuleSkin';
+      }
+    ````
 
-     See samples for details:
+     **See samples for details:**
      * src/SlickSkin.php
      * slick_extras/src/SlickExtrasSkin.php
      * slick_example/src/SlickExampleSkin.php
@@ -188,12 +197,12 @@ Otherwise we may have to do more homeworks for a smoother migration.
 
    Most Slick libraries, like D8, are now moved into Blazy to be re-usable for
    non-carousel formatters or Views styles. If you use any manually in code,
-   be sure to update it to reference Blazy libraries instead.
+   please update it to reference Blazy libraries instead.
    Slick 3.x has now only slick.colorbox.js and slick.load.js.
 
 5. **Optionset/ API**, if you don't store optionsets in codebase, skip below.
   + Options under `general` are removed. Some merged into the main options.
-    If you added a custom wrapper class under `General` option, be sure to use
+    If you added a custom wrapper class under `General` option, lease use
     preprocess now, or override `theme_slick()` accordingly.
   + Renamed ctools plugin api from `slick_default_preset` to `slick_optionset`.
     Update your `hook_ctools_plugin_api()` to use `slick_optionset`.
@@ -203,34 +212,37 @@ Otherwise we may have to do more homeworks for a smoother migration.
     except for file renaming.
   + Renamed `hook_slick_default_presets()` into `hook_slick_optionsets()`.
     If using bulk exporter, this is already taken care of by ctools exporter.
-  + Optionset now uses a new `Drupal\slick\Entity\Slick class`, not stdClass.
-    Note the change on the exporter function name:
-      + **Old hook**:
-      ````
+
+5. **Optionset Exports**    
+   Optionset now uses a new `Drupal\slick\Entity\Slick class`, not `stdClass`.
+   Note the change on the exporter function name:
+    + **Old hook**:
+    ````
         function MY_MODULE_slick_default_presets() {
           $preset = new stdClass();
           // ...
         }
-      ````
-      + **New hook**:
-        ````
+    ````
+
+    + **New hook**:
+    ````
         use Drupal\slick\Entity\Slick;
         function MY_MODULE_slick_optionsets() {
           $optionset = new Slick();
           // ...
         }
-        ````
+    ````
 
-      + **Or if using bulk exporter**:
-        ````
+    + **Or if using bulk exporter**:
+    ````
         function MY_MODULE_slick_optionsets() {
           $optionset = new Drupal\slick\Entity\Slick();
           // ...
         }
-        ````
+    ````
 
-        Important! Be sure you add relevant autoload directives into your
-        MODULE.info file. See below for details.
+    **Important!** Add relevant autoload directives into your MODULE.info file.
+    See below for details.
 
 
 ## MIGRATING SLICK (CUSTOM) MODULES FROM 2.x TO 3.x
@@ -248,26 +260,23 @@ autoload = TRUE
 ; This is for registry_autoload.module
 registry_autoload[] = PSR-4
 ```
-See samples:
+
+**See samples:**
+
 * blazy.info
 * slick.info
 * slick_fields.info
 ...
 
-Or put hard dependencies accordingly. Choose one, not all, of course:
-```
-dependencies[] = registry_autoload:registry_autoload
-dependencies[] = autoload:autoload
-dependencies[] = xautoload:xautoload
-```
-
-Decide which works best for you.
+No need to put hard dependencies on an autoloader as Slick depends on Blazy
+which will lock an autoloader as its dependencies once found.
 
 ## KNOWN ISSUES WITH AUTOLOADER
-* **autoload**: must run `drush aur` and `drush cc` on Blazy, or Slick
-  activation, or fatal. The same procedure applies whenever blazy-related
+* **autoload**: must **ALWAYS** run `drush aur` and `drush cc` on Blazy, or
+  Slick activation, or fatal. The same procedure applies whenever blazy-related
   modules are activated, or adding new classes. Especially during DEV, Alpha,
   Beta. If not using drush, consider the other two:
+
   **registry_autoload**, **xautoload**.
 
 This 3.x branch is meant to take advantage of Blazy features, and DRY.
@@ -275,7 +284,7 @@ This 3.x branch is meant to take advantage of Blazy features, and DRY.
 ## KNOWN ISSUES WITH UPGRADING
 1. The provided Slick fields formatter update is only for those stored via Field
 UI. If you use Slick formatters within Views UI, such as seen at Slick example,
-the update is performed at Slick Views. Be sure to run Slick Views update, too.
+the update is performed at Slick Views. Run Slick Views update, too.
 
 2. The provided updates are not designed for large sets of slicks such as for
 Slick Views with tons of carousels. We should use batch to avoid potential time

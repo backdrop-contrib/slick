@@ -8,8 +8,8 @@ Wheeler's [Slick carousel](http://kenwheeler.github.io/slick).
 
 Slick has gazillion options, please start with the very basic working
 samples from [slick_example](http://dgo.to/slick_extras) only if trouble to
-build slicks. Be sure read this. Spending 5 minutes or so will save you hours
-in building more complex slideshows.
+build slicks. Spending 5 minutes or so will save you hours in building more
+complex slideshows.
 
 The module supports Slick 1.6 above until 1.8.1. Versions 1.9.0 and above are
 not currently supported. Slick 2.x is just out 9/21/15, and hasn't been
@@ -39,8 +39,8 @@ officially supported now, 9/27.
 4. [Blazy](http://dgo.to/slick_extras), to reduce DRY stuffs, and as a bonus,
    advanced lazyloading such as delay lazyloading for below-fold sliders,
    iframe, (fullscreen) CSS background lazyloading, breakpoint dependent
-   multi-serving images, lazyload ahead for smoother UX. Be sure to check out
-   Blazy installation guides!
+   multi-serving images, lazyload ahead for smoother UX.
+   Check out Blazy installation guides!
 
 
 ## INSTALLATION
@@ -124,14 +124,14 @@ To create optionsets, go to:
 
   [Slick UI](/admin/config/media/slick)
 
-Be sure to enable Slick UI sub-module first, otherwise regular "Access denied".
+Enable Slick UI sub-module first, otherwise regular **Access denied**.
 They will be available at field formatter "Manage display", and Views UI.
 
 
 ## VIEWS AND FIELDS
 Slick works with Views and as field display formatters.
 Slick Views is available as a style plugin included at slick_views.module.
-Slick Fields formatterd included as a plugin which supports core:
+Slick Fields formatters included as a plugin which supports:
 Image, Media, Field Collection, Paragraphs, Text. Read more at:
 
 **/admin/help/slick_fields** or **slick_fields/README.md**.
@@ -151,8 +151,8 @@ However if it is broken, unless an update is explicitly required, clearing cache
 should fix most issues during DEV phases. Prior to any update, always visit:
 **/admin/config/development/performance**
 
-And hit "Clear all caches" button once the new Slick is in place. Regenerate CSS
-and JS as the latest fixes may contain changes to the assets.
+And hit **Clear all caches** button once the new Slick is in place.
+Regenerate CSS and JS as the latest fixes may contain changes to the assets.
 Have the latest or similar release Blazy to avoid trouble in the first place.
 
 
