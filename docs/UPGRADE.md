@@ -68,14 +68,14 @@ Skip #1 and #2 if Blazy was in place.
 
 5. Note the errors, if any, and please report. Or continue below.
 
-6. Update **Slick Views**, **Slick Extras**, if you use it into 3.x branch,
+6. Update **Slick Views**, **Slick Extras** into 3.x branch, if you use it,
    else broken displays due to some stock skins moving.
    Run the provided updates, as well.
    If you use stock skins, install Slick Extras as some skins are moved into
    **Slick Extras**, not **Slick Example**.
 
-   This ensures you can keep Slick Example disabled, if you don't install it,
-   and only enable Slick Extras just for stock skins. If you installed Slick
+   This ensures you can keep Slick Example disabled, if you don't install it.
+   And only enable Slick Extras just for stock skins. If you installed Slick
    Example, please ignore, Slick Extras is already enabled in this case.
 
    If confusing, just enable Slick Extras only if using stock skins. Ignore if
@@ -91,7 +91,10 @@ Skip #1 and #2 if Blazy was in place.
 
 ***
 Shortly, do it one at a time. Not all at once like usual. If you are feeling
-adventurous, feel free to do it all at once at your own risk.
+adventurous, feel free to do it all at once at your own risk. If successful,
+kindly let us know, so that we can ditch deprecated formatters, and functions
+prior to full release rather than keeping around the codebase.
+
 If you modified Slick templates, update templates, see SLICK 3x CHANGES below.
 ***
 
