@@ -135,7 +135,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     }
 
     if (!empty($attach['down_arrow'])) {
-      $load['library'][] = ['slick', 'arrow.down'];
+      $load['library'][] = ['slick', 'arrows.down'];
     }
 
     foreach (self::getConstantSkins() as $group) {

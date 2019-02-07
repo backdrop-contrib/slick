@@ -56,8 +56,11 @@ function _slick_preprocess_item(&$variables) {
 
   // Chances are entity_view, or Views flattens out the expected render array.
   // Or a drupal_render() is called too early, or just string passed.
-  if (isset($variables['item']['slide']) && is_string($variables['item']['slide'])) {
-    $variables['item']['slide'] = ['#markup' => $variables['item']['slide']];
+  // Applies to thumbnail caption as well in case bypassing the API.
+  foreach (['slide', 'caption'] as $key) {
+    if (isset($variables['item'][$key]) && is_string($variables['item'][$key])) {
+      $variables['item'][$key] = ['#markup' => $variables['item'][$key]];
+    }
   }
 
   // With clones, regular CSS :nth-child will fail to style uniquely, add delta.

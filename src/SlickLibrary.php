@@ -84,8 +84,7 @@ class SlickLibrary extends BlazyLibrary {
         ],
       ];
 
-      $items = ['arrow.down', 'thumbnail.grid', 'thumbnail.hover'];
-      foreach ($items as $item) {
+      foreach (['arrows.down', 'thumbnail.grid', 'thumbnail.hover'] as $item) {
         $libraries[$item] = [
           'dependencies' => [['slick', 'theme']],
           'css' => [$path . '/css/components/slick.' . $item . '.css' => []],

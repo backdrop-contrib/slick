@@ -172,8 +172,8 @@ If you find this module helpful, please help back spread the love. Thanks.
   **progressive**. Unless within an ajaxified lightbox.
 * Choose lazyload **Blazy** for carousels below the fold to delay loading them.
 * Tick **Optimized** option on the top right of Slick optionset edit page.
-* Use image style with regular sizes containing effect **crop** in the name. This
-  way all images will inherit dimensions calculated once.
+* Use image style with regular sizes containing effect **crop** in the name.
+  This way all images will inherit dimensions calculated once.
 * Disable core library **slick-theme.css** as it contains font **slick** which
   may not be in use when using own icon font at:
   **/admin/config/media/slick/ui**
