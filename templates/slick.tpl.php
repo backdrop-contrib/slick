@@ -4,16 +4,16 @@
  * @file
  * Default theme implementation for the Slick carousel template.
  *
- * This file is not used by Slick, which uses theme_slick() instead for
+ * This file is not used by Slick, which uses theme_slick_wrapper() instead for
  * performance reasons. The markup is the same, though, so if you want to use
  * template files rather than functions to extend Slick theming, copy this to
  * your custom theme. If you are comfortable with PHP, consider overriding
- * theme_slick() instead, such as MY_THEME_slick(), or regular preprocess.
+ * theme_slick() instead, such as MY_THEME_slick(), or regular
+ * preprocess.
  *
  * Available variables:
  * - $items: The array of items containing main image/video/audio, and optional
  *     image/video/audio overlay and captions.
- * - $js: The JS optionset which may contain configurable HTML such as arrows.
  * - $settings: A cherry-picked settings that mostly defines the slide HTML or
  *     layout, and none of JS settings/options which are defined at data-slick.
  * - $attributes: The array of attributes to hold the container classes, and id.

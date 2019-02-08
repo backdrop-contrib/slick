@@ -58,7 +58,7 @@ function _slick_preprocess_item(&$variables) {
   // Or a drupal_render() is called too early, or just string passed.
   // Applies to thumbnail caption as well in case bypassing the API.
   foreach (['slide', 'caption'] as $key) {
-    if (isset($variables['item'][$key]) && is_string($variables['item'][$key])) {
+    if (!empty($variables['item'][$key]) && is_string($variables['item'][$key])) {
       $variables['item'][$key] = ['#markup' => $variables['item'][$key]];
     }
   }
@@ -82,16 +82,44 @@ function _slick_preprocess_item(&$variables) {
  * @ingroup themeable
  */
 function theme_slick_wrapper(array $variables) {
-  _slick_preprocess_container($variables);
   extract($variables);
 
   $build = ['content' => $items];
   if (!empty($settings['nav'])) {
-    $build['content']['#prefix'] = '<div' . drupal_attributes($attributes_array) . '>';
+    $build['content']['#prefix'] = '<div' . $attributes . '>';
     $build['content']['#suffix'] = '</div>';
   }
 
   return drupal_render_children($build);
+}
+
+/**
+ * Preperocess variables for theme_slick_wrapper(), or slick-wrapper.tpl.php.
+ */
+function template_preprocess_slick_wrapper(&$variables) {
+  _slick_preprocess_container($variables);
+  $settings = $variables['settings'];
+
+  // Add specific suggestions that can override the default implementation.
+  // More relevant to Slick Views template suggestions as provided at Views UI
+  // since we don't register this theme via Views, else otherwise breaking this.
+  if (!empty($settings['view_name']) && !empty($settings['_views'])) {
+    $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['view_name'];
+    $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['view_display'];
+    $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['view_name'] . '__' . $settings['view_display'];
+
+    if (!empty($settings['current_view_mode'])) {
+      $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['current_view_mode'];
+      $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['view_name'] . '__' . $settings['current_view_mode'];
+    }
+  }
+}
+
+/**
+ * Process variables for theme_slick_wrapper(), or slick-wrapper.tpl.php.
+ */
+function template_process_slick_wrapper(&$variables) {
+  _slick_process_attributes($variables);
 }
 
 /**
@@ -165,6 +193,7 @@ function template_preprocess_slick(&$variables) {
   $content_attributes  = &$variables['content_attributes_array'];
 
   // Blazy can still lazyload an unslick.
+  // The lazy supercedes JS lazyLoad for background, breakpoints, media, etc.
   $settings['lazy'] = $settings['lazy'] ?: $js['lazyLoad'];
   if ($display != 'thumbnail' && ($settings['lazy'] == 'blazy' || !empty($settings['blazy']))) {
     $js['lazyLoad'] = 'blazy';
@@ -192,7 +221,7 @@ function template_preprocess_slick(&$variables) {
       $arrows[] = 'slick__arrow--v';
     }
 
-    // Only makes sense for the main display.
+    // Only makes sense for the main display, not thumbnail, overlay.
     if ($display == 'main') {
       if ($settings['skin_arrows']) {
         $arrows[] = 'slick__arrow--' . str_replace('_', '-', $settings['skin_arrows']);
@@ -301,6 +330,8 @@ function theme_slick_thumbnail(array $variables) {
   extract($variables);
 
   $build = '';
+  // Cannot use FIGURE, as both slide and caption are optional. FIGURE makes
+  // no sense when only caption is provided for tab navigation, and no image.
   if (!empty($item['slide'])) {
     $build .= '<div class="slide__thumbnail">' . drupal_render($item['slide']) . '</div>';
   }

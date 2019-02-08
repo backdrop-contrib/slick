@@ -305,6 +305,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     $settings += SlickDefault::htmlSettings();
 
     // Adds helper class if thumbnail on dots hover provided.
+    // The thumbnail_style is provided by formatter, thumbnail by Slick Views.
     if (!empty($settings['thumbnail_effect']) && (!empty($settings['thumbnail_style']) || !empty($settings['thumbnail']))) {
       $dots_class[] = 'slick-dots--thumbnail-' . $settings['thumbnail_effect'];
     }
@@ -357,7 +358,6 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     }
 
     // Display all items if unslick is enforced for plain grid to lightbox.
-    // Or when the total is less than visible_items.
     if (!empty($settings['unslick'])) {
       $settings['display']      = 'main';
       $settings['current_item'] = 'grid';
@@ -428,12 +428,10 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
       $build[$key] = isset($build[$key]) ? $build[$key] : [];
     }
 
-    $settings = array_filter($build['settings']);
-    $settings += SlickDefault::htmlSettings();
+    $settings = $build['settings'];
     $cache = [];
     if (!empty($settings['cache'])) {
-      $cid = $this->getCacheId($settings);
-      $cache['#cache']['cid'] = $settings['display'] == 'thumbnail' ? $cid . ':thumbnail' : $cid;
+      $cache['#cache']['cid'] = $this->getCacheId($settings);
       $cache['#cache']['expire'] = $settings['cache'] == CACHE_TEMPORARY ? CACHE_TEMPORARY : REQUEST_TIME + $settings['cache'];
     }
 

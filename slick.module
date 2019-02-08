@@ -138,7 +138,7 @@ function slick_attach(array $attach, array $settings = []) {
 }
 
 /**
- * Remove BC layer once Slick Views, etc. has 3.x branch, or before release.
+ * Remove BC layer once Slick Views, etc. has 3.x branch.
  *
  * @deprecated to be removed before 3.x full release.
  */

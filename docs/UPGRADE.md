@@ -47,19 +47,21 @@ Migrate at your own risk! Be prepared this update may kill your kittens.
    Until then keep it ENABLED!
 
 ### A sequential step below is critical otherwise potential errors:
-Skip #1 and #2 if Blazy was in place.  
+
+**Do not update Slick to 3.x branch, yet, till you have Blazy installed.**
+
+Skip #1 and #2 if Blazy was in place.
 
 1. Install one of autoload modules: **registry_autoload, autoload, xautoload.**
-   Skip if you already one have. If you have others, please create a feature
-   to include it in the module hook_requirements() if necessary.
+   Skip if you already have one.
 
    Save! Do not install Blazy, yet, since Blazy has no hard dependency on any.
-   Please read Blazy related docs on this for details.
 
-2. Install Blazy 7.x. Do not update Slick to 3.x branch, yet!
+2. Install Blazy 7.x.
+   Do not update Slick to 3.x branch, yet!
 
-3. Update Slick to 3.x branch. Postpone Slick Views, Slick Extras, till the main
-   Slick module is updated.
+3. Update Slick to 3.x branch.
+   Postpone Slick Views, Slick Extras, till the main Slick module is updated.
 
 4. Run `/update.php` or `drush updb`:
    * to bulk convert old optionsets which were stdClass instances to be
@@ -70,7 +72,9 @@ Skip #1 and #2 if Blazy was in place.
 
 6. Update **Slick Views**, **Slick Extras** into 3.x branch, if you use it,
    else broken displays due to some stock skins moving.
-   Run the provided updates, as well.
+
+   Run `/update.php` or `drush updb` again.
+
    If you use stock skins, install Slick Extras as some skins are moved into
    **Slick Extras**, not **Slick Example**.
 
@@ -119,6 +123,7 @@ Otherwise we may have to do more homeworks for a smoother migration.
    * Added **theme_slick_thumbnail()** and **theme_slick_vanilla()** to reduce
      complexity at **theme_slick_slide()**, and more fine grained theming.
      No .tpl files, just theme functions.
+   * Added **slick-wrapper.tpl.php** for Views template suggestions.
    * Removed **theme_slick_image()** for **theme_blazy()**.
    * Removed **slick-grid.tpl.php** for **theme_slick_grid()**.
    * Changed **slick.tpl.php** for **theme_slick()** by default.
@@ -127,15 +132,17 @@ Otherwise we may have to do more homeworks for a smoother migration.
    * Changed **theme_slick_item()** into **theme_slick_slide()** for clarity
      like 8.x.
 
-   Slick 3.x has only two template files:
-   `slick-slide.tpl.php`, and `slick.tpl.php` which are not used by default till
-   you copy to your theme, only if you need to. If not, ignore. Slick now uses
-   theme functions instead.
+   Slick 3.x has only 3 template files:
+   `slick-slide.tpl.php`, `slick.tpl.php`, `slick-wrapper.tpl.php` which are not
+   used by default till you copy to your theme, only if you need to. If not,
+   ignore. Slick now uses theme functions instead.
 
    Since they are both PHP, not Twig, it makes no big difference as they are
    both equally themeable, except probably some performance gain.
 
    Only if you modified any, update them accordingly. If not, ignore.
+   * The `slick-wrapper.tpl.php` is provided to support the template suggestions
+     as provided by Views UI when using Slick Views.
    * The `slick-slide.tpl.php` file has different render array.
    * Update the removed `slick-grid.tpl.php` for `theme_slick_grid()`.
 
@@ -203,14 +210,16 @@ Otherwise we may have to do more homeworks for a smoother migration.
    please update it to reference Blazy libraries instead.
    Slick 3.x has now only slick.colorbox.js and slick.load.js.
 
-5. **Optionset/ API**, if you don't store optionsets in codebase, skip below.
+5. **Optionset/ API**. If you don't store optionsets in codebase, skip below.
   + Options under `general` are removed. Some merged into the main options.
-    If you added a custom wrapper class under `General` option, lease use
+    If you added a custom wrapper class under `General` option, please use
     preprocess now, or override `theme_slick()` accordingly.
   + Renamed ctools plugin api from `slick_default_preset` to `slick_optionset`.
     Update your `hook_ctools_plugin_api()` to use `slick_optionset`.
+
     With this, also changed `MY_MODULE.slick_default_preset.inc` into
     `MY_MODULE.slick_optionset.inc`.
+
     If using bulk exporter, this is already taken care of by ctools exporter,
     except for file renaming.
   + Renamed `hook_slick_default_presets()` into `hook_slick_optionsets()`.
@@ -251,7 +260,10 @@ Otherwise we may have to do more homeworks for a smoother migration.
 ## MIGRATING SLICK (CUSTOM) MODULES FROM 2.x TO 3.x
 You don't need to extend classes unless it makes your life easier. Please stick
 to 2.x. Or gradually update and replace deprecated functions for the new ones.
-See `slick.deprecated.inc` for details as they shall be removed on full release.
+
+See `slick.deprecated.inc`, and `slick.module` files for details and replacement
+functions/ methods as those marked **@deprecated** shall be removed before or
+after full release, depending on the needs.
 
 Below is only needed if you import classes or optionsets in your module.
 Otherwise ignore. In your MODULE.info file, include one of the supported
