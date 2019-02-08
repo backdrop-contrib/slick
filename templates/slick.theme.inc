@@ -98,21 +98,6 @@ function theme_slick_wrapper(array $variables) {
  */
 function template_preprocess_slick_wrapper(&$variables) {
   _slick_preprocess_container($variables);
-  $settings = $variables['settings'];
-
-  // Add specific suggestions that can override the default implementation.
-  // More relevant to Slick Views template suggestions as provided at Views UI
-  // since we don't register this theme via Views, else otherwise breaking this.
-  if (!empty($settings['view_name']) && !empty($settings['_views'])) {
-    $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['view_name'];
-    $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['view_display'];
-    $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['view_name'] . '__' . $settings['view_display'];
-
-    if (!empty($settings['current_view_mode'])) {
-      $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['current_view_mode'];
-      $variables['theme_hook_suggestions'][] = 'slick_wrapper__' . $settings['view_name'] . '__' . $settings['current_view_mode'];
-    }
-  }
 }
 
 /**

@@ -78,12 +78,9 @@ Skip #1 and #2 if Blazy was in place.
    If you use stock skins, install Slick Extras as some skins are moved into
    **Slick Extras**, not **Slick Example**.
 
-   This ensures you can keep Slick Example disabled, if you don't install it.
-   And only enable Slick Extras just for stock skins. If you installed Slick
-   Example, please ignore, Slick Extras is already enabled in this case.
-
-   If confusing, just enable Slick Extras only if using stock skins. Ignore if
-   already enabled.
+   If you use **Slick Views** with the old Views template suggestions, and or
+   modify Slick Views templates, please review your modifications here:
+   https://cgit.drupalcode.org/slick_views/tree/README.md?h=7.x-3.x#n36
 
    Non-updated Slick contribs, says Slick entityreference, should be compatible
    with Slick 3.x till they have time to update to the new Slick codebase.
@@ -143,6 +140,7 @@ Otherwise we may have to do more homeworks for a smoother migration.
    Only if you modified any, update them accordingly. If not, ignore.
    * The `slick-wrapper.tpl.php` is provided to support the template suggestions
      as provided by Views UI when using Slick Views.
+     See `slick_views_preprocess_slick_wrapper()`.
    * The `slick-slide.tpl.php` file has different render array.
    * Update the removed `slick-grid.tpl.php` for `theme_slick_grid()`.
 
@@ -255,6 +253,8 @@ Otherwise we may have to do more homeworks for a smoother migration.
 
     **Important!** Add relevant autoload directives into your MODULE.info file.
     See below for details.
+    If you modify **Slick Views** template, please review the breaking changes:
+    https://cgit.drupalcode.org/slick_views/tree/README.md?h=7.x-3.x#n36
 
 
 ## MIGRATING SLICK (CUSTOM) MODULES FROM 2.x TO 3.x
