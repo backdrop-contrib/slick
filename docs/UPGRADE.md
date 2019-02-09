@@ -1,10 +1,6 @@
 
 ***
 ***
-@todo create a change record aside from this.
-We cannot discuss in project issues for now, as this is just a quick backport
-of 8.x with potential breakage here and there. We'll update this for
-more findings later on.
 
 ## UPGRADING / MIGRATING FROM 2.x TO 3.x
 
@@ -223,7 +219,7 @@ Otherwise we may have to do more homeworks for a smoother migration.
   + Renamed `hook_slick_default_presets()` into `hook_slick_optionsets()`.
     If using bulk exporter, this is already taken care of by ctools exporter.
 
-5. **Optionset Exports**    
+6. **Optionset Exports**    
    Optionset now uses a new `Drupal\slick\Entity\Slick class`, not `stdClass`.
    Note the change on the exporter function name:
     + **Old hook**:
@@ -255,6 +251,10 @@ Otherwise we may have to do more homeworks for a smoother migration.
     See below for details.
     If you modify **Slick Views** template, please review the breaking changes:
     https://cgit.drupalcode.org/slick_views/tree/README.md?h=7.x-3.x#n36
+
+7. If you were using Picture in Slick carousel, enable Picture integration at:
+
+   **/admin/config/media/blazy**
 
 
 ## MIGRATING SLICK (CUSTOM) MODULES FROM 2.x TO 3.x
