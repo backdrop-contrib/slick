@@ -172,7 +172,7 @@ function template_preprocess_slick(&$variables) {
   $settings['count']   = isset($settings['count']) ? $settings['count'] : count($variables['items']);
   $settings['unslick'] = $settings['unslick'] || $settings['count'] == 1;
   $attributes          = &$variables['attributes_array'];
-  $custom_classes      = isset($attributes['class']) ? $attributes['class'] : [];
+  $custom_classes      = empty($attributes['class']) ? [] : $attributes['class'];
   $attributes['class'] = array_merge(['slick'], $custom_classes);
   $attributes['id']    = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
   $content_attributes  = &$variables['content_attributes_array'];
@@ -275,6 +275,16 @@ function template_preprocess_slick(&$variables) {
 
   // Had weird issues with some theme expecting classes array at 2014, satisfy.
   $variables['classes_array'] = $attributes['class'];
+}
+
+/**
+ * Process variables for theme_slick(), or slick.tpl.php.
+ */
+function template_process_slick(&$variables) {
+  _slick_process_attributes($variables);
+  foreach (['arrow', 'arrow_down'] as $key) {
+    $variables[$key . '_attributes'] = empty($variables[$key . '_attributes_array']) ? '' : drupal_attributes($variables[$key . '_attributes_array']);
+  }
 }
 
 /**
@@ -449,6 +459,13 @@ function template_preprocess_slick_slide(&$variables) {
 }
 
 /**
+ * Process variables for theme_slick_slide() or slick-slide.tpl.php.
+ */
+function template_process_slick_slide(&$variables) {
+  _slick_process_attributes($variables);
+}
+
+/**
  * Returns HTML for a slick grid.
  *
  * @param array $variables
@@ -499,23 +516,6 @@ function template_preprocess_slick_grid(&$variables) {
     $variables['items'][$delta] = $slide;
     unset($slide);
   }
-}
-
-/**
- * Process variables for theme_slick(), or slick.tpl.php.
- */
-function template_process_slick(&$variables) {
-  _slick_process_attributes($variables);
-  foreach (['arrow', 'arrow_down'] as $key) {
-    $variables[$key . '_attributes'] = empty($variables[$key . '_attributes_array']) ? '' : drupal_attributes($variables[$key . '_attributes_array']);
-  }
-}
-
-/**
- * Process variables for theme_slick_slide() or slick-slide.tpl.php.
- */
-function template_process_slick_slide(&$variables) {
-  _slick_process_attributes($variables);
 }
 
 /**
