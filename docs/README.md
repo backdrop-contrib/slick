@@ -36,7 +36,7 @@ officially supported now, 9/27.
 
 3. PHP 5.6+
 
-4. [Blazy](http://dgo.to/slick_extras), to reduce DRY stuffs, and as a bonus,
+4. [Blazy](http://dgo.to/blazy), to reduce DRY stuffs, and as a bonus,
    advanced lazyloading such as delay lazyloading for below-fold sliders,
    iframe, (fullscreen) CSS background lazyloading, breakpoint dependent
    multi-serving images, lazyload ahead for smoother UX.

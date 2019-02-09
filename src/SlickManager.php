@@ -257,10 +257,6 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     }
 
     if ($settings['display'] == 'main') {
-      if ($settings['media_switch']) {
-        $classes[] = $settings['media_switch'];
-      }
-
       // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
       if ($settings['view_name'] && $settings['current_view_mode']) {
         $classes[] = 'view--' . str_replace('_', '-', $settings['view_name']);
@@ -274,8 +270,14 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
       }
 
       // Provide a context for lightbox, or multimedia galleries, save for grid.
-      if (!empty($settings['media_switch']) && empty($settings['grid'])) {
-        $attributes['data-' . $settings['media_switch'] . '-gallery'] = TRUE;
+      if (!empty($settings['media_switch'])) {
+        $switch = str_replace('_', '-', $settings['media_switch']);
+        $classes[] = $switch;
+
+        // Only if not using grid, output the gallery attribute.
+        if (empty($settings['grid'])) {
+          $attributes['data-' . $switch . '-gallery'] = TRUE;
+        }
       }
     }
     elseif ($settings['display'] == 'thumbnail') {
@@ -415,7 +417,8 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
     // Support a grid of lightbox or inline multimedia gallery.
     if (!empty($settings['media_switch'])) {
-      $attributes['data-' . $settings['media_switch'] . '-gallery'] = TRUE;
+      $switch = str_replace('_', '-', $settings['media_switch']);
+      $attributes['data-' . $switch . '-gallery'] = TRUE;
     }
     return $attributes;
   }
