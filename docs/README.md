@@ -13,7 +13,7 @@ complex slideshows.
 
 The module supports Slick 1.6 above until 1.8.1. Versions 1.9.0 and above are
 not currently supported. Slick 2.x is just out 9/21/15, and hasn't been
-officially supported now, 9/27.
+officially supported now, Feb 2019.
 
 
 ## REQUIREMENTS

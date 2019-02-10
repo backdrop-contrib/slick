@@ -1,6 +1,6 @@
 ***
 ***
-# FAQS
+# <a name="faqs"></a>FAQS
 
 ## NESTED SLICKS
 Nested slick is a parent Slick containing slides which contain individual child
@@ -11,7 +11,7 @@ Use Slick Fields with Field Collection or Paragraphs or Views to build one.
 Supported multi-value fields for nested slicks: Image, Text, Media.
 
 
-## SKINS
+## <a name="skins"></a>SKINS
 The main purpose of skins are to demonstrate that often some CSS lines are
 enough to build fairly variant layouts. No JS needed. Unless, of course, for
 more sophisticated slider like spiral 3D carousel which is beyond what CSS can
@@ -100,7 +100,7 @@ To create Slick grid or multiple rows carousel, there are 3 options:
    Visit [/admin/config/media/slick](/admin/config/media/slick),
    Edit current optionset, and set
 
-   ``slidesToShow > 1, and Rows and slidesperRow = 1``
+   `slidesToShow > 1, and Rows and slidesperRow = 1`
 
 2. **Multiple rows grid managed by library:**
 
@@ -108,7 +108,7 @@ To create Slick grid or multiple rows carousel, there are 3 options:
 
    Edit current optionset, and set
 
-   ``slidesToShow = 1, Rows > 1 and slidesPerRow > 1``
+   `slidesToShow = 1, Rows > 1 and slidesPerRow > 1`
 
 3. **Multiple rows grid managed by module:**
 
@@ -116,7 +116,7 @@ To create Slick grid or multiple rows carousel, there are 3 options:
    from slick_example. Be sure to install the Slick example sub-module first.
    Requires skin "Grid", and
 
-   ``slidesToShow, Rows and slidesPerRow = 1``
+   `slidesToShow, Rows and slidesPerRow = 1`
 
 The first 2 are supported by core library using pure JS approach.
 The last is the Module feature using pure CSS Foundation block-grid.
@@ -127,7 +127,7 @@ The total amount of Views results must be bigger than Visible slides, otherwise
 broken Grid, see skin Grid above for more details.
 
 
-## HTML STRUCTURE
+## <a name="html-structure"></a>HTML STRUCTURE
 Note, non-BEM classes are added by JS.
 
 ````

@@ -71,10 +71,8 @@ abstract class SlickFormBase extends ctools_export_ui {
     parent::edit_form($form, $form_state);
 
     $slick          = $form_state['item'];
-    $path           = drupal_get_path('module', 'slick');
     $tooltip        = ['class' => ['is-tooltip']];
     $tooltip_bottom = $tooltip + ['data-blazy-tooltip' => 'wide', 'data-blazy-tooltip-direction' => 'bottom'];
-    $readme         = url($path . '/README.txt');
     $admin_css      = $this->manager->config('admin_css', TRUE, 'blazy.settings');
 
     $form['#attributes']['class'][] = 'form--slick';
@@ -92,7 +90,7 @@ abstract class SlickFormBase extends ctools_export_ui {
       '#options'       => $this->admin->getSkinsByGroupOptions(),
       '#empty_option'  => t('- None -'),
       '#default_value' => isset($form_state['values']['skin']) ? $form_state['values']['skin'] : $slick->skin,
-      '#description'   => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See main <a href="@url">README</a> for details on Skins. Only useful for custom work, and ignored/overridden by slick formatters or sub-modules.', ['@url' => $readme]),
+      '#description'   => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <b>/admin/help/slick_ui</b> for details on Skins. Only useful for custom work, and ignored/overridden by slick formatters or sub-modules.'),
       '#attributes'    => $tooltip_bottom,
       '#prefix'        => '<div class="form__header form__half form__half--last has-tooltip clearfix">',
     ];

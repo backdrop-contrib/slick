@@ -303,13 +303,13 @@ class SlickForm extends SlickFormBase {
       $elements['asNavFor'] = [
         'type'        => 'textfield',
         'title'       => t('asNavFor target'),
-        'description' => t('Leave empty if using sub-modules to have it auto-matched. Set the slider to be the navigation of other slider (Class or ID Name). Use selector identifier ("." or "#") accordingly. See HTML structure section at README.txt for more info. Overriden by field formatter, or Views style.'),
+        'description' => t('Leave empty if using sub-modules to have it auto-matched. Set the slider to be the navigation of other slider (Class or ID Name). Use selector identifier ("." or "#") accordingly. See HTML structure section at <b>/admin/help/slick_ui</b> for more info. Overriden by field formatter, or Views style.'),
       ];
 
       $elements['accessibility'] = [
         'type'        => 'checkbox',
         'title'       => t('Accessibility'),
-        'description' => t('Enables tabbing and arrow key navigation'),
+        'description' => t('Enables tabbing and arrow key navigation.'),
       ];
 
       $elements['adaptiveHeight'] = [
@@ -321,19 +321,19 @@ class SlickForm extends SlickFormBase {
       $elements['autoplay'] = [
         'type'        => 'checkbox',
         'title'       => t('Autoplay'),
-        'description' => t('Enables autoplay'),
+        'description' => t('Enables autoplay.'),
       ];
 
       $elements['autoplaySpeed'] = [
         'type'        => 'textfield',
         'title'       => t('Autoplay speed'),
-        'description' => t('Autoplay speed in milliseconds'),
+        'description' => t('Autoplay speed in milliseconds.'),
       ];
 
       $elements['pauseOnHover'] = [
         'type'        => 'checkbox',
         'title'       => t('Pause on hover'),
-        'description' => t('Pause autoplay on hover'),
+        'description' => t('Pause autoplay on hover.'),
       ];
 
       $elements['pauseOnDotsHover'] = [
@@ -345,7 +345,7 @@ class SlickForm extends SlickFormBase {
       $elements['arrows'] = [
         'type'        => 'checkbox',
         'title'       => t('Arrows'),
-        'description' => t('Show prev/next arrows'),
+        'description' => t('Show prev/next arrows.'),
       ];
 
       $elements['prevArrow'] = [
@@ -430,7 +430,7 @@ class SlickForm extends SlickFormBase {
       $elements['infinite'] = [
         'type'        => 'checkbox',
         'title'       => t('Infinite'),
-        'description' => t('Infinite loop sliding.'),
+        'description' => t('Infinite loop sliding. Will create clones which may result in lightbox images being duplicated.'),
       ];
 
       $elements['initialSlide'] = [
@@ -519,7 +519,7 @@ class SlickForm extends SlickFormBase {
       $elements['edgeFriction'] = [
         'type'        => 'textfield',
         'title'       => t('Edge friction'),
-        'description' => t("Resistance when swiping edges of non-infinite carousels. If you don't want resistance, set it to 1."),
+        'description' => t("Resistance when swiping edges of non-infinite carousels. If you don't want resistance, set it to 1. Default: 0.35."),
       ];
 
       $elements['touchMove'] = [
@@ -531,7 +531,7 @@ class SlickForm extends SlickFormBase {
       $elements['touchThreshold'] = [
         'type'        => 'textfield',
         'title'       => t('Touch threshold'),
-        'description' => t('Swipe distance threshold.'),
+        'description' => t('Swipe distance threshold. Default: 5.'),
       ];
 
       $elements['useCSS'] = [
@@ -555,7 +555,7 @@ class SlickForm extends SlickFormBase {
         'type'         => 'select',
         'options'      => $this->getCssEasingOptions(),
         'empty_option' => t('- None -'),
-        'description'  => t('If provided, this will override the CSS ease with the pre-defined CSS easings based on <a href="@ceaser">CSS Easing Animation Tool</a>. Leave it empty to use your own CSS ease.', ['@ceaser' => 'http://matthewlein.com/ceaser/']),
+        'description'  => t('If provided, this will override the CSS ease with the pre-defined CSS easings based on <a href="@ceaser">CSS Easing Animation Tool</a>. This field will stay empty. Leave it empty to use your own CSS ease.', ['@ceaser' => 'http://matthewlein.com/ceaser/']),
       ];
 
       $elements['useTransform'] = [
@@ -600,7 +600,19 @@ class SlickForm extends SlickFormBase {
       $defaults = Slick::defaultSettings();
       foreach ($elements as $name => $element) {
         $default = $element['type'] == 'checkbox' ? FALSE : '';
-        $elements[$name]['default'] = isset($defaults[$name]) ? $defaults[$name] : $default;
+        $default = isset($defaults[$name]) ? $defaults[$name] : $default;
+        $elements[$name]['default'] = $default;
+        if (isset($elements[$name]['description'])) {
+          $default_printed = $default;
+          if (is_bool($default)) {
+            $default_printed = $default ? 'TRUE' : 'FALSE';
+          }
+          elseif (is_string($default) && empty($default)) {
+            $default_printed = '" "';
+          }
+          // No need to translate this useless default values.
+          $elements[$name]['description'] .= '<br>Default: <b>' . $default_printed . '.</b>';
+        }
       }
 
       foreach (Slick::getDependentOptions() as $parent => $items) {

@@ -1,7 +1,7 @@
 ***
 ***
 
-## SUBMITTING PATCHES OR ISSUES
+## <a name="contribution"></a>SUBMITTING PATCHES OR ISSUES
 Please consider the following to help you explain better, and to help us
 understand better your bug reports, or patches as needed:
 
@@ -38,7 +38,7 @@ In order for you to help, or buy, us successfully, please consider:
 * providing optional links to the change records, or docs, if any.
 * providing links to docs is a must for coding standards issues.
   This also lets us, you and me, learn from the actual docs, not told by tools!
-  We can just run ```drupalcs ...```, but help is welcome, too, in case a miss.
+  We can just run `drupalcs ...`, but help is welcome, too, in case a miss.
 * checking out the latest dev branch in case already resolved.
 * providing reproduction steps for bug reports is a must. No repro, no bugs.
 

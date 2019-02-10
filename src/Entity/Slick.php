@@ -166,20 +166,8 @@ class Slick implements SlickInterface {
     ctools_include('export');
     $optionset = ctools_export_crud_new(static::TABLE);
 
-    $optionset->options = $optionset->options['settings'] = [];
-    $optionset->breakpoints = 0;
-    $fields = [
-      'name',
-      'label',
-      'skin',
-      'breakpoints',
-      'collection',
-      'optimized',
-      'options',
-    ];
-
     if ($values) {
-      foreach ($fields as $key) {
+      foreach (self::defaultProperties() as $key => $ignore) {
         if (isset($values[$key])) {
           $optionset->{$key} = $values[$key];
         }
@@ -349,6 +337,21 @@ class Slick implements SlickInterface {
       ];
     }
     return static::$defaultSettings;
+  }
+
+  /**
+   * Returns default database fields as properties.
+   */
+  public static function defaultProperties() {
+    return [
+      'name' => 'default',
+      'label' => 'Default',
+      'skin' => '',
+      'breakpoints' => 0,
+      'collection' => '',
+      'optimized' => 0,
+      'options' => [],
+    ];
   }
 
   /**

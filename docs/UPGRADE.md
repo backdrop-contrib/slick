@@ -2,7 +2,7 @@
 ***
 ***
 
-## UPGRADING / MIGRATING FROM 2.x TO 3.x
+## <a name="upgrading"></a>UPGRADING / MIGRATING FROM 2.x TO 3.x
 
 ## Important!
 Migration is not supported, yet. Consider 3.x for new sites only.

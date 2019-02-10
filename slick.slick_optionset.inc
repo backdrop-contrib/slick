@@ -13,14 +13,7 @@ use Drupal\slick\Entity\Slick;
 function slick_slick_optionsets() {
   $optionsets = [];
 
-  $values = [
-    'name' => 'default',
-    'label' => 'Default',
-    'breakpoints' => 0,
-    'skin' => '',
-    'group' => '',
-    'optimized' => 0,
-  ];
+  $values = Slick::defaultProperties();
   $optionset = Slick::create($values);
   $optionset->disabled = TRUE;
   $optionset->api_version = 3;

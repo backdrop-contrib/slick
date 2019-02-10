@@ -1,9 +1,9 @@
 
 ***
 ***
-## TROUBLESHOOTING
-Please read this before submitting issues. This 4-years+ brief is worth saving
-you from headaches.
+## <a name="troubleshooting"></a>TROUBLESHOOTING
+Please read this before submitting issues. This 4-year+-old brief is worth
+reading to save you from headaches.
 
 1. When upgrading from Slick v1.3.6 to later version, try to re-save options at:
   * admin/config/media/slick

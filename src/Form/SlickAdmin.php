@@ -74,9 +74,8 @@ class SlickAdmin extends BlazyAdminExtended implements SlickAdminInterface {
    * Returns the opening form elements.
    */
   public function openingForm(array &$form, $definition = []) {
-    $path         = drupal_get_path('module', 'slick');
-    $readme       = url($path . '/README.txt');
-    $readme_field = url($path . '/src/Plugin/Field/README.txt');
+    $readme       = module_exists('slick_ui') ? url('admin/help/slick_ui') : '/admin/help/slick_ui';
+    $readme_field = module_exists('slick_fields') ? url('admin/help/slick_fields') : '/admin/help/slick_fields';
     $arrows       = $this->getSkinsByGroupOptions('arrows');
     $dots         = $this->getSkinsByGroupOptions('dots');
 
@@ -86,7 +85,7 @@ class SlickAdmin extends BlazyAdminExtended implements SlickAdminInterface {
       $form['optionset']['#title'] = t('Optionset main');
 
       if (module_exists('slick_ui')) {
-        $form['optionset']['#description'] = t('Manage optionsets at <a href="!url" target="_blank">the optionset admin page</a>.', ['@url' => url('admin/config/media/slick')]);
+        $form['optionset']['#description'] = t('Manage optionsets at <a href="@url" target="_blank">the optionset admin page</a>.', ['@url' => url('admin/config/media/slick')]);
       }
     }
 
@@ -169,11 +168,11 @@ class SlickAdmin extends BlazyAdminExtended implements SlickAdminInterface {
 
     if (isset($form['skin'])) {
       $form['skin']['#title'] = t('Skin main');
-      $form['skin']['#description'] = t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. E.g.: Skin Split requires any split layout option. Failing to choose the expected layout makes it useless. See <a href="@url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', ['@url' => $readme]);
+      $form['skin']['#description'] = t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. E.g.: Skin Split requires any split layout option. Failing to choose the expected layout makes it useless. See <a href="@url" target="_blank">SKINS section</a> at /admin/help/slick_ui for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', ['@url' => $readme]);
     }
 
     if (isset($form['layout'])) {
-      $form['layout']['#description'] = t('Requires a skin. The builtin layouts affects the entire slides uniformly. Split half requires any skin Split. See <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Leave empty to DIY.', ['@url' => $readme_field]);
+      $form['layout']['#description'] = t('Requires a skin. The builtin layouts affects the entire slides uniformly. Split half requires any skin Split. See Slick Fields <a href="@url" target="_blank">README</a> under "Slide layout" for more info. Leave empty to DIY.', ['@url' => $readme_field]);
     }
 
     $weight = -99;
