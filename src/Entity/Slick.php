@@ -164,13 +164,13 @@ class Slick implements SlickInterface {
    */
   public static function create(array $values = []) {
     ctools_include('export');
+
     $optionset = ctools_export_crud_new(static::TABLE);
 
-    if ($values) {
-      foreach (self::defaultProperties() as $key => $ignore) {
-        if (isset($values[$key])) {
-          $optionset->{$key} = $values[$key];
-        }
+    $optionset->options = $optionset->options['settings'] = [];
+    foreach (self::defaultProperties() as $key => $ignore) {
+      if (isset($values[$key])) {
+        $optionset->{$key} = $values[$key];
       }
     }
 
