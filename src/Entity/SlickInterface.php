@@ -34,13 +34,13 @@ interface SlickInterface {
   /**
    * Checks whether an optionset with the given name already exists.
    *
-   * @param string $optionset_name
+   * @param string $name
    *   The Optionset machine name.
    *
    * @return bool
    *   Returns TRUE if exists, FALSE otherwise.
    */
-  public static function exists($optionset_name);
+  public static function exists($name);
 
   /**
    * Returns a new optionset object without saving it to the database.

@@ -165,7 +165,7 @@ abstract class SlickFormBase extends ctools_export_ui {
     $optimized = $form_state['values']['optimized'];
 
     // Cast the values.
-    $slick->typecast($settings);
+    Slick::typecast($settings);
 
     $main_settings = $settings;
     if ($optimized) {
@@ -188,7 +188,7 @@ abstract class SlickFormBase extends ctools_export_ui {
           $slick->setResponsiveSettings([], $delta);
         }
         else {
-          $slick->typecast($responsive['settings']);
+          Slick::typecast($responsive['settings']);
 
           $responsive_settings = $responsive['settings'];
           if ($optimized) {

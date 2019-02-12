@@ -135,7 +135,7 @@ class Slick implements SlickInterface {
       $optionset = ctools_export_crud_load(static::TABLE, 'default');
     }
 
-    // BC layer which uses stdClass().
+    // @todo remove BC layer which uses stdClass().
     // Slick 2.x was exported as stdClass, convert into Slick.
     if (!($optionset instanceof Slick)) {
       $optionset = self::create((array) $optionset);
@@ -154,8 +154,9 @@ class Slick implements SlickInterface {
   /**
    * {@inheritdoc}
    */
-  public static function exists($optionset) {
-    $optionset = is_string($optionset) ? self::load($optionset) : $optionset;
+  public static function exists($name) {
+    ctools_include('export');
+    $optionset = ctools_export_crud_load('slick_optionset', $name);
     return isset($optionset->name);
   }
 
@@ -180,12 +181,62 @@ class Slick implements SlickInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Saves the given option set to the database.
+   *
+   * @param object $optionset
+   *   The Optionset object.
+   * @param bool $new
+   *   Set the $new flag if this set has not been written before.
+   *
+   * @return object
+   *   Returns the newly saved object, FALSE otherwise.
    */
-  public static function save($optionset) {
-    ctools_include('export');
-    ctools_export_crud_save(static::TABLE, $optionset);
-    return $optionset;
+  public static function save($optionset, $new = FALSE) {
+    // If the machine name is missing or already in use, return an error.
+    if (empty($optionset->name) or (FALSE != self::exists($optionset->name) and $new)) {
+      return FALSE;
+    }
+
+    // Check for an invalid list of options.
+    if (isset($optionset->options) and !is_array($optionset->options)) {
+      return FALSE;
+    }
+
+    // Assumes creating defaults.
+    if (!isset($optionset->options)) {
+      $optionset->options = [];
+    }
+
+    $defaults['settings'] = self::defaultSettings();
+    $optionset->options = $optionset->options + $defaults;
+
+    self::typecast($optionset->options['settings']);
+
+    // Prepare the database values.
+    $db_values = [
+      'name'        => $optionset->name,
+      'label'       => isset($optionset->label) ? $optionset->label : $optionset->name,
+      'breakpoints' => isset($optionset->breakpoints) ? $optionset->breakpoints : 0,
+      'skin'        => isset($optionset->skin) ? $optionset->skin : '',
+      'collection'  => isset($optionset->collection) ? $optionset->collection : '',
+      'optimized'   => isset($optionset->optimized) ? $optionset->optimized : 0,
+      'options'     => $optionset->options,
+    ];
+
+    if ($new) {
+      $result = drupal_write_record(static::TABLE, $db_values);
+    }
+    else {
+      $result = drupal_write_record(static::TABLE, $db_values, 'name');
+    }
+
+    // Return the object if the values were saved successfully.
+    if (($new and SAVED_NEW == $result) or (!$new and SAVED_UPDATED == $result)) {
+      return $optionset;
+    }
+
+    // Otherwise, an error occured.
+    return FALSE;
   }
 
   /**
@@ -209,7 +260,7 @@ class Slick implements SlickInterface {
    * @param array $settings
    *   An array of Optionset settings.
    */
-  public function typecast(array &$settings = []) {
+  public static function typecast(array &$settings = []) {
     if (empty($settings)) {
       return;
     }

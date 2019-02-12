@@ -94,7 +94,7 @@ class SlickCrudTest extends DrupalWebTestCase {
       $optionset = Slick::load($name);
 
       $this->assertTrue($optionset instanceof Slick, t('Loaded optionset: <strong>@name</strong> instanceof Slick', ['@name' => $optionset->name]));
-      $this->assertEqual($name, $optionset->name, t('Loaded name matches: <strong>@name</strong>', ['@name' => $optionset->name]));
+      $this->assertEqual($name, $optionset->name, t('Loaded name matches: <strong>@name1 == @name2</strong>', ['@name1' => $name, '@name2' => $optionset->name]));
 
       // Ensure defaults match the custom saved data when no overrides.
       $default = Slick::create();
