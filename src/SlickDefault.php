@@ -2,6 +2,7 @@
 
 namespace Drupal\slick;
 
+use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
 
 /**
@@ -142,6 +143,17 @@ class SlickDefault extends BlazyDefault {
       'thumbnail',
       'title',
     ];
+  }
+
+  /**
+   * Dummy method to remove.
+   *
+   * @todo temp fix for Slick failing test missing Blazy class.
+   *
+   * @see https://dispatcher.drupalci.org/job/drupal_d7/121280/artifact/jenkins-drupal_d7-121280/artifacts/run_tests_d7/
+   */
+  public static function dummy() {
+    return Blazy::PAGES;
   }
 
 }

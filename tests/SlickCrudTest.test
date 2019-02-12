@@ -15,6 +15,8 @@ use Drupal\slick\Entity\Slick;
  * @see https://www.drupal.org/node/645286
  * @see https://www.drupal.org/node/265828
  * @see DrupalTestCase
+ * @see https://dispatcher.drupalci.org/job/drupal_d7/121280/artifact/jenkins-drupal_d7-121280/artifacts/run_tests_d7/command_output/
+ * @todo this test fails on missing class: Drupal\blazy\Blazy
  *
  * @requires module registry_autoload
  *
@@ -42,6 +44,9 @@ class SlickCrudTest extends DrupalWebTestCase {
    */
   public function setUp() {
     parent::setUp('libraries', 'ctools', 'jquery_update', 'registry_autoload', 'blazy', 'slick', 'slick_ui');
+
+    // @todo recheck if needed.
+    $this->profile = 'testing';
 
     // Create users.
     $this->adminUser = $this->drupalCreateUser(['administer slick']);
@@ -97,8 +102,8 @@ class SlickCrudTest extends DrupalWebTestCase {
       $this->assertEqual($name, $optionset->name, t('Loaded name matches: <strong>@name1 == @name2</strong>', ['@name1' => $name, '@name2' => $optionset->name]));
 
       // Ensure defaults match the custom saved data when no overrides.
-      $default = Slick::create();
-      foreach ((array) $default->options['settings'] as $key => $value) {
+      $default = Slick::load('default');
+      foreach ($default->options['settings'] as $key => $value) {
         $new_value = $optionset->options['settings'][$key];
         $read_value = $this->getPrintedValue($value);
         $read_new_value = $this->getPrintedValue($new_value);
