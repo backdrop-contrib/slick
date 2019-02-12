@@ -31,7 +31,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
    *
    * @var array
    */
-  private static $skins = ['main', 'thumbnail', 'arrows', 'dots'];
+  private static $skins = ['lightbox', 'main', 'thumbnail', 'arrows', 'dots'];
 
   /**
    * Returns the supported skins.

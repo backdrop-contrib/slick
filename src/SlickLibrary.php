@@ -62,13 +62,13 @@ class SlickLibrary extends BlazyLibrary {
         'title' => 'Slick',
         'website' => 'https://kenwheeler.github.io/slick/',
         'js' => [$library . '/slick/slick.min.js' => ['group' => JS_LIBRARY]],
-        'css' => [$library . '/slick/slick.css' => []],
+        'css' => [$library . '/slick/slick.css' => ['weight' => -6]],
         'version' => '1.x',
       ];
 
       $libraries['css'] = [
         'dependencies' => [['slick', 'slick']],
-        'css' => [$library . '/slick/slick-theme.css' => []],
+        'css' => [$library . '/slick/slick-theme.css' => ['weight' => -5]],
       ];
 
       $libraries['load'] = [
@@ -77,10 +77,9 @@ class SlickLibrary extends BlazyLibrary {
       ];
 
       $libraries['theme'] = [
-        'dependencies' => [['slick', 'load']],
         'css' => [
-          $path . '/css/layout/slick.module.css' => [],
-          $path . '/css/theme/slick.theme.css' => [],
+          $path . '/css/layout/slick.module.css' => ['weight' => -4],
+          $path . '/css/theme/slick.theme.css' => ['weight' => -3],
         ],
       ];
 

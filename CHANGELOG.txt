@@ -1,4 +1,9 @@
 
+Slick 7.x-3.0-dev, 2019-01-12
+-----------------------------
+- Added weight to Slick library CSS to prevent it from overriding module CSS.
+- Added group lightbox for Slick skin for Slick Lightbox potential skins.
+
 Slick 7.x-3.0-dev, 2019-01-19
 -----------------------------
 - Deprecated old Slick carousel formatter to the new ones suffixed with field
