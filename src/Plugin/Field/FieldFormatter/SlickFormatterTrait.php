@@ -13,13 +13,6 @@ trait SlickFormatterTrait {
   use BlazyFormatterTrait;
 
   /**
-   * The slick field formatter manager.
-   *
-   * @var \Drupal\slick\SlickAdminInterface
-   */
-  protected $admin;
-
-  /**
    * Returns the slick admin service shortcut.
    */
   public function admin() {
