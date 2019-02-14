@@ -10,6 +10,10 @@ namespace Drupal\slick;
  *     Postponed till D9
  *
  * @see slick.api.php for more supported methods.
+ * @see src/SlickSkin.php
+ * @see slick_extras/src/SlickExtrasSkin.php
+ * @see slick_extras/slick_example/src/SlickExampleSkin.php
+ * @see tests/modules/slick_test/src/SlickSkinTest.php
  */
 interface SlickSkinInterface {
 

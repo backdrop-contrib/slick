@@ -196,6 +196,7 @@
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
   width: 42px;
+  z-index: 98;
 }
 
 .slick-arrow:active,

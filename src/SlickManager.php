@@ -20,7 +20,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   protected $skinDefinition;
 
   /**
-   * The easing libray.
+   * The easing library.
    *
    * @var string|bool
    */
@@ -65,7 +65,6 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
    */
   public function getEasingPath() {
     if (!isset($this->easingPath)) {
-      $this->easingPath = FALSE;
       $library_easing = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
       if ($library_easing) {
         $easing_path = $library_easing . '/jquery.easing.min.js';
@@ -73,8 +72,8 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
         if (!is_file($easing_path)) {
           $easing_path = $library_easing . '/js/jquery.easing.min.js';
         }
-        $this->easingPath = is_file($easing_path) ? $easing_path : FALSE;
       }
+      $this->easingPath = isset($easing_path) && is_file($easing_path) ? $easing_path : FALSE;
     }
     return $this->easingPath;
   }

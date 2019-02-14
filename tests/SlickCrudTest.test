@@ -15,8 +15,6 @@ use Drupal\slick\Entity\Slick;
  * @see https://www.drupal.org/node/645286
  * @see https://www.drupal.org/node/265828
  * @see DrupalTestCase
- * @see https://dispatcher.drupalci.org/job/drupal_d7/121280/artifact/jenkins-drupal_d7-121280/artifacts/run_tests_d7/command_output/
- * @todo this test fails on missing class: Drupal\blazy\Blazy
  *
  * @requires module registry_autoload
  *
