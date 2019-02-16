@@ -519,7 +519,6 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
     $settings['count']    = empty($settings['count']) ? count($build['items']) : $settings['count'];
     $settings['id']       = $id;
-    $settings['display']  = 'main';
     $settings['nav']      = $settings['nav'] ?: (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
     $settings['navpos']   = $settings['nav'] && !empty($settings['thumbnail_position']);
     $settings['vertical'] = $optionset->getSetting('vertical');

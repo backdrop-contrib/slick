@@ -126,11 +126,10 @@ class SlickLibrary extends BlazyLibrary {
    */
   public function librariesInfo() {
     if (!isset($this->librariesInfo)) {
-      $this->librariesInfo['slick'] = [
-        'name' => 'Slick carousel',
+      $libraries['slick'] = [
+        'name' => 'Slick Carousel',
         'vendor url' => 'http://kenwheeler.github.io/slick/',
         'download url' => 'https://github.com/kenwheeler/slick/releases',
-        'version' => '1.x',
         'version arguments' => [
           'file' => 'slick/slick.js',
           'pattern' => '@Version:\s+([0-9a-zA-Z\.-]+)@',
@@ -142,6 +141,8 @@ class SlickLibrary extends BlazyLibrary {
           'source' => ['files' => ['js' => ['slick/slick.js']]],
         ],
       ];
+
+      $this->librariesInfo = $libraries;
     }
     return $this->librariesInfo;
   }

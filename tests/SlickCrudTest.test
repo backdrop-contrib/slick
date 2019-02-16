@@ -89,8 +89,8 @@ class SlickCrudTest extends DrupalWebTestCase {
       $this->assertTrue($optionset->name == $name, t('Optionset object created: <strong>@name</strong>', ['@name' => $optionset->name]));
       $this->assertFalse(empty($optionset->options), 'Create optionset works.');
 
-      // Save the optionset to the database.
-      $optionset = Slick::save($optionset, TRUE);
+      // Save the new optionset to the database.
+      $optionset->save();
       $this->assertFalse(FALSE === $optionset, 'Optionset saved to database.');
 
       // Read the values from the database.
@@ -162,7 +162,7 @@ class SlickCrudTest extends DrupalWebTestCase {
     $optionset->options['settings'] = (array) $test_options['set2'] + (array) $optionset->options['settings'];
 
     // Save the updated values.
-    $optionset = Slick::save($optionset);
+    $optionset->save();
     $this->assertTrue($optionset instanceof Slick, 'Saved updates to optionset instanceof Slick to database.');
 
     // Load the values from the database again.
@@ -186,7 +186,7 @@ class SlickCrudTest extends DrupalWebTestCase {
     $this->assertTrue(Slick::exists($test), t('Optionset <strong>@name</strong> exists and is ready to be deleted and reverted.', ['@name' => $test]));
 
     // Remove from db, but kept in code with Slick::create() above.
-    Slick::delete($optionset);
+    $optionset->delete();
 
     // Ensure the optionset is reverted to code after deletion from DB.
     $this->assertTrue(Slick::exists($test), t('Optionset <strong>@name</strong> is deleted from DB, and reverted to code.', ['@name' => $test]));

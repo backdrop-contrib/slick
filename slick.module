@@ -27,18 +27,20 @@ function slick($key = 'manager') {
   if (!isset($manager)) {
     $manager = new SlickManager();
     $formatter = new SlickFormatter();
-    $library = new SlickLibrary($manager);
   }
 
   switch ($key) {
-    case 'manager':
-      return $manager;
-
     case 'formatter':
       return $formatter;
 
     case 'library':
+      if (!isset($library)) {
+        $library = new SlickLibrary($manager);
+      }
       return $library;
+
+    default:
+      return $manager;
   }
 }
 

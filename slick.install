@@ -242,12 +242,11 @@ function slick_update_7302() {
       $optionset->collection = $collection;
       $optionset->optimized = $optimized;
 
-      ctools_export_crud_save(Slick::TABLE, $optionset);
-
-      $run_update = TRUE;
-
       // Removed non-supported options under general, some moved above.
       unset($optionset->options['general']);
+
+      ctools_export_crud_save(Slick::TABLE, $optionset);
+      $run_update = TRUE;
     }
   }
 

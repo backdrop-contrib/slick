@@ -96,10 +96,6 @@ function slick_render_cache($settings = []) {
  * To be removed.
  */
 function slick_get_image(array $settings = [], array &$media = [], array $item = []) {
-  if (!empty($settings['picture_style'])) {
-    $settings['responsive_image_style'] = $settings['picture_style'];
-  }
-
   $build = [
     'item' => (object) $item,
     'settings' => array_merge($settings, $media),

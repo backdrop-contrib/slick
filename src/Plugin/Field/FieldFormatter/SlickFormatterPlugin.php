@@ -41,7 +41,7 @@ class SlickFormatterPlugin extends FormatterPlugin {
         $class = 'Drupal\slick\Plugin\Field\FieldFormatter\Slick' . $name . 'Formatter';
 
         $formatters['slick_' . $type] = [
-          'label' => t('Slick carousel'),
+          'label' => t('Slick Carousel'),
           'class' => $class,
           'field types' => $type == 'text' ? SlickDefault::TEXTS : [$type],
           'settings' => $class::defaultSettings(),
@@ -52,7 +52,7 @@ class SlickFormatterPlugin extends FormatterPlugin {
       if ($this->manager->config('deprecated_formatter', TRUE, 'slick.settings')) {
         array_pop($fields);
         $formatters['slick'] = [
-          'label' => t('Slick carousel (deprecated)'),
+          'label' => t('Slick Carousel (deprecated)'),
           'field types' => $fields,
           'settings' => SlickDefault::extendedSettings(),
         ];

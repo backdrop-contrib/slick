@@ -117,13 +117,6 @@ class Slick implements SlickInterface {
   }
 
   /**
-   * Constructs a Slick instance.
-   */
-  public function __construct() {
-    ctools_include('export');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function load($id = 'default') {
@@ -135,11 +128,6 @@ class Slick implements SlickInterface {
       $optionset = ctools_export_crud_load(static::TABLE, 'default');
     }
 
-    // @todo remove BC layer which uses stdClass().
-    // Slick 2.x was exported as stdClass, convert into Slick.
-    if (!($optionset instanceof Slick)) {
-      $optionset = self::create((array) $optionset);
-    }
     return $optionset;
   }
 
@@ -175,83 +163,40 @@ class Slick implements SlickInterface {
       }
     }
 
+    if (empty($values['label']) && isset($values['name'])) {
+      $optionset->label = $values['name'];
+    }
+
     $defaults['settings'] = self::defaultSettings();
     $optionset->options = $optionset->options + $defaults;
     return $optionset;
   }
 
   /**
-   * Saves the given option set to the database.
+   * Saves the optionset to database.
    *
-   * @param object $optionset
-   *   The Optionset object.
-   * @param bool $new
-   *   Set the $new flag if this set has not been written before.
-   *
-   * @return object
-   *   Returns the newly saved object, FALSE otherwise.
+   * @return mixed
+   *   Returns the newly saved or updated object, FALSE otherwise.
    */
-  public static function save($optionset, $new = FALSE) {
-    // If the machine name is missing or already in use, return an error.
-    if (empty($optionset->name) or (FALSE != self::exists($optionset->name) and $new)) {
-      return FALSE;
-    }
-
-    // Check for an invalid list of options.
-    if (isset($optionset->options) and !is_array($optionset->options)) {
-      return FALSE;
-    }
-
-    // Assumes creating defaults.
-    if (!isset($optionset->options)) {
-      $optionset->options = [];
-    }
+  public function save() {
+    $data = $this->toArray();
+    $update = self::exists($data['name']) ? ['name'] : [];
 
     $defaults['settings'] = self::defaultSettings();
-    $optionset->options = $optionset->options + $defaults;
+    $data['options'] = $data['options'] + $defaults;
 
-    self::typecast($optionset->options['settings']);
-
-    // Prepare the database values.
-    $db_values = [
-      'name'        => $optionset->name,
-      'label'       => isset($optionset->label) ? $optionset->label : $optionset->name,
-      'breakpoints' => isset($optionset->breakpoints) ? $optionset->breakpoints : 0,
-      'skin'        => isset($optionset->skin) ? $optionset->skin : '',
-      'collection'  => isset($optionset->collection) ? $optionset->collection : '',
-      'optimized'   => isset($optionset->optimized) ? $optionset->optimized : 0,
-      'options'     => $optionset->options,
-    ];
-
-    if ($new) {
-      $result = drupal_write_record(static::TABLE, $db_values);
-    }
-    else {
-      $result = drupal_write_record(static::TABLE, $db_values, 'name');
-    }
-
-    // Return the object if the values were saved successfully.
-    if (($new and SAVED_NEW == $result) or (!$new and SAVED_UPDATED == $result)) {
-      return $optionset;
-    }
-
-    // Otherwise, an error occured.
-    return FALSE;
+    return drupal_write_record(static::TABLE, $data, $update);
   }
 
   /**
-   * Deletes the given option set from the database.
+   * Deletes the optionset from database.
    *
-   * @param string|object $optionset
-   *   Optionset object, or string machine name.
+   * This only deletes from the database, which means that if an item is in
+   * code, then this is actually a revert.
    */
-  public static function delete($optionset) {
+  public function delete() {
     ctools_include('export');
-    $object = is_string($optionset) ? self::load($optionset) : $optionset;
-
-    // This only deletes from the database, which means that if an item is in
-    // code, then this is actually a revert.
-    ctools_export_crud_delete(static::TABLE, $object);
+    ctools_export_crud_delete(static::TABLE, $this->name);
   }
 
   /**
@@ -391,18 +336,35 @@ class Slick implements SlickInterface {
   }
 
   /**
-   * Returns default database fields as properties.
+   * Returns default database field property values.
+   *
+   * @return mixed[]
+   *   An array of property values, keyed by property name.
    */
   public static function defaultProperties() {
     return [
-      'name' => 'default',
-      'label' => 'Default',
-      'skin' => '',
+      'name'        => 'default',
+      'label'       => 'Default',
       'breakpoints' => 0,
-      'collection' => '',
-      'optimized' => 0,
-      'options' => [],
+      'collection'  => '',
+      'optimized'   => 0,
+      'skin'        => '',
+      'options'     => [],
     ];
+  }
+
+  /**
+   * Returns an array of all property values.
+   *
+   * @return mixed[]
+   *   An array of property values, keyed by property name.
+   */
+  public function toArray() {
+    $values = [];
+    foreach (self::defaultProperties() as $key => $ignore) {
+      $values[$key] = $this->{$key};
+    }
+    return $values;
   }
 
   /**
@@ -454,7 +416,10 @@ class Slick implements SlickInterface {
     $defaults = self::defaultSettings();
 
     // Remove wasted dependent options if disabled, empty or not.
-    $this->removeWastedDependentOptions($js);
+    if (!$this->optimized) {
+      $this->removeWastedDependentOptions($js);
+    }
+
     $config = array_diff_assoc($js, $defaults);
 
     // Remove empty lazyLoad, or left to default ondemand, to avoid JS error.
@@ -487,7 +452,9 @@ class Slick implements SlickInterface {
         }
         else {
           // Remove wasted dependent options if disabled, empty or not.
-          $this->removeWastedDependentOptions($responsives[$key]['settings']);
+          if (!$this->optimized) {
+            $this->removeWastedDependentOptions($responsives[$key]['settings']);
+          }
           $cleaned[$key]['settings'] = array_diff_assoc($responsives[$key]['settings'], $defaults);
         }
       }

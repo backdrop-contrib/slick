@@ -31,6 +31,7 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
       $optionset = Slick::load('default');
     }
 
+    // Defines settings which should reach container and down to each item here.
     $settings['nav'] = !empty($settings['optionset_thumbnail']) && isset($items[1]);
 
     // Do not bother for SlickTextFormatter, or when vanilla is on.

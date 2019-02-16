@@ -1,4 +1,8 @@
 
+Slick 7.x-3.0-dev, 2019-02-16
+-----------------------------
+- Simplified CRUD methods.
+
 Slick 7.x-3.0-dev, 2019-01-12
 -----------------------------
 - Added weight to Slick library CSS to prevent it from overriding module CSS.
