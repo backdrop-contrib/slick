@@ -127,7 +127,7 @@ function slick_optionset_load($id = 'default') {
  * @deprecated to be removed for SlickManager::getOptionsetOptions()
  */
 function slick_optionset_options($collection = '') {
-  return slick()->getOptionsetOptions($collection = '');
+  return slick()->getOptionsetOptions($collection);
 }
 
 /**

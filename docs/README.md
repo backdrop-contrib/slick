@@ -4,10 +4,10 @@
 Visit **/admin/help/slick_ui** once Slick UI installed to read this in comfort.
 
 Slick is a powerful and performant slideshow/carousel solution leveraging Ken
-Wheeler's [Slick carousel](http://kenwheeler.github.io/slick).
+Wheeler's [Slick Carousel](http://kenwheeler.github.io/slick).
 
 Slick has gazillion options, please start with the very basic working
-samples from [slick_example](http://dgo.to/slick_extras) only if trouble to
+samples from [Slick Example](http://dgo.to/slick_extras) only if trouble to
 build slicks. Spending 5 minutes or so will save you hours in building more
 complex slideshows.
 

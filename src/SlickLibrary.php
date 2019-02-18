@@ -27,7 +27,7 @@ class SlickLibrary extends BlazyLibrary {
    * Implements hook_library_alter().
    */
   public function libraryAlter(&$libraries, $extension) {
-    if ($extension === 'slick') {
+    if ($extension == 'slick') {
       if ($easing_path = $this->manager->getEasingPath()) {
         $libraries['easing']['js'] = [$easing_path => ['group' => JS_LIBRARY]];
       }

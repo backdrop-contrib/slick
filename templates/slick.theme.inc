@@ -365,7 +365,7 @@ function theme_slick_slide(array $variables) {
   }
 
   $caption = '';
-  // Ensures no caption markup is displayed until provided.
+  // Ensures no caption markup is displayed until its data is provided.
   if ($settings['use_caption']) {
     $inner = empty($item['caption']['title']) ? '' : '<h2 class="slide__title">' . drupal_render($item['caption']['title']) . '</h2>';
     $inner .= empty($item['caption']['alt']) ? '' : '<p class="slide__description">' . drupal_render($item['caption']['alt']) . '</p>';
@@ -499,10 +499,12 @@ function template_preprocess_slick_grid(&$variables) {
     $settings['current_item'] = 'grid';
 
     $item_attributes = empty($item['attributes']) ? [] : $item['attributes'];
+    $classes = empty($item_attributes['class']) ? [] : (array) $item_attributes['class'];
     if (empty($settings['unslick'])) {
-      $item_attributes['class'][] = 'slide__grid';
+      $classes[] = 'slide__grid';
     }
-    $item_attributes['class'][] = 'grid';
+
+    $item_attributes['class'] = array_merge(['grid'], $classes);
     unset($item['settings'], $item['attributes']);
 
     $slide['slide'] = [

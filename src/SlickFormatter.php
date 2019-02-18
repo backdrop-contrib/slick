@@ -55,6 +55,8 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
     }
 
     $build['optionset'] = $optionset;
+
+    drupal_alter('slick_settings', $build, $items);
   }
 
   /**

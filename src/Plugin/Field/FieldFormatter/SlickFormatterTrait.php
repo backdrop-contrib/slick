@@ -13,7 +13,7 @@ trait SlickFormatterTrait {
   use BlazyFormatterTrait;
 
   /**
-   * Returns the slick admin service shortcut.
+   * Returns the slick admin service.
    */
   public function admin() {
     if (!isset($this->admin)) {
