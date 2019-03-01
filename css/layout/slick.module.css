@@ -28,7 +28,7 @@
   }
 
   .slide--caption--center .slide__caption {
-    margin-top: -16%;
+    /* margin-top: -16%; */
     position: absolute;
     top: 50%;
   }
