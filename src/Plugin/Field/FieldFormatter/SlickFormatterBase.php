@@ -66,7 +66,7 @@ abstract class SlickFormatterBase extends BlazyFormatterBase {
   /**
    * Build caption element if so configured can be used for thumbnail caption.
    */
-  abstract protected function getCaption($item, $caption, $settings);
+  abstract protected function getCaption($entity, $field_name, $settings);
 
   /**
    * {@inheritdoc}

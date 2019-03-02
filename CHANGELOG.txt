@@ -1,4 +1,9 @@
 
+Slick 7.x-3.0-dev, 2019-03-02
+-----------------------------
+- Added proper check for captions for edge case settings hold old references
+  to fields while they can be deleted anytime.
+
 Slick 7.x-3.0-dev, 2019-02-16
 -----------------------------
 - Simplified CRUD methods.

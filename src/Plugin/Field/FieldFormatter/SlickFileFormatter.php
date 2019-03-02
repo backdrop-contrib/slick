@@ -141,7 +141,7 @@ class SlickFileFormatter extends SlickFormatterBase {
     // Build caption if so configured, supports file entity/ media via $entity.
     if (!empty($settings['caption'])) {
       foreach ($settings['caption'] as $caption) {
-        if ($caption_content = array_filter($this->getCaption($entity, $caption, $settings))) {
+        if (isset($entity->{$caption}) && $caption_content = array_filter($this->getCaption($entity, $caption, $settings))) {
           // Put into data sepecific for fieldable entity captions where caption
           // can be anything: text, link, image, etc.
           $element['caption']['data'][$caption] = $caption_content;
