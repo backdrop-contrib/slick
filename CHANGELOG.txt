@@ -1,6 +1,7 @@
 
 Slick 7.x-3.0-dev, 2019-03-06
 -----------------------------
+- Renamed getOptionsetOptions() to getOptionsetByGroupOptions().
 - Updated to the latest Blazy change 03-06 with BlazyAdminBase::openingForm().
 - Added hook_slick_build_alter() to modify the entire slick outputs.
 

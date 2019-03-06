@@ -339,7 +339,7 @@ class SlickAdmin extends BlazyAdminExtended implements SlickAdminInterface {
    * Returns available slick optionsets by collection.
    */
   public function getOptionsetsByGroupOptions($collection = '') {
-    return $this->manager->getOptionsetOptions($collection);
+    return $this->manager->getOptionsetByGroupOptions($collection);
   }
 
   /**

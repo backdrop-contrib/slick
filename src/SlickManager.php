@@ -189,7 +189,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   /**
    * Returns available slick optionsets by collection.
    */
-  public function getOptionsetOptions($collection = '') {
+  public function getOptionsetByGroupOptions($collection = '') {
     $optionsets = $collected = $uncollected = [];
     $slicks = Slick::loadMultiple();
     foreach ($slicks as $slick) {
