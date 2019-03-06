@@ -437,12 +437,15 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
       $cache['#cache']['expire'] = $settings['cache'] == CACHE_TEMPORARY ? CACHE_TEMPORARY : REQUEST_TIME + $settings['cache'];
     }
 
-    return empty($build['items']) ? [] : [
+    $slick = [
       '#theme'      => 'slick_wrapper',
       '#items'      => [],
       '#build'      => $build,
       '#pre_render' => ['slick_pre_render_wrapper'],
     ] + $cache;
+
+    drupal_alter('slick_build', $slick, $settings);
+    return empty($build['items']) ? [] : $slick;
   }
 
   /**

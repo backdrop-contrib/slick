@@ -73,7 +73,7 @@ class SlickAdmin extends BlazyAdminExtended implements SlickAdminInterface {
   /**
    * Returns the opening form elements.
    */
-  public function openingForm(array &$form, $definition = []) {
+  public function openingForm(array &$form, &$definition = []) {
     $readme       = module_exists('slick_ui') ? url('admin/help/slick_ui') : '/admin/help/slick_ui';
     $readme_field = module_exists('slick_fields') ? url('admin/help/slick_fields') : '/admin/help/slick_fields';
     $arrows       = $this->getSkinsByGroupOptions('arrows');

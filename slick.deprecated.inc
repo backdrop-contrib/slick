@@ -7,7 +7,7 @@
  * You can disable this file inclusion at Slick UI after all-slick related
  * modules (Slick Views, Slick Extras, etc.) migrated into 3.x.
  *
- * @deprecated to be remove.
+ * @deprecated to be removed.
  */
 
 use Drupal\blazy\Blazy;
