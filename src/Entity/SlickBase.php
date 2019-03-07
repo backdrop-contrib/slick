@@ -147,7 +147,9 @@ abstract class SlickBase implements SlickBaseInterface {
    * @param array $settings
    *   An array of Optionset settings.
    */
-  abstract public static function typecast(array &$settings = []);
+  public static function typecast(array &$settings = []) {
+    // Do nothing.
+  }
 
   /**
    * {@inheritdoc}
