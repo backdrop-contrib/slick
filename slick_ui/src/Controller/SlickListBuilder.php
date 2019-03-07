@@ -65,19 +65,6 @@ trait SlickListBuilder {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function build_operations($entity) {
-    $operations = parent::build_operations($entity);
-
-    if ($entity->name == 'default') {
-      unset($operations['enable'], $operations['disable'], $operations['edit']);
-    }
-
-    return $operations;
-  }
-
-  /**
    * Overrides parent::list_form.
    */
   public function list_form(&$form, &$form_state) {

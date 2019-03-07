@@ -3,11 +3,14 @@
 namespace Drupal\slick_ui\Form;
 
 use Drupal\slick\Entity\Slick;
+use Drupal\slick_ui\Controller\SlickListBuilder;
 
 /**
  * Extends base form for slick instance configuration form.
  */
 class SlickForm extends SlickFormBase {
+
+  use SlickListBuilder;
 
   /**
    * The form elements.
@@ -21,10 +24,80 @@ class SlickForm extends SlickFormBase {
    */
   public function edit_form(&$form, &$form_state) {
     parent::edit_form($form, $form_state);
-    $slick     = $form_state['item'];
-    $options   = $slick->getOptions() ?: [];
-    $admin_css = $this->manager->config('admin_css', TRUE, 'blazy.settings');
-    $tooltip   = ['class' => ['is-tooltip']];
+
+    $slick          = $form_state['item'];
+    $options        = $slick->getOptions() ?: [];
+    $tooltip        = ['class' => ['is-tooltip']];
+    $tooltip_bottom = $tooltip + ['data-blazy-tooltip' => 'wide', 'data-blazy-tooltip-direction' => 'bottom'];
+    $admin_css      = $this->manager->config('admin_css', TRUE, 'blazy.settings');
+
+    $form['#attributes']['class'][] = 'form--slick form--blazy form--optionset has-tooltip';
+
+    $form['info']['label']['#attributes']['class'][] = 'is-tooltip';
+    $form['info']['name']['#attributes']['class'][] = 'is-tooltip';
+    $form['info']['label']['#prefix'] = '<div class="form__header-container clearfix"><div class="form__header form__half form__half--first has-tooltip clearfix">';
+    $form['info']['name']['#suffix'] = '</div>';
+
+    $form['skin'] = [
+      '#type'          => 'select',
+      '#title'         => t('Skin'),
+      '#options'       => $this->admin->getSkinsByGroupOptions(),
+      '#empty_option'  => t('- None -'),
+      '#default_value' => isset($form_state['values']['skin']) ? $form_state['values']['skin'] : $slick->skin,
+      '#description'   => t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See <b>/admin/help/slick_ui</b> for details on Skins. Only useful for custom work, and ignored/overridden by slick formatters or sub-modules.'),
+      '#attributes'    => $tooltip_bottom,
+      '#prefix'        => '<div class="form__header form__half form__half--last has-tooltip clearfix">',
+    ];
+
+    $collection = isset($slick->collection) ? $slick->collection : '';
+    $form['collection'] = [
+      '#type'          => 'select',
+      '#title'         => t('Collection'),
+      '#options'       => [
+        'main'      => t('Main'),
+        'thumbnail' => t('Thumbnail'),
+      ],
+      '#empty_option'  => t('- None -'),
+      '#default_value' => isset($form_state['values']['collection']) ? $form_state['values']['collection'] : $collection,
+      '#description'   => t('Group this optionset to avoid confusion for optionset selections. Leave empty to make it available for all.'),
+      '#attributes'    => $tooltip_bottom,
+    ];
+
+    $form['breakpoints'] = [
+      '#title'         => t('Breakpoints'),
+      '#type'          => 'textfield',
+      '#default_value' => isset($form_state['values']['breakpoints']) ? $form_state['values']['breakpoints'] : $slick->breakpoints,
+      '#description'   => t('The number of breakpoints added to Responsive display, max 9. This is not Breakpoint Width (480px, etc).'),
+      '#ajax' => [
+        'callback' => 'slick_ui_add_breakpoints',
+        'wrapper'  => 'edit-breakpoints-ajax-wrapper',
+        'event'    => 'blur',
+      ],
+      '#attributes' => $tooltip_bottom,
+      '#maxlength'  => 1,
+    ];
+
+    $optimized = isset($slick->optimized) ? $slick->optimized : '';
+    $form['optimized'] = [
+      '#type'          => 'checkbox',
+      '#title'         => t('Optimized'),
+      '#default_value' => isset($form_state['values']['optimized']) ? $form_state['values']['optimized'] : $optimized,
+      '#description'   => t('Check to optimize the stored options. Anything similar to defaults will not be stored, except those required by sub-modules and theme_slick(). Like you hand-code/ cherry-pick the needed options, and are smart enough to not repeat defaults, and free up memory. The rest are taken care of by JS. Uncheck only if theme_slick() can not satisfy the needs, and more hand-coded preprocess is needed which is less likely in most cases.'),
+      '#access'        => $slick->name != 'default',
+      '#attributes'    => $tooltip_bottom,
+    ];
+
+    if ($slick->name == 'default') {
+      $form['breakpoints']['#suffix'] = '</div></div>';
+    }
+    else {
+      $form['optimized']['#suffix'] = '</div></div>';
+    }
+
+    if ($admin_css) {
+      $form['optimized']['#field_suffix'] = '&nbsp;';
+      $form['optimized']['#title_display'] = 'before';
+    }
 
     // Options.
     $form['options'] = [
@@ -746,6 +819,64 @@ class SlickForm extends SlickFormBase {
 
     // Update cssEaseBezier value based on cssEaseOverride.
     $form_state['values']['options']['settings']['cssEaseBezier'] = $override;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function edit_form_submit(&$form, &$form_state) {
+    parent::edit_form_submit($form, $form_state);
+
+    // Optimized if so configured.
+    $slick = $form_state['item'];
+    $default = $slick->name == 'default';
+    if ($default) {
+      return;
+    }
+
+    $defaults = Slick::defaultSettings();
+    $required = $this->getOptionsRequiredByTemplate();
+    $settings = $form_state['values']['options']['settings'];
+    $optimized = $form_state['values']['optimized'];
+
+    // Cast the values.
+    Slick::typecast($settings);
+
+    $main_settings = $settings;
+    if ($optimized) {
+      // Remove wasted dependent options if disabled, empty or not.
+      $slick->removeWastedDependentOptions($settings);
+      $main = array_diff_assoc($defaults, $required);
+      $main_settings = array_diff_assoc($settings, $main);
+    }
+
+    $slick->setSettings($main_settings);
+
+    if (isset($form_state['values']['options']['responsives'])
+      && $responsives = $form_state['values']['options']['responsives']['responsive']) {
+      foreach ($responsives as $delta => &$responsive) {
+
+        settype($responsive['breakpoint'], 'int');
+        settype($responsive['unslick'], 'bool');
+
+        if (!empty($responsive['unslick'])) {
+          $slick->setResponsiveSettings([], $delta);
+        }
+        else {
+          Slick::typecast($responsive['settings']);
+
+          $responsive_settings = $responsive['settings'];
+          if ($optimized) {
+            $slick->removeWastedDependentOptions($responsive['settings']);
+            $responsive_settings = array_diff_assoc($responsive['settings'], $defaults);
+          }
+
+          $slick->setResponsiveSettings($responsive_settings, $delta);
+          $slick->setResponsiveSettings($responsive['breakpoint'], $delta, 'breakpoint');
+          $slick->setResponsiveSettings($responsive['unslick'], $delta, 'unslick');
+        }
+      }
+    }
   }
 
 }

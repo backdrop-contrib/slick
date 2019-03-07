@@ -1,4 +1,8 @@
 
+Slick 7.x-3.0-dev, 2019-03-07
+-----------------------------
+- Made Slick and Slick UI extensible.
+
 Slick 7.x-3.0-dev, 2019-03-06
 -----------------------------
 - Renamed getOptionsetOptions() to getOptionsetByGroupOptions().
