@@ -170,7 +170,7 @@ class SlickCrudTest extends DrupalWebTestCase {
 
     // Compare saved options match the set2 options.
     foreach ($test_options['set2'] as $key => $value) {
-      $saved_value = $optionset->options['settings'][$key];
+      $saved_value = $optionset->getSetting($key);
       $read_value = $this->getPrintedValue($value);
       $read_saved_value = $this->getPrintedValue($saved_value);
 
