@@ -92,6 +92,8 @@ class SlickDefault extends BlazyDefault {
   public static function jsSettings() {
     return [
       'asNavFor'        => '',
+      'prevArrow'       => '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0">Previous</button>',
+      'nextArrow'       => '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0">Next</button>',
       'downArrowTarget' => '',
       'downArrowOffset' => '',
       'lazyLoad'        => 'ondemand',

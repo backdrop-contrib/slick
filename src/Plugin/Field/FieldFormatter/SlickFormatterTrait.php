@@ -36,6 +36,13 @@ trait SlickFormatterTrait {
     // Collects specific settings to this formatter.
     $this->entity = $entity;
     $settings = $this->buildSettings();
+
+    // Pass first item to optimize sizes and build colorbox/zoom-like gallery.
+    if (method_exists($this, 'getImageItem') && $image = $this->getImageItem($entities[0])) {
+      $settings['first_item'] = $image['item'];
+      $settings['first_uri'] = $image['item']->uri;
+    }
+
     $build = ['settings' => $settings];
     $this->formatter()->buildSettings($build, $items, $entity);
 
@@ -43,6 +50,7 @@ trait SlickFormatterTrait {
     $this->buildElements($build, $entities);
 
     // Supports Blazy multi-breakpoint images if provided.
+    // @todo move it into ::build() as moved to base class.
     if (isset($build['items'][0]) && empty($settings['vanilla'])) {
       $this->formatter()->isBlazy($build['settings'], $build['items'][0]);
     }
