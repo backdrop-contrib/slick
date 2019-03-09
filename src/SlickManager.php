@@ -537,7 +537,13 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
     // Attach libraries.
     if ($switch && $switch != 'content') {
-      $settings[$switch] = $switch;
+      $settings[$switch] = empty($settings[$switch]) ? $switch : $settings[$switch];
+    }
+
+    // Supports Blazy multi-breakpoint or lightbox images if provided.
+    // Cases: Blazy within Views gallery, or references without direct image.
+    if (!empty($settings['check_blazy']) && !empty($settings['first_image'])) {
+      $this->isBlazy($settings, $settings['first_image']);
     }
 
     // Pass needed build items into slick.
