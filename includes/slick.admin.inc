@@ -13,6 +13,55 @@
 /**
  * To be removed.
  */
+function slick_get_responsive_options($count = 0) {
+  return [];
+}
+
+/**
+ * To be removed.
+ */
+function slick_clean_options(array $options) {
+  return $options;
+}
+
+/**
+ * To be removed.
+ */
+function slick_get_overridable_options() {
+  return [];
+}
+
+/**
+ * To be removed.
+ */
+function slick_layouts() {
+  return [];
+}
+
+/**
+ * To be removed.
+ */
+function slick_optionset_options($collection = '') {
+  return slick()->getOptionsetByGroupOptions($collection);
+}
+
+/**
+ * To be removed.
+ */
+function slick_optionset_exists($optionset_name) {
+  return FALSE;
+}
+
+/**
+ * To be removed.
+ */
+function slick_optionset_load_all($reset = FALSE) {
+  return [];
+}
+
+/**
+ * To be removed.
+ */
 function slick_get_top_elements(array &$elements, $settings, &$form_state) {
   // Do nothing.
 }
@@ -49,5 +98,12 @@ function slick_get_admin_assets(array &$elements, $settings = [], &$form = []) {
  * To be removed.
  */
 function slick_get_admin_summary($field, $instance, $view_mode, $module) {
+  // Do nothing.
+}
+
+/**
+ * To be removed.
+ */
+function _slick_typecast_optionset(array &$options = array(), $breakpoints = 0) {
   // Do nothing.
 }

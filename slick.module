@@ -124,15 +124,6 @@ function slick_optionset_load($id = 'default') {
 /**
  * Kept here to prevent accidental removal till we do so.
  *
- * @deprecated to be removed for SlickManager::getOptionsetByGroupOptions()
- */
-function slick_optionset_options($collection = '') {
-  return slick()->getOptionsetByGroupOptions($collection);
-}
-
-/**
- * Kept here to prevent accidental removal till we do so.
- *
  * @deprecated to be removed for SlickManager::attach()
  */
 function slick_attach(array $attach, array $settings = []) {

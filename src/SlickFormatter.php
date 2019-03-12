@@ -57,6 +57,9 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
     $build['optionset'] = $optionset;
 
     drupal_alter('slick_settings', $build, $items);
+
+    // Done at top level works, prevents leaking to child for few settings.
+    unset($settings['first_item']);
   }
 
   /**

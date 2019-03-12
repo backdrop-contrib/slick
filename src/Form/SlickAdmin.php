@@ -147,7 +147,7 @@ class SlickAdmin extends BlazyAdminExtended implements SlickAdminInterface {
             'select[name*="[optionset_thumbnail]"]' => ['!value' => ''],
           ],
         ],
-        '#weight'      => -99,
+        '#weight'      => -96,
       ];
     }
 
