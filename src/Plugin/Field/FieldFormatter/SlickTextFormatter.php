@@ -95,7 +95,10 @@ class SlickTextFormatter extends FormatterBase {
    */
   public function getScopedFormElements() {
     return [
-      'no_layouts' => TRUE,
+      'no_image_style'   => TRUE,
+      'no_layouts'       => TRUE,
+      'responsive_image' => FALSE,
+      'style'            => TRUE,
     ] + parent::getScopedFormElements();
   }
 

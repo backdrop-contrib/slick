@@ -163,7 +163,7 @@ function template_preprocess_slick(&$variables) {
 
   // Prepare attributes.
   $settings  = array_merge(SlickDefault::htmlSettings(), $variables['settings']);
-  $optionset = $variables['optionset'] ?: Slick::load($settings['optionset']);
+  $optionset = $variables['optionset'] ?: Slick::loadWithFallback($settings['optionset']);
   $js        = array_merge($optionset->getSettings(), $variables['options']) + SlickDefault::jsSettings();
   $display   = $settings['display'];
   $id        = $settings['id'] ?: Blazy::getHtmlId('slick');
@@ -217,12 +217,15 @@ function template_preprocess_slick(&$variables) {
         $downs['class'] = ['slick-down'];
         $downs['data-offset'] = $js['downArrowOffset'];
         $downs['data-target'] = $js['downArrowTarget'];
+        $downs['data-role'] = 'none';
+        $downs['type'] = 'button';
         $attributes['class'][] = 'slick--has-arrow-down';
       }
     }
 
     $variables['arrow_down_attributes_array'] = $downs;
     $variables['arrow_attributes_array']['class'] = array_merge(['slick__arrow'], $arrows);
+    $variables['arrow_attributes_array']['role'] = 'navigation';
 
     // Main arrows.
     // @todo remove the $settings parts (BC) for $js to reduce dups.

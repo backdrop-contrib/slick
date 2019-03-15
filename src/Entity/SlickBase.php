@@ -74,6 +74,19 @@ abstract class SlickBase implements SlickBaseInterface {
   }
 
   /**
+   * Load the optionset with a fallback.
+   */
+  public static function loadWithFallback($id) {
+    $optionset = self::load($id);
+
+    // Ensures deleted optionset while being used doesn't screw up.
+    if (empty($optionset)) {
+      $optionset = self::load('default');
+    }
+    return $optionset;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function loadMultiple($reset = FALSE) {

@@ -513,13 +513,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     }
 
     // Load the optionset to work with.
-    $optionset = $build['optionset'] ?: Slick::load($settings['optionset']);
-
-    // Ensures deleted optionset while being used doesn't screw up.
-    if (empty($optionset)) {
-      $optionset = Slick::load('default');
-    }
-
+    $optionset            = $build['optionset'] ?: Slick::loadWithFallback($settings['optionset']);
     $settings['count']    = empty($settings['count']) ? count($build['items']) : $settings['count'];
     $settings['id']       = $id;
     $settings['nav']      = $settings['nav'] ?: (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
@@ -530,7 +524,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     // If thumbnail navigation is required, build one.
     if ($settings['nav']) {
       $options['asNavFor'] = "#{$thumb_id}-slider";
-      $optionset_thumbnail = Slick::load($settings['optionset_thumbnail']);
+      $optionset_thumbnail = Slick::loadWithFallback($settings['optionset_thumbnail']);
       $mousewheel = $optionset_thumbnail->getSetting('mouseWheel');
       $settings['vertical_tn'] = $optionset_thumbnail->getSetting('vertical');
     }
@@ -590,6 +584,8 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
     // Collect the slick instances.
     $element['#items'] = $slick;
+
+    unset($build);
     return $element;
   }
 

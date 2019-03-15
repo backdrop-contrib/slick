@@ -24,12 +24,7 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
     parent::buildSettings($build, $items, $entity);
 
     // Load the optionset to work with.
-    $optionset = Slick::load($settings['optionset']);
-
-    // Ensures deleted optionset while being used doesn't screw up.
-    if (empty($optionset)) {
-      $optionset = Slick::load('default');
-    }
+    $optionset = Slick::loadWithFallback($settings['optionset']);
 
     // Defines settings which should reach container and down to each item here.
     $settings['nav'] = !empty($settings['optionset_thumbnail']) && isset($items[1]);
