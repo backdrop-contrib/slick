@@ -22,6 +22,22 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
 
     // Pass basic info to parent::buildSettings().
     parent::buildSettings($build, $items, $entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preBuildElements(array &$build, $items, $entity, array $entities = []) {
+    // Checks if we are syncing with Blazy post Beta2.
+    // @todo remove conditions post RC1.
+    if (method_exists(get_parent_class($this), 'preBuildElements')) {
+      parent::preBuildElements($build, $items, $entity, $entities);
+    }
+    else {
+      $this->buildSettings($build, $items, $entity);
+    }
+
+    $settings = &$build['settings'];
 
     // Load the optionset to work with.
     $optionset = Slick::loadWithFallback($settings['optionset']);
@@ -52,9 +68,19 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
     $build['optionset'] = $optionset;
 
     drupal_alter('slick_settings', $build, $items);
+  }
 
-    // Done at top level works, prevents leaking to child for few settings.
-    unset($settings['first_item']);
+  /**
+   * {@inheritdoc}
+   *
+   * @todo remove post Blazy RC1.
+   */
+  public function postBuildElements(array &$build, $items, $entity, array $entities = []) {
+
+    // Checks if we are syncing with Blazy post Beta2.
+    if (method_exists(get_parent_class($this), 'postBuildElements')) {
+      parent::postBuildElements($build, $items, $entity, $entities);
+    }
   }
 
   /**

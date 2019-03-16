@@ -60,7 +60,9 @@ class SlickTextFormatter extends FormatterBase {
 
     // Build the settings.
     $build = ['settings' => $settings];
-    $this->formatter()->buildSettings($build, $items, $entity);
+
+    // Modifies settings before building elements.
+    $this->formatter()->preBuildElements($build, $items, $entity);
 
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
