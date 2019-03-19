@@ -1,4 +1,8 @@
 
+Slick 7.x-3.0-dev, 2019-03-18
+-----------------------------
+- Fixed for typos, and cleaned up TODOs.
+
 Slick 7.x-3.0-dev, 2019-03-17
 -----------------------------
 - Updated to the latest Blazy 2019-03-17 to reduce dups.

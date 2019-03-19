@@ -4,7 +4,7 @@
  * @file
  * Default theme implementation for the Slick carousel template.
  *
- * This file is not used by Slick, which uses theme_slick_wrapper() instead for
+ * This file is not used by Slick, which uses theme_slick() instead for
  * performance reasons. The markup is the same, though, so if you want to use
  * template files rather than functions to extend Slick theming, copy this to
  * your custom theme. If you are comfortable with PHP, consider overriding

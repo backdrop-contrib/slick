@@ -94,7 +94,7 @@ function theme_slick_wrapper(array $variables) {
 }
 
 /**
- * Preperocess variables for theme_slick_wrapper(), or slick-wrapper.tpl.php.
+ * Preprocess variables for theme_slick_wrapper(), or slick-wrapper.tpl.php.
  */
 function template_preprocess_slick_wrapper(&$variables) {
   _slick_preprocess_container($variables);
@@ -130,6 +130,7 @@ function theme_slick(array $variables) {
   extract($variables);
 
   // Prevents direct call to this theme without proper checks from screwing up.
+  // @todo remove babysitters at Slick 4.x.
   if (empty($items)) {
     return '';
   }
@@ -153,7 +154,7 @@ function theme_slick(array $variables) {
 }
 
 /**
- * Preperocess variables for theme_slick().
+ * Preprocess variables for theme_slick().
  */
 function template_preprocess_slick(&$variables) {
   _slick_preprocess_container($variables);

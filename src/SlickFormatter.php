@@ -28,14 +28,7 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
    * {@inheritdoc}
    */
   public function preBuildElements(array &$build, $items, $entity, array $entities = []) {
-    // Checks if we are syncing with Blazy post Beta2.
-    // @todo remove conditions post RC1.
-    if (method_exists(get_parent_class($this), 'preBuildElements')) {
-      parent::preBuildElements($build, $items, $entity, $entities);
-    }
-    else {
-      $this->buildSettings($build, $items, $entity);
-    }
+    parent::preBuildElements($build, $items, $entity, $entities);
 
     $settings = &$build['settings'];
 
@@ -72,19 +65,6 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo remove post Blazy RC1.
-   */
-  public function postBuildElements(array &$build, $items, $entity, array $entities = []) {
-
-    // Checks if we are syncing with Blazy post Beta2.
-    if (method_exists(get_parent_class($this), 'postBuildElements')) {
-      parent::postBuildElements($build, $items, $entity, $entities);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function getThumbnail(array $settings = [], $item = NULL) {
     $thumbnail = [];
@@ -98,10 +78,12 @@ class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
       ];
 
       // Extract relevant variables from image or file entity/ media.
-      foreach (['attributes', 'height', 'weight', 'alt', 'title'] as $key) {
-        // Do not output empty value to prevent ugly title undefined.
-        if ($item && isset($item->{$key})) {
-          $thumbnail["#$key"] = $item->{$key};
+      if ($item) {
+        foreach (['attributes', 'height', 'weight', 'alt', 'title'] as $key) {
+          // Do not output empty value to prevent ugly title undefined.
+          if (isset($item->{$key})) {
+            $thumbnail["#$key"] = $item->{$key};
+          }
         }
       }
     }
