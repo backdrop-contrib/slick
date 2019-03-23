@@ -20,6 +20,20 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   protected $skinDefinition;
 
   /**
+   * Static cache for the skins by group.
+   *
+   * @var array
+   */
+  protected $skinsByGroup;
+
+  /**
+   * Static cache for the skins by group.
+   *
+   * @var array
+   */
+  protected $optionsetByGroup;
+
+  /**
    * The easing library.
    *
    * @var string|bool
@@ -164,53 +178,59 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
    * Returns available slick skins by group.
    */
   public function getSkinsByGroup($group = '', $option = FALSE) {
-    $skins         = $grouped = $ungrouped = [];
-    $nav_skins     = in_array($group, ['arrows', 'dots']);
-    $defined_skins = $nav_skins ? $this->getSkins()[$group] : $this->getSkins()['skins'];
+    if (!isset($this->skinsByGroup[$group])) {
+      $skins         = $grouped = $ungrouped = [];
+      $nav_skins     = in_array($group, ['arrows', 'dots']);
+      $defined_skins = $nav_skins ? $this->getSkins()[$group] : $this->getSkins()['skins'];
 
-    foreach ($defined_skins as $skin => $properties) {
-      $item = $option ? check_plain($properties['name']) : $properties;
-      if (!empty($group)) {
-        if (isset($properties['group'])) {
-          if ($properties['group'] != $group) {
-            continue;
+      foreach ($defined_skins as $skin => $properties) {
+        $item = $option ? check_plain($properties['name']) : $properties;
+        if (!empty($group)) {
+          if (isset($properties['group'])) {
+            if ($properties['group'] != $group) {
+              continue;
+            }
+            $grouped[$skin] = $item;
           }
-          $grouped[$skin] = $item;
+          elseif (!$nav_skins) {
+            $ungrouped[$skin] = $item;
+          }
         }
-        elseif (!$nav_skins) {
-          $ungrouped[$skin] = $item;
-        }
+        $skins[$skin] = $item;
       }
-      $skins[$skin] = $item;
+      $this->skinsByGroup[$group] = $group ? array_merge($ungrouped, $grouped) : $skins;
     }
-    return $group ? array_merge($ungrouped, $grouped) : $skins;
+    return $this->skinsByGroup[$group];
   }
 
   /**
-   * Returns available slick optionsets by collection.
+   * Returns available slick optionsets by collection for select options.
    */
-  public function getOptionsetByGroupOptions($collection = '') {
-    $optionsets = $collected = $uncollected = [];
-    $slicks = Slick::loadMultiple();
-    foreach ($slicks as $slick) {
-      $name = check_plain($slick->label);
-      $id = $slick->name;
-      $current_collection = $slick->collection;
-      if (!empty($collection)) {
-        if ($current_collection) {
-          if ($current_collection != $collection) {
-            continue;
+  public function getOptionsetByGroupOptions($group = '') {
+    if (!isset($this->optionsetByGroup[$group])) {
+      $optionsets = $collected = $uncollected = [];
+      $slicks = Slick::loadMultiple();
+      foreach ($slicks as $slick) {
+        $name = check_plain($slick->label);
+        $id = $slick->name;
+        $current_collection = $slick->collection;
+        if (!empty($group)) {
+          if ($current_collection) {
+            if ($current_collection != $group) {
+              continue;
+            }
+            $collected[$id] = $name;
           }
-          $collected[$id] = $name;
+          else {
+            $uncollected[$id] = $name;
+          }
         }
-        else {
-          $uncollected[$id] = $name;
-        }
+        $optionsets[$id] = $name;
       }
-      $optionsets[$id] = $name;
-    }
 
-    return $collection ? array_merge($uncollected, $collected) : $optionsets;
+      $this->optionsetByGroup[$group] = $group ? array_merge($uncollected, $collected) : $optionsets;
+    }
+    return $this->optionsetByGroup[$group];
   }
 
   /**
@@ -232,8 +252,10 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   /**
    * Prepare attributes for the known module features, not necessarily users'.
    */
-  public function prepareAttributes(array $settings = []) {
-    $classes = $attributes = [];
+  public function prepareAttributes(array $build = []) {
+    $settings = $build['settings'];
+    $attributes = isset($build['attributes']) ? $build['attributes'] : [];
+    $classes = [];
     $skin = $settings['skin'];
     if ($skin) {
       $classes[] = 'skin--' . str_replace('_', '-', $skin);
@@ -298,7 +320,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     $build = $element['#build'];
     unset($element['#build']);
 
-    $settings = $build['settings'];
+    $settings = &$build['settings'];
     $settings += SlickDefault::htmlSettings();
 
     // Adds helper class if thumbnail on dots hover provided.
@@ -332,7 +354,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
       }
     }
 
-    $build['attributes'] = $this->prepareAttributes($settings);
+    $build['attributes'] = $this->prepareAttributes($build);
     $build['options'] = isset($js) ? array_merge($build['options'], $js) : $build['options'];
 
     drupal_alter('slick_optionset', $build['optionset'], $settings);
@@ -342,6 +364,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
       $element["#$key"] = $build[$key];
     }
 
+    unset($build);
     return $element;
   }
 
@@ -497,8 +520,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     // Supports programmatic options defined within skin definitions to allow
     // addition of options with other libraries integrated with Slick without
     // modifying optionset such as for Zoom, Reflection, Slicebox, Transit, etc.
-    if (!empty($settings['skin'])) {
-      $skins = $this->getSkinsByGroup('main');
+    if (!empty($settings['skin']) && $skins = $this->getSkinsByGroup('main')) {
       if (isset($skins[$settings['skin']]['options'])) {
         $options = array_merge($options, $skins[$settings['skin']]['options']);
       }
@@ -519,6 +541,13 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
       $optionset_thumbnail = Slick::loadWithFallback($settings['optionset_thumbnail']);
       $mousewheel = $optionset_thumbnail->getSetting('mouseWheel');
       $settings['vertical_tn'] = $optionset_thumbnail->getSetting('vertical');
+    }
+    else {
+      // Pass extra attributes such as those from Commerce product variations to
+      // theme_slick() since we have no asNavFor wrapper here.
+      if (isset($element['#attributes'])) {
+        $build['attributes'] = empty($build['attributes']) ? $element['#attributes'] : NestedArray::mergeDeep($build['attributes'], $element['#attributes']);
+      }
     }
 
     // Attach libraries.

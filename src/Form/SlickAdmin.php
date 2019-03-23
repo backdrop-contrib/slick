@@ -168,7 +168,7 @@ class SlickAdmin extends BlazyAdminExtended implements SlickAdminInterface {
 
     if (isset($form['skin'])) {
       $form['skin']['#title'] = t('Skin main');
-      $form['skin']['#description'] = t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. E.g.: Skin Split requires any split layout option. Failing to choose the expected layout makes it useless. See <a href="@url" target="_blank">SKINS section</a> at /admin/help/slick_ui for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', ['@url' => $readme]);
+      $form['skin']['#description'] = t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. E.g.: Skin Split requires any split layout option. Failing to choose the expected layout makes it useless. See <a href="@url" target="_blank">SKINS section</a> at /admin/help/slick_ui for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones. Skins are permanently cached. Clear cache if new skins do not appear.', ['@url' => $readme]);
     }
 
     if (isset($form['layout'])) {

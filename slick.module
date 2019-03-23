@@ -114,8 +114,6 @@ function slick_library_alter(&$libraries, $extension) {
 
 /**
  * Returns a Slick optionset object identified by its name.
- *
- * @todo tbd; to deprecate for Slick::load()
  */
 function slick_optionset_load($id = 'default') {
   return Slick::load($id);
@@ -131,9 +129,18 @@ function slick_attach(array $attach, array $settings = []) {
 }
 
 /**
+ * Kept here to prevent accidental removal till we do so.
+ *
+ * @deprecated to be removed for SlickManager::getOptionsetByGroupOptions()
+ */
+function slick_optionset_options($collection = '') {
+  return slick()->getOptionsetByGroupOptions($collection);
+}
+
+/**
  * Remove BC layer once Slick Views, etc. has 3.x branch.
  *
- * @deprecated to be removed before 3.x full release.
+ * @deprecated to be removed before/ post 3.x full release.
  */
 if (slick()->config('deprecated', TRUE)) {
   require_once dirname(__FILE__) . '/slick.deprecated.inc';

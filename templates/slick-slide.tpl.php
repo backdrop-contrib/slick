@@ -47,7 +47,7 @@
       <div class="slide__constrained">
     <?php endif; ?>
 
-      <div class="slide__caption">
+      <div<?php print $caption_attributes; ?>>
         <?php if (!empty($item['caption']['overlay'])): ?>
           <div class="slide__overlay"><?php print render($item['caption']['overlay']); ?></div>
           <?php if ($settings['has_data']): ?>

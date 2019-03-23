@@ -41,13 +41,6 @@ function slick_layouts() {
 /**
  * To be removed.
  */
-function slick_optionset_options($collection = '') {
-  return slick()->getOptionsetByGroupOptions($collection);
-}
-
-/**
- * To be removed.
- */
 function slick_optionset_exists($optionset_name) {
   return FALSE;
 }

@@ -163,7 +163,8 @@ function template_preprocess_slick(&$variables) {
   }
 
   // Prepare attributes.
-  $settings  = array_merge(SlickDefault::htmlSettings(), $variables['settings']);
+  $settings  = &$variables['settings'];
+  $settings += SlickDefault::htmlSettings();
   $optionset = $variables['optionset'] ?: Slick::loadWithFallback($settings['optionset']);
   $js        = array_merge($optionset->getSettings(), $variables['options']) + SlickDefault::jsSettings();
   $display   = $settings['display'];
@@ -250,13 +251,12 @@ function template_preprocess_slick(&$variables) {
 
   // Pass js, settings and attributes to theme_slick().
   $variables['js'] = $js;
-  $variables['settings'] = $settings;
 
   // Process individual item, basically converting array to render array.
   foreach ($variables['items'] as $delta => $item) {
-    $settings['current_item'] = $display;
-    $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
+    $item_settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
     $item_attributes = isset($item['attributes']) ? $item['attributes'] : [];
+    $item_settings['current_item'] = $display;
 
     // Remove extracted item elements to prevent them from being rendered.
     unset($item['settings'], $item['attributes'], $item['item']);
@@ -270,7 +270,7 @@ function template_preprocess_slick(&$variables) {
       '#theme'      => 'slick_' . $theme,
       '#item'       => $item,
       '#delta'      => $delta,
-      '#settings'   => $settings,
+      '#settings'   => $item_settings,
       '#attributes' => $item_attributes,
     ];
     $variables['items'][$delta] = $slide;
@@ -389,7 +389,7 @@ function theme_slick_slide(array $variables) {
     }
 
     // Second level caption container.
-    $caption = '<div class="slide__caption">' . $caption . '</div>';
+    $caption = '<div' . $caption_attributes . '>' . $caption . '</div>';
 
     // First level caption fullwidth container.
     if ($settings['fullwidth']) {
@@ -459,6 +459,7 @@ function template_preprocess_slick_slide(&$variables) {
   }
 
   $content_attributes['class'][] = $settings['detroy'] ? 'slide' : 'slide__content';
+  $variables['caption_attributes_array']['class'][] = 'slide__caption';
   $variables['classes_array'] = $attributes['class'];
 }
 
@@ -467,6 +468,7 @@ function template_preprocess_slick_slide(&$variables) {
  */
 function template_process_slick_slide(&$variables) {
   _slick_process_attributes($variables);
+  $variables['caption_attributes'] = empty($variables['caption_attributes_array']) ? '' : drupal_attributes($variables['caption_attributes_array']);
 }
 
 /**

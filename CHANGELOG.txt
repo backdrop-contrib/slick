@@ -1,4 +1,10 @@
 
+Slick 7.x-3.0-dev, 2019-03-23
+-----------------------------
+- Added caption_attributes for easy preprocess overrides.
+- Micro optimizations.
+- Fixed for docs.
+
 Slick 7.x-3.0-dev, 2019-03-18
 -----------------------------
 - Fixed for typos, and cleaned up TODOs.
