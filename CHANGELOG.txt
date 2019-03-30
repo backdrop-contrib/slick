@@ -1,4 +1,10 @@
 
+Slick 7.x-3.0-dev, 2019-03-30
+-----------------------------
+- Updated to the latest Blazy 03/30.
+- Removed Drupal.blazy.init.revalidate() for Drupal.blazy.init.load() as being
+  too expensive, also for IO compatibility.
+
 Slick 7.x-3.0-dev, 2019-03-23
 -----------------------------
 - Added caption_attributes for easy preprocess overrides.
