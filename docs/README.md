@@ -58,6 +58,23 @@ Skip #1 and #2 if Blazy was in place.
 
 3. Install Slick.
 
+### Known issues:
+* **autoload**: must run `drush aur` and `drush cc` on Blazy activation, or
+  fatal. The same procedure applies whenever blazy-related modules are
+  activated, or adding new classes. Especially during DEV, Alpha, Beta,
+  before RC. If not using drush, consider the other two:
+
+  **registry_autoload**, **xautoload**.
+
+If any issue with other autoloaders, kindly let us know. Blazy doesn't have a
+hard dependency on any, it is on your own discretion.
+
+**At any rate, solution is available:**
+
+* know how to run `drush cc all` or clear cache.
+* Only **at worst** case, clear registry, or if you don't drush, install and
+  know how to use registry_rebuild.module safely.
+
 More info can be found:
 [Drupal 7](http://drupal.org/documentation/install/modules-themes/modules-7)
 
