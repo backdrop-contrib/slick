@@ -135,9 +135,9 @@ function template_preprocess_slick(&$variables) {
     $content_attributes['id'] = $attributes['id'] . '-slider';
 
     // The slider must have the attribute "dir" set to "rtl", if so configured.
-    if (!empty($js['rtl'])) {
-      $attributes['dir'] = 'rtl';
-    }
+    global $language;
+    $attributes['dir'] = $language->direction ? 'rtl' : 'ltr';
+    $js['rtl'] = $language->direction ? TRUE : FALSE;
 
     // Arrows are enforced to allow responsive options hide/show them.
     $tags = '<a><em><strong><button><p><div><i><span>';
