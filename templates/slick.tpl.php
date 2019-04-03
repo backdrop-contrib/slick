@@ -21,7 +21,7 @@
     <div<?php print $content_attributes; ?>>
   <?php endif; ?>
 
-    <?php foreach ($items as $delta => $item): ?>
+    <?php foreach ($items as $item): ?>
       <?php print render($item); ?>
     <?php endforeach; ?>
 

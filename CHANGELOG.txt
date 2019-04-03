@@ -1,4 +1,8 @@
 
+Slick 7.x-2.1-dev, 2019-04-03
+-----------------------------
+- Backported few 3.x improvements.
+
 Slick 7.x-2.1-dev, 2018-12-19
 -----------------------------
 - Yeeeha! 7.x-2.1 is out after 3 years of dev storms.
