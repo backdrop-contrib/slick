@@ -1,4 +1,8 @@
 
+Slick 7.x-3.0-dev, 2019-04-01
+-----------------------------
+- Fixes for slidesToShow > 1, centerMode, clones with Blazy IO.
+
 Slick 7.x-3.0-dev, 2019-03-30
 -----------------------------
 - Updated to the latest Blazy 03/30.
