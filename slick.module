@@ -77,27 +77,27 @@ function slick_library() {
  * Implements hook_libraries_info().
  */
 function slick_libraries_info() {
-  $libraries['slick'] = [
+  $libraries['slick'] = array(
     'name' => 'Slick carousel',
     'vendor url' => 'http://kenwheeler.github.io/slick/',
     'download url' => 'https://github.com/kenwheeler/slick/releases',
-    'version arguments' => [
+    'version arguments' => array(
       'file' => 'slick/slick.js',
       'pattern' => '@Version:\s+([0-9a-zA-Z\.-]+)@',
       'lines' => 16,
-    ],
-    'files' => ['js' => ['slick/slick.min.js']],
-    'variants' => [
-      'minified' => [
-        'files' => [
-          'js' => [
+    ),
+    'files' => array('js' => array('slick/slick.min.js')),
+    'variants' => array(
+      'minified' => array(
+        'files' => array(
+          'js' => array(
             'slick/slick.min.js',
-          ],
-        ],
-      ],
-      'source' => ['files' => ['js' => ['slick/slick.js']]],
-    ],
-  ];
+          ),
+        ),
+      ),
+      'source' => array('files' => array('js' => array('slick/slick.js'))),
+    ),
+  );
 
   return $libraries;
 }
