@@ -1,4 +1,9 @@
 
+Slick 7.x-3.0-dev, 2019-04-22
+-----------------------------
+- Issue #3045487 by calbasi: Error: Class '\''Drupal\slick\SlickManager'\'' not
+  found in slick().
+
 Slick 7.x-3.0-dev, 2019-04-01
 -----------------------------
 - Fixes for slidesToShow > 1, centerMode, clones with Blazy IO.

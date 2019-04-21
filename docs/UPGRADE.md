@@ -290,9 +290,16 @@ which will lock an autoloader as its dependencies once found.
 * **autoload**: must **ALWAYS** run `drush aur` and `drush cc` on Blazy, or
   Slick activation, or fatal. The same procedure applies whenever blazy-related
   modules are activated, or adding new classes. Especially during DEV, Alpha,
-  Beta. If not using drush, consider the other two:
+  Beta.
+* **xAutoload**: was reported missing SlickManager class here:
+  https://www.drupal.org/project/slick/issues/3045487
 
-  **registry_autoload**, **xautoload**.
+If not using drush, consider the other two:
+
+**registry_autoload**, **xautoload**.
+
+Nobody reports any issue with **registry_autoload** so far, so this is the only
+no-issue module for now, and so recommended.
 
 This 3.x branch is meant to take advantage of Blazy features, and DRY.
 
