@@ -92,7 +92,7 @@ class SlickLibrary extends BlazyLibrary {
 
       $libraries['colorbox'] = [
         'dependencies' => [['blazy', 'colorbox']],
-        'js' => [$path . '/js/slick.colorbox.min.js' => ['group' => JS_DEFAULT]],
+        'js' => [$path . '/js/slick.colorbox.min.js' => ['group' => JS_DEFAULT, 'weight' => -0.02]],
       ];
 
       foreach (SlickManager::getConstantSkins() as $group) {

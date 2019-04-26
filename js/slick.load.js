@@ -85,6 +85,9 @@
 
     /**
      * Blazy is not loaded on slidesToShow > 1, reload.
+     *
+     * @param {bool} ahead
+     *   Whether to lazyload ahead, or not.
      */
     function preloadBlazy(ahead) {
       if (t.find('.b-lazy:not(.b-loaded)').length) {
@@ -105,12 +108,6 @@
 
       if (isBlazy) {
         preloadBlazy(false);
-      }
-
-      // Cleans up preloader if any named b-loader due to the ways clones built..
-      var $preloader = t.find('.b-loaded ~ .b-loader');
-      if ($preloader.length) {
-        $preloader.remove();
       }
     }
 
@@ -166,6 +163,7 @@
         return (css.match(/(\S+)loading/g) || []).join(' ');
       });
 
+      // @deprecated to be removed for Blazy background.
       if ($bg.length && $bg.find('> img').length) {
         $bg.css('background-image', 'url(' + $img.attr('src') + ')');
         $bg.find('> img').remove();
@@ -214,6 +212,12 @@
         // @see https://github.com/kenwheeler/slick/issues/262
         if (less && slick.$slideTrack.width() <= slick.$slider.width()) {
           slick.$slideTrack.css({left: '', transform: ''});
+        }
+
+        // Cleans up preloader if any named b-loader due to the ways clones built..
+        var $preloader = t.find('.b-loaded ~ .b-loader');
+        if ($preloader.length) {
+          $preloader.remove();
         }
 
         // Do not remove arrows, to allow responsive have different options.
