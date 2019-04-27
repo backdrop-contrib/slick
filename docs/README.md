@@ -44,7 +44,7 @@ officially supported now, Feb 2019.
 
 
 ## INSTALLATION
-### A sequential step below is critical otherwise potential errors:
+### A sequential step below is crucial otherwise missing dependency error:
 Skip #1 and #2 if Blazy was in place.  
 
 1. Visit **/admin/modules** and install one of autoload modules:
