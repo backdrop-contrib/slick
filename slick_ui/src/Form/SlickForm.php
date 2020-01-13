@@ -119,9 +119,10 @@ class SlickForm extends SlickFormBase {
     foreach ($this->getFormElements() as $name => $element) {
       $element['default'] = isset($element['default']) ? $element['default'] : '';
       $value = isset($slick->options['settings'][$name]) ? $slick->options['settings'][$name] : $element['default'];
+      $default_value = (NULL !== $value) ? $value : $element['default'];
       $form['settings'][$name] = [
         '#title'         => isset($element['title']) ? $element['title'] : '',
-        '#default_value' => (NULL !== $value) ? $value : $element['default'],
+        '#default_value' => $default_value,
       ];
 
       if (isset($element['type'])) {
@@ -158,7 +159,7 @@ class SlickForm extends SlickFormBase {
 
       // Expand textfield for easy edit.
       if (in_array($name, ['prevArrow', 'nextArrow'])) {
-        $form['settings'][$name]['#attributes']['class'][] = 'js-expandable';
+        $form['settings'][$name]['#default_value'] = trim(strip_tags($default_value));
       }
 
       if (isset($element['field_suffix'])) {
@@ -424,13 +425,13 @@ class SlickForm extends SlickFormBase {
       $elements['prevArrow'] = [
         'type'        => 'textfield',
         'title'       => t('Previous arrow'),
-        'description' => t("Customize the previous arrow markups. Be sure to keep the expected class: slick-prev."),
+        'description' => t("Customize the previous arrow text."),
       ];
 
       $elements['nextArrow'] = [
         'type'        => 'textfield',
         'title'       => t('Next arrow'),
-        'description' => t("Customize the next arrow markups. Be sure to keep the expected class: slick-next."),
+        'description' => t("Customize the next arrow text."),
       ];
 
       $elements['downArrow'] = [

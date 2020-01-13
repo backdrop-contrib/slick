@@ -139,7 +139,9 @@ function theme_slick(array $variables) {
   // slideshow cannot slide. The markups are only provided when it can slide.
   if (empty($settings['unslick'])) {
     $arrow_down = empty($arrow_down_attributes) ? '' : '<button' . $arrow_down_attributes . '></button>';
-    $arrows = $js['prevArrow'] . $arrow_down . $js['nextArrow'];
+    $arrows = '<button type="button" data-role="none" class="slick-prev" aria-label="' . $js['prevArrow'] . '" tabindex="0">' . $js['prevArrow'] . '</button>';
+    $arrows .= $arrow_down;
+    $arrows .= '<button type="button" data-role="none" class="slick-next" aria-label="' . $js['nextArrow'] . '" tabindex="0">' . $js['nextArrow'] . '</button>';
 
     $items = ['slides' => $items];
     $items['slides']['#prefix'] = '<div' . $content_attributes . '>';
@@ -231,8 +233,8 @@ function template_preprocess_slick(&$variables) {
 
     // Main arrows.
     // @todo remove the $settings parts (BC) for $js to reduce dups.
-    $js['prevArrow'] = $settings['prev_arrow'] = strip_tags($js['prevArrow'], '<a><em><span><strong><button><div>');
-    $js['nextArrow'] = $settings['next_arrow'] = strip_tags($js['nextArrow'], '<a><em><span><strong><button><div>');
+    $js['prevArrow'] = $settings['prev_arrow'] = strip_tags($js['prevArrow']);
+    $js['nextArrow'] = $settings['next_arrow'] = strip_tags($js['nextArrow']);
 
     // focusOnSelect won't work with empty slide value, so add proper selector.
     // Respects core Grid markups which may wrap .slick__slide within anon DIV.
@@ -251,6 +253,7 @@ function template_preprocess_slick(&$variables) {
 
   // Pass js, settings and attributes to theme_slick().
   $variables['js'] = $js;
+  $variables['settings'] = $settings;
 
   // Process individual item, basically converting array to render array.
   foreach ($variables['items'] as $delta => $item) {

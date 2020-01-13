@@ -260,3 +260,23 @@ function slick_update_7302() {
   // Repeat rebuilding old Slick UI class registry.
   registry_rebuild();
 }
+
+/**
+ * Removed HTML tags from arrows due to translation issue as per #3075838.
+ */
+function slick_update_7303() {
+  // Configuration translation disallowed HTML.
+  // See https://drupal.org/node/3075838
+  foreach (Slick::loadMultiple() as &$optionset) {
+    foreach (['prevArrow', 'nextArrow'] as $key) {
+      // Don't bother with Optimized ON, as arrows are removed already.
+      if ($value = $optionset->getSetting($key)) {
+        $optionset->setSetting($key, trim(strip_tags($value)));
+      }
+    }
+    ctools_export_crud_save(Slick::TABLE, $optionset);
+  }
+
+  // Rebuild CTools cache for the Slick::TABLE.
+  ctools_export_load_object_reset(Slick::TABLE);
+}

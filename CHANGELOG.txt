@@ -1,4 +1,8 @@
 
+Slick 7.x-3.0-dev, 2020-01-13
+-----------------------------
+- Issue #3075838 by volkerk, gausarts: Configuration translation disallowed HTML
+
 Slick 7.x-3.0-dev, 2019-04-27
 -----------------------------
 - Updated docs.
