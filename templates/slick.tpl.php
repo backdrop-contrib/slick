@@ -28,9 +28,9 @@
   <?php if (empty($settings['unslick'])): ?>
     </div>
     <nav class="slick__arrow<?php print $settings['skin_arrows']; ?>">
-      <?php print $settings['prev_arrow']; ?>
+      <button type="button" data-role="none" class="slick-prev" aria-label="<?php print $settings['prev_arrow']; ?>" tabindex="0"><?php print $settings['prev_arrow']; ?></button>
       <?php isset($arrow_down) && print $arrow_down; ?>
-      <?php print $settings['next_arrow']; ?>
+      <button type="button" data-role="none" class="slick-next" aria-label="<?php print $settings['next_arrow']; ?>" tabindex="0"><?php print $settings['next_arrow']; ?></button>
     </nav>
   <?php endif; ?>
 </div>

@@ -118,8 +118,8 @@ function slick_get_options() {
       'pauseOnHover'     => TRUE,
       'pauseOnDotsHover' => FALSE,
       'arrows'           => TRUE,
-      'prevArrow'        => '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button">Previous</button>',
-      'nextArrow'        => '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button">Next</button>',
+      'prevArrow'        => 'Previous',
+      'nextArrow'        => 'Next',
       'centerMode'       => FALSE,
       'centerPadding'    => '50px',
       'dots'             => FALSE,
@@ -285,9 +285,9 @@ function slick_optionset_create(array $values = array()) {
  *   The cacheable array formatted for the '#attached' property.
  */
 function slick_attach(array $attach, array $settings = array()) {
-  $path   = drupal_get_path('module', 'slick');
-  $main   = slick_get_skins_by_group('main');
-  $load   = array();
+  $path    = drupal_get_path('module', 'slick');
+  $main    = slick_get_skins_by_group('main');
+  $load    = array();
   $attach += array(
     'attach_slick_css'  => variable_get('slick_css', TRUE),
     'attach_module_css' => variable_get('slick_module_css', TRUE),

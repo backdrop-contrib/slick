@@ -140,9 +140,8 @@ function template_preprocess_slick(&$variables) {
     $js['rtl'] = $language->direction ? TRUE : FALSE;
 
     // Arrows are enforced to allow responsive options hide/show them.
-    $tags = '<a><em><strong><button><p><div><i><span>';
-    $settings['prev_arrow'] = strip_tags($js['prevArrow'], $tags);
-    $settings['next_arrow'] = strip_tags($js['nextArrow'], $tags);
+    $settings['prev_arrow'] = strip_tags($js['prevArrow']);
+    $settings['next_arrow'] = strip_tags($js['nextArrow']);
 
     // Adds helper class if thumbnail on dots hover provided.
     $js['dotsClass'] = empty($js['dotsClass']) ? 'slick-dots' : $js['dotsClass'];
