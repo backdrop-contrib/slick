@@ -22,7 +22,18 @@ use Drupal\slick\Entity\Slick;
  */
 class SlickCrudTest extends DrupalWebTestCase {
 
+  /**
+   * The admin object.
+   *
+   * @var object
+   */
   protected $adminUser;
+
+  /**
+   * The any user object.
+   *
+   * @var object
+   */
   protected $anyUser;
 
   /**

@@ -4,7 +4,9 @@
  * @file
  * This file is not used by Slick 3.x.
  *
- * @deprecated to be removed once Slick Views, etc. migrated to 3.x.
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   the provided substitutions instead.
+ * @see https://www.drupal.org/node/3031759
  */
 
 use Drupal\slick\SlickDefault;

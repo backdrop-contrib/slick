@@ -7,7 +7,8 @@
  * You can disable this file inclusion at Slick UI after all-slick related
  * modules (Slick Views, Slick Extras, etc.) migrated into 3.x.
  *
- * @deprecated to be removed.
+ * @todo remove post slick:7.x-3.0.
+ * @see https://www.drupal.org/node/3031759
  */
 
 use Drupal\blazy\Blazy;
@@ -16,7 +17,9 @@ use Drupal\slick\Entity\Slick;
 /**
  * To be removed.
  *
- * @deprecated for Slick::defaultSettings().
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   Slick::defaultSettings() instead.
+ * @see https://www.drupal.org/node/3031759
  */
 function slick_get_options() {
   return Slick::defaultSettings();
@@ -25,7 +28,9 @@ function slick_get_options() {
 /**
  * To be removed.
  *
- * @deprecated for SlickManager::getSkins().
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   SlickManager::getSkins() instead.
+ * @see https://www.drupal.org/node/3031759
  */
 function slick_skins() {
   // @todo cannot use return slick()->getSkins(); for BC layer which
@@ -41,7 +46,9 @@ function slick_skins() {
 /**
  * To be removed.
  *
- * @deprecated for SlickManager::getSkinsByGroup().
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   SlickManager::getSkinsByGroup() instead.
+ * @see https://www.drupal.org/node/3031759
  */
 function slick_get_skins_by_group($group = '', $select = FALSE) {
   return slick()->getSkinsByGroup($group, $select);
@@ -50,7 +57,9 @@ function slick_get_skins_by_group($group = '', $select = FALSE) {
 /**
  * To be removed.
  *
- * @deprecated for Blazy::getHtmlId().
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   Blazy::getHtmlId() instead.
+ * @see https://www.drupal.org/node/3031759
  */
 function slick_html_id($string = 'slick', $id = '') {
   return Blazy::getHtmlId($string, $id);
@@ -59,7 +68,9 @@ function slick_html_id($string = 'slick', $id = '') {
 /**
  * To be removed.
  *
- * @deprecated for Slick::create()
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   Slick::create() instead.
+ * @see https://www.drupal.org/node/3031759
  */
 function slick_optionset_create(array $values = []) {
   return Slick::create($values);
@@ -68,7 +79,9 @@ function slick_optionset_create(array $values = []) {
 /**
  * To be removed.
  *
- * @deprecated for SlickManager::build().
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   SlickManager::build() instead.
+ * @see https://www.drupal.org/node/3031759
  */
 function slick_build(array $items, array $options, array $settings = [], array $attach = [], $id = NULL, $optionset = NULL) {
   $loaded = isset($attach['css']) || isset($attach['js']) || isset($attach['library']);
@@ -86,7 +99,9 @@ function slick_build(array $items, array $options, array $settings = [], array $
 /**
  * To be removed.
  *
- * @deprecated for SlickManager::build().
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   SlickManager::build() instead.
+ * @see https://www.drupal.org/node/3031759
  */
 function slick_render_cache($settings = []) {
   return FALSE;

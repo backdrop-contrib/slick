@@ -87,7 +87,8 @@ to register ones. Clear the cache once.
 See slick.api.php for more info on skins.
 See **\Drupal\slick\SlickSkinInterface**.
 
-Other skins are available at [Slick Extras](http://dgo.to/slick_extras).
+Other skins are available at
+[Slick Extras](https://drupal.org/project/slick_extras).
 Some extra skins are WIP which may not work as expected. Use them as starters,
 not final products.
 

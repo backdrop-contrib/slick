@@ -371,14 +371,13 @@ use Drupal\slick\Entity\Slick;
  * Each skin supports a few keys:
  * - name: The human readable name of the skin.
  * - description: The description about the skin, for help and manage pages.
- * - dependencies: An array of library dependencies.
  * - css: An array of CSS files to attach.
  * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
- * - options: An array of JS options to be included within [data-slick] such
- *     as when integrating extra libraries defined at `js` which later can be
- *     accessed by JS via [data-slick] to work with.
- * - group: A string grouping the current skin: main, thumbnail.
+ * - group: A string grouping the current skin: main, thumbnail, arrows, dots.
+ * - dependencies: Similar to how core library dependencies constructed.
  * - provider: A module name registering the skins.
+ * - options: Extra JavaScript (Slicebox, 3d carousel, etc) options merged into
+ *     existing [data-slick] attribute to be consumed by custom JS.
  *
  * @section sec_skins Defines the Slick main and thumbnail skins
  *

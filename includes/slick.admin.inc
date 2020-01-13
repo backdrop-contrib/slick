@@ -7,7 +7,10 @@
  * The relevant functions have been moved into the main module file to avoid
  * accidental removal so this file is no longer needed to be imported.
  *
- * @deprecated to be removed once Slick Views, etc. migrated to 3.x.
+ * @todo to be removed once Slick Views, etc. migrated to 3.x.
+ * @deprecated in slick:7.x-3.0 and is removed from slick:7.x-4.0. Use
+ *   the provided replacements instead.
+ * @see https://www.drupal.org/node/3031759
  */
 
 /**

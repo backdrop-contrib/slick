@@ -45,7 +45,10 @@ interface SlickSkinInterface {
    *     as when integrating extra libraries defined at `js` which later can be
    *     accessed by JS via [data-slick] to work with.
    * - group: A string grouping the current skin: main, thumbnail.
+   * - dependencies: SImilar to how core library dependencies constructed.
    * - provider: A module name registering the skins.
+   * - options: Extra JavaScript (Slicebox, 3d carousel, etc) options merged
+   *     into existing [data-slick] attribute to be consumed by custom JS.
    *
    * @return array
    *   The array of the main and thumbnail skins.

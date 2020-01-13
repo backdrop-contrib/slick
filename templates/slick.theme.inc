@@ -533,7 +533,7 @@ function template_preprocess_slick_grid(&$variables) {
  * As a module .tpl may be copied into themes, we play safe. At Slick 3.x,
  * you can override theme_slick_grid() instead, and remove slick-grid.tpl.php.
  *
- * @deprecated to be removed post full release as this is no longer needed.
+ * @todo to be removed post full release as this is no longer needed.
  */
 function template_process_slick_grid(&$variables) {
   _slick_process_attributes($variables);

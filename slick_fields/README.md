@@ -11,9 +11,9 @@ All is applicable only to multi-value fields. Ignored for single value.
 
 * Image
 * Text, Text long, Text with summary
-* [File entity via Media](http://dgo.to/media)
-* [Field Collection](http://dgo.to/field_collection)
-* [Paragraphs](http://dgo.to/paragraphs)
+* [File entity via Media](https://drupal.org/project/media)
+* [Field Collection](https://drupal.org/project/field_collection)
+* [Paragraphs](https://drupal.org/project/paragraphs)
 
 
 ## USAGE
