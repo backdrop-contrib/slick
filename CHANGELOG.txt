@@ -1,4 +1,8 @@
 
+Slick 7.x-2.1-dev, 2020-01-14
+-----------------------------
+- Issue #3075018 by gausarts, drumm: Pin to specific library versions.
+
 Slick 7.x-2.1-dev, 2019-04-03
 -----------------------------
 - Issue #3025486 by philsward: Breakpoint Arrows Don'\''t work well with

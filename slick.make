@@ -5,7 +5,7 @@ core = 7.x
 
 ; Slick.
 libraries[slick][download][type] = "file"
-libraries[slick][download][url] = "https://github.com/kenwheeler/slick/archive/master.zip"
+libraries[slick][download][url] = "https://github.com/kenwheeler/slick/archive/v1.8.1.zip"
 libraries[slick][directory_name] = "slick"
 libraries[slick][destination] = "libraries"
 
