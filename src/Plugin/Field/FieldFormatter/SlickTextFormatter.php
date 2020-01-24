@@ -64,6 +64,19 @@ class SlickTextFormatter extends FormatterBase {
     // Modifies settings before building elements.
     $this->formatter()->preBuildElements($build, $items, $entity);
 
+    // Build the elements.
+    $this->buildElements($build, $items);
+
+    // If using 0, or directly passed like D8, taken over by theme_field().
+    $element = $this->manager()->build($build);
+    return $element;
+  }
+
+  /**
+   * Build the slick carousel elements.
+   */
+  public function buildElements(array &$build, $items) {
+    $settings = $build['settings'];
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $item) {
@@ -71,10 +84,6 @@ class SlickTextFormatter extends FormatterBase {
       $build['items'][] = ['#markup' => $text];
       unset($text);
     }
-
-    // If using 0, or directly passed like D8, taken over by theme_field().
-    $element = $this->manager()->build($build);
-    return $element;
   }
 
   /**
