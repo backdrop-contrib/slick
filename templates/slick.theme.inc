@@ -10,6 +10,7 @@
  * needed as Slick 3.x still supports the unused optional .tpl files, as well.
  */
 
+// phpcs:ignoreFile -- extract($variables) seems not recognized, kindly ignore
 use Drupal\blazy\Blazy;
 use Drupal\slick\SlickDefault;
 use Drupal\slick\Entity\Slick;

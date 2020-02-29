@@ -22,6 +22,7 @@ class SlickForm extends SlickFormBase {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore -- this is core stuff, kindly ignore, you are awesome!
   public function edit_form(&$form, &$form_state) {
     parent::edit_form($form, $form_state);
 
@@ -809,6 +810,7 @@ class SlickForm extends SlickFormBase {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore -- this is core stuff, kindly ignore, you are awesome!
   public function edit_form_validate(&$form, &$form_state) {
     parent::edit_form_validate($form, $form_state);
 
@@ -825,6 +827,7 @@ class SlickForm extends SlickFormBase {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore -- this is core stuff, kindly ignore, you are awesome!
   public function edit_form_submit(&$form, &$form_state) {
     parent::edit_form_submit($form, $form_state);
 

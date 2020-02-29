@@ -55,7 +55,7 @@
   }
 
   .slick--skin--classic .slide__caption .slide__data {
-    margin: 0 !important;
+    margin: 0 !important; /* csslint allow: known-properties, important */
     padding: 15px;
     width: 100%;
   }

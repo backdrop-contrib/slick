@@ -12,6 +12,7 @@ trait SlickListBuilder {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore -- this is core stuff, kindly ignore, you are awesome!
   public function list_table_header() {
     $headers = parent::list_table_header();
     $breakpoints_header[] = ['data' => t('Breakpoint'), 'class' => ['ctools-export-ui-breakpoints']];
@@ -29,6 +30,7 @@ trait SlickListBuilder {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore -- this is core stuff, kindly ignore, you are awesome!
   public function list_build_row($entity, &$form_state, $operations) {
     parent::list_build_row($entity, $form_state, $operations);
     $skins = $this->manager->getSkins()['skins'];
@@ -67,6 +69,7 @@ trait SlickListBuilder {
   /**
    * Overrides parent::list_form.
    */
+  // phpcs:ignore -- this is core stuff, kindly ignore, you are awesome!
   public function list_form(&$form, &$form_state) {
     parent::list_form($form, $form_state);
 
@@ -81,6 +84,7 @@ trait SlickListBuilder {
    * @return array
    *   Renderable array.
    */
+  // phpcs:ignore -- this is core stuff, kindly ignore, you are awesome!
   public function list_render(&$form_state) {
     $build['parent'] = ['#markup' => parent::list_render($form_state)];
 

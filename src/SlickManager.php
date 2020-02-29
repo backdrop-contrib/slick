@@ -279,6 +279,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
     if ($settings['display'] == 'main') {
       // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
+      // @todo use Blazy::containerAttributes($attributes, $settings);
       if ($settings['view_name'] && $settings['current_view_mode']) {
         $classes[] = 'view--' . str_replace('_', '-', $settings['view_name']);
         $classes[] = 'view--' . str_replace('_', '-', $settings['view_name'] . '--' . $settings['current_view_mode']);
@@ -418,6 +419,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   public function prepareGridAttributes(array $settings = []) {
     // By default Slick only supports Grid Foundation, adds relevant grid_id for
     // optional Style: CSS3 Columns, and probably future flexbox.
+    // @todo use BlazyGrid::attributes($attributes, $settings); anytime.
     $grid_id = empty($settings['style']) ? 'grid' : $settings['style'];
     $classes[] = 'block-columngrid block-' . $grid_id;
     $classes[] = $settings['unslick'] ? 'slick__grid' : 'slide__content';

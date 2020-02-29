@@ -92,6 +92,12 @@
     function preloadBlazy(ahead) {
       if (t.find('.b-lazy:not(.b-loaded)').length) {
         var $src = t.find(ahead ? '.slide:not(.slick-cloned) .b-lazy:not(.b-loaded)' : '.slick-active .b-lazy:not(.b-loaded)');
+
+        // If selectively fails, always suspect .slick-cloned being rebuilt.
+        // This is not an issue if Infinite is disabled.
+        if (!$src.length) {
+          $src = t.find('.slick-cloned .b-lazy:not(.b-loaded)');
+        }
         if ($src.length) {
           Drupal.blazy.init.load($src);
         }

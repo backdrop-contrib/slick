@@ -200,6 +200,7 @@ abstract class SlickFormBase extends ctools_export_ui {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore -- this is core stuff, kindly ignore, you are awesome!
   public function build_operations($entity) {
     $operations = parent::build_operations($entity);
 
