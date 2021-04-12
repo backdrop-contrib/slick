@@ -430,7 +430,7 @@ function theme_slick_image(array $variables) {
     if (!empty($settings['background'])) {
       // @todo Blazy integration with multi-serving bakground images.
       // slick_build_breakpoint_attributes($attributes, $settings);
-      $attributes['class'][] = 'media--background';
+      $attributes['class'][] = 'b-bg media--background';
     }
 
     if (!empty($settings['lazy'])) {
