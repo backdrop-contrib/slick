@@ -19,6 +19,6 @@ libraries[easing][destination] = "libraries"
 ; Mousehwheel.
 ; @see https://github.com/kenwheeler/slick/issues/122
 libraries[mousewheel][download][type] = "file"
-libraries[mousewheel][download][url] = "https://github.com/brandonaaron/jquery-mousewheel/archive/master.zip"
+libraries[mousewheel][download][url] = "https://github.com/jquery/jquery-mousewheel/archive/3.1.13.zip"
 libraries[mousewheel][directory_name] = "mousewheel"
 libraries[mousewheel][destination] = "libraries"
