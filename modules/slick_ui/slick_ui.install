@@ -1,0 +1,24 @@
+<?php
+/**
+ * @file
+ * Update functions for Slick UI.
+ */
+
+/**
+ * Implements hook_update_N(): Converts Slick UI variables to config.
+ */
+function slick_ui_update_1000(&$sandbox) {
+  $admin_css = update_variable_get('slick_admin_css', TRUE);
+  $module_css = update_variable_get('slick_module_css', TRUE);
+  $slick_css = update_variable_get('slick_css', TRUE);
+
+  $config = config('slick.settings');
+  $config->set('admin_css', $admin_css);
+  $config->set('module_css', $module_css);
+  $config->set('slick_css', $slick_css);
+  $config->save();
+
+  variable_del('slick_admin_css');
+  variable_del('slick_module_css');
+  variable_del('slick_css');
+}
