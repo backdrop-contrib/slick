@@ -1,6 +1,7 @@
+type = module
 name = Slick fields
 description = "Adds a field display formatter for the Slick carousel."
-core = 7.x
+backdrop = 1.x
 package = Slick
 
 dependencies[] = image

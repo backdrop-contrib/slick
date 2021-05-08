@@ -1,10 +1,7 @@
+type = module
 name = Slick
 description = "Slick carousel, the last carousel you'll ever need."
-core = 7.x
+backdrop = 1.x
 package = Slick
-
-dependencies[] = libraries (>=2.x)
-dependencies[] = ctools
-dependencies[] = jquery_update
 
 files[] = tests/slick.test
