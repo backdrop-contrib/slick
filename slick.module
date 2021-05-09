@@ -1,9 +1,40 @@
 <?php
-
 /**
  * @file
  * Slick carousel integration, the last carousel you'll ever need.
  */
+
+/**
+ * Implements hook_config_info()
+ */
+function slick_config_info() {
+  // If this configuration file points to one particular file, a "name" key
+  // will display that exact string for that file.
+  $prefixes['slick.settings'] = array(
+    'label' => t('Slick Settings'),
+    'group' => t('Configuration'),
+  );
+  // If there are a large number of configuration files prefixed with this
+  // string, provide a "name_key" that will be read from the configuration file
+  // and used when listing the configuration file.
+  $prefixes['slick.optionset'] = array(
+    'name_key' => 'key', // From
+    'label_key' => 'key name',
+    'group' => t('Slick optionsets'),
+  );
+
+  return $prefixes;
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function slick_autoload_info() {
+  return array(
+    'SlickOptionset' => 'includes/slick.class.inc',
+  );
+}
+
 
 /**
  * Implements hook_theme().
@@ -26,20 +57,11 @@ function slick_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_ctools_plugin_api().
- */
-function slick_ctools_plugin_api($owner, $api) {
-  if ($owner == 'slick' && $api == 'slick_default_preset') {
-    return array('version' => 1);
-  }
-}
-
-/**
  * Implements hook_library().
  */
 function slick_library() {
-  $library    = libraries_get_path('slick');
   $path       = drupal_get_path('module', 'slick');
+  $library    = $path . '/libraries/slick';
   $components = $path . '/css/components';
 
   $libraries['slick'] = array(
@@ -229,36 +251,38 @@ function slick_html_id($string = 'slick', $id = '') {
 /**
  * Returns the given optionset object identified by $id.
  *
- * @param string $id
- *   The optionset ID with property name, or default.
+ * @param string $name
+ *   The optionset property name, or 'default'.
  *
  * @return object
- *   Returns the optionset, or else default, if no optionset found.
+ *   Returns the optionset, or the default optionset, if no optionset is found.
  */
-function slick_optionset_load($id = 'default') {
-  ctools_include('export');
-  $optionset = ctools_export_crud_load('slick_optionset', $id);
+function slick_optionset_load($name = 'default') {
+  $optionset_values = config_get('slick.optionset.' . $name);
 
   // Ensures deleted optionset while being used doesn't screw up.
   if (!isset($optionset->name)) {
-    $optionset = ctools_export_crud_load('slick_optionset', 'default');
+    $optionset_values = config_get('slick.optionset.default');
   }
+
+  $optionset = slick_optionset_create($optionset_values);
+
   return $optionset;
 }
 
 /**
- * Returns a new optionset object without saving it to the database.
+ * Returns a new optionset without saving it to the database.
  *
  * @param array $values
  *   The values to build the optionset if provided.
+ * @param bool $new
+ *   Whether the item is new or previously existing.
  *
  * @return object
  *   Returns the programmatically created optionset object.
  */
-function slick_optionset_create(array $values = array()) {
-  ctools_include('export');
-  $optionset = ctools_export_crud_new('slick_optionset');
-
+function slick_optionset_create(array $values = array(), $new = FALSE) {
+  $optionset = new SlickOptionset();
   $optionset->options = $optionset->options['settings'] = array();
   $optionset->breakpoints = 0;
   foreach (array('name', 'label', 'skin', 'breakpoints', 'options') as $key) {
@@ -270,6 +294,11 @@ function slick_optionset_create(array $values = array()) {
   $defaults['general']  = array('goodies' => array());
   $defaults['settings'] = slick_get_options();
   $optionset->options   = $optionset->options + $defaults;
+
+  if ($new) {
+    $optionset->is_new = TRUE;
+  }
+
   return $optionset;
 }
 
@@ -442,4 +471,57 @@ function slick_build(array $items = array(), array $options = array(), array $se
     }
   }
   return $slick;
+}
+
+/**
+ * Returns the typecast values, so that JSON object has the right values.
+ *
+ * @param array $options
+ *   An array of Optionset options.
+ * @param int $breakpoints
+ *   The number of breakpoints if specified.
+ */
+function _slick_typecast_optionset(array &$options = array(), $breakpoints = 0) {
+  if (empty($options)) {
+    return;
+  }
+
+  $slick_options = slick_get_options();
+  foreach ($slick_options as $name => $value) {
+    if (isset($options['settings'][$name])) {
+      $cast = gettype($slick_options[$name]);
+      settype($options['settings'][$name], $cast);
+    }
+  }
+
+  if (isset($options['responsives']['responsive']) && $breakpoints) {
+    $slick_responsive_options = slick_get_responsive_options($breakpoints);
+    foreach ($slick_responsive_options as $i => $items) {
+      foreach ($items as $name => $item) {
+        switch ($name) {
+          case 'breakpoint':
+            settype($options['responsives']['responsive'][$i][$name], 'int');
+            break;
+
+          case 'unslick':
+            settype($options['responsives']['responsive'][$i][$name], 'bool');
+            break;
+
+          case 'settings':
+            foreach ($item as $key => $setting) {
+              if (isset($options['responsives']['responsive'][$i][$name][$key])) {
+                $cast = gettype($item[$key]);
+                settype($options['responsives']['responsive'][$i][$name][$key], $cast);
+              }
+            }
+            break;
+
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  drupal_alter('slick_typecast_optionset_info', $options, $breakpoints);
 }

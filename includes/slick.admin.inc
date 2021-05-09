@@ -135,44 +135,6 @@ function slick_optionset_options() {
 }
 
 /**
- * Checks whether an optionset with the given name already exists.
- *
- * @param string $optionset_name
- *   The Optionset machine name.
- *
- * @return bool
- *   Returns TRUE if exists, FALSE otherwise.
- */
-function slick_optionset_exists($optionset_name) {
-  ctools_include('export');
-  $optionset = ctools_export_crud_load('slick_optionset', $optionset_name);
-  return isset($optionset->name);
-}
-
-/**
- * Fetches all optionsets from the storage.
- *
- * @param bool $reset
- *   If TRUE, the static cache of all objects will be flushed prior to
- *   loading all. This can be important on listing pages where items
- *   might have changed on the page load.
- *
- * @return array
- *   The associative array of all optionsets.
- */
-function slick_optionset_load_all($reset = FALSE) {
-  ctools_include('export');
-  $optionsets = ctools_export_crud_load_all('slick_optionset', $reset);
-  foreach ($optionsets as $optionset) {
-    // Ensures the optionset is typecast after being loaded from storage.
-    $breakpoints = isset($optionset->breakpoints) ? $optionset->breakpoints : NULL;
-    _slick_typecast_optionset($optionset->options, $breakpoints);
-  }
-
-  return $optionsets;
-}
-
-/**
  * Saves the given option set to the database.
  *
  * Set the $new flag if this set has not been written before.
@@ -248,59 +210,6 @@ function slick_optionset_delete($optionset) {
   // This only deletes from the database, which means that if an item is in
   // code, then this is actually a revert.
   ctools_export_crud_delete('slick_optionset', $object);
-}
-
-/**
- * Returns the typecast values, so that JSON object has the right values.
- *
- * @param array $options
- *   An array of Optionset options.
- * @param int $breakpoints
- *   The number of breakpoints if specified.
- */
-function _slick_typecast_optionset(array &$options = array(), $breakpoints = 0) {
-  if (empty($options)) {
-    return;
-  }
-
-  $slick_options = slick_get_options();
-  foreach ($slick_options as $name => $value) {
-    if (isset($options['settings'][$name])) {
-      $cast = gettype($slick_options[$name]);
-      settype($options['settings'][$name], $cast);
-    }
-  }
-
-  if (isset($options['responsives']['responsive']) && $breakpoints) {
-    $slick_responsive_options = slick_get_responsive_options($breakpoints);
-    foreach ($slick_responsive_options as $i => $items) {
-      foreach ($items as $name => $item) {
-        switch ($name) {
-          case 'breakpoint':
-            settype($options['responsives']['responsive'][$i][$name], 'int');
-            break;
-
-          case 'unslick':
-            settype($options['responsives']['responsive'][$i][$name], 'bool');
-            break;
-
-          case 'settings':
-            foreach ($item as $key => $setting) {
-              if (isset($options['responsives']['responsive'][$i][$name][$key])) {
-                $cast = gettype($item[$key]);
-                settype($options['responsives']['responsive'][$i][$name][$key], $cast);
-              }
-            }
-            break;
-
-          default:
-            break;
-        }
-      }
-    }
-  }
-
-  drupal_alter('slick_typecast_optionset_info', $options, $breakpoints);
 }
 
 /**

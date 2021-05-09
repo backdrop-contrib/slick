@@ -8,17 +8,91 @@
  * Implements hook_menu().
  */
 function slick_ui_menu() {
+  $items['admin/config/media/slick'] = array(
+    'title' => 'Slick carousel',
+    'description' => 'Create and manage Slick carousel optionsets.',
+    'page callback' => 'slick_ui',
+    'access arguments' => array('administer slick'),
+    'file' => 'slick_ui.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 1,
+  );
+  $items['admin/config/media/slick/list'] = array(
+    'title' => 'Optionsets',
+    'description' => 'Create and manage Slick carousel optionsets.',
+    'page callback' => 'slick_ui',
+    'access arguments' => array('administer slick'),
+    'file' => 'slick_ui.admin.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 1,
+  );
   $items['admin/config/media/slick/ui'] = array(
-    'title' => 'UI',
-    'description' => 'Configure the Slick UI.',
+    'title' => 'Settings',
+    'description' => 'Configure the Slick user interface.',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('slick_ui_form_settings'),
     'access arguments' => array('administer slick'),
+    'file' => 'slick_ui.admin.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' => 3,
   );
 
+  $items['admin/config/media/slick/add'] = array(
+    'title' => 'Add Slick Optionset',
+    'description' => 'Create a Slick carousel Optionset',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('slick_ui_edit_form'),
+    'access arguments' => array('administer slick'),
+    'file' => 'slick_ui.admin.inc',
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  $items['admin/config/media/slick/%slick_optionset/configure'] = array(
+    'title' => 'Configure optionset',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('slick_ui_edit_form', 4),
+    'access arguments' => array('administer slick'),
+    'file' => 'slick_ui.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/media/slick/%slick_optionset/enable'] = array(
+    'title' => 'Enable optionset',
+    'load arguments' => array(TRUE),
+    'page callback' => 'slick_optionset_enable',
+    'page arguments' => array(4),
+    'access arguments' => array('administer slick'),
+    'file' => 'slick_ui.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/media/slick/%slick_optionset/disable'] = array(
+    'title' => 'Disable optionset',
+    'page callback' => 'slick_optionset_disable',
+    'page arguments' => array(4),
+    'access arguments' => array('administer slick'),
+    'file' => 'slick_ui.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/media/slick/%slick_optionset/delete'] = array(
+    'title' => 'Delete optionset',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('slick_ui_delete_form', 4),
+    'access arguments' => array('administer slick'),
+    'file' => 'slick_ui.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function slick_ui_permission() {
+  return array(
+    'administer slick' => array(
+      'title' => t('Administer the Slick carousel module'),
+    ),
+  );
 }
 
 /**
@@ -42,44 +116,4 @@ function slick_ui_library() {
   );
 
   return $libraries;
-}
-
-/**
- * Implements hook_permission().
- */
-function slick_ui_permission() {
-  return array(
-    'administer slick' => array(
-      'title' => t('Administer the Slick carousel module'),
-    ),
-  );
-}
-
-/**
- * Form for Slick UI module settings.
- */
-function slick_ui_form_settings() {
-  $config = config('slick.settings');
-  $form['slick_admin_css'] = array(
-    '#type'          => 'checkbox',
-    '#title'         => t('Enable Slick admin CSS'),
-    '#description'   => t('Uncheck if trouble with slick admin CSS compatibility for your admin theme.'),
-    '#default_value' => $config->get('admin_css'),
-  );
-
-  $form['slick_module_css'] = array(
-    '#type'          => 'checkbox',
-    '#title'         => t('Enable Slick module slick.theme.css'),
-    '#description'   => t('Uncheck to permanently disable the module slick.theme.css, normally included along with skins.'),
-    '#default_value' => $config->get('module_css'),
-  );
-
-  $form['slick_css'] = array(
-    '#type'          => 'checkbox',
-    '#title'         => t('Enable Slick library slick-theme.css'),
-    '#description'   => t('Uncheck to permanently disable the optional slick-theme.css, normally included along with skins.'),
-    '#default_value' => $config->get('slick_css'),
-  );
-
-  return system_settings_form($form);
 }

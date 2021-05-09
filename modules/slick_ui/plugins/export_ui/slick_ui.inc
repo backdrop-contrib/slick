@@ -10,15 +10,6 @@
  */
 $plugin = array(
   'schema' => 'slick_optionset',
-  'access' => 'administer slick',
-
-  // Define the menu item.
-  'menu' => array(
-    'menu prefix' => 'admin/config/media',
-    'menu item' => 'slick',
-    'menu title' => 'Slick carousel',
-    'menu description' => 'Administer Slick carousel presets.',
-  ),
 
   // Define user interface texts.
   'title singular' => t('optionset'),

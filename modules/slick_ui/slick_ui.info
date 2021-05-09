@@ -1,6 +1,6 @@
 type = module
 name = Slick UI
-description = "Provides the Slick carousel export UI."
+description = Provides the Slick carousel export UI.
 backdrop = 1.x
 package = Slick
 
